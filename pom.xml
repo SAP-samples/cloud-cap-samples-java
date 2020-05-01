@@ -1,0 +1,234 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<groupId>my</groupId>
+	<artifactId>bookshop-parent</artifactId>
+	<version>${revision}</version>
+	<packaging>pom</packaging>
+
+	<name>bookshop parent</name>
+
+	<properties>
+		<!-- OUR VERSION -->
+		<revision>1.0-SNAPSHOT</revision>
+
+		<!-- DEPENDENCIES VERSION -->
+		<jdk.version>1.8</jdk.version>
+		<cds.services.version>1.5.1</cds.services.version>
+		<cds4j.version>1.9.0</cds4j.version>
+		<spring.boot.version>2.2.6.RELEASE</spring.boot.version>
+
+		<node.version>v12.16.2</node.version>
+		<node.url>https://nodejs.org/dist/</node.url>
+	</properties>
+
+	<modules>
+		<module>srv</module>
+	</modules>
+
+	<dependencyManagement>
+		<dependencies>
+			<!-- CDS SERVICES -->
+			<dependency>
+				<groupId>com.sap.cds</groupId>
+				<artifactId>cds-services-bom</artifactId>
+				<version>${cds.services.version}</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+
+			<!-- SPRING BOOT -->
+			<dependency>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-dependencies</artifactId>
+				<version>${spring.boot.version}</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
+
+	<build>
+		<pluginManagement>
+			<plugins>
+				<!-- STEPS TO GENERATE CDS ARTIFACTS WITH AVAILABLE NODE/NPM -->
+				<plugin>
+					<groupId>org.codehaus.mojo</groupId>
+					<artifactId>exec-maven-plugin</artifactId>
+					<version>1.6.0</version>
+					<executions>
+						<execution>
+							<id>cds build</id>
+							<phase>initialize</phase>
+							<goals>
+								<goal>exec</goal>
+							</goals>
+							<configuration>
+								<executable>npm</executable>
+								<arguments>
+									<argument>run</argument>
+									<argument>build</argument>
+								</arguments>
+							</configuration>
+						</execution>
+
+						<execution>
+							<id>cds schema</id>
+							<phase>initialize</phase>
+							<goals>
+								<goal>exec</goal>
+							</goals>
+							<configuration>
+								<executable>npm</executable>
+								<arguments>
+									<argument>run</argument>
+									<argument>schema</argument>
+								</arguments>
+							</configuration>
+						</execution>
+					</executions>
+				</plugin>
+
+				<!-- STEPS TO GENERATE CDS ARTIFACTS WITH EIRSLETT -->
+				<plugin>
+					<groupId>com.github.eirslett</groupId>
+					<artifactId>frontend-maven-plugin</artifactId>
+					<version>1.9.1</version>
+					<executions>
+						<execution>
+							<id>install-node-and-npm</id>
+							<phase>initialize</phase>
+							<goals>
+								<goal>install-node-and-npm</goal>
+							</goals>
+							<configuration>
+								<downloadRoot>${node.url}</downloadRoot>
+								<nodeVersion>${node.version}</nodeVersion>
+								<npmInheritsProxyConfigFromMaven>true</npmInheritsProxyConfigFromMaven>
+							</configuration>
+						</execution>
+
+						<execution>
+							<id>npm install</id>
+							<phase>initialize</phase>
+							<goals>
+								<goal>npm</goal>
+							</goals>
+							<configuration>
+								<arguments>install</arguments>
+							</configuration>
+						</execution>
+
+						<execution>
+							<id>cds build</id>
+							<phase>initialize</phase>
+							<goals>
+								<goal>npm</goal>
+							</goals>
+							<configuration>
+								<arguments>run build</arguments>
+							</configuration>
+						</execution>
+
+						<execution>
+							<id>cds schema</id>
+							<phase>initialize</phase>
+							<goals>
+								<goal>npm</goal>
+							</goals>
+							<configuration>
+								<arguments>run schema</arguments>
+							</configuration>
+						</execution>
+					</executions>
+				</plugin>
+			</plugins>
+		</pluginManagement>
+
+		<plugins>
+			<!-- JAVA VERSION -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>3.8.1</version>
+				<configuration>
+					<source>${jdk.version}</source>
+					<target>${jdk.version}</target>
+				</configuration>
+			</plugin>
+
+			<!-- MAKE SPRING BOOT PLUGIN RUNNABLE FROM ROOT -->
+			<plugin>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-maven-plugin</artifactId>
+				<version>${spring.boot.version}</version>
+				<configuration>
+					<fork>false</fork>
+					<skip>true</skip>
+				</configuration>
+			</plugin>
+
+			<!-- POM FLATTENING FOR CI FRIENDLY VERSIONS -->
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>flatten-maven-plugin</artifactId>
+				<version>1.2.1</version>
+				<configuration>
+					<updatePomFile>true</updatePomFile>
+					<flattenMode>resolveCiFriendliesOnly</flattenMode>
+				</configuration>
+				<executions>
+					<execution>
+						<id>flatten</id>
+						<phase>process-resources</phase>
+						<goals>
+							<goal>flatten</goal>
+						</goals>
+					</execution>
+					<execution>
+						<id>flatten.clean</id>
+						<phase>clean</phase>
+						<goals>
+							<goal>clean</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+
+			<!-- PROJECT STRUCTURE CHECKS -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-enforcer-plugin</artifactId>
+				<version>3.0.0-M3</version>
+				<executions>
+					<execution>
+						<id>Project Structure Checks</id>
+						<goals>
+							<goal>enforce</goal>
+						</goals>
+						<configuration>
+							<rules>
+								<requireMavenVersion>
+									<version>3.5</version>
+								</requireMavenVersion>
+								<requireJavaVersion>
+									<version>${jdk.version}</version>
+								</requireJavaVersion>
+								<requireProperty>
+									<property>project.artifactId</property>
+									<regex>[^_]+</regex>
+									<regexMessage>"The artifactId should not contain underscores
+										(_) as this causes issues when deploying to Cloud Foundry."</regexMessage>
+								</requireProperty>
+								<reactorModuleConvergence />
+							</rules>
+							<fail>true</fail>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
+</project>
