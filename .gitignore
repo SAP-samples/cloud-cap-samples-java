@@ -1,19 +1,15 @@
 gen/
 edmx/
 schema.sql
-default-env.json
 
 bin/
 target/
-.flattened-pom.xml
 .classpath
 .project
 .settings
-.vscode
 
 node/
 node_modules/
-package-lock.json
 
 .mta/
 *.mtar
@@ -21,6 +17,5 @@ package-lock.json
 *.log*
 gc_history*
 hs_err*
-.DS_Store
 
 *.db

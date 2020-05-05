@@ -2,18 +2,18 @@
     "name": "bookshop-java",
     "version": "1.0.0",
     "description": "Bookshop using CAP Java NG",
-    "license": "Apache License Version 2.0",
+    "license": "ISC",
     "repository": "",
     "scripts": {
         "build": "cds build/all --clean",
-        "schema": "cds deploy --to sqlite --dry > srv/src/main/resources/schema.sql",
+        "schema": "cds compile srv --to sql > srv/src/main/resources/schema.sql",
         "deploy": "cds deploy"
     },
     "dependencies": {
-        "@sap/cds": "^3.33.0"
+        "@sap/cds": "^3.33.1"
     },
     "devDependencies": {
-        "sqlite3": "^4.1.1"
+        "sqlite3": "^4.1.0"
     },
     "cds": {
         "build": {

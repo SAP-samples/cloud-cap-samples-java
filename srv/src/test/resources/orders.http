@@ -1,0 +1,17 @@
+### List Books with their current stocks
+GET http://localhost:8080/api/admin/Books?$select=ID,stock
+
+### List all Orders
+GET http://localhost:8080/api/admin/Orders?
+&$expand=Items
+
+### Submit Orders
+POST http://localhost:8080/api/admin/Orders
+Content-Type: application/json
+# Accept-Language: de
+
+{ "Items":[
+    { "book_ID":"9b084139-0b1e-43b6-b12a-7b3669d75f02", "amount":5 }
+]}
+
+# Sending this three times should result in a 409: 5 exceeds stock for book #9b084139-0b1e-43b6-b12a-7b3669d75f02

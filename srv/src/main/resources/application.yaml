@@ -1,15 +1,8 @@
 ---
 spring:
-  resources.static-locations: "file:./app"
+  resources.static-locations: "file:./app"  # for fast UI-dev turnarounds
 cds:
-  odata-v4.endpoint.path: "/api"
-  security.mock.users:
-    - name: admin
-      password: admin
-      roles:
-      - admin
-    - name: user
-      password: user
+  odatav4.endpoint.path: "/api"
 
 ---
 spring:

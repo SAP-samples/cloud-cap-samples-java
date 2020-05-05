@@ -1,7 +1,5 @@
 package my.bookshop.handlers;
 
-import static cds.gen.catalogservice.CatalogService_.BOOKS;
-
 import java.util.stream.Stream;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +13,7 @@ import com.sap.cds.services.handler.annotations.ServiceName;
 import com.sap.cds.services.persistence.PersistenceService;
 
 import cds.gen.catalogservice.Books;
+import cds.gen.catalogservice.Books_;
 import cds.gen.catalogservice.CatalogService_;
 
 @Component
@@ -28,8 +27,8 @@ public class CatalogServiceHandler implements EventHandler {
 	public void discountBooks(Stream<Books> books) {
 		books.filter(b -> b.getTitle() != null).filter(b -> {
 			Integer stock = b.getStock();
-			if (stock == null) {
-				stock = db.run(Select.from(BOOKS).byId(b.getId()).columns(c -> c.stock())).single(Books.class).getStock();
+			if(stock == null) {
+				stock = db.run(Select.from(Books_.class).byId(b.getId()).columns(c -> c.stock())).single(Books.class).getStock();
 			}
 			return stock > 111;
 		})

@@ -1,7 +1,6 @@
 namespace my.bookshop;
 using { Currency, managed, cuid } from '@sap/cds/common';
 
-@fiori.draft.enabled
 entity Books : cuid, managed {
   title    : localized String(111);
   descr    : localized String(1111);
@@ -21,7 +20,7 @@ entity Authors : cuid, managed {
 }
 
 entity Orders : cuid, managed {
-  OrderNo  : String @title:'{i18n>OrderNumber}' @mandatory; //> readable key
+  OrderNo  : String @title:'Order Number'; //> readable key
   Items    : Composition of many OrderItems on Items.parent = $self;
   total    : Decimal(9,2) @readonly;
   currency : Currency;
