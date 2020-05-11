@@ -1,0 +1,54 @@
+{
+	"systemName": "<S4 SYSTEM NAME>",
+	"communicationArrangement": {
+		"communicationArrangementName": "BOOKSHOP_JAVA_INBOUND",
+		"scenarioId": "SAP_COM_0008",
+		"inboundAuthentication": "BasicAuthentication",
+		"outboundAuthentication": "BasicAuthentication",
+		"outboundServices": [
+			{
+				"name": "Replicate Customers from S/4 System to Client",
+				"isServiceActive": false
+			},
+			{
+				"name": "Replicate Suppliers from S/4 System to Client",
+				"isServiceActive": false
+			},
+			{
+				"name": "Replicate Company Addresses from S/4 System to Client",
+				"isServiceActive": false
+			},
+			{
+				"name": "Replicate Workplace Addresses from S/4 System to Client",
+				"isServiceActive": false
+			},
+			{
+				"name": "Replicate Personal Addresses from S/4 System to Client",
+				"isServiceActive": false
+			},
+			{
+				"name": "Business Partner - Replicate from SAP S/4HANA Cloud to Client",
+				"isServiceActive": false
+			},
+			{
+				"name": "Business Partner Relationship - Replicate from SAP S/4HANA Cloud to Client",
+				"isServiceActive": false
+			},
+			{
+				"name": "Business Partner - Send Confirmation from SAP S/4HANA Cloud to Client",
+				"isServiceActive": false
+			},
+			{
+				"name": "BP Relationship - Send Confirmation from SAP S/4HANA Cloud to Client",
+				"isServiceActive": false
+			}
+		],
+		"communicationSystem": {
+			"communicationSystemHostname": "<S4 HOST NAME>",
+			"outboundCommunicationUser": {
+				"username": "DefaultUser",
+				"password": "DefaultPassword"
+			}
+		}
+	}
+}

@@ -1,38 +1,32 @@
 {
-    "name": "bookshop-java",
-    "version": "1.0.0",
-    "description": "Bookshop using CAP Java NG",
-    "license": "Apache License Version 2.0",
-    "repository": "",
-    "scripts": {
-        "build": "cds build/all --clean",
-        "schema": "cds deploy --to sqlite --dry > srv/src/main/resources/schema.sql",
-        "deploy": "cds deploy"
+  "name": "bookshop-java",
+  "version": "1.0.0",
+  "description": "Bookshop using CAP Java NG",
+  "license": "Apache License Version 2.0",
+  "repository": "",
+  "scripts": {
+    "build": "cds build/all --clean",
+    "schema": "cds deploy --to sqlite --with-mocks --dry > srv/src/main/resources/schema.sql",
+    "deploy": "cds deploy --with-mocks"
+  },
+  "dependencies": {
+    "@sap/cds": "^3.33.0",
+    "@sap/hana-client": "^2.4.196"
+  },
+  "devDependencies": {
+    "sqlite3": "^4.1.1"
+  },
+  "cds": {
+    "build": {
+      "target": "."
     },
-    "dependencies": {
-        "@sap/cds": "^3.33.0"
+    "requires": {
+      "db": {
+        "kind": "sql"
+      }
     },
-    "devDependencies": {
-        "sqlite3": "^4.1.1"
-    },
-    "cds": {
-        "build": {
-            "target": "."
-        },
-        "requires": {
-            "db": {
-                "kind": "sqlite",
-                "model": [
-                    "db",
-                    "srv"
-                ],
-                "credentials": {
-                    "database": "sqlite.db"
-                }
-            }
-        },
-        "odata": {
-            "version": "v4"
-        }
+    "odata": {
+      "version": "v4"
     }
+  }
 }

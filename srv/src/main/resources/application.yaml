@@ -8,13 +8,22 @@ cds:
       password: admin
       roles:
       - admin
+      attributes:
+        businessPartner:
+        - SAPSE
     - name: user
       password: user
 
 ---
 spring:
   profiles: cloud
-
+cds:
+  services:
+    abp:
+      name: API_BUSINESS_PARTNER
+      serve:
+        ignore: true
+      destination: "s4-business-partner-api"
 ---
 spring:
   profiles: sqlite

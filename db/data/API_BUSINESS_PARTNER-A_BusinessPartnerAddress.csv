@@ -1,0 +1,6 @@
+AddressID;BusinessPartner;Country;CityName;PostalCode;StreetName;HouseNumber
+100;SAPSE;DE;Walldorf;68199;Dietmar-Hopp-Allee;16
+200;SAPSE;DE;St.Leon-Rot;68789;SAP-Allee;29
+300;SAPSE;DE;Potsdam;14469;Konrad-Zuse-Ring;10
+400;SAPUS;US;Newtown Square;19073;West Chester Pike;3999
+500;SAPUS;US;Palo Alto;94304;Hillview Avenue;3410

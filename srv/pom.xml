@@ -16,6 +16,7 @@
 
 	<!-- ACTUAL DEPENDENCIES -->
 	<dependencies>
+		<!-- CDS DEPENDENCIES -->
 		<dependency>
 			<groupId>com.sap.cds</groupId>
 			<artifactId>cds-starter-spring-boot-odata</artifactId>
@@ -32,6 +33,23 @@
 			</exclusions>
 		</dependency>
 
+		<!-- CLOUD SDK DEPENDENCIES -->
+		<dependency>
+			<groupId>com.sap.cloud.sdk.datamodel</groupId>
+			<artifactId>odata-v4-client</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>com.sap.cloud.sdk.cloudplatform</groupId>
+			<artifactId>cloudplatform-core</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>com.sap.cloud.sdk.cloudplatform</groupId>
+			<artifactId>cloudplatform-connectivity</artifactId>
+		</dependency>
+
+		<!-- OTHER DEPENDENCIES -->
 		<dependency>
 			<groupId>org.xerial</groupId>
 			<artifactId>sqlite-jdbc</artifactId>

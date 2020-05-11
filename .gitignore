@@ -24,3 +24,6 @@ hs_err*
 .DS_Store
 
 *.db
+
+# added by cds deploy
+connection.properties

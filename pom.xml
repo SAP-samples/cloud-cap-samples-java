@@ -19,6 +19,7 @@
 		<cds.services.version>1.5.1</cds.services.version>
 		<cds4j.version>1.9.0</cds4j.version>
 		<spring.boot.version>2.2.6.RELEASE</spring.boot.version>
+		<cloud.sdk.version>3.19.1</cloud.sdk.version>
 
 		<node.version>v12.16.2</node.version>
 		<node.url>https://nodejs.org/dist/</node.url>
@@ -44,6 +45,15 @@
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-dependencies</artifactId>
 				<version>${spring.boot.version}</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+
+			<!-- SAP CLOUD SDK -->
+			<dependency>
+				<groupId>com.sap.cloud.sdk</groupId>
+				<artifactId>sdk-bom</artifactId>
+				<version>${cloud.sdk.version}</version>
 				<type>pom</type>
 				<scope>import</scope>
 			</dependency>
