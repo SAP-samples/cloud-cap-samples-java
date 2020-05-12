@@ -1,0 +1,70 @@
+### Select one book using GraphQL
+
+POST http://localhost:8080/graphql
+Authorization: Basic user:user
+Content-Type: application/json
+
+{
+	"query": "{ getCatalogServiceBooksById(ID: \"f846b0b9-01d4-4f6d-82a4-d79204f62278\") { ID title author } }"
+}
+
+### Localization works out-of-the box
+
+POST http://localhost:8080/graphql
+Authorization: Basic user:user
+Content-Type: application/json
+Accept-Language: de
+
+{
+	"query": "{ getCatalogServiceBooksById(ID: \"f846b0b9-01d4-4f6d-82a4-d79204f62278\") { ID title descr stock price createdAt author } }"
+}
+
+### Business logic is triggered
+
+POST http://localhost:8080/graphql
+Authorization: Basic user:user
+Content-Type: application/json
+
+{
+	"query": "{ getCatalogServiceBooksById(ID: \"51061ce3-ddde-4d70-a2dc-6314afbcc73e\") { ID title stock price } }"
+}
+
+### Request elements from associated entities
+
+POST http://localhost:8080/graphql
+Authorization: Basic user:user
+Content-Type: application/json
+
+{
+	"query": "{ getCatalogServiceBooksById(ID: \"f846b0b9-01d4-4f6d-82a4-d79204f62278\") { ID price currency { code } } }"
+}
+
+### Select all books
+
+POST http://localhost:8080/graphql
+Authorization: Basic user:user
+Content-Type: application/json
+
+{
+	"query": "{ getCatalogServiceBooks { ID price currency { code } } }"
+}
+
+### Authorization checks work out-of-the box
+
+POST http://localhost:8080/graphql
+Authorization: Basic user:user
+Content-Type: application/json
+
+{
+	"query": "{ getAdminServiceOrdersById(IsActiveEntity: true, ID: \"7e2f2640-6866-4dcf-8f4d-3027aa831cad\") { ID Items { amount book { title } } } }"
+}
+
+### Select one order with all items and their book
+
+POST http://localhost:8080/graphql
+Authorization: Basic admin:admin
+Content-Type: application/json
+
+{
+	"query": "{ getAdminServiceOrdersById(IsActiveEntity: true, ID: \"7e2f2640-6866-4dcf-8f4d-3027aa831cad\") { ID Items { amount book { title } } } }"
+}
