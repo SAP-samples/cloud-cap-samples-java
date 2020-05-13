@@ -3,7 +3,9 @@ using { my.bookshop as my } from '../db/schema';
 
 @path:'admin'
 service AdminService @(requires:'admin') {
-  entity Books as projection on my.Books;
+  entity Books as projection on my.Books actions {
+    action addToOrder(order_ID: UUID, amount: Integer) returns Orders;
+  }
   entity Authors as projection on my.Authors;
   entity Orders as select from my.Orders;
 }
@@ -25,13 +27,7 @@ annotate AdminService.Books with {
 
 // Enable Fiori Draft for Orders
 annotate AdminService.Orders with @odata.draft.enabled;
-annotate AdminService.Books with @Capabilities.Insertable: false;
-annotate AdminService.Books with @odata.draft.enabled;
-
-// Add Action to Books
-extend entity AdminService.Books with actions {
-  action addToOrder(order_ID: UUID, amount: Integer) returns AdminService.Orders;
-}
+annotate AdminService.Books with @odata.draft.enabled @Capabilities.Insertable: false;
 
 // workaround to enable the value help for languages
 // Necessary because auto exposure is currently not working
