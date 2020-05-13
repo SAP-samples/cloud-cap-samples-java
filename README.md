@@ -2,6 +2,10 @@
 
 Welcome to the bookshop-java project. It demonstrates a simple application built on the Java SDK for the [SAP Cloud Application Programming Model](https://cap.cloud.sap).
 
+# Application/Stack Overview
+
+Application Framework, or runtime for the Application, is Spring Boot. Though a CAP application is not required to build on Spring Boot, it is the first choice as it is seamlessly integrated.
+
 # Getting Started
 
 The following sections describe how to set up, build and run the project.
@@ -16,15 +20,15 @@ Make sure you have setup a development environment (that means, you have install
 ```
   git clone https://github.com/SAP-samples/cloud-cap-samples-java.git
 ```
-2.  Import the project using **File > Import > Existing Maven Projects**. 
-    
+2.  Import the project using **File > Import > Existing Maven Projects**.
+
     Now, you should see the projects **bookshop** and **bookshop-parent** in the project/package explorer view.
 3.  In Project Explorer, change the property "Package Presentation" from "Flat" to "Hierarchical" for better understanding.
 
 ## Building and Running
 
-1.  To **compile** the project, right-click the file `pom.xml` in the `bookshop-parent` project root folder and select 
-**Run as** > **Maven build**. 
+1.  To **compile** the project, right-click the file `pom.xml` in the `bookshop-parent` project root folder and select
+**Run as** > **Maven build**.
 
     In the following dialog, enter the string `clean install` into the field labeled with "Goals" and click "Run".
 
@@ -39,14 +43,15 @@ Make sure you have setup a development environment (that means, you have install
 	```${workspace_loc:bookshop-parent}```
 
 	Afterwards, click **Run**. This step starts the applications `main` method located in `src/main/java/my/bookshop/Application.java`.
-    
+
 3.  Use the following links in the browser to check if everything works fine:
 
-    <http://localhost:8080/>: This should show the automatically generated index page of served paths.  
+    <http://localhost:8080/>: This should show the automatically generated index page of served paths.
     <http://localhost:8080/fiori.html>: This is the actual bookshop application UI
 
-    You'll start with an empty stock of books as this procedure starts the bookshop application with an empty in-memory sqlite database. Two mock users are defined for local development:
+    You'll start with an empty stock of books as this procedure starts the bookshop application with an empty in-memory sqlite database.
 
+    Two mock users are defined for local development:
     - User: `user`, password: `user` to browse books
     - User: `admin`, password: `admin` to manage books and orders
 
@@ -54,8 +59,8 @@ Make sure you have setup a development environment (that means, you have install
 
 The application comes with three predefined profiles: `default`, `sqlite` and `cloud` (see `src/main/resources/application.yaml`).
 
-- The `default` profile specifies to use an in-memory SQLite database. 
-  The in-memory database is set up automatically during startup of the application. 
+- The `default` profile specifies to use an in-memory SQLite database.
+  The in-memory database is set up automatically during startup of the application.
   However, example data from CSV files are not yet automatically imported, therefore some content needs to be created via OData V4 API requests.
 
 - The `sqlite` profile specifies to use a persistent SQLite database from root directory of the project.
@@ -79,12 +84,17 @@ To switch from the default in-memory SQLite database to a file-based SQLite data
 
 ## Demonstrated Features
 
-- Application configuration
-- How to add custom event handlers
-- Authentication & Authorization
-- Mocking users for local development
-- Localization
-- Support for SAP Fiori Elements and Drafts
+## Demonstrated features
+- [Application configuration](https://cap.cloud.sap/docs/java/development#application-configuration) via [application.yaml](srv/src/main/resources/application.yaml)
+- [Custom event handlers](https://cap.cloud.sap/docs/java/provisioning-api) such as the [Custom business logic for the Admin Service](srv/src/main/java/my/bookshop/handlers/AdminServiceHandler.java)
+- [Authentication & Authorization](https://cap.cloud.sap/docs/java/advanced#security) (including User-Specific Restrictions with @restrict in the [Admin Service](/srv/admin-service.cds))
+- [Mocking users](/srv/src/main/resources/application.yaml) for local development
+- [Localization](https://cap.cloud.sap/docs/guides/i18n) for [English](app/_i18n/i18n.properties) and [German](app/_i18n/i18n_de.properties)
+- Support for SAP [Fiori Elements](https://cap.cloud.sap/docs/guides/fiori/#fiori-draft-support)
+- [Fiori Draft based Editing](https://cap.cloud.sap/docs/guides/fiori/#fiori-draft-support) for [Books and Authors](srv/admin-service.cds)
+- [Value Help](https://cap.cloud.sap/docs/cds/annotations#odata) for [Books](app/orders/fiori-service.cds) and [Authors](app/common.cds)
+- [CDS Query Language with a Static CDS Model](https://cap.cloud.sap/docs/java/advanced#staticmodel) in the [Admin Service](srv/src/main/java/my/bookshop/handlers/AdminServiceHandler.java)
+- Use of [Aspects](https://cap.cloud.sap/docs/cds/cdl#aspects) in the Model Definition such as the [reuse of Aspects](https://cap.cloud.sap/docs/cds/common#common-reuse-aspects) in [Books](db/schema.cds)
 
 ## Get Support
 
