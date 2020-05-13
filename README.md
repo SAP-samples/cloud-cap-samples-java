@@ -1,10 +1,66 @@
 # Welcome to CAP Samples for Java
 
-Welcome to the bookshop-java project. It demonstrates a simple application built on the Java SDK for the [SAP Cloud Application Programming Model](https://cap.cloud.sap).
+Welcome to the bookshop-java project. It demonstrates how to build simple applications on the Java SDK for the [SAP Cloud Application Programming Model](https://cap.cloud.sap) (CAP). The applications in this project enable browsing books, managing books and managing orders.
 
-# Application/Stack Overview
+![Application Overview via Fiori Launchpad](assets/readmeImages/FioriHome.jpg)
 
-Application Framework, or runtime for the Application, is Spring Boot. Though a CAP application is not required to build on Spring Boot, it is the first choice as it is seamlessly integrated.
+## Outline
+
+- [Welcome to CAP Samples for Java](#welcome-to-cap-samples-for-java)
+  - [Outline](#outline)
+- [Overview](#overview)
+  - [Demonstrated Features](#demonstrated-features)
+- [Getting Started](#getting-started)
+  - [Prerequisites](#prerequisites)
+  - [Importing the Project in Eclipse](#importing-the-project-in-eclipse)
+  - [Building and Running](#building-and-running)
+  - [Database Setup and Spring Profiles](#database-setup-and-spring-profiles)
+  - [Using a File-Based SQLite Database](#using-a-file-based-sqlite-database)
+- [Get Support](#get-support)
+- [License](#license)
+
+# Overview
+
+The goal of the bookshop-java project is to provide fully-functional applications including **domain models** and **data persistency**, **OData services** and **application logic**, and **SAP Fiori frontends**.
+
+![CAP Core Concepts](assets/readmeImages/core-concepts.png)
+
+The **Application Framework**, or runtime for the application, is Spring Boot. Although a Java CAP application is not required to build on Spring Boot, it is the first choice of framework, as it is seamlessly integrated.
+
+The **Domain models** are defined using [CDS entity definitions](https://cap.cloud.sap/docs/cds/cdl#entity-and-type-definitions).
+
+For local **Data persistency** an in-memory SQLite or file-based SQLite database can be used. For cloud Data persistency, once deployed to SAP Cloud Platform, SAP HANA can be used.
+
+**Services** are defined using [CDS Service Models](https://cap.cloud.sap/docs/cds/cdl#services). The **OData V4 Protocol Adapter** translate the CDS service models into corresponding OData schemas and maps the incoming OData requests to the corresponding CDS services.
+
+Although CAP provides Generic **Event handlers** to serve most CRUD requests out-of-the-box, it is possible to add business logic via [Custom Event Handlers](https://cap.cloud.sap/docs/get-started/in-a-nutshell#adding-custom-logic).
+
+A Fiori UI is added using predefined SAP Fiori elements templates. **[Fiori annotations](https://cap.cloud.sap/docs/guides/fiori/#fiori-annotations)** add information to the service definitions, on how to render the data.
+
+## Demonstrated Features
+
+Framework/Infrastructure related Features
+
+- [Application configuration](https://cap.cloud.sap/docs/java/development#application-configuration) for spring and cds using [application.yaml](srv/src/main/resources/application.yaml)
+- [Mocking users](/srv/src/main/resources/application.yaml) for local development
+- [Authentication & Authorization](https://cap.cloud.sap/docs/java/advanced#security) (including user-specific restrictions with `@restrict` in the [Admin Service](/srv/admin-service.cds))
+- [Localization](https://cap.cloud.sap/docs/guides/i18n) for [English](app/_i18n/i18n.properties) and [German](app/_i18n/i18n_de.properties) language
+
+Domain Model related Features
+
+- [CDS Query Language with a Static CDS Model](https://cap.cloud.sap/docs/java/advanced#staticmodel) in the [Admin Service](srv/src/main/java/my/bookshop/handlers/AdminServiceHandler.java)
+- Use of [Aspects](https://cap.cloud.sap/docs/cds/cdl#aspects) in the Model Definition such as the [reuse of Aspects](https://cap.cloud.sap/docs/cds/common#common-reuse-aspects) in [Books](db/schema.cds)
+
+Service Model related Features
+
+- [Custom event handlers](https://cap.cloud.sap/docs/java/provisioning-api) such as the [Custom business logic for the Admin Service](srv/src/main/java/my/bookshop/handlers/AdminServiceHandler.java)
+- [Value Help](https://cap.cloud.sap/docs/cds/annotations#odata) for [Books](app/orders/fiori-service.cds) and [Authors](app/common.cds)
+
+UI related Features
+
+- Support for SAP [Fiori Elements](https://cap.cloud.sap/docs/guides/fiori/#fiori-draft-support)
+- [Fiori Draft based Editing](https://cap.cloud.sap/docs/guides/fiori/#fiori-draft-support) for [Books and Authors](srv/admin-service.cds)
+
 
 # Getting Started
 
@@ -44,7 +100,7 @@ Make sure you have setup a development environment (that means, you have install
 
 	Afterwards, click **Run**. This step starts the applications `main` method located in `src/main/java/my/bookshop/Application.java`.
 
-3.  Use the following links in the browser to check if everything works fine:
+4.  Use the following links in the browser to check if everything works fine:
 
     <http://localhost:8080/>: This should show the automatically generated index page of served paths.
     <http://localhost:8080/fiori.html>: This is the actual bookshop application UI
@@ -82,25 +138,11 @@ To switch from the default in-memory SQLite database to a file-based SQLite data
 
 2.  Edit your Run Configuration via **Run** > **Run Configurations...** and select enter the **Profile** `sqlite` on tab **Spring** and click **Run**.
 
-## Demonstrated Features
-
-## Demonstrated features
-- [Application configuration](https://cap.cloud.sap/docs/java/development#application-configuration) via [application.yaml](srv/src/main/resources/application.yaml)
-- [Custom event handlers](https://cap.cloud.sap/docs/java/provisioning-api) such as the [Custom business logic for the Admin Service](srv/src/main/java/my/bookshop/handlers/AdminServiceHandler.java)
-- [Authentication & Authorization](https://cap.cloud.sap/docs/java/advanced#security) (including User-Specific Restrictions with @restrict in the [Admin Service](/srv/admin-service.cds))
-- [Mocking users](/srv/src/main/resources/application.yaml) for local development
-- [Localization](https://cap.cloud.sap/docs/guides/i18n) for [English](app/_i18n/i18n.properties) and [German](app/_i18n/i18n_de.properties)
-- Support for SAP [Fiori Elements](https://cap.cloud.sap/docs/guides/fiori/#fiori-draft-support)
-- [Fiori Draft based Editing](https://cap.cloud.sap/docs/guides/fiori/#fiori-draft-support) for [Books and Authors](srv/admin-service.cds)
-- [Value Help](https://cap.cloud.sap/docs/cds/annotations#odata) for [Books](app/orders/fiori-service.cds) and [Authors](app/common.cds)
-- [CDS Query Language with a Static CDS Model](https://cap.cloud.sap/docs/java/advanced#staticmodel) in the [Admin Service](srv/src/main/java/my/bookshop/handlers/AdminServiceHandler.java)
-- Use of [Aspects](https://cap.cloud.sap/docs/cds/cdl#aspects) in the Model Definition such as the [reuse of Aspects](https://cap.cloud.sap/docs/cds/common#common-reuse-aspects) in [Books](db/schema.cds)
-
-## Get Support
+# Get Support
 
 Check out the documentation at https://cap.cloud.sap.
 In case you find a bug or need support, please [open an issue in here](https://github.com/SAP-samples/cloud-cap-samples-java/issues/new).
 
-## License
+# License
 
 Copyright (c) 2020 SAP SE or an SAP affiliate company. All rights reserved. This file is licensed under the Apache Software License, version 2.0 except as noted otherwise in the [LICENSE](LICENSE) file.
