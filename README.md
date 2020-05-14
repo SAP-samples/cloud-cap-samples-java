@@ -1,13 +1,13 @@
+<!-- omit in toc -->
 # Welcome to CAP Samples for Java
 
 Welcome to the bookshop-java project. It demonstrates how to build simple applications on the Java SDK for the [SAP Cloud Application Programming Model](https://cap.cloud.sap) (CAP). The applications in this project enable browsing books, managing books and managing orders.
 
 ![Application Overview via Fiori Launchpad](assets/readmeImages/FioriHome.jpg)
 
+<!-- omit in toc -->
 ## Outline
 
-- [Welcome to CAP Samples for Java](#welcome-to-cap-samples-for-java)
-  - [Outline](#outline)
 - [Overview](#overview)
   - [Demonstrated Features](#demonstrated-features)
 - [Getting Started](#getting-started)
