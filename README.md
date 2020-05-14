@@ -1,7 +1,7 @@
 <!-- omit in toc -->
 # Welcome to CAP Samples for Java
 
-Welcome to the bookshop-java project. It demonstrates how to build simple applications on the Java SDK for the [SAP Cloud Application Programming Model](https://cap.cloud.sap) (CAP). The applications in this project enable browsing books, managing books and managing orders.
+Welcome to the bookshop-java project. It demonstrates how to build business applications using the [CAP Java SDK](https://cap.cloud.sap) providing a book shop web application as an example. The application in this project enables browsing books, managing books and managing orders.
 
 ![Application Overview via Fiori Launchpad](assets/readmeImages/FioriHome.jpg)
 
@@ -21,19 +21,17 @@ Welcome to the bookshop-java project. It demonstrates how to build simple applic
 
 # Overview
 
-The goal of the bookshop-java project is to provide fully-functional applications including **domain models** and **data persistency**, **OData services** and **application logic**, and **SAP Fiori frontends**.
+This sample application shows how to conveniently create business applications based on **CDS domain models**, persisting data with **SQLite** or **SAP HANA** and exposing an **OData V4** frontend with a **SAP Fiori** frontend on top.
 
-![CAP Core Concepts](assets/readmeImages/core-concepts.png)
+This sample uses Spring Boot as an **application framework**. Although a Java CAP application is not required to build on Spring Boot, it is the first choice of framework, as it is seamlessly integrated.
 
-The **Application Framework**, or runtime for the application, is Spring Boot. Although a Java CAP application is not required to build on Spring Boot, it is the first choice of framework, as it is seamlessly integrated.
+The **domain models** are defined using [CDS entity definitions](https://cap.cloud.sap/docs/cds/cdl#entity-and-type-definitions).
 
-The **Domain models** are defined using [CDS entity definitions](https://cap.cloud.sap/docs/cds/cdl#entity-and-type-definitions).
+By default, an in-memory or optionally a file-based SQLite database is used for **data persistency**. Once productively deployed to SAP Cloud Platform, SAP HANA can be used.
 
-For local **Data persistency** an in-memory SQLite or file-based SQLite database can be used. For cloud Data persistency, once deployed to SAP Cloud Platform, SAP HANA can be used.
+**Services** are defined using [CDS Service Models](https://cap.cloud.sap/docs/cds/cdl#services). The **OData V4 Protocol Adapter** translates the CDS service models into corresponding OData schemas and maps the incoming OData requests to the corresponding CDS services.
 
-**Services** are defined using [CDS Service Models](https://cap.cloud.sap/docs/cds/cdl#services). The **OData V4 Protocol Adapter** translate the CDS service models into corresponding OData schemas and maps the incoming OData requests to the corresponding CDS services.
-
-Although CAP provides Generic **Event handlers** to serve most CRUD requests out-of-the-box, it is possible to add business logic via [Custom Event Handlers](https://cap.cloud.sap/docs/get-started/in-a-nutshell#adding-custom-logic).
+Although CAP provides generic **event handlers** to serve most CRUD requests out-of-the-box, it is possible to add business logic via [Custom Event Handlers](https://cap.cloud.sap/docs/get-started/in-a-nutshell#adding-custom-logic).
 
 A Fiori UI is added using predefined SAP Fiori elements templates. **[Fiori annotations](https://cap.cloud.sap/docs/guides/fiori/#fiori-annotations)** add information to the service definitions, on how to render the data.
 
@@ -41,7 +39,7 @@ A Fiori UI is added using predefined SAP Fiori elements templates. **[Fiori anno
 
 Framework/Infrastructure related Features
 
-- [Application configuration](https://cap.cloud.sap/docs/java/development#application-configuration) for spring and cds using [application.yaml](srv/src/main/resources/application.yaml)
+- [Application configuration](https://cap.cloud.sap/docs/java/development#application-configuration) for Spring and CDS using [application.yaml](srv/src/main/resources/application.yaml)
 - [Mocking users](/srv/src/main/resources/application.yaml) for local development
 - [Authentication & Authorization](https://cap.cloud.sap/docs/java/advanced#security) (including user-specific restrictions with `@restrict` in the [Admin Service](/srv/admin-service.cds))
 
@@ -76,18 +74,30 @@ The following sections describe how to set up, build and run the project.
 
 Make sure you have setup a development environment (that means, you have installed the CDS Compiler, Java and Apache Maven) [as described here](https://cap.cloud.sap/docs/java/getting-started).
 
-## Importing the Project in Eclipse
+## Clone Build & Run
 
 1.  Clone the project:
-```
+```bash 
   git clone https://github.com/SAP-samples/cloud-cap-samples-java.git
 ```
-2.  Import the project using **File > Import > Existing Maven Projects**.
 
+2. Build and run the application:
+```
+  mvn spring-boot:run
+```
+
+## Using Eclipse
+
+Optionally, use the following steps to import the project to Eclipse:
+
+1.  Import the project using **File > Import > Existing Maven Projects**.
+    
     Now, you should see the projects **bookshop** and **bookshop-parent** in the project/package explorer view.
-3.  In Project Explorer, change the property "Package Presentation" from "Flat" to "Hierarchical" for better understanding.
 
-## Building and Running
+2.  In Project Explorer, change the property "Package Presentation" from "Flat" to "Hierarchical" for better understanding.
+
+
+### Building and Running
 
 1.  To **compile** the project, right-click the file `pom.xml` in the `bookshop-parent` project root folder and select
 **Run as** > **Maven build**.
