@@ -44,22 +44,25 @@ Framework/Infrastructure related Features
 - [Application configuration](https://cap.cloud.sap/docs/java/development#application-configuration) for spring and cds using [application.yaml](srv/src/main/resources/application.yaml)
 - [Mocking users](/srv/src/main/resources/application.yaml) for local development
 - [Authentication & Authorization](https://cap.cloud.sap/docs/java/advanced#security) (including user-specific restrictions with `@restrict` in the [Admin Service](/srv/admin-service.cds))
-- [Localization](https://cap.cloud.sap/docs/guides/i18n) for [English](app/_i18n/i18n.properties) and [German](app/_i18n/i18n_de.properties) language
 
 Domain Model related Features
 
 - [CDS Query Language with a Static CDS Model](https://cap.cloud.sap/docs/java/advanced#staticmodel) in the [Admin Service](srv/src/main/java/my/bookshop/handlers/AdminServiceHandler.java)
-- Use of [Aspects](https://cap.cloud.sap/docs/cds/cdl#aspects) in the Model Definition such as the [reuse of Aspects](https://cap.cloud.sap/docs/cds/common#common-reuse-aspects) in [Books](db/schema.cds)
+- Use of [Aspects](https://cap.cloud.sap/docs/cds/cdl#aspects) in the Model Definition such as the [`managed` or `cuid` Aspect](https://cap.cloud.sap/docs/cds/common#common-reuse-aspects) in [Books](db/schema.cds)
+- [Data Localization](https://cap.cloud.sap/docs/guides/localized-data) for [Books](db/schema.cds)
 
 Service Model related Features
 
 - [Custom event handlers](https://cap.cloud.sap/docs/java/provisioning-api) such as the [Custom business logic for the Admin Service](srv/src/main/java/my/bookshop/handlers/AdminServiceHandler.java)
-- [Value Help](https://cap.cloud.sap/docs/cds/annotations#odata) for [Books](app/orders/fiori-service.cds) and [Authors](app/common.cds)
+- [Localized Messages](https://cap.cloud.sap/docs/java/provisioning-api#indicating-errors) in the [Admin Service Event Handler](srv/src/main/java/my/bookshop/handlers/AdminServiceHandler.java)
 
 UI related Features
 
 - Support for SAP [Fiori Elements](https://cap.cloud.sap/docs/guides/fiori/#fiori-draft-support)
 - [Fiori Draft based Editing](https://cap.cloud.sap/docs/guides/fiori/#fiori-draft-support) for [Books and Authors](srv/admin-service.cds)
+- [Fiori annotations](https://cap.cloud.sap/docs/guides/fiori/#fiori-annotations) specific for [Browse Books](app/browse/fiori-service.cds), [Manage Books](app/admin/fiori-service.cds), [Manage Orders](app/orders/fiori-service.cds) and [common annotations](app/common.cds) which apply to all UI's
+- [Value Help](https://cap.cloud.sap/docs/cds/annotations#odata) for [Books](app/orders/fiori-service.cds) and [Authors](app/common.cds)
+- [Model Localization](https://cap.cloud.sap/docs/guides/i18n) for [English](app/_i18n/i18n.properties) and [German](app/_i18n/i18n_de.properties) language for static texts
 
 
 # Getting Started
