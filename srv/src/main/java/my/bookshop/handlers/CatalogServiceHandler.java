@@ -17,6 +17,12 @@ import com.sap.cds.services.persistence.PersistenceService;
 import cds.gen.catalogservice.Books;
 import cds.gen.catalogservice.CatalogService_;
 
+/**
+ * Custom business logic for the "Catalog Service" (see cat-service.cds)
+ *
+ * Handles Reading of Books
+ * Adds Discount Message to the Book Title if too much stock is available
+ */
 @Component
 @ServiceName(CatalogService_.CDS_NAME)
 public class CatalogServiceHandler implements EventHandler {

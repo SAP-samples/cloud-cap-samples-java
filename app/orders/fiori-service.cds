@@ -1,3 +1,7 @@
+/*
+  Annotations for the Manage Orders App
+*/
+
 using AdminService from '../../srv/admin-service';
 
 annotate AdminService.Books with {

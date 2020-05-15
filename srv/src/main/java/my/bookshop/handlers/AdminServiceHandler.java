@@ -71,7 +71,9 @@ public class AdminServiceHandler implements EventHandler {
 	}
 
 	/**
-	 * Finish an order
+	 * Validate correctness of an order before finishing the order proces:
+	 * 1. Check Order amount for each Item and return a message if amount is empty or <= 0
+	 * 2. Check Order amount for each Item is available, return message if the stock is too low
 	 *
 	 * @param orders
 	 */
@@ -81,7 +83,7 @@ public class AdminServiceHandler implements EventHandler {
 			// reset total
 			order.setTotal(BigDecimal.valueOf(0));
 			order.getItems().forEach(orderItem -> {
-				// validation of the request
+				// validation of the Order creation request
 				Integer amount = orderItem.getAmount();
 				if (amount == null || amount <= 0) {
 					// exceptions with localized messages from property files
@@ -92,12 +94,12 @@ public class AdminServiceHandler implements EventHandler {
 
 				String bookId = orderItem.getBookId();
 				if (bookId == null) {
-					// using static text without localization is still possible in exceptions and messages
+					// Tip: using static text without localization is still possible in exceptions and messages
 					throw new ServiceException(ErrorStatuses.BAD_REQUEST, "You have to specify the book to order");
 				}
 
 				// calculate the actual amount difference
-				// FIXME this should handle book changes
+				// FIXME this should handle book changes, currently only amount changes are handled
 				int diffAmount = amount - db.run(Select.from(Bookshop_.ORDER_ITEMS).columns(i -> i.amount()).byId(orderItem.getId()))
 											.first(OrderItems.class).map(i -> i.getAmount()).orElse(0);
 
@@ -105,7 +107,7 @@ public class AdminServiceHandler implements EventHandler {
 				Result result = db.run(Select.from(BOOKS).columns(b -> b.ID(), b -> b.stock(), b -> b.price()).byId(bookId));
 				Books book = result.first(Books.class).orElseThrow(notFound(MessageKeys.BOOK_MISSING));
 				if (book.getStock() < diffAmount) {
-					// you can also use parameters in your messages
+					// Tip: you can have localized messages and use parameters in your messages
 					throw new ServiceException(ErrorStatuses.BAD_REQUEST, MessageKeys.BOOK_REQUIRE_STOCK, book.getStock());
 				}
 
@@ -124,7 +126,7 @@ public class AdminServiceHandler implements EventHandler {
 	}
 
 	/**
-	 * Calculate the net amount and total preview updated while editing an order
+	 * Calculate the total order value preview when editing an order item
 	 *
 	 * @param context
 	 * @param orderItem
@@ -134,7 +136,6 @@ public class AdminServiceHandler implements EventHandler {
 		// check if amount or book was updated
 		Integer amount = orderItem.getAmount();
 		String bookId = orderItem.getBookId();
-		// FIXME analyze full CqnUpdate instead of only the ref once available
 		String orderItemId = (String) analyzer.analyze(context.getCqn().ref()).targetKeys().get(OrderItems.ID);
 		BigDecimal netAmount = calculateNetAmountInDraft(orderItemId, amount, bookId);
 		if (netAmount != null) {
@@ -143,7 +144,7 @@ public class AdminServiceHandler implements EventHandler {
 	}
 
 	/**
-	 * Calculate total preview when an order item is deleted
+	 * Calculate the total order value preview when deleting an order item from the order
 	 *
 	 * @param context
 	 */
@@ -185,7 +186,7 @@ public class AdminServiceHandler implements EventHandler {
 
 		// only warn about invalid values as we are in draft mode
 		if(amount <= 0) {
-			// additional messages with localized messages from property files
+			// Tip: add additional messages with localized messages from property files
 			// these messages are transported in sap-messages and do not abort the request
 			messages.warn(MessageKeys.AMOUNT_REQUIRE_MINIMUM);
 		}

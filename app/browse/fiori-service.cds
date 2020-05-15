@@ -1,3 +1,7 @@
+/*
+  Annotations for the Browse Books App
+*/
+
 using CatalogService from '../../srv/cat-service';
 
 ////////////////////////////////////////////////////////////////////////////
