@@ -94,7 +94,7 @@
 				<plugin>
 					<groupId>com.github.eirslett</groupId>
 					<artifactId>frontend-maven-plugin</artifactId>
-					<version>1.9.1</version>
+					<version>1.10.0</version>
 					<executions>
 						<execution>
 							<id>install-node-and-npm</id>
@@ -173,7 +173,7 @@
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>flatten-maven-plugin</artifactId>
-				<version>1.2.1</version>
+				<version>1.2.2</version>
 				<configuration>
 					<updatePomFile>true</updatePomFile>
 					<flattenMode>resolveCiFriendliesOnly</flattenMode>
