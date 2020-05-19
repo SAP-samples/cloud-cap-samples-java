@@ -26,6 +26,7 @@ entity Orders : cuid, managed {
   total    : Decimal(9,2) @readonly;
   currency : Currency;
 }
+
 entity OrderItems : cuid {
   parent    : Association to Orders;
   book      : Association to Books;
