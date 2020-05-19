@@ -18,7 +18,7 @@
 		<cds4j.version>1.9.0</cds4j.version>
 		<spring.boot.version>2.2.7.RELEASE</spring.boot.version>
 
-		<node.version>v12.16.2</node.version>
+		<node.version>v12.16.3</node.version>
 		<node.url>https://nodejs.org/dist/</node.url>
 	</properties>
 
