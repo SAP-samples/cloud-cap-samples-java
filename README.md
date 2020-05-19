@@ -23,7 +23,7 @@ The **domain models** are defined using **[CDS entity definitions](https://cap.c
 
 The data is exposed using **[CDS Service Models](https://cap.cloud.sap/docs/cds/cdl#services)**. The **OData V4 protocol adapter** translates the CDS service models into corresponding OData schemas and maps the incoming OData requests to the corresponding CDS services.
 
-Custom **busines logic** is implemented in by so called **[custom event handlers](https://cap.cloud.sap/docs/get-started/in-a-nutshell#adding-custom-logic)**, while most **CRUD requests** are served out-of-the-box.
+Custom **busines logic** is implemented by so called **[custom event handlers](https://cap.cloud.sap/docs/get-started/in-a-nutshell#adding-custom-logic)**, while most **CRUD requests** are served out-of-the-box.
 
 A **Fiori UI** is added using predefined SAP Fiori Elements templates. **[Fiori annotations](https://cap.cloud.sap/docs/guides/fiori/#fiori-annotations)** add information to the service definitions, on how to render the data.
 
