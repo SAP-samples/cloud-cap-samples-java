@@ -35,13 +35,13 @@ Framework and infrastructure-related features:
 - [Mocking users](/srv/src/main/resources/application.yaml) for local development
 - [Authentication & Authorization](https://cap.cloud.sap/docs/java/advanced#security) (including user-specific restrictions with `@restrict` in the [Admin Service](/srv/admin-service.cds))
 
-Domain model related features:
+Domain model-related features:
 
 - [CDS Query Language with a Static CDS Model](https://cap.cloud.sap/docs/java/advanced#staticmodel) in the [Admin Service](srv/src/main/java/my/bookshop/handlers/AdminServiceHandler.java)
 - Use of [Aspects](https://cap.cloud.sap/docs/cds/cdl#aspects) in the Model Definition such as the [`managed` or `cuid` Aspect](https://cap.cloud.sap/docs/cds/common#common-reuse-aspects) in [Books](db/schema.cds)
 - [Data Localization](https://cap.cloud.sap/docs/guides/localized-data) for [Books](db/schema.cds)
 
-Service model related features:
+Service model-related features:
 
 - [Custom event handlers](https://cap.cloud.sap/docs/java/provisioning-api) such as the [Custom business logic for the Admin Service](srv/src/main/java/my/bookshop/handlers/AdminServiceHandler.java)
 - [Custom actions](https://cap.cloud.sap/docs/cds/cdl#actions) such as `addToOrder` in the [Admin Service](/srv/admin-service.cds). The Action implementation is in the [Admin Service Event Handler](srv/src/main/java/my/bookshop/handlers/AdminServiceHandler.java)
@@ -89,9 +89,9 @@ Try it out using the following URLs:
 
 You'll start with an empty stock of books as this procedure starts the bookshop application with an empty in-memory SQLite database.
 
-Log in with one of the two mock users that are pre-defined for local development:
+Log in with one of the two mock users that are predefined for local development:
   - To browse books, login in with user: `user`, password: `user`
-  - To manage bookd and orders, log in with User: `admin`, password: `admin`
+  - To manage books and orders, log in with User: `admin`, password: `admin`
 
 ## Using Eclipse
 
