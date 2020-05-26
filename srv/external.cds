@@ -18,6 +18,15 @@ extend service external with {
     @readonly HouseNumber
   }
 
+  /**
+   * Add asynchronous eventing API
+   */
+  event BO.BusinessPartner.Changed {
+    ![KEY]: Array of {
+      BUSINESSPARTNER: String;
+    };
+  }
+
 }
 
 /**

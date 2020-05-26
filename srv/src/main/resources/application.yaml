@@ -3,6 +3,12 @@ spring:
   resources.static-locations: "file:./app"
 cds:
   odata-v4.endpoint.path: "/api"
+  services:
+    abp:
+      name: API_BUSINESS_PARTNER
+      messaging:
+        type: "s4hana"
+        topic-namespace: "sap/S4HANAOD/dkom"
   security.mock.users:
     - name: admin
       password: admin
@@ -20,7 +26,6 @@ spring:
 cds:
   services:
     abp:
-      name: API_BUSINESS_PARTNER
       serve:
         ignore: true
       destination: "s4-business-partner-api"

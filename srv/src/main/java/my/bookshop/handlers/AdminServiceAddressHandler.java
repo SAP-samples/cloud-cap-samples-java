@@ -25,7 +25,6 @@ import com.sap.cds.services.ServiceException;
 import com.sap.cds.services.cds.CdsReadEventContext;
 import com.sap.cds.services.cds.CdsService;
 import com.sap.cds.services.draft.DraftPatchEventContext;
-import com.sap.cds.services.draft.DraftService;
 import com.sap.cds.services.handler.EventHandler;
 import com.sap.cds.services.handler.annotations.Before;
 import com.sap.cds.services.handler.annotations.On;
@@ -34,10 +33,14 @@ import com.sap.cds.services.persistence.PersistenceService;
 
 import cds.gen.adminservice.AdminService_;
 import cds.gen.adminservice.Orders;
+import cds.gen.api_business_partner.ABusinessPartnerAddress;
 import cds.gen.api_business_partner.ABusinessPartnerAddress_;
 import cds.gen.api_business_partner.ApiBusinessPartner_;
+import cds.gen.my.bookshop.Addresses;
 import cds.gen.my.bookshop.Addresses_;
 import my.bookshop.MessageKeys;
+import my.bookshop.context.BusinessPartnerChangedEventContext;
+import my.bookshop.context.BusinessPartnerChangedEventContext.BoBusinessPartnerChanged.BusinessPartnerKey;
 
 /**
  * Custom handler for the Admin Service Addresses, which come from a remote S/4 System
@@ -94,7 +97,7 @@ public class AdminServiceAddressHandler implements EventHandler {
 	}
 
 	// Replicate chosen addresses from S/4 when filling orders.
-	@Before(event = DraftService.EVENT_DRAFT_PATCH)
+	@Before
 	public void patchAddressId(DraftPatchEventContext context, Stream<Orders> orders) {
 		String businessPartner = context.getUserInfo().getAttribute("businessPartner").findFirst()
 			.orElseThrow(() -> new ServiceException(ErrorStatuses.FORBIDDEN, MessageKeys.BUPA_MISSING));
@@ -117,7 +120,35 @@ public class AdminServiceAddressHandler implements EventHandler {
 				}
 			}
 		});
+	}
 
+	@On(service = ApiBusinessPartner_.CDS_NAME)
+	public void updateBusinessPartnerAddresses(BusinessPartnerChangedEventContext context) {
+		logger.info(">> received: " + context.getData().toJson());
+		for(BusinessPartnerKey key : context.getData().getKeys()) {
+			String businessPartner = key.getBusinessPartner(); // S/4 HANA's payload format
+			if(businessPartner != null) {
+				// fetch affected entries from local replicas
+				Result replicas = db.run(Select.from(addresses).where(a -> a.BusinessPartner().eq(businessPartner)));
+				if(replicas.rowCount() > 0) {
+					logger.info("Updating Addresses for BusinessPartner '{}'", businessPartner);
+					// fetch changed data from S/4 -> might be less than local due to deletes
+					Result remoteAddresses = bupa.run(Select.from(externalAddresses).columns(getRelevantColumns()).where(a -> a.BusinessPartner().eq(businessPartner)));
+					// update replicas or add tombstone if external address was deleted
+					replicas.streamOf(Addresses.class).forEach(rep -> {
+						Optional<ABusinessPartnerAddress> matching = remoteAddresses.streamOf(ABusinessPartnerAddress.class).filter(ext -> ext.getAddressID().equals(rep.getAddressID())).findFirst();
+						if(!matching.isPresent()) {
+							rep.setTombstone(true);
+						} else {
+							rep.replaceAll((k, v) -> matching.get().get(k));
+						}
+					});
+					// update local replicas with changes from S/4
+					db.run(Upsert.into(addresses).entries(replicas));
+				}
+			}
+		}
+		context.setCompleted();
 	}
 
 }

@@ -17,6 +17,9 @@
     "sqlite3": "^4.1.1"
   },
   "cds": {
+    "features": {
+      "snapi": true
+    },
     "build": {
       "target": "."
     },

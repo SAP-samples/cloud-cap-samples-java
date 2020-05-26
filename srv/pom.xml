@@ -33,6 +33,11 @@
 			</exclusions>
 		</dependency>
 
+		<dependency>
+			<groupId>com.sap.cds</groupId>
+			<artifactId>cds-adapter-messaging</artifactId>
+		</dependency>
+
 		<!-- CLOUD SDK DEPENDENCIES -->
 		<dependency>
 			<groupId>com.sap.cloud.sdk.datamodel</groupId>

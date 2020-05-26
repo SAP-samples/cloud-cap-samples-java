@@ -8,6 +8,7 @@ import java.util.stream.Collectors;
 
 import org.apache.http.client.HttpClient;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
 
 import com.sap.cds.ql.cqn.CqnElementRef;
@@ -39,18 +40,15 @@ import cds.gen.api_business_partner.ApiBusinessPartner_;
  */
 @Component
 @ServiceName(ApiBusinessPartner_.CDS_NAME)
+@ConditionalOnProperty("cds.services.abp.destination")
 public class ApiBusinessPartnerHandler implements EventHandler {
 
-	@Value("${cds.services.abp.destination:}")
+	@Value("${cds.services.abp.destination}")
 	private String destination;
 
 	@On(entity = ABusinessPartnerAddress_.CDS_NAME)
 	@SuppressWarnings("unchecked")
-	public void readBusinessPartnerAddresses(CdsReadEventContext context) {
-		if(destination == null || destination.trim().isEmpty()) {
-			return;
-		}
-
+	public List<Map<String, Object>> readBusinessPartnerAddresses(CdsReadEventContext context) {
 		List<String> queryParams = new ArrayList<>();
 
 		// get columns from CQN
@@ -100,7 +98,7 @@ public class ApiBusinessPartnerHandler implements EventHandler {
 			Map<String, Object> resultMap = result.asMap();
 			List<Map<String, Object>> resultList = (List<Map<String, Object>>) ((Map<String, Object>) resultMap.get("d")).get("results");
 			resultList.forEach(m -> m.remove("__metadata"));
-			context.setResult(resultList);
+			return resultList;
 		} catch (ODataServiceException e) {
 			throw new ServiceException(ErrorStatuses.SERVER_ERROR, "Could not query BusinessPartner API", e);
 		}
