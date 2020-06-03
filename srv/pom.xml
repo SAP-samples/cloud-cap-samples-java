@@ -24,12 +24,6 @@
 		<dependency>
 			<groupId>com.sap.cds</groupId>
 			<artifactId>cds-starter-cloudfoundry</artifactId>
-			<exclusions>
-				<exclusion>
-					<groupId>com.sap.cds</groupId>
-					<artifactId>cds-feature-mt</artifactId>
-				</exclusion>
-			</exclusions>
 		</dependency>
 
 		<dependency>
