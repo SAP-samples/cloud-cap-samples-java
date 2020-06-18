@@ -1,0 +1,127 @@
+## Generated mta.yaml based on template version 0.2.0
+## appName = bookshop-java
+## language=java; multiTenant=false
+## approuter=
+_schema-version: '3.1'
+ID: bookshop-java-mg
+version: 1.0.0
+description: "Bookshop using CAP Java NG"
+parameters:
+  enable-parallel-deployments: true
+build-parameters:
+  before-all:
+   - builder: custom
+     commands:
+      - npm install
+
+modules:
+ # --------------------- SERVER MODULE ------------------------
+ - name: bookshop-java-srv-mg
+ # ------------------------------------------------------------
+   type: java
+   path: srv
+   properties:
+     EXIT: 1  # required by deploy.js task to terminate
+     CDS_MULTITENANCY_APPUI_TENANTSEPARATOR: "-"
+   build-parameters:
+      builder: custom
+      commands:
+        - mvn clean package -DskipTests=true -P !local -P mt-hana-managed
+      build-result: "target/*.[wj]ar"
+   requires:
+    - name: service-manager-mg
+    - name: xsuaa-mg
+    - name: db-mg
+      properties:
+        CDS_MULTITENANCY_DEPLOYER_URL: ~{url}
+    - name: hdi_credentials
+      properties:
+        CDS_MULTITENANCY_DEPLOYER_USER: ~{user}
+        CDS_MULTITENANCY_DEPLOYER_PASSWORD: ~{password}
+    - name: bookshop-java-app-mg
+      properties:
+        CDS_MULTITENANCY_APPUI_URL: ${org}-${space}-bookshop-java-srv-mg.cfapps.sap.hana.ondemand.com
+   provides:
+    - name: srv-mg
+      properties:
+        srv-url: '${default-url}'
+
+ # --------------------- DB MODULE ----------------------------
+ - name: bookshop-cap-java-db-mg
+ # ------------------------------------------------------------
+   type: nodejs #workaround because com.sap.xs.hdi-dynamic not supported by cds compiler
+   path: db
+   parameters:
+    memory: 256M
+    disk-quota: 256M
+   requires:
+    - name: saas-registry-mg
+    #       Set user and password to secure rest API via basic authentication
+    - name: hdi_credentials
+      properties:
+        hdi_dynamic_deploy_user: ~{user}
+        hdi_dynamic_deploy_password: ~{password}
+   provides:
+    - name: db-mg
+      properties:
+        url: ${default-url}
+
+ # --------------------- Application Router -------------------
+ - name: bookshop-java-app-mg
+ # ------------------------------------------------------------
+   type: nodejs
+   path: appRouter
+   parameters:
+    memory: 256M
+    disk-quota: 256M
+   properties:
+    TENANT_HOST_PATTERN: ^(.*).${default-uri}
+   requires:
+    - name: srv-mg
+      group: destinations
+      properties:
+        name: backend
+        url: ~{srv-url}
+        forwardAuthToken: true
+    - name: xsuaa-mg
+    - name: saas-registry-mg
+
+ # --------------------- RESSOURCES ---------------------------
+resources:
+ # ------------------------------------------------------------
+ - name: xsuaa-mg
+   type: com.sap.xs.uaa
+   parameters:
+      path: ./security.json
+      service-plan: broker
+      config:
+        xsappname: bookshop-cap-java-mg-${org}-${space}
+
+ - name: service-manager-mg
+   type: org.cloudfoundry.managed-service
+   parameters:
+      # service: service-manager
+      # service-plan: container
+      service: managed-hana
+      service-plan: hdi-shared
+
+ - name: saas-registry-mg
+   type: org.cloudfoundry.managed-service
+   parameters:
+    service: saas-registry
+    service-plan: application
+    config:
+      appName: my-bookshop-mg-${org}-${space}
+      xsappname: bookshop-cap-java-mg-${org}-${space}
+      appUrls:
+        getDependencies: ~{srv-mg/srv-url}/mt/v1.0/subscriptions/dependencies
+        onSubscription: ~{srv-mg/srv-url}/mt/v1.0/subscriptions/tenants/{tenantId}
+      # # Provider Tenant ID = Provider Subaccount ID
+      # providerTenantId : f33c931e-5cea-4fd9-8d4c-42cca0bf39ee
+   requires:
+    - name: srv-mg
+
+ - name: hdi_credentials
+   properties:
+    user: ${generated-user}
+    password: ${generated-password}

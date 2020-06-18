@@ -1,0 +1,15 @@
+{
+    "authenticationMethod": "route",
+    "routes": [
+      {
+        "source": "(/.*)/com.sap.model.bookshop.CatalogServiceSecured(/.*)",
+        "authenticationType": "xsuaa",
+        "destination": "backend"
+      },
+      {
+        "source": "^/(.*)$",
+        "authenticationType": "none",
+        "destination": "backend"
+      }
+    ]
+  }

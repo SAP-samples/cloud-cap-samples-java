@@ -16,7 +16,7 @@
 
 		<!-- DEPENDENCIES VERSION -->
 		<jdk.version>1.8</jdk.version>
-		<cds.services.version>1.6.0</cds.services.version>
+		<cds.services.version>1.7.0-SNAPSHOT</cds.services.version>
 		<cds4j.version>1.10.0</cds4j.version>
 		<spring.boot.version>2.2.6.RELEASE</spring.boot.version>
 

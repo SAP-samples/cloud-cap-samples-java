@@ -1,0 +1,20 @@
+{
+  "xsappname": "bookshop-cap-java-mg",
+  "tenant-mode": "shared",
+  "scopes": [
+    {
+        "name": "$XSAPPNAME.mtcallback",
+        "description": "Multi Tenancy Callback Access",
+        "grant-as-authority-to-apps": [
+            "$XSAPPNAME(application,sap-provisioning,tenant-onboarding)"
+        ]
+    },
+    {
+        "name": "$XSAPPNAME.mtdeployment",
+        "description": "Scope to trigger a re-deployment of the database artifacts"
+    }
+],
+"authorities": [
+    "$XSAPPNAME.mtdeployment"
+]
+}
