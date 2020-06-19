@@ -8,6 +8,7 @@ version: 1.0.0
 description: "Bookshop using CAP Java NG"
 parameters:
   enable-parallel-deployments: true
+  cf-domain: cfapps.sap.hana.ondemand.com
 build-parameters:
   before-all:
    - builder: custom
@@ -26,7 +27,7 @@ modules:
    build-parameters:
       builder: custom
       commands:
-        - mvn clean package -DskipTests=true -P !local -P mt-hana-managed
+        - mvn clean package -DskipTests=true -P
       build-result: "target/*.[wj]ar"
    requires:
     - name: service-manager-mg
@@ -40,7 +41,7 @@ modules:
         CDS_MULTITENANCY_DEPLOYER_PASSWORD: ~{password}
     - name: bookshop-java-app-mg
       properties:
-        CDS_MULTITENANCY_APPUI_URL: ${org}-${space}-bookshop-java-srv-mg.cfapps.sap.hana.ondemand.com
+        CDS_MULTITENANCY_APPUI_URL: ${org}-${space}-bookshop-java-srv-mg.${cf-domain}
    provides:
     - name: srv-mg
       properties:
@@ -74,6 +75,9 @@ modules:
    parameters:
     memory: 256M
     disk-quota: 256M
+    keep-existing-routes: true
+    routes:
+        - route: testmultitenancy-bookshop-java-srv-mg-${org}-${space}.${cf-domain}      # PaaS tenant
    properties:
     TENANT_HOST_PATTERN: ^(.*).${default-uri}
    requires:

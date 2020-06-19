@@ -1,9 +1,13 @@
 {
 	"name": "db",
 	"dependencies": {
-		"@sap/hdi-dynamic-deploy": "1.5.9"
+		"@sap/hdi-deploy": "^3.8.2"
+	},
+	"engines": {
+		"node": "^8"
 	},
 	"scripts": {
-		"start": "node node_modules/@sap/hdi-dynamic-deploy/"
+		"postinstall": "node .build.js",
+		"start": "node node_modules/@sap/hdi-deploy/deploy.js"
 	}
 }
