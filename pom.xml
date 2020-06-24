@@ -16,12 +16,10 @@
 
 		<!-- DEPENDENCIES VERSION -->
 		<jdk.version>1.8</jdk.version>
-		<cds.services.version>1.6.0</cds.services.version>
-		<cds4j.version>1.10.0</cds4j.version>
-		<spring.boot.version>2.2.6.RELEASE</spring.boot.version>
+		<cds.services.version>1.7.0-SNAPSHOT</cds.services.version>
+		<spring.boot.version>2.3.1.RELEASE</spring.boot.version>
 
 		<node.version>v12.16.2</node.version>
-		<node.url>https://nodejs.org/dist/</node.url>
 	</properties>
 
 	<modules>
@@ -51,102 +49,6 @@
 	</dependencyManagement>
 
 	<build>
-		<pluginManagement>
-			<plugins>
-				<!-- STEPS TO GENERATE CDS ARTIFACTS WITH AVAILABLE NODE/NPM -->
-				<plugin>
-					<groupId>org.codehaus.mojo</groupId>
-					<artifactId>exec-maven-plugin</artifactId>
-					<version>1.6.0</version>
-					<executions>
-						<execution>
-							<id>cds build</id>
-							<phase>initialize</phase>
-							<goals>
-								<goal>exec</goal>
-							</goals>
-							<configuration>
-								<executable>npm</executable>
-								<arguments>
-									<argument>run</argument>
-									<argument>build</argument>
-								</arguments>
-							</configuration>
-						</execution>
-
-						<execution>
-							<id>cds schema</id>
-							<phase>initialize</phase>
-							<goals>
-								<goal>exec</goal>
-							</goals>
-							<configuration>
-								<executable>npm</executable>
-								<arguments>
-									<argument>run</argument>
-									<argument>schema</argument>
-								</arguments>
-							</configuration>
-						</execution>
-					</executions>
-				</plugin>
-
-				<!-- STEPS TO GENERATE CDS ARTIFACTS WITH EIRSLETT -->
-				<plugin>
-					<groupId>com.github.eirslett</groupId>
-					<artifactId>frontend-maven-plugin</artifactId>
-					<version>1.9.1</version>
-					<executions>
-						<execution>
-							<id>install-node-and-npm</id>
-							<phase>initialize</phase>
-							<goals>
-								<goal>install-node-and-npm</goal>
-							</goals>
-							<configuration>
-								<downloadRoot>${node.url}</downloadRoot>
-								<nodeVersion>${node.version}</nodeVersion>
-								<npmInheritsProxyConfigFromMaven>true</npmInheritsProxyConfigFromMaven>
-							</configuration>
-						</execution>
-
-						<execution>
-							<id>npm install</id>
-							<phase>initialize</phase>
-							<goals>
-								<goal>npm</goal>
-							</goals>
-							<configuration>
-								<arguments>install</arguments>
-							</configuration>
-						</execution>
-
-						<execution>
-							<id>cds build</id>
-							<phase>initialize</phase>
-							<goals>
-								<goal>npm</goal>
-							</goals>
-							<configuration>
-								<arguments>run build</arguments>
-							</configuration>
-						</execution>
-
-						<execution>
-							<id>cds schema</id>
-							<phase>initialize</phase>
-							<goals>
-								<goal>npm</goal>
-							</goals>
-							<configuration>
-								<arguments>run schema</arguments>
-							</configuration>
-						</execution>
-					</executions>
-				</plugin>
-			</plugins>
-		</pluginManagement>
-
 		<plugins>
 			<!-- JAVA VERSION -->
 			<plugin>
