@@ -160,7 +160,7 @@ To switch from the default in-memory SQLite database to a file-based SQLite data
 # Get Support
 
 Check out the CAP documentation [here](https://cap.cloud.sap).
-In case you find a bug or need support, please [open an issue in here](https://github.com/SAP-samples/cloud-cap-samples-java/issues/new).
+In case you find a bug or need support, please contact our [community](https://answers.sap.com/tags/9f13aee1-834c-4105-8e43-ee442775e5ce).
 
 # License
 
