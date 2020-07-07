@@ -10,20 +10,12 @@ service AdminService @(requires:'admin') {
   entity Orders as select from my.Orders;
 }
 
-// Deep Search
-annotate AdminService.Orders with {
-  OrderNo @Search.defaultSearchElement;
-  Items @Search.cascade;
-}
+// Deep Search Items
+annotate AdminService.Orders with @cds.search : {OrderNo, Items};
 
-annotate AdminService.OrderItems with {
-  book  @Search.cascade;
-}
+annotate AdminService.OrderItems with @cds.search : {book};
 
-annotate AdminService.Books with {
-  descr @Search.defaultSearchElement;
-  title @Search.defaultSearchElement;
-}
+annotate AdminService.Books with @cds.search : {descr, title};
 
 // Enable Fiori Draft for Orders
 annotate AdminService.Orders with @odata.draft.enabled;

@@ -1,3 +1,7 @@
+/*
+  Annotations for the Manage Books App
+*/
+
 using AdminService from '../../srv/admin-service';
 
 ////////////////////////////////////////////////////////////////////////////

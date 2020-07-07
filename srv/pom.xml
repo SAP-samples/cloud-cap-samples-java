@@ -24,12 +24,6 @@
 		<dependency>
 			<groupId>com.sap.cds</groupId>
 			<artifactId>cds-starter-cloudfoundry</artifactId>
-			<exclusions>
-				<exclusion>
-					<groupId>com.sap.cds</groupId>
-					<artifactId>cds-feature-mt</artifactId>
-				</exclusion>
-			</exclusions>
 		</dependency>
 
 		<dependency>
@@ -86,71 +80,67 @@
 				</executions>
 			</plugin>
 
-			<!-- CONFIGURE ADDITIONAL SOURCE DIRECTORY FOR GENERATED CLASSES -->
-			<plugin>
-				<groupId>org.codehaus.mojo</groupId>
-				<artifactId>build-helper-maven-plugin</artifactId>
-				<version>3.0.0</version>
-				<executions>
-					<execution>
-						<phase>generate-sources</phase>
-						<goals>
-							<goal>add-source</goal>
-						</goals>
-						<configuration>
-							<sources>
-								<source>src/gen/java</source>
-							</sources>
-						</configuration>
-					</execution>
-				</executions>
-			</plugin>
-
-			<!-- GENERATE POJO INTERFACES -->
+			<!-- STEPS TO BUILD CDS MODEL AND GENERATE POJOs -->
 			<plugin>
 				<groupId>com.sap.cds</groupId>
-				<artifactId>cds4j-maven-plugin</artifactId>
-				<version>${cds4j.version}</version>
+				<artifactId>cds-maven-plugin</artifactId>
+				<version>${cds.services.version}</version>
 				<configuration>
-					<csnFile>${project.basedir}/src/main/resources/edmx/csn.json</csnFile>
-					<outputDirectory>${project.basedir}/src/gen</outputDirectory>
-					<basePackage>cds.gen</basePackage>
-					<eventContext>true</eventContext>
-					<excludes>
-						<exclude>localized.*</exclude>
-					</excludes>
+					<nodeVersion>${node.version}</nodeVersion>
 				</configuration>
 				<executions>
 					<execution>
-						<id>cds4j-generate-model</id>
-						<phase>generate-sources</phase>
+						<id>cds.clean</id>
+						<goals>
+							<goal>clean</goal>
+						</goals>
+					</execution>
+
+					<execution>
+						<id>cds.install-node</id>
+						<goals>
+							<goal>install-node</goal>
+						</goals>
+						<configuration>
+							<skip>${cdsdk-global}</skip>
+						</configuration>
+					</execution>
+
+					<execution>
+						<id>install-cdsdk</id>
+						<goals>
+							<goal>install-cdsdk</goal>
+						</goals>
+						<configuration>
+							<skip>${cdsdk-global}</skip>
+						</configuration>
+					</execution>
+
+					<execution>
+						<id>cds.build</id>
+						<goals>
+							<goal>cds</goal>
+						</goals>
+						<configuration>
+							<commands>
+								<command>build/all --clean</command>
+
+								<command>deploy --to sqlite --dry >
+									${project.basedir}/src/main/resources/schema.sql</command>
+							</commands>
+						</configuration>
+					</execution>
+
+					<execution>
+						<id>cds.generate</id>
 						<goals>
 							<goal>generate</goal>
 						</goals>
+						<configuration>
+							<basePackage>cds.gen</basePackage>
+						</configuration>
 					</execution>
 				</executions>
-			</plugin>
-
-			<!-- CLEAN GENERATED ARTIFACTS -->
-			<plugin>
-				<artifactId>maven-clean-plugin</artifactId>
-				<version>3.1.0</version>
-				<configuration>
-					<filesets>
-						<fileset>
-							<directory>src/gen</directory>
-							<followSymlinks>false</followSymlinks>
-						</fileset>
-						<fileset>
-							<directory>src/main/resources</directory>
-							<includes>
-								<include>edmx/**</include>
-								<include>schema.sql</include>
-							</includes>
-							<followSymlinks>false</followSymlinks>
-						</fileset>
-					</filesets>
-				</configuration>
 			</plugin>
 		</plugins>
 	</build>
@@ -159,35 +149,9 @@
 		<!-- A profile that uses global installation of @sap/cds-dk -->
 		<profile>
 			<id>cdsdk-global</id>
-			<build>
-				<plugins>
-					<!-- STEPS TO GENERATE CDS ARTIFACTS IMPORTED FROM PARENT -->
-					<plugin>
-						<groupId>org.codehaus.mojo</groupId>
-						<artifactId>exec-maven-plugin</artifactId>
-						<configuration>
-							<workingDirectory>${project.basedir}/..</workingDirectory>
-						</configuration>
-					</plugin>
-				</plugins>
-			</build>
-		</profile>
-
-		<!-- The default profile that uses eirslett plugin to install and perform cds commands -->
-		<profile>
-			<id>cdsdk-local</id>
-			<activation>
-				<activeByDefault>true</activeByDefault>
-			</activation>
-			<build>
-				<plugins>
-					<!-- STEPS TO GENERATE CDS ARTIFACTS IMPORTED FROM PARENT -->
-					<plugin>
-						<groupId>com.github.eirslett</groupId>
-						<artifactId>frontend-maven-plugin</artifactId>
-					</plugin>
-				</plugins>
-			</build>
+			<properties>
+				<cdsdk-global>true</cdsdk-global>
+			</properties>
 		</profile>
 	</profiles>
 </project>
