@@ -1,0 +1,20 @@
+{
+    "build": {
+        "target": "."
+    },
+    "requires": {
+        "db": {
+            "kind": "sqlite",
+            "model": [
+                "db",
+                "srv"
+            ],
+            "credentials": {
+                "database": "sqlite.db"
+            }
+        }
+    },
+    "odata": {
+        "version": "v4"
+    }
+}
