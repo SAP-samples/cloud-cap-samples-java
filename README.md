@@ -147,7 +147,7 @@ The application comes with three predefined profiles: `default`, `sqlite`, and `
 
 - The `sqlite` profile specifies to use a persistent SQLite database from root directory of the project.
   This database needs to be created first, to ensure it’s initialized with the correct schema and with the CSV-based example data.
-  To initialize the database, simply run `cds deploy` from the project's root directory. Repeat this step, once you make changes to the CDS model.
+  To initialize the database, simply run `cds deploy --to sql:sqlite.db --no-save` from the project's root directory. Repeat this step, once you make changes to the CDS model.
 
 - When deploying the application to the CloudFoundry, the CF Java Buildpack automatically configures the `cloud` Spring profile.
   This profile doesn’t specify any datasource location. In that case CAP Java can automatically detect HANA service bindings available in the environment.
@@ -158,7 +158,7 @@ To switch from the default in-memory SQLite database to a file-based SQLite data
 
 1.  Deploy the example data stored in .csv files in the folder ``db/data`` to a file-based SQLite database by executing the command-line utility
 
-    ```cds deploy```
+    ```cds deploy --to sql:sqlite.db --no-save```
 
     from your project root folder.
 
