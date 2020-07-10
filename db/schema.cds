@@ -7,7 +7,6 @@ entity Books : cuid, managed {
   descr    : localized String(1111);
   author   : Association to Authors;
   stock    : Integer;
-  @assert.range: [0.01, 99999.00]
   price    : Decimal(9,2);
   currency : Currency;
 }

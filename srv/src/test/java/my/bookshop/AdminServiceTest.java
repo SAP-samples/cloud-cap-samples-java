@@ -1,10 +1,11 @@
 package my.bookshop;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.annotation.Resource;
 
@@ -23,6 +24,7 @@ import com.sap.cds.services.ServiceException;
 import com.sap.cds.services.draft.DraftService;
 
 import cds.gen.adminservice.AdminService_;
+import cds.gen.adminservice.Authors_;
 import cds.gen.adminservice.Orders;
 import cds.gen.adminservice.Orders_;
 
@@ -51,15 +53,21 @@ public class AdminServiceTest {
 		adminService.newDraft(Insert.into(Orders_.class).entry(Collections.emptyMap()));
 	}
 
+	@Test(expected = ServiceException.class)
+	@WithMockUser(username = "admin")
+	public void testInvalidAuthorName() {
+		Map<String, Object> data = new HashMap<>();
+		data.put("name", "little Joey");
+		adminService.run(Insert.into(Authors_.class).entry(data));
+	}
+
 	@Test
 	@WithMockUser(username = "admin")
-	public void testAuthorNameValidation() throws Exception {
-		String authorsURI = "/api/admin/Authors";
-		mockMvc.perform(post(authorsURI).content("{\"name\": \"Big Joey\"}").header("Content-Type", "application/json"))
-		.andExpect(status().isCreated());
-
-		mockMvc.perform(post(authorsURI).content("{\"name\": \"little Joey\"}").header("Content-Type", "application/json"))
-		.andExpect(status().isBadRequest());
+	public void testValidAuthorName() {
+		Map<String, Object> data = new HashMap<>();
+		data.put("name", "Big Joey");
+		Result result = adminService.run(Insert.into(Authors_.class).entry(data));
+		assertEquals(1, result.rowCount());
 	}
 
 }
