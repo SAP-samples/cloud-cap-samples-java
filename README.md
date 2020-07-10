@@ -67,6 +67,13 @@ User Interface related Features:
 - [Value Help](https://cap.cloud.sap/docs/cds/annotations#odata) for [Books](app/orders/fiori-service.cds) and [Authors](app/common.cds)
 - [Model Localization](https://cap.cloud.sap/docs/guides/i18n) for [English](app/_i18n/i18n.properties) and [German](app/_i18n/i18n_de.properties) language for static texts
 
+CDS Maven Plugin Features:
+
+- Install [Node.js](srv/pom.xml#L87) in the specified version
+- Install the latest version of [@sap/cds-dk](srv/pom.xml#L97)
+- Execute arbitrary [CDS](srv/pom.xml#L107) commands
+- [Generate](srv/pom.xml#L122) Java POJOs for type-safe access to the CDS model
+- [Clean](srv/pom.xml#L80) project from artifacts of the previous build
 
 # Getting Started
 
