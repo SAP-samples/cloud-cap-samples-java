@@ -1,6 +1,8 @@
 package my.bookshop;
 
 import static org.junit.Assert.assertNotNull;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.util.Collections;
 
@@ -8,9 +10,12 @@ import javax.annotation.Resource;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.web.servlet.MockMvc;
 
 import com.sap.cds.Result;
 import com.sap.cds.ql.Insert;
@@ -23,10 +28,14 @@ import cds.gen.adminservice.Orders_;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
+@AutoConfigureMockMvc
 public class AdminServiceTest {
 
 	@Resource(name = AdminService_.CDS_NAME)
 	private DraftService adminService;
+
+	@Autowired
+	private MockMvc mockMvc;
 
 	@Test
 	@WithMockUser(username = "admin")
@@ -40,6 +49,17 @@ public class AdminServiceTest {
 	@WithMockUser(username = "user")
 	public void testUnauthorizedAccess() {
 		adminService.newDraft(Insert.into(Orders_.class).entry(Collections.emptyMap()));
+	}
+
+	@Test
+	@WithMockUser(username = "admin")
+	public void testAuthorNameValidation() throws Exception {
+		String authorsURI = "/api/admin/Authors";
+		mockMvc.perform(post(authorsURI).content("{\"name\": \"Big Joey\"}").header("Content-Type", "application/json"))
+		.andExpect(status().isCreated());
+
+		mockMvc.perform(post(authorsURI).content("{\"name\": \"little Joey\"}").header("Content-Type", "application/json"))
+		.andExpect(status().isBadRequest());
 	}
 
 }
