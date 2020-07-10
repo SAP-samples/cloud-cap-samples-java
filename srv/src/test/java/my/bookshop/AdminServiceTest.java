@@ -4,8 +4,6 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
 import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
 
 import javax.annotation.Resource;
 
@@ -22,6 +20,7 @@ import com.sap.cds.services.ServiceException;
 import com.sap.cds.services.draft.DraftService;
 
 import cds.gen.adminservice.AdminService_;
+import cds.gen.adminservice.Authors;
 import cds.gen.adminservice.Authors_;
 import cds.gen.adminservice.Orders;
 import cds.gen.adminservice.Orders_;
@@ -51,17 +50,17 @@ public class AdminServiceTest {
 	@Test(expected = ServiceException.class)
 	@WithMockUser(username = "admin")
 	public void testInvalidAuthorName() {
-		Map<String, Object> data = new HashMap<>();
-		data.put("name", "little Joey");
-		adminService.run(Insert.into(Authors_.class).entry(data));
+		Authors author = Authors.create();
+		author.setName("little Joey");
+		adminService.run(Insert.into(Authors_.class).entry(author));
 	}
 
 	@Test
 	@WithMockUser(username = "admin")
 	public void testValidAuthorName() {
-		Map<String, Object> data = new HashMap<>();
-		data.put("name", "Big Joey");
-		Result result = adminService.run(Insert.into(Authors_.class).entry(data));
+		Authors author = Authors.create();
+		author.setName("Big Joey");
+		Result result = adminService.run(Insert.into(Authors_.class).entry(author));
 		assertEquals(1, result.rowCount());
 	}
 
