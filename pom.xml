@@ -16,9 +16,10 @@
 
 		<!-- DEPENDENCIES VERSION -->
 		<jdk.version>1.8</jdk.version>
-		<cds.services.version>1.6.0</cds.services.version>
+		<cds.services.version>1.8.0-SNAPSHOT</cds.services.version>
 		<cds4j.version>1.10.0</cds4j.version>
 		<spring.boot.version>2.2.6.RELEASE</spring.boot.version>
+		<ngdbc.version>2.4.76</ngdbc.version>
 
 		<node.version>v12.16.2</node.version>
 		<node.url>https://nodejs.org/dist/</node.url>
@@ -47,8 +48,52 @@
 				<type>pom</type>
 				<scope>import</scope>
 			</dependency>
+
+			<!-- HANA -->
+			<dependency>
+				<groupId>com.sap.cloud.db.jdbc</groupId>
+				<artifactId>ngdbc</artifactId>
+				<version>${ngdbc.version}</version>
+			</dependency>
 		</dependencies>
 	</dependencyManagement>
+
+	<profiles>
+		<!-- Local development, enables dynamic switching between SQLite and HANA -->
+		<profile>
+			<id>local</id>
+			<activation>
+				<activeByDefault>true</activeByDefault>
+			</activation>
+			<dependencies>
+				<dependency>
+					<groupId>org.xerial</groupId>
+					<artifactId>sqlite-jdbc</artifactId>
+				</dependency>
+
+				<dependency>
+					<groupId>org.springframework.boot</groupId>
+					<artifactId>spring-boot-starter-security</artifactId>
+				</dependency>
+
+				<dependency>
+					<groupId>com.sap.cds</groupId>
+					<artifactId>cds-framework-spring-boot</artifactId>
+				</dependency>
+			</dependencies>
+		</profile>
+
+		<!-- HANA Service Manager -->
+		<profile>
+			<id>mt-hana-managed</id>
+			<dependencies>
+				<dependency>
+					<groupId>com.sap.cloud.db.jdbc</groupId>
+					<artifactId>ngdbc</artifactId>
+				</dependency>
+			</dependencies>
+		</profile>
+	</profiles>
 
 	<build>
 		<pluginManagement>

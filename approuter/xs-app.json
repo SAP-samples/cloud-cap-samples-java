@@ -1,0 +1,15 @@
+{
+	"authenticationMethod": "route",
+	"routes": [
+	  {
+		"source": "(/.*)/admin(/.*)",
+		"authenticationType": "xsuaa",
+		"destination": "backend"
+	  },
+	  {
+		"source": "^/(.*)$",
+		"authenticationType": "none",
+		"destination": "backend"
+	  }
+	]
+}
