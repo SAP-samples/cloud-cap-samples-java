@@ -17,7 +17,7 @@ import org.springframework.test.web.servlet.MockMvc;
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @AutoConfigureMockMvc
-public class CatalogServiceTest {
+public class CatalogServiceITest {
 
 	private static final String booksURI = "/api/browse/Books";
 
