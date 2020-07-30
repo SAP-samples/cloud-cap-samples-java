@@ -19,7 +19,7 @@ modules:
         - mvn clean package -DskipTests=true -P !local -P mt-hana-managed
       build-result: target/*.jar
     requires:
-      - name: bookshop-java-public-service-manager
+      - name: bookshop-java-service-manager
       - name: bookshop-java-public-uaa
       - name: hdi_credentials
         properties:
@@ -85,7 +85,7 @@ resources:
       path: ./cds-security.json
       config: # override xsappname in security.json, xsappname needs to be unique
         xsappname: bookshop-java-public-${org}-${space}
-  - name: bookshop-java-public-service-manager
+  - name: bookshop-java-service-manager
     type: org.cloudfoundry.managed-service
     parameters:
       service: service-manager

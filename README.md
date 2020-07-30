@@ -168,6 +168,18 @@ To switch from the default in-memory SQLite database to a file-based SQLite data
 
 2.  Edit your Run Configuration via **Run** > **Run Configurations...** and select enter the **Profile** `sqlite` on tab **Spring** and click **Run**.
 
+## Deploy to SAP Cloud Platform
+
+Prerequisistes:
+- Install the "MultiApps Archive Builder", the mbt tool:
+`npm install -g mbt`
+- Install the [Cloud Foundry Command Line Interface](https://docs.cloudfoundry.org/cf-cli/install-go-cli.html)
+- Get a Cloud Platform account to deploy the services and applications
+
+1. Run `mbt build`
+2. Run `cf login`
+3. Run `cf deploy mta_archives/bookshop-java-public_1.0.0.mtar -e mt.mtaext`
+
 # Get Support
 
 Check out the documentation at [https://cap.cloud.sap](https://cap.cloud.sap).

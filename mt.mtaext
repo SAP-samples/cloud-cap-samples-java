@@ -7,8 +7,6 @@ modules:
   - name: bookshop-java-public-srv
     properties:
       # this is the separator between the subdomain name and the base URL
-      # in canary the structure is subdomain-hostname
-      # in production it is subdomain.hostname
       CDS_MULTITENANCY_APPUI_TENANTSEPARATOR: "-"
   - name: bookshop-java-public-approuter
     properties:
