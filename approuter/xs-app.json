@@ -4,6 +4,7 @@
 	"routes": [
 	  {
 		"source": "^/app/(.*)$",
+		"target": "$1", 
 		"localDir": "resources",
 		"cacheControl": "no-cache, no-store, must-revalidate",
 		"authenticationType": "xsuaa"
