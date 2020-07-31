@@ -1,9 +1,9 @@
 {
-	"name": "db",
-	"dependencies": {
-		"@sap/hdi-dynamic-deploy": "^1.7.1"
-	},
-	"scripts": {
-		"start": "node node_modules/@sap/hdi-dynamic-deploy/"
-	}
+				"name": "deploy",
+				"dependencies": {
+								"@sap/hdi-deploy": "^3.11.11"
+				},
+				"scripts": {
+								"start": "node node_modules/@sap/hdi-deploy/deploy.js"
+				}
 }

@@ -1,19 +1,10 @@
 {
 	"xsappname": "bookshop-java-public",
-	"tenant-mode": "shared",
+	"tenant-mode": "dedicated",
 	"scopes": [
 	  {
 		"name": "$XSAPPNAME.admin",
 		"description": "admin"
-	  },
-	  {
-		"name": "$XSAPPNAME.mtcallback",
-		"description": "Multi Tenancy Callback Access",
-		"grant-as-authority-to-apps": ["$XSAPPNAME(application,sap-provisioning,tenant-onboarding)"]
-	  },
-	  {
-		  "name": "$XSAPPNAME.mtdeployment",
-		  "description": "Scope to trigger a re-deployment of the database artifacts"
 	  }
 	],
 	"attributes": [],

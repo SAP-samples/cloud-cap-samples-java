@@ -176,9 +176,18 @@ Prerequisistes:
 - Install the [Cloud Foundry Command Line Interface](https://docs.cloudfoundry.org/cf-cli/install-go-cli.html)
 - Get a Cloud Platform account to deploy the services and applications
 
-1. Run `mbt build`
-2. Run `cf login`
-3. Run `cf deploy mta_archives/bookshop-java-public_1.0.0.mtar -e mt.mtaext`
+1. Deploy as Multitenant Application:
+Rename `mta-mt.yaml` to `mta.yaml`
+Run `mbt build`
+Run `cf login`
+Run `cf deploy mta_archives/bookshop-java-public_1.0.0.mtar -e mt.mtaext`
+
+2. Deploy as Single Tenant Application
+Rename `mta-st.yaml` to `mta.yaml`
+Rename `package-st.json` in the `db` folder to `package.json`
+Run `mbt build`
+Run `cf login`
+Run `cf deploy mta_archives/bookshop-java-public_1.0.0.mtar`
 
 # Get Support
 
