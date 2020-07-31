@@ -28,13 +28,6 @@ modules:
         properties:
           CDS_MULTITENANCY_DEPLOYER_USER: ~{user}
           CDS_MULTITENANCY_DEPLOYER_PASSWORD: ~{password}
-      # url of dynamic hdi deployer
-      - name: dynamic_db_deployment
-        properties:
-          CDS_MULTITENANCY_DEPLOYER_URL: ~{url}
-      - name: app-url
-        properties:
-          CDS_MULTITENANCY_APPUI_URL: ~{url}
     provides:
       - name: srv-url
         properties:
@@ -106,7 +99,7 @@ resources:
       service: xsuaa
       service-plan: broker
       path: ./cds-security.json
-      config: # override xsappname in security.json, xsappname needs to be unique
+      config: # override xsappname in cds-security.json, xsappname needs to be unique
         xsappname: bookshop-java-public-${org}-${space}
   - name: bookshop-java-public-hdi-container
     type: org.cloudfoundry.managed-service
