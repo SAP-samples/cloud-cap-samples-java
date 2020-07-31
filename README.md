@@ -183,7 +183,7 @@ Run `mbt build`
 Run `cf login`
 Run `cf deploy mta_archives/bookshop-java-public_1.0.0.mtar -e mt.mtaext`
 Go to Cloud Foundry and subscribe to the application
-Run `cf map-route bookshop-java-public-approuter cfapps.sap.hana.ondemand.com --hostname testmultitenancy-cdsnode-cdsjava-bookshop-java-public-approuter`
+Run `cf map-route bookshop-java-public-approuter <YOUR DOMAIN> --hostname testmultitenancy-cdsnode-cdsjava-bookshop-java-public-approuter`
 
 2. Deploy as Single Tenant Application
 Rename `mta-st.yaml` to `mta.yaml`
