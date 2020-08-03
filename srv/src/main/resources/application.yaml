@@ -28,7 +28,10 @@ cds:
     abp:
       serve:
         ignore: true
-      destination: "s4-business-partner-api"
+      destination:
+        name: "s4-business-partner-api"
+        suffix: "sap/opu/odata/sap/"
+        type: "odata-v2"
 ---
 spring:
   profiles: sqlite

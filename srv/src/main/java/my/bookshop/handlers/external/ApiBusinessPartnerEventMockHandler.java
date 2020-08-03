@@ -7,7 +7,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
 
-import com.sap.cds.Struct;
 import com.sap.cds.ql.cqn.CqnAnalyzer;
 import com.sap.cds.services.EventContext;
 import com.sap.cds.services.cds.CdsService;
@@ -19,9 +18,8 @@ import com.sap.cds.services.handler.annotations.ServiceName;
 import cds.gen.api_business_partner.ABusinessPartnerAddress;
 import cds.gen.api_business_partner.ABusinessPartnerAddress_;
 import cds.gen.api_business_partner.ApiBusinessPartner_;
+import cds.gen.api_business_partner.bo.businesspartner.Changed;
 import my.bookshop.context.BusinessPartnerChangedEventContext;
-import my.bookshop.context.BusinessPartnerChangedEventContext.BoBusinessPartnerChanged;
-import my.bookshop.context.BusinessPartnerChangedEventContext.BoBusinessPartnerChanged.BusinessPartnerKey;
 
 /**
  * This class mocks the event emitting of the S/4 API
@@ -40,10 +38,10 @@ public class ApiBusinessPartnerEventMockHandler implements EventHandler {
 		String businessPartner = (String) analyzer.analyze(context.getCqn().ref()).targetKeys().get(ABusinessPartnerAddress.BUSINESS_PARTNER);
 
 		// Construct S/4 HANA Payload
-		BoBusinessPartnerChanged eventData = Struct.create(BoBusinessPartnerChanged.class);
-		BusinessPartnerKey eventBupaKey = Struct.create(BusinessPartnerKey.class);
-		eventBupaKey.setBusinessPartner(businessPartner);
-		eventData.setKeys(Arrays.asList(eventBupaKey));
+		Changed eventData = Changed.create();
+		Changed.Key eventBupaKey = Changed.Key.create();
+		eventBupaKey.setBusinesspartner(businessPartner);
+		eventData.setKey(Arrays.asList(eventBupaKey));
 
 		// Emit Changed Event
 		logger.info("<< emitting: " + eventData.toJson());
