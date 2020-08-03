@@ -111,8 +111,8 @@ resources:
   - name: bookshop-java-public-service-manager
     type: org.cloudfoundry.managed-service
     parameters:
-      service: managed-hana
-      service-plan: hdi-shared
+      service: service-manager
+      service-plan: container
   - name: bookshop-java-public-saas-registry
     type: org.cloudfoundry.managed-service
     parameters:
