@@ -1,5 +1,6 @@
 package my.bookshop.handlers;
 
+import java.time.Duration;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -30,6 +31,9 @@ import com.sap.cds.services.handler.annotations.Before;
 import com.sap.cds.services.handler.annotations.On;
 import com.sap.cds.services.handler.annotations.ServiceName;
 import com.sap.cds.services.persistence.PersistenceService;
+import com.sap.cloud.sdk.cloudplatform.resilience.ResilienceConfiguration;
+import com.sap.cloud.sdk.cloudplatform.resilience.ResilienceConfiguration.TimeLimiterConfiguration;
+import com.sap.cloud.sdk.cloudplatform.resilience.ResilienceDecorator;
 
 import cds.gen.adminservice.AdminService_;
 import cds.gen.adminservice.Orders;
@@ -80,7 +84,7 @@ public class AdminServiceAddressHandler implements EventHandler {
 		Select<?> select = Select.from(externalAddresses).where(a -> a.BusinessPartner().eq(businessPartner));
 		Optional<CqnPredicate> where = context.getCqn().where();
 		if(where.isPresent()) {
-			select = select.where(CQL.and(select.where().get(), where.get()));
+			select.where(CQL.and(select.where().get(), where.get()));
 		}
 
 		// forward the selected columns (in Java, we cannot use our simplified projection Addresses yet)
@@ -92,7 +96,19 @@ public class AdminServiceAddressHandler implements EventHandler {
 			List<String> relevantColumnsList = Arrays.asList(getRelevantColumns());
 			select.columns(columns.stream().filter(i -> relevantColumnsList.contains(i.asValue().value().asRef().firstSegment())).collect(Collectors.toList()));
 		}
-		return bupa.run(select);
+
+		// use Cloud SDK resilience capabilities..
+		ResilienceConfiguration config = ResilienceConfiguration.of(AdminServiceAddressHandler.class)
+			.timeLimiterConfiguration(TimeLimiterConfiguration.of(Duration.ofSeconds(10)));
+
+		return ResilienceDecorator.executeSupplier(() ->  {
+			// ..to access the S/4 system in a resilient way..
+			return bupa.run(select);
+		}, config, (t) -> {
+			// ..falling back to the already replicated addresses in our own database
+			Select<?> selectDb = Select.copy(context.getCqn()).where(select.where().get());
+			return db.run(selectDb);
+		});
 	}
 
 	// Replicate chosen addresses from S/4 when filling orders.
