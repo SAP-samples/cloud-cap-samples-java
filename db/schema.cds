@@ -12,6 +12,7 @@ entity Books : cuid, managed {
 }
 
 entity Authors : cuid, managed {
+  @assert.format: '^\p{Lu}.*' // assert that name starts with a capital letter
   name         : String(111);
   dateOfBirth  : Date;
   dateOfDeath  : Date;
@@ -26,6 +27,7 @@ entity Orders : cuid, managed {
   total    : Decimal(9,2) @readonly;
   currency : Currency;
 }
+
 entity OrderItems : cuid {
   parent    : Association to Orders;
   book      : Association to Books;
