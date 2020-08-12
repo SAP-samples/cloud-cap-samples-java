@@ -12,9 +12,9 @@ Welcome to the bookshop-java project. It demonstrates how to build business appl
   - [Demonstrated Features](#demonstrated-features)
 - [Getting Started](#getting-started)
   - [Prerequisites](#prerequisites)
+  - [Clone Build & Run](#clone-build--run)
   - [Using Eclipse](#using-eclipse)
     - [Building and Running](#building-and-running)
-  - [Building and Running](#building-and-running)
   - [Database Setup and Spring Profiles](#database-setup-and-spring-profiles)
   - [Using a File-Based SQLite Database](#using-a-file-based-sqlite-database)
 - [Get Support](#get-support)
@@ -48,6 +48,7 @@ Domain Model related Features:
 
 - [CDS Query Language with a Static CDS Model](https://cap.cloud.sap/docs/java/advanced#staticmodel) in the [Admin Service](srv/src/main/java/my/bookshop/handlers/AdminServiceHandler.java)
 - Use of [Aspects](https://cap.cloud.sap/docs/cds/cdl#aspects) in the Model Definition such as the [`managed` or `cuid` Aspect](https://cap.cloud.sap/docs/cds/common#common-reuse-aspects) in [Books](db/schema.cds)
+- [Input validation](https://cap.cloud.sap/docs/cds/annotations#input-validation) using model annotation `@assert.format`
 - [Data Localization](https://cap.cloud.sap/docs/guides/localized-data) for [Books](db/schema.cds)
 
 Service Model related Features:
@@ -86,7 +87,7 @@ Make sure you have set up a development environment (that means, you’ve instal
 
 1.  Clone the project:
 
-```bash 
+```bash
   git clone https://github.com/SAP-samples/cloud-cap-samples-java.git
 ```
 
@@ -101,7 +102,7 @@ Make sure you have set up a development environment (that means, you’ve instal
 Optionally, use the following steps to import the project to Eclipse:
 
 1.  Import the project using **File > Import > Existing Maven Projects**.
-    
+
     Now, you should see the projects **bookshop** and **bookshop-parent** in the project/package explorer view.
 
 2.  In Project Explorer, change the property "Package Presentation" from "Flat" to "Hierarchical" for better understanding.
@@ -147,7 +148,7 @@ The application comes with three predefined profiles: `default`, `sqlite`, and `
 
 - The `sqlite` profile specifies to use a persistent SQLite database from root directory of the project.
   This database needs to be created first, to ensure it’s initialized with the correct schema and with the CSV-based example data.
-  To initialize the database, simply run `cds deploy` from the project's root directory. Repeat this step, once you make changes to the CDS model.
+  To initialize the database, simply run `cds deploy --to sql:sqlite.db --no-save` from the project's root directory. Repeat this step, once you make changes to the CDS model.
 
 - When deploying the application to the CloudFoundry, the CF Java Buildpack automatically configures the `cloud` Spring profile.
   This profile doesn’t specify any datasource location. In that case CAP Java can automatically detect HANA service bindings available in the environment.
@@ -158,7 +159,7 @@ To switch from the default in-memory SQLite database to a file-based SQLite data
 
 1.  Deploy the example data stored in .csv files in the folder ``db/data`` to a file-based SQLite database by executing the command-line utility
 
-    ```cds deploy```
+    ```cds deploy --to sql:sqlite.db --no-save```
 
     from your project root folder.
 

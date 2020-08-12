@@ -12,9 +12,7 @@ service AdminService @(requires:'admin') {
 
 // Deep Search Items
 annotate AdminService.Orders with @cds.search : {OrderNo, Items};
-
 annotate AdminService.OrderItems with @cds.search : {book};
-
 annotate AdminService.Books with @cds.search : {descr, title};
 
 // Enable Fiori Draft for Orders
