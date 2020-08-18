@@ -62,7 +62,7 @@ modules:
   - name: bookshop-java-public-approuter
 # ------------------------------------------------------------
     type: nodejs
-    path: approuter
+    path: app
     parameters:
       memory: 256M
       disk-quota: 512M
@@ -75,28 +75,10 @@ modules:
         forwardAuthToken: true
         strictSSL: true
     - name: bookshop-java-public-uaa
-    build-parameters:
-      requires:
-        - name: bookshop-java-public-app
-          artifacts:
-            - './*'
-          target-path: resources
     provides:
       - name: app-url
         properties:
           url: '${default-url}'
-# --------------------- UI MODULE ---------------------
-  - name: bookshop-java-public-app
-# ------------------------------------------------------
-    type: html5
-    path: app
-    build-parameters:
-      # only build initially and once fiori app changed
-      builder: custom
-      commands: 
-        - bash build.sh
-      supported-platforms: []
-      build-result: dist
 # --------------------- RESOURCES ---------------------
 resources:
 # -----------------------------------------------------

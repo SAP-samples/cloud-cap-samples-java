@@ -4,23 +4,33 @@
 	"routes": [
 	  {
 		"source": "^/app/(.*)$",
-		"target": "$1", 
-		"localDir": "resources",
 		"cacheControl": "no-cache, no-store, must-revalidate",
+		"target": "$1", 
+		"localDir": "./",
 		"authenticationType": "xsuaa"
 	  },
 	  {
-		"source": "(/.*)/webapp/(.*)$",
-		"localDir": "resources",
+		"source": "^/browse/webapp/(.*)$",
+		"localDir": "./",
 		"authenticationType": "xsuaa"
 	  },
 	  {
-		"source": "(/.*)/admin(/.*)",
+		"source": "^/admin/webapp/(.*)$",
+		"localDir": "./",
+		"authenticationType": "xsuaa"
+	  },
+	  {
+		"source": "^/orders/webapp/(.*)$",
+		"localDir": "./",
+		"authenticationType": "xsuaa"
+	  },
+	  {
+		"source": "^/api/admin/(.*)",
 		"authenticationType": "xsuaa",
 		"destination": "backend"
 	  },
 	  {
-		"source": "^/(.*)$",
+		"source": "^/api/(.*)$",
 		"authenticationType": "none",
 		"destination": "backend"
 	  }

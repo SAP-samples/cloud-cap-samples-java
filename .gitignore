@@ -24,7 +24,3 @@ hs_err*
 .DS_Store
 
 *.db
-
-#Build
-app/dist
-approuter/resources
