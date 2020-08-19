@@ -171,11 +171,10 @@ To switch from the default in-memory SQLite database to a file-based SQLite data
 ## Deploy to SAP Cloud Platform
 
 When deploying the application to the SAP Cloud Platform, it can be deployed as a single tenant application or as a multitenant application.
-Follow the Prequisites and then the step by step guide for the single or multitenant scenario in order to successfully deploy the application.
+Follow the prequisites and the step by step guide for the single or multitenant scenario in order to successfully deploy the application to the SAP Cloud Platform.
 
-Prerequisistes:
-- Install the "MultiApps Archive Builder", the mbt tool:
-`npm install -g mbt`
+Prerequisites:
+- Install the "MultiApps Archive Builder": `npm install -g mbt`
 - Install the [Cloud Foundry Command Line Interface](https://docs.cloudfoundry.org/cf-cli/install-go-cli.html)
 - Get a Cloud Platform account to deploy the services and applications
 
@@ -185,7 +184,7 @@ Rename `package-mt.json` in the `db` folder to `package.json`
 Run `mbt build`
 Run `cf login`
 Run `cf deploy mta_archives/bookshop-java-public_1.0.0.mtar -e mt.mtaext`
-Go to Cloud Foundry and subscribe to the application
+Go to another subaccount in your global account, under subscriptions and subscribe to the application you deployed
 Run `cf map-route bookshop-java-public-approuter <YOUR DOMAIN> --hostname <SUBSCRIBER TENANT>-<ORG>-<SPACE>-bookshop-java-public-approuter`
 
 2. Deploy as Single Tenant Application
