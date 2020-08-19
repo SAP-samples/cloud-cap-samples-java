@@ -4,6 +4,6 @@
 								"@sap/hdi-deploy": "^3.11.11"
 				},
 				"scripts": {
-								"hdi-deploy": "node node_modules/@sap/hdi-deploy/deploy.js -t --verbose --root ./db --exit"
+								"start": "node node_modules/@sap/hdi-deploy --exit"
 				}
 }

@@ -42,9 +42,9 @@ modules:
       disk-quota: 512M
       no-route: true
       no-start: true
-      tasks:    # execute hdi deployer on app creation/update.
+      tasks:    # execute hdi deployer on app creation/update
       - name: hdi-deploy
-        command: node node_modules/@sap/hdi-deploy/deploy.js -t --verbose --root ./db --exit
+        command: npm run start
     requires:
       # Set user and password to secure rest API via basic authentication
       - name: bookshop-java-public-hdi-container
@@ -52,10 +52,6 @@ modules:
         properties:
           hdi_dynamic_deploy_user: ~{user}
           hdi_dynamic_deploy_password: ~{password}
-    provides:
-      - name: dynamic_db_deployment
-        properties:
-          url: ${default-url}
 # --------------------- APPROUTER MODULE ---------------------
   - name: bookshop-java-public-approuter
 # ------------------------------------------------------------
