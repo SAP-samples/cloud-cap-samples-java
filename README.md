@@ -179,17 +179,16 @@ Prerequisites:
 - Get a Cloud Platform account to deploy the services and applications
 
 1. Deploy as Multitenant Application:
+Create a HANA Cloud Instance in your Cloud Platform space
 Rename `mta-mt.yaml` to `mta.yaml`
-Rename `package-mt.json` in the `db` folder to `package.json`
 Run `mbt build`
 Run `cf login`
 Run `cf deploy mta_archives/bookshop-java-public_1.0.0.mtar -e mt.mtaext`
 Go to another subaccount in your global account, under subscriptions and subscribe to the application you deployed
-Run `cf map-route bookshop-java-public-approuter <YOUR DOMAIN> --hostname <SUBSCRIBER TENANT>-<ORG>-<SPACE>-bookshop-java-public-approuter`
+Run `cf map-route bookshop-java-public-approuter <YOUR DOMAIN> --hostname <SUBSCRIBER TENANT>-<ORG>-<SPACE>-bookshop-java-public-approuter` or create and bind the route manually
 
 2. Deploy as Single Tenant Application
 Rename `mta-st.yaml` to `mta.yaml`
-Rename `package-st.json` in the `db` folder to `package.json`
 Run `mbt build`
 Run `cf login`
 Run `cf deploy mta_archives/bookshop-java-public_1.0.0.mtar`

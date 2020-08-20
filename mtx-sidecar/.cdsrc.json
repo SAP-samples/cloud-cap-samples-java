@@ -1,0 +1,51 @@
+{
+    "hana": {
+        "syntax": "hdi"
+    },
+    "build": {
+        "tasks": [
+            {
+                "for": "hana",
+                "src": "db",
+                "dest": "db",
+                "options": {
+                    "model": [
+                        "db",
+                        "srv",
+                        "app"
+                    ]
+                }
+            },
+            {
+                "for": "java-cf",
+                "src": "srv",
+                "dest": "java",
+                "options": {
+                    "model": [
+                        "srv"
+                    ]
+                }
+            }
+        ]
+    },
+    "odata": {
+        "version": "v4"
+    },
+    "requires": {
+        "db": {
+            "kind": "hana",
+            "multiTenant": true,
+            "vcap": {
+				"label": "service-manager"
+            }
+        },
+        "uaa": {
+            "kind": "xsuaa"
+        }
+    },
+    "auth": {
+        "passport": {
+          "strategy": "JWT"
+        }
+      }
+}

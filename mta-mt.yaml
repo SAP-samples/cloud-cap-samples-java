@@ -25,14 +25,9 @@ modules:
       - name: bookshop-java-public-service-manager
       - name: bookshop-java-public-uaa
       - name: bookshop-java-public-saas-registry
-      - name: hdi_credentials
+      - name: sidecar
         properties:
-          CDS_MULTITENANCY_DEPLOYER_USER: ~{user}
-          CDS_MULTITENANCY_DEPLOYER_PASSWORD: ~{password}
-      # url of dynamic hdi deployer
-      - name: dynamic_db_deployment
-        properties:
-          CDS_MULTITENANCY_DEPLOYER_URL: ~{url}
+          CDS_MULTITENANCY_SIDECAR_URL: ~{url}
       - name: app-url
         properties:
           CDS_MULTITENANCY_APPUI_URL: ~{url}
@@ -41,21 +36,20 @@ modules:
         properties:
           url: '${default-url}'
 # --------------------- DB MODULE ---------------------------
-  - name: bookshop-java-public-db
+  - name: bookshop-java-public-sidecar
 # -----------------------------------------------------------
     type: nodejs
-    path: db
+    path: mtx-sidecar
     parameters:
       memory: 256M
       disk-quota: 512M
+    properties:
+      SAP_JWT_TRUST_ACL: [{"clientid":"*","identityzone":"sap-provisioning"}]
     requires:
-      # Set user and password to secure rest API via basic authentication
-      - name: hdi_credentials
-        properties:
-          hdi_dynamic_deploy_user: ~{user}
-          hdi_dynamic_deploy_password: ~{password}
+      - name: bookshop-java-public-service-manager
+      - name: bookshop-java-public-uaa
     provides:
-      - name: dynamic_db_deployment
+      - name: sidecar
         properties:
           url: ${default-url}
 # --------------------- APPROUTER MODULE ---------------------
@@ -74,6 +68,12 @@ modules:
         url: ~{url}
         forwardAuthToken: true
         strictSSL: true
+    - name: sidecar
+      group: destinations
+      properties:
+        name: sidecar
+        url: ~{url}
+        forwardAuthToken: true
     - name: bookshop-java-public-uaa
     provides:
       - name: app-url
@@ -108,7 +108,3 @@ resources:
            onSubscription: ~{srv-url/url}/mt/v1.0/subscriptions/tenants/{tenantId}
     requires:
       - name: srv-url
-  - name: hdi_credentials # generate a user and password for dynamic hdi deployer
-    properties:
-      user: ${generated-user}
-      password: ${generated-password}

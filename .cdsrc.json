@@ -1,6 +1,20 @@
 {
     "build": {
-        "target": "."
+        "target": ".",
+        "tasks": [
+            {
+                "for": "java-cf",
+                "src": "srv"
+            },
+            {
+                "for": "mtx",
+                "src": ".",
+                "dest": "mtx-sidecar"
+            }
+        ]
+    },
+    "hana": {
+        "syntax": "hdi"
     },
     "requires": {
         "db": {
