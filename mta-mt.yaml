@@ -36,7 +36,7 @@ modules:
       - name: srv-url
         properties:
           url: '${default-url}'
-# --------------------- DB MODULE ---------------------------
+# --------------------- SIDECAR MODULE ---------------------------
   - name: bookshop-java-public-sidecar
 # -----------------------------------------------------------
     type: nodejs
