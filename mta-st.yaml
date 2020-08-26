@@ -87,7 +87,7 @@ resources:
   - name: bookshop-java-public-hdi-container
     type: org.cloudfoundry.managed-service
     parameters:
-      service: hanatrial
+      service: hana
       service-plan: hdi-shared
   - name: hdi_credentials # generate a user and password for dynamic hdi deployer
     properties:
