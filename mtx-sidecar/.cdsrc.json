@@ -17,7 +17,14 @@
             },
             {
                 "for": "java-cf",
-                "src": "srv"
+                "src": "srv",
+                "options": {
+                    "model": [
+                        "db",
+                        "srv",
+                        "app"
+                    ]
+                }
             }
         ]
     },
