@@ -56,12 +56,6 @@
 				<artifactId>ngdbc</artifactId>
 				<version>${ngdbc.version}</version>
 			</dependency>
-
-			<dependency>
-				<groupId>com.sap.cloud.servicesdk.spring.boot</groupId>
-				<artifactId>service-connector-hana</artifactId>
-				<version>${hana.connector.version}</version>
-			</dependency>
 		</dependencies>
 	</dependencyManagement>
 
@@ -104,12 +98,6 @@
 		<!-- HANA only -->
 		<profile>
 			<id>st-hana</id>
-			<dependencies>
-				<dependency>
-					<groupId>com.sap.cloud.servicesdk.spring.boot</groupId>
-					<artifactId>service-connector-hana</artifactId>
-				</dependency>
-			</dependencies>
 		</profile>
 	</profiles>
 	
