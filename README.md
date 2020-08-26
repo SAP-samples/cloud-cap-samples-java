@@ -45,7 +45,7 @@ Framework and Infrastructure-related Features:
 - [Authentication & Authorization](https://cap.cloud.sap/docs/java/advanced#security) (including user-specific restrictions with `@restrict` in the [Admin Service](/srv/admin-service.cds))
 - [Cloud Foundry Deployment using MTA](https://cap.cloud.sap/docs/advanced/deploy-to-cloud#deploy-using-mta) with XSUAA [Service Bindings](mta.yaml)
 - Application Router configuration including authentication via the XSUAA Service. See [package.json](approuter/package.json), [xs-app.json](approuter/xs-app.json) and [cds-security.json](cds-security.json)
-- [Multitenancy configuration](https://cap.cloud.sap/docs/java/advanced#multitenancy) via [mta.yaml](mta.yaml), [mt.mtaext](mt.mtaext)
+- [Multitenancy configuration](https://cap.cloud.sap/docs/java/multitenancy) via [mta-mt.yaml](mta-mt.yaml), [.cdsrc.json](.cdsrc.json), [sidecar module](mtx-sidecar) , [pom.xml](pom.xml#L87)
 
 Domain Model related Features:
 
@@ -178,20 +178,20 @@ Prerequisites:
 - Install the [Cloud Foundry Command Line Interface](https://docs.cloudfoundry.org/cf-cli/install-go-cli.html)
 - Get a Cloud Platform account to deploy the services and applications
 
-1. Deploy as Multitenant Application:
+Deploy as Multitenant Application:
 Create a HANA Cloud Instance in your Cloud Platform space
-Rename `mta-mt.yaml` to `mta.yaml`
-Run `mbt build`
-Run `cf login`
-Run `cf deploy mta_archives/bookshop-java-public_1.0.0.mtar`
-Go to another subaccount in your global account, under subscriptions and subscribe to the application you deployed
-Run `cf map-route bookshop-java-public-approuter <YOUR DOMAIN> --hostname <SUBSCRIBER TENANT>-<ORG>-<SPACE>-bookshop-java-public-approuter` or create and bind the route manually
+- Rename `mta-mt.yaml` to `mta.yaml`
+- Run `mbt build`
+- Run `cf login`
+- Run `cf deploy mta_archives/bookshop-java-public_1.0.0.mtar`
+- Go to another subaccount in your global account, under subscriptions and subscribe to the application you deployed
+- Run `cf map-route bookshop-java-public-approuter <YOUR DOMAIN> --hostname <SUBSCRIBER TENANT>-<ORG>-<SPACE>-bookshop-java-public-approuter` or create and bind the route manually
 
-2. Deploy as Single Tenant Application
-Rename `mta-st.yaml` to `mta.yaml`
-Run `mbt build`
-Run `cf login`
-Run `cf deploy mta_archives/bookshop-java-public_1.0.0.mtar`
+Deploy as Single Tenant Application
+- Rename `mta-st.yaml` to `mta.yaml`
+- Run `mbt build`
+- Run `cf login`
+- Run `cf deploy mta_archives/bookshop-java-public_1.0.0.mtar`
 
 # Get Support
 
