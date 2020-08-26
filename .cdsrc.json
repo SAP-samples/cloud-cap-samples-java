@@ -4,16 +4,37 @@
         "tasks": [
             {
                 "for": "java-cf",
-                "src": "srv"
+                "src": "srv",
+                "options": {
+                    "model": [
+                        "db",
+                        "srv",
+                        "app"
+                    ]
+                }
             },
             {
                 "for": "mtx",
                 "src": ".",
-                "dest": "mtx-sidecar"
+                "dest": "mtx-sidecar",
+                "options": {
+                    "model": [
+                        "db",
+                        "srv",
+                        "app"
+                    ]
+                }
             },
             {
                 "for": "hana",
-                "src": "db"
+                "src": "db",
+                "options": {
+                    "model": [
+                        "db",
+                        "srv",
+                        "app"
+                    ]
+                }
             }
         ]
     },
