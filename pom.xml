@@ -21,8 +21,6 @@
 		<ngdbc.version>2.4.76</ngdbc.version>
 		<cds.services.version>1.8.1</cds.services.version>
 		<spring.boot.version>2.3.2.RELEASE</spring.boot.version>
-		<hana.connector.version>0.0.1-20190319-123934</hana.connector.version>
-
 		<node.version>v12.16.2</node.version>
 	</properties>
 
