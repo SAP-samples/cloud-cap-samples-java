@@ -183,7 +183,7 @@ Create a HANA Cloud Instance in your Cloud Platform space
 Rename `mta-mt.yaml` to `mta.yaml`
 Run `mbt build`
 Run `cf login`
-Run `cf deploy mta_archives/bookshop-java-public_1.0.0.mtar -e mt.mtaext`
+Run `cf deploy mta_archives/bookshop-java-public_1.0.0.mtar`
 Go to another subaccount in your global account, under subscriptions and subscribe to the application you deployed
 Run `cf map-route bookshop-java-public-approuter <YOUR DOMAIN> --hostname <SUBSCRIBER TENANT>-<ORG>-<SPACE>-bookshop-java-public-approuter` or create and bind the route manually
 

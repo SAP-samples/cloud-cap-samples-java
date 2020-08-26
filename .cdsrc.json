@@ -10,11 +10,15 @@
                 "for": "mtx",
                 "src": ".",
                 "dest": "mtx-sidecar"
+            },
+            {
+                "for": "hana",
+                "src": "db"
             }
         ]
     },
     "hana": {
-        "syntax": "hdi"
+        "deploy-format": "hdbtable"
     },
     "requires": {
         "db": {

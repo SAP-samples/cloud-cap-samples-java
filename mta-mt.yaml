@@ -16,6 +16,7 @@ modules:
       buildpack: sap_java_buildpack
     properties:
       SPRING_PROFILES_ACTIVE: cloud
+      CDS_MULTITENANCY_APPUI_TENANTSEPARATOR: "-"
     build-parameters:
       builder: custom
       commands:
@@ -60,6 +61,8 @@ modules:
     parameters:
       memory: 256M
       disk-quota: 512M
+    properties:
+      TENANT_HOST_PATTERN: ^(.*)-${default-uri}
     requires:
     - name: srv-url
       group: destinations

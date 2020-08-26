@@ -1,13 +1,12 @@
 {
     "hana": {
-        "syntax": "hdi"
+        "deploy-format": "hdbtable"
     },
     "build": {
         "tasks": [
             {
                 "for": "hana",
                 "src": "db",
-                "dest": "db",
                 "options": {
                     "model": [
                         "db",
@@ -18,13 +17,7 @@
             },
             {
                 "for": "java-cf",
-                "src": "srv",
-                "dest": "java",
-                "options": {
-                    "model": [
-                        "srv"
-                    ]
-                }
+                "src": "srv"
             }
         ]
     },
@@ -42,10 +35,5 @@
         "uaa": {
             "kind": "xsuaa"
         }
-    },
-    "auth": {
-        "passport": {
-          "strategy": "JWT"
-        }
-      }
+    }
 }

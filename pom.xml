@@ -12,7 +12,7 @@
 
 	<properties>
 		<!-- OUR VERSION -->
-		<revision>1.0-SNAPSHOT</revision>
+		<revision>1.0.0-SNAPSHOT</revision>
 
 		<!-- DEPENDENCIES VERSION -->
 		<jdk.version>1.8</jdk.version>
@@ -21,6 +21,7 @@
 		<ngdbc.version>2.4.76</ngdbc.version>
 		<cds.services.version>1.8.1</cds.services.version>
 		<spring.boot.version>2.3.2.RELEASE</spring.boot.version>
+		<hana.connector.version>0.0.1-20190319-123934</hana.connector.version>
 
 		<node.version>v12.16.2</node.version>
 	</properties>
@@ -54,6 +55,12 @@
 				<groupId>com.sap.cloud.db.jdbc</groupId>
 				<artifactId>ngdbc</artifactId>
 				<version>${ngdbc.version}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>com.sap.cloud.servicesdk.spring.boot</groupId>
+				<artifactId>service-connector-hana</artifactId>
+				<version>${hana.connector.version}</version>
 			</dependency>
 		</dependencies>
 	</dependencyManagement>
@@ -90,6 +97,17 @@
 				<dependency>
 					<groupId>com.sap.cloud.db.jdbc</groupId>
 					<artifactId>ngdbc</artifactId>
+				</dependency>
+			</dependencies>
+		</profile>
+
+		<!-- HANA only -->
+		<profile>
+			<id>st-hana</id>
+			<dependencies>
+				<dependency>
+					<groupId>com.sap.cloud.servicesdk.spring.boot</groupId>
+					<artifactId>service-connector-hana</artifactId>
 				</dependency>
 			</dependencies>
 		</profile>

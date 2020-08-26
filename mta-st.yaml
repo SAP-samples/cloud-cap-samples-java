@@ -19,7 +19,7 @@ modules:
     build-parameters:
       builder: custom
       commands:
-        - mvn clean package -DskipTests=true -P !local -P mt-hana-managed
+        - mvn clean package -DskipTests=true -P !local -P st-hana
       build-result: target/*.jar
     requires:
       - name: bookshop-java-public-hdi-container
@@ -87,7 +87,7 @@ resources:
   - name: bookshop-java-public-hdi-container
     type: org.cloudfoundry.managed-service
     parameters:
-      service: hana
+      service: hanatrial
       service-plan: hdi-shared
   - name: hdi_credentials # generate a user and password for dynamic hdi deployer
     properties:
