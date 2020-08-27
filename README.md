@@ -184,7 +184,7 @@ Deploy as Single Tenant Application
 - Run `cf deploy mta_archives/bookshop-java-public_1.0.0.mtar`
 
 Deploy as Multitenant Application:
-- Create a HANA Cloud Instance in your Cloud Platform space
+- Create a HANA Cloud Instance in your SAP Cloud Platform space
 - Rename `mta-multi-tenant.yaml` to `mta.yaml`
 - Run `mbt build`
 - Run `cf login`
