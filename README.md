@@ -1,8 +1,12 @@
 <!-- omit in toc -->
 # Welcome to CAP Samples for Java
 
-Welcome to the *bookshop-java* project. It demonstrates how to build business applications using the [CAP Java SDK](https://cap.cloud.sap) by SAP. This application maintains a database of books and authors and provides a UI to browse and manage available books and orders.
+Welcome to the *bookshop-java* project. It demonstrates how to build business applications using the [CAP Java SDK](https://cap.cloud.sap) by SAP. This application maintains a database of books and authors and provides a UI to browse and manage available books and orders:
 
+![Application Overview in Fiori Launchpad](assets/readmeImages/FioriHome.jpg)
+
+<!-- omit in toc -->
+## Outline
 - [Overview](#overview)
 - [Demonstrated Features](#demonstrated-features)
 - [Getting Started](#getting-started)
@@ -17,15 +21,15 @@ Welcome to the *bookshop-java* project. It demonstrates how to build business ap
 
 # Overview
 
-This sample uses **Spring Boot** as an application framework. Although CAP Java applications aren't required to build on Spring Boot, it’s the first choice of framework, as it’s seamlessly integrated.
+This sample demonstrates how to write [*CAP Java applications*](http://cap.cloud.sap/java) in combination with the [*Spring Boot*](https://spring.io/projects/spring-boot) framework. Although CAP Java applications aren't required to build on Spring Boot, it’s the first choice of framework, as it’s seamlessly integrated.
 
-The **domain models** are defined using **[CDS entity definitions](https://cap.cloud.sap/docs/cds/cdl#entity-and-type-definitions)**. By default, data is stored in an in-memory or optionally a file-based **SQLite** database. Once productively deployed to the SAP Cloud Platform, you can easily switch to **SAP HANA**.
+By default, data is stored in an in-memory or optionally a file-based *SQLite* database. Once productively deployed to the SAP Cloud Platform, you can easily switch to *SAP HANA*.  
 
-The data is exposed using **[CDS Service Models](https://cap.cloud.sap/docs/cds/cdl#services)**. The **OData V4 protocol adapter** translates the CDS service models into corresponding OData schemas and maps the incoming OData requests to the corresponding CDS services.
+*Domain modelling* is achieved using [*CDS entity definitions*](https://cap.cloud.sap/docs/cds/cdl#entity-and-type-definitions). The public API of CAP services is defined by [*CDS service models*](https://cap.cloud.sap/docs/cds/cdl#services). Eventually, that data is exposed using the *OData V4* protocol.
 
-Custom **busines logic** is implemented in by so called **[custom event handlers](https://cap.cloud.sap/docs/get-started/in-a-nutshell#adding-custom-logic)**, while most **CRUD requests** are served out-of-the-box.
+Custom business logic is implemented by so called [*custom event handlers*](https://cap.cloud.sap/docs/get-started/in-a-nutshell#adding-custom-logic), while most *CRUD requests* are served out-of-the-box.
 
-A **Fiori UI** is added using predefined SAP Fiori Elements templates. **[Fiori annotations](https://cap.cloud.sap/docs/guides/fiori/#fiori-annotations)** add information to the service definitions, on how to render the data.
+A [*SAP UI5*](https://sapui5.hana.ondemand.com) based frontend uses predefined SAP Fiori Elements templates. [*Fiori annotations*](https://cap.cloud.sap/docs/guides/fiori/#fiori-annotations) add information to the service definitions, on how to render the data.
 
 # Demonstrated Features
 
