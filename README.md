@@ -175,7 +175,7 @@ CAP Java applications can be deployed to the SAP Cloud Platform either in single
 Prerequisites:
 - Install the [Cloud MTA Build Tool](https://sap.github.io/cloud-mta-build-tool/): `npm install -g mbt
 - Install the [Cloud Foundry Command Line Interface](https://docs.cloudfoundry.org/cf-cli/install-go-cli.html)
-- Get a Cloud Platform account to deploy the services and applications
+- Get a SAP Cloud Platform account to deploy the services and applications
 
 Deploy as Single Tenant Application
 - Rename `mta-single-tenant.yaml` to `mta.yaml`
@@ -184,7 +184,7 @@ Deploy as Single Tenant Application
 - Run `cf deploy mta_archives/bookshop-java-public_1.0.0.mtar`
 
 Deploy as Multitenant Application:
-- Create a HANA Cloud Instance in your SAP Cloud Platform space
+- Create a SAP HANA Cloud Instance in your SAP Cloud Platform space
 - Rename `mta-multi-tenant.yaml` to `mta.yaml`
 - Run `mbt build`
 - Run `cf login`
