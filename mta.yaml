@@ -20,7 +20,7 @@ modules:
     build-parameters:
       builder: custom
       commands:
-        - mvn clean package -DskipTests=true -P !local -P mt-hana-managed
+        - mvn clean package -DskipTests=true
       build-result: target/*.jar
     requires:
       - name: bookshop-java-public-service-manager
@@ -36,9 +36,9 @@ modules:
       - name: srv-url
         properties:
           url: '${default-url}'
-# --------------------- SIDECAR MODULE ---------------------------
+# --------------------- SIDECAR MODULE -----------------------
   - name: bookshop-java-public-sidecar
-# -----------------------------------------------------------
+# ------------------------------------------------------------
     type: nodejs
     path: mtx-sidecar
     parameters:
@@ -71,12 +71,6 @@ modules:
         url: ~{url}
         forwardAuthToken: true
         strictSSL: true
-    - name: sidecar
-      group: destinations
-      properties:
-        name: sidecar
-        url: ~{url}
-        forwardAuthToken: true
     - name: bookshop-java-public-uaa
     provides:
       - name: app-url

@@ -143,7 +143,7 @@ Optionally, use the following steps to import the project to Eclipse:
 
 ## Database Setup and Spring Profiles
 
-The application comes with three predefined profiles: `default`, `sqlite`, and `cloud` (see `src/main/resources/application.yaml`).
+The application comes with three predefined profiles: `default`, `sqlite`, and `cloud` (see `srv/src/main/resources/application.yaml`).
 
 - The `default` profile specifies to use an in-memory SQLite database.
   The in-memory database is set up automatically during startup of the application.
@@ -170,28 +170,26 @@ To switch from the default in-memory SQLite database to a file-based SQLite data
 
 ## Deploy to SAP Cloud Platform
 
-When deploying the application to the SAP Cloud Platform, it can be deployed as a single tenant application or as a multitenant application.
-Follow the prequisites and the step by step guide for the single or multitenant scenario in order to successfully deploy the application to the SAP Cloud Platform.
+CAP Java applications can be deployed to the SAP Cloud Platform either in single tenant or in multitenancy mode (see [Multitenancy in CAP Java](https://cap.cloud.sap/docs/java/multitenancy) for more information.
 
 Prerequisites:
-- Install the "MultiApps Archive Builder": `npm install -g mbt`
+- Install the [Cloud MTA Build Tool](https://sap.github.io/cloud-mta-build-tool/): `npm install -g mbt
 - Install the [Cloud Foundry Command Line Interface](https://docs.cloudfoundry.org/cf-cli/install-go-cli.html)
 - Get a Cloud Platform account to deploy the services and applications
-
-Deploy as Multitenant Application:
-Create a HANA Cloud Instance in your Cloud Platform space
-- Rename `mta-mt.yaml` to `mta.yaml`
-- Run `mbt build`
-- Run `cf login`
-- Run `cf deploy mta_archives/bookshop-java-public_1.0.0.mtar`
-- Go to another subaccount in your global account, under subscriptions and subscribe to the application you deployed
-- Run `cf map-route bookshop-java-public-approuter <YOUR DOMAIN> --hostname <SUBSCRIBER TENANT>-<ORG>-<SPACE>-bookshop-java-public-approuter` or create and bind the route manually
 
 Deploy as Single Tenant Application
 - Rename `mta-st.yaml` to `mta.yaml`
 - Run `mbt build`
 - Run `cf login`
 - Run `cf deploy mta_archives/bookshop-java-public_1.0.0.mtar`
+
+Deploy as Multitenant Application:
+- Create a HANA Cloud Instance in your Cloud Platform space
+- Run `mbt build`
+- Run `cf login`
+- Run `cf deploy mta_archives/bookshop-java-public_1.0.0.mtar`
+- Go to another subaccount in your global account, under subscriptions and subscribe to the application you deployed
+- Run `cf map-route bookshop-java-public-approuter <YOUR DOMAIN> --hostname <SUBSCRIBER TENANT>-<ORG>-<SPACE>-bookshop-java-public-approuter` or create and bind the route manually
 
 # Get Support
 

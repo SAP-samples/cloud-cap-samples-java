@@ -19,7 +19,7 @@ modules:
     build-parameters:
       builder: custom
       commands:
-        - mvn clean package -DskipTests=true -P !local -P st-hana
+        - mvn clean package -DskipTests=true
       build-result: target/*.jar
     requires:
       - name: bookshop-java-public-hdi-container
