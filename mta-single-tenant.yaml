@@ -24,10 +24,6 @@ modules:
     requires:
       - name: bookshop-java-public-hdi-container
       - name: bookshop-java-public-uaa
-      - name: hdi_credentials
-        properties:
-          CDS_MULTITENANCY_DEPLOYER_USER: ~{user}
-          CDS_MULTITENANCY_DEPLOYER_PASSWORD: ~{password}
     provides:
       - name: srv-url
         properties:
@@ -48,10 +44,6 @@ modules:
     requires:
       # Set user and password to secure rest API via basic authentication
       - name: bookshop-java-public-hdi-container
-      - name: hdi_credentials
-        properties:
-          hdi_dynamic_deploy_user: ~{user}
-          hdi_dynamic_deploy_password: ~{password}
 # --------------------- APPROUTER MODULE ---------------------
   - name: bookshop-java-public-approuter
 # ------------------------------------------------------------
@@ -87,9 +79,5 @@ resources:
   - name: bookshop-java-public-hdi-container
     type: org.cloudfoundry.managed-service
     parameters:
-      service: hana
+      service: hanatrial
       service-plan: hdi-shared
-  - name: hdi_credentials # generate a user and password for dynamic hdi deployer
-    properties:
-      user: ${generated-user}
-      password: ${generated-password}
