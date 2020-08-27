@@ -44,8 +44,6 @@ modules:
     parameters:
       memory: 256M
       disk-quota: 512M
-    properties:
-      SAP_JWT_TRUST_ACL: [{"clientid":"*","identityzone":"sap-provisioning"}]
     requires:
       - name: bookshop-java-public-service-manager
       - name: bookshop-java-public-uaa
