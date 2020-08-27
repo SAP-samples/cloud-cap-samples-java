@@ -20,7 +20,7 @@ modules:
       builder: custom
       commands:
         - mvn clean package -DskipTests=true
-      build-result: target/*.jar
+      build-result: target/*-exec.jar
     requires:
       - name: bookshop-java-public-hdi-container
       - name: bookshop-java-public-uaa
