@@ -43,6 +43,9 @@ Framework and Infrastructure-related Features:
 - [Application configuration](https://cap.cloud.sap/docs/java/development#application-configuration) for Spring and CDS using [application.yaml](srv/src/main/resources/application.yaml)
 - [Mocking users](/srv/src/main/resources/application.yaml) for local development
 - [Authentication & Authorization](https://cap.cloud.sap/docs/java/advanced#security) (including user-specific restrictions with `@restrict` in the [Admin Service](/srv/admin-service.cds))
+- [Cloud Foundry Deployment using MTA](https://cap.cloud.sap/docs/advanced/deploy-to-cloud#deploy-using-mta) with XSUAA [Service Bindings](mta-single-tenant.yaml)
+- Application Router configuration including authentication via the XSUAA Service. See [package.json](app/package.json), [xs-app.json](app/xs-app.json) and [cds-security.json](cds-security.json)
+- [Multitenancy configuration](https://cap.cloud.sap/docs/java/multitenancy) via [mta-multi-tenant.yaml](mta-multi-tenant.yaml), [.cdsrc.json](.cdsrc.json), [sidecar module](mtx-sidecar)
 
 Domain Model related Features:
 
@@ -140,7 +143,7 @@ Optionally, use the following steps to import the project to Eclipse:
 
 ## Database Setup and Spring Profiles
 
-The application comes with three predefined profiles: `default`, `sqlite`, and `cloud` (see `src/main/resources/application.yaml`).
+The application comes with three predefined profiles: `default`, `sqlite`, and `cloud` (see `srv/src/main/resources/application.yaml`).
 
 - The `default` profile specifies to use an in-memory SQLite database.
   The in-memory database is set up automatically during startup of the application.
@@ -164,6 +167,30 @@ To switch from the default in-memory SQLite database to a file-based SQLite data
     from your project root folder.
 
 2.  Edit your Run Configuration via **Run** > **Run Configurations...** and select enter the **Profile** `sqlite` on tab **Spring** and click **Run**.
+
+## Deploy to SAP Cloud Platform
+
+CAP Java applications can be deployed to the SAP Cloud Platform either in single tenant or in multitenancy mode (see [Multitenancy in CAP Java](https://cap.cloud.sap/docs/java/multitenancy) for more information.
+
+Prerequisites:
+- Install the [Cloud MTA Build Tool](https://sap.github.io/cloud-mta-build-tool/): `npm install -g mbt
+- Install the [Cloud Foundry Command Line Interface](https://docs.cloudfoundry.org/cf-cli/install-go-cli.html)
+- Get a SAP Cloud Platform account to deploy the services and applications
+
+Deploy as Single Tenant Application
+- Rename `mta-single-tenant.yaml` to `mta.yaml`
+- Run `mbt build`
+- Run `cf login`
+- Run `cf deploy mta_archives/bookshop-java-public_1.0.0.mtar`
+
+Deploy as Multitenant Application:
+- Create a SAP HANA Cloud Instance in your SAP Cloud Platform space
+- Rename `mta-multi-tenant.yaml` to `mta.yaml`
+- Run `mbt build`
+- Run `cf login`
+- Run `cf deploy mta_archives/bookshop-java-public_1.0.0.mtar`
+- Go to another subaccount in your global account, under subscriptions and subscribe to the application you deployed
+- Run `cf map-route bookshop-java-public-approuter <YOUR DOMAIN> --hostname <SUBSCRIBER TENANT>-<ORG>-<SPACE>-bookshop-java-public-approuter` or create and bind the route manually
 
 # Get Support
 

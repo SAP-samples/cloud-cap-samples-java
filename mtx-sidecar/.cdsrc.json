@@ -1,0 +1,46 @@
+{
+    "hana": {
+        "deploy-format": "hdbtable"
+    },
+    "build": {
+        "tasks": [
+            {
+                "for": "hana",
+                "src": "db",
+                "options": {
+                    "model": [
+                        "db",
+                        "srv",
+                        "app"
+                    ]
+                }
+            },
+            {
+                "for": "java-cf",
+                "src": "srv",
+                "options": {
+                    "model": [
+                        "db",
+                        "srv",
+                        "app"
+                    ]
+                }
+            }
+        ]
+    },
+    "odata": {
+        "version": "v4"
+    },
+    "requires": {
+        "db": {
+            "kind": "hana",
+            "multiTenant": true,
+            "vcap": {
+				"label": "service-manager"
+            }
+        },
+        "uaa": {
+            "kind": "xsuaa"
+        }
+    }
+}
