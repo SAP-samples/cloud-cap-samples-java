@@ -1,0 +1,38 @@
+{
+	"welcomeFile": "/app/fiori.html",
+	"authenticationMethod": "route",
+	"routes": [
+	  {
+		"source": "^/app/(.*)$",
+		"cacheControl": "no-cache, no-store, must-revalidate",
+		"target": "$1", 
+		"localDir": "./",
+		"authenticationType": "xsuaa"
+	  },
+	  {
+		"source": "^/browse/webapp/(.*)$",
+		"localDir": "./",
+		"authenticationType": "xsuaa"
+	  },
+	  {
+		"source": "^/admin/webapp/(.*)$",
+		"localDir": "./",
+		"authenticationType": "xsuaa"
+	  },
+	  {
+		"source": "^/orders/webapp/(.*)$",
+		"localDir": "./",
+		"authenticationType": "xsuaa"
+	  },
+	  {
+		"source": "^/api/admin/(.*)",
+		"authenticationType": "xsuaa",
+		"destination": "backend"
+	  },
+	  {
+		"source": "^/api/(.*)$",
+		"authenticationType": "none",
+		"destination": "backend"
+	  }
+	]
+}
