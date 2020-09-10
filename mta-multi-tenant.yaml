@@ -1,0 +1,105 @@
+_schema-version: '2.1'
+ID: bookshop-java-public
+version: 1.0.0
+description: "Multitenant Bookshop CAP Java Project with UI"
+parameters:
+  enable-parallel-deployments: true
+modules:
+# --------------------- SERVER MODULE ------------------------
+  - name: bookshop-java-public-srv
+# ------------------------------------------------------------
+    type: java
+    path: srv
+    parameters:
+      memory: 1024M
+      disk-quota: 256M
+      buildpack: sap_java_buildpack
+    properties:
+      SPRING_PROFILES_ACTIVE: cloud
+      CDS_MULTITENANCY_APPUI_TENANTSEPARATOR: "-"
+    build-parameters:
+      builder: custom
+      commands:
+        - mvn clean package -DskipTests=true
+      build-result: target/*-exec.jar
+    requires:
+      - name: bookshop-java-public-service-manager
+      - name: bookshop-java-public-uaa
+      - name: bookshop-java-public-saas-registry
+      - name: sidecar
+        properties:
+          CDS_MULTITENANCY_SIDECAR_URL: ~{url}
+      - name: app-url
+        properties:
+          CDS_MULTITENANCY_APPUI_URL: ~{url}
+    provides:
+      - name: srv-url
+        properties:
+          url: '${default-url}'
+# --------------------- SIDECAR MODULE -----------------------
+  - name: bookshop-java-public-sidecar
+# ------------------------------------------------------------
+    type: nodejs
+    path: mtx-sidecar
+    parameters:
+      memory: 256M
+      disk-quota: 512M
+    requires:
+      - name: bookshop-java-public-service-manager
+      - name: bookshop-java-public-uaa
+    provides:
+      - name: sidecar
+        properties:
+          url: ${default-url}
+# --------------------- APPROUTER MODULE ---------------------
+  - name: bookshop-java-public-approuter
+# ------------------------------------------------------------
+    type: nodejs
+    path: app
+    parameters:
+      memory: 256M
+      disk-quota: 512M
+    properties:
+      TENANT_HOST_PATTERN: ^(.*)-${default-uri}
+    requires:
+    - name: srv-url
+      group: destinations
+      properties:
+        name: backend
+        url: ~{url}
+        forwardAuthToken: true
+        strictSSL: true
+    - name: bookshop-java-public-uaa
+    provides:
+      - name: app-url
+        properties:
+          url: '${default-url}'
+# --------------------- RESOURCES ---------------------
+resources:
+# -----------------------------------------------------
+  - name: bookshop-java-public-uaa
+    type: com.sap.xs.uaa
+    parameters:
+      service: xsuaa
+      service-plan: broker
+      path: ./cds-security-mt.json
+      config: # override xsappname in cds-security.json, xsappname needs to be unique
+        xsappname: bookshop-java-public-${org}-${space}
+  - name: bookshop-java-public-service-manager
+    type: org.cloudfoundry.managed-service
+    parameters:
+      service: service-manager
+      service-plan: container
+  - name: bookshop-java-public-saas-registry
+    type: org.cloudfoundry.managed-service
+    parameters:
+      service: saas-registry
+      service-plan: application
+      config:
+         appName: bookshop-java-public-${org}-${space} # this is the text on the tile
+         xsappname: bookshop-java-public-${org}-${space} # this is the value from xsuaa.parameters.config.xsappname
+         appUrls:
+           getDependencies: ~{srv-url/url}/mt/v1.0/subscriptions/dependencies
+           onSubscription: ~{srv-url/url}/mt/v1.0/subscriptions/tenants/{tenantId}
+    requires:
+      - name: srv-url

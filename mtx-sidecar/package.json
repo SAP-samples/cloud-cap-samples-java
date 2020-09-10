@@ -1,0 +1,16 @@
+{
+    "name": "deploy",
+    "dependencies": {
+        "@sap/cds": "^4.1.7",
+        "@sap/cds-mtx": "^1.0.17",
+        "@sap/hdi-deploy": "^3.11.11",
+        "@sap/instance-manager": "^2.2.0",
+        "@sap/xssec": "^3.0.9",
+        "@sap/hana-client": "^2.5.105",
+        "express": "^4.17.1",
+        "passport": "^0.4.1"
+    },
+    "scripts": {
+        "start": "node server.js"
+    }
+}
