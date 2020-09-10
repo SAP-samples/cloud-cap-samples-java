@@ -1,0 +1,83 @@
+_schema-version: '2.1'
+ID: bookshop-java-public
+version: 1.0.0
+description: "Bookshop CAP Java Project with UI"
+parameters:
+  enable-parallel-deployments: true
+modules:
+# --------------------- SERVER MODULE ------------------------
+  - name: bookshop-java-public-srv
+# ------------------------------------------------------------
+    type: java
+    path: srv
+    parameters:
+      memory: 1024M
+      disk-quota: 256M
+      buildpack: sap_java_buildpack
+    properties:
+      SPRING_PROFILES_ACTIVE: cloud
+    build-parameters:
+      builder: custom
+      commands:
+        - mvn clean package -DskipTests=true
+      build-result: target/*-exec.jar
+    requires:
+      - name: bookshop-java-public-hdi-container
+      - name: bookshop-java-public-uaa
+    provides:
+      - name: srv-url
+        properties:
+          url: '${default-url}'
+# --------------------- DB MODULE ---------------------------
+  - name: bookshop-java-public-db
+# -----------------------------------------------------------
+    type: nodejs
+    path: db
+    parameters:
+      memory: 256M
+      disk-quota: 512M
+      no-route: true
+      no-start: true
+      tasks:    # execute hdi deployer on app creation/update
+      - name: hdi-deploy
+        command: npm run start
+    requires:
+      # Set user and password to secure rest API via basic authentication
+      - name: bookshop-java-public-hdi-container
+# --------------------- APPROUTER MODULE ---------------------
+  - name: bookshop-java-public-approuter
+# ------------------------------------------------------------
+    type: nodejs
+    path: app
+    parameters:
+      memory: 256M
+      disk-quota: 512M
+    requires:
+    - name: srv-url
+      group: destinations
+      properties:
+        name: backend
+        url: ~{url}
+        forwardAuthToken: true
+        strictSSL: true
+    - name: bookshop-java-public-uaa
+    provides:
+      - name: app-url
+        properties:
+          url: '${default-url}'
+# --------------------- RESOURCES ---------------------
+resources:
+# -----------------------------------------------------
+  - name: bookshop-java-public-uaa
+    type: com.sap.xs.uaa
+    parameters:
+      service: xsuaa
+      service-plan: broker
+      path: ./cds-security.json
+      config: # override xsappname in cds-security.json, xsappname needs to be unique
+        xsappname: bookshop-java-public-${org}-${space}
+  - name: bookshop-java-public-hdi-container
+    type: org.cloudfoundry.managed-service
+    parameters:
+      service: hanatrial
+      service-plan: hdi-shared
