@@ -25,7 +25,6 @@
 		<dependency>
 			<groupId>com.sap.cds</groupId>
 			<artifactId>cds-starter-cloudfoundry</artifactId>
-			<scope>runtime</scope>
 		</dependency>
 
 		<dependency>
