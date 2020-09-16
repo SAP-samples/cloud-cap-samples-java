@@ -72,3 +72,13 @@ annotate my.Authors with {
 	ID @title:'{i18n>ID}' @UI.HiddenFilter;
 	name @title:'{i18n>AuthorName}';
 }
+
+////////////////////////////////////////////////////////////////////////////
+//
+//	Fiori requires generated IDs to be annotated with @Core.Computed
+//
+using { cuid } from '@sap/cds/common';
+
+annotate cuid with {
+	ID @Core.Computed
+}
