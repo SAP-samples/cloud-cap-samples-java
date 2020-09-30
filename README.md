@@ -1,6 +1,9 @@
 <!-- omit in toc -->
 # Welcome to CAP Samples for Java
 
+![CI status](https://github.com/SAP-samples/cloud-cap-samples-java/workflows/Java%20CI%20with%20Maven/badge.svg)
+[![REUSE status](https://api.reuse.software/badge/github.com/SAP-samples/cloud-cap-samples-java)](https://api.reuse.software/info/github.com/SAP-samples/cloud-cap-samples-java)
+
 Welcome to the bookshop-java project. It demonstrates how to build business applications using the [CAP Java SDK](https://cap.cloud.sap) providing a book shop web application as an example. The application in this project enables browsing books, managing books, and managing orders.
 
 ![Application Overview in Fiori Launchpad](assets/readmeImages/FioriHome.jpg)
