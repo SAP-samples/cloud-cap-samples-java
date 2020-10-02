@@ -56,16 +56,17 @@ public class AdminServiceHandler implements EventHandler {
 	@Resource(name = AdminService_.CDS_NAME)
 	private DraftService adminService;
 
-	@Autowired
-	private PersistenceService db;
+	private final PersistenceService db;
 
-	@Autowired
-	private Messages messages;
+	private final Messages messages;
 
-	private CqnAnalyzer analyzer;
+	private final CqnAnalyzer analyzer;
 
-	@Autowired
-	public AdminServiceHandler(CdsModel model) {
+	public AdminServiceHandler(DraftService adminService, PersistenceService db, Messages messages, CdsModel model) {
+		this.adminService = adminService;
+		this.db = db;
+		this.messages = messages;
+
 		// model is a tenant-dependant model proxy
 		this.analyzer = CqnAnalyzer.create(model);
 	}
