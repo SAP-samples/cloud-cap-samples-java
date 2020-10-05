@@ -2,8 +2,11 @@ package my.bookshop.handlers;
 
 import static cds.gen.catalogservice.CatalogService_.BOOKS;
 
+import java.util.List;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import cds.gen.catalogservice.Books_;
 import org.springframework.stereotype.Component;
 
 import com.sap.cds.ql.Select;
@@ -34,14 +37,23 @@ public class CatalogServiceHandler implements EventHandler {
 
 	@After(event = CdsService.EVENT_READ)
 	public void discountBooks(Stream<Books> books) {
-		books.filter(b -> b.getTitle() != null).filter(b -> {
-			Integer stock = b.getStock();
-			if (stock == null) {
-				stock = db.run(Select.from(BOOKS).byId(b.getId()).columns(c -> c.stock())).single(Books.class).getStock();
+		books.filter(b -> b.getTitle() != null).forEach(
+			b -> {
+				loadStockIfNotSet(b);
+				discountBooksWithMoreThan111Stock(b);
 			}
-			return stock > 111;
-		})
-		.forEach(b -> b.setTitle(b.getTitle() + " -- 11% discount"));
+		);
 	}
 
+	private void discountBooksWithMoreThan111Stock(Books b) {
+		if(b.getStock() > 111) {
+			b.setTitle(String.format("%s -- 11%% discount", b.getTitle()));
+		}
+	}
+
+	private void loadStockIfNotSet(Books b) {
+		if (b.getStock()== null) {
+			b.setStock(db.run(Select.from(BOOKS).byId(b.getId()).columns(Books_::stock)).single(Books.class).getStock());
+		}
+	}
 }
