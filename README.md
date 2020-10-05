@@ -113,7 +113,6 @@ Optionally, use the following steps to import the project to Eclipse:
 
 2.  In Project Explorer, change the property "Package Presentation" from "Flat" to "Hierarchical" for better understanding.
 
-
 ### Building and Running
 
 1.  To **compile** the project, right-click the file `pom.xml` in the `bookshop-parent` project root folder and select
@@ -143,6 +142,22 @@ Optionally, use the following steps to import the project to Eclipse:
     Two mock users are defined for local development:
     - User: `user`, password: `user` to browse books
     - User: `admin`, password: `admin` to manage books and orders
+    
+## Using IntelliJ Idea (Community and Ultimate)
+
+IntelliJ can handle the project more or less out-of-the-box. Since some of the event handlers in the project rely on
+the code generated from the CDS model the build path of the project (module) needs to be extended
+with the folder containing the generated code. In order to add the generated code you need to add the 'gen' folder
+to the build path:
+
+* Open the project settings 
+* Navigate to the 'modules' section
+* Select the srv/src/gen folder and mark it as 'sources'.
+* Save and leave the project settings
+* Trigger a rebuild
+
+After the generated code is considered by IntelliJ's build the application can be handled just as any other Spring Boot
+application in IntelliJ.
 
 ## Database Setup and Spring Profiles
 

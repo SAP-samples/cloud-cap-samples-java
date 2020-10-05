@@ -10,6 +10,8 @@ target/
 .project
 .settings
 .vscode
+.idea
+*.iml
 
 node/
 node_modules/
