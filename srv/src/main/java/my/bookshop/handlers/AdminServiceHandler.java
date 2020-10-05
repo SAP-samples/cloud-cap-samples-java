@@ -11,9 +11,7 @@ import java.util.UUID;
 import java.util.function.Supplier;
 import java.util.stream.Stream;
 
-import javax.annotation.Resource;
-
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
 import com.sap.cds.Result;
@@ -53,8 +51,7 @@ import my.bookshop.MessageKeys;
 @ServiceName(AdminService_.CDS_NAME)
 public class AdminServiceHandler implements EventHandler {
 
-	@Resource(name = AdminService_.CDS_NAME)
-	private DraftService adminService;
+	private final DraftService adminService;
 
 	private final PersistenceService db;
 
@@ -62,7 +59,7 @@ public class AdminServiceHandler implements EventHandler {
 
 	private final CqnAnalyzer analyzer;
 
-	public AdminServiceHandler(DraftService adminService, PersistenceService db, Messages messages, CdsModel model) {
+	public AdminServiceHandler(@Qualifier(AdminService_.CDS_NAME) DraftService adminService, PersistenceService db, Messages messages, CdsModel model) {
 		this.adminService = adminService;
 		this.db = db;
 		this.messages = messages;
