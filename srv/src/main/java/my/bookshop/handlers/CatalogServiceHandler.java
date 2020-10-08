@@ -2,8 +2,6 @@ package my.bookshop.handlers;
 
 import static cds.gen.catalogservice.CatalogService_.BOOKS;
 
-import java.util.List;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import cds.gen.catalogservice.Books_;
