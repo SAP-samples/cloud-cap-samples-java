@@ -50,7 +50,7 @@ public class CatalogServiceHandler implements EventHandler {
 	}
 
 	private void loadStockIfNotSet(Books b) {
-		if (b.getStock()== null) {
+		if (b.getStock() == null) {
 			b.setStock(db.run(Select.from(BOOKS).byId(b.getId()).columns(Books_::stock)).single(Books.class).getStock());
 		}
 	}
