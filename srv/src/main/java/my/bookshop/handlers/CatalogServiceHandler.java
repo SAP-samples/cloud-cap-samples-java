@@ -24,11 +24,11 @@ import cds.gen.catalogservice.CatalogService_;
  */
 @Component
 @ServiceName(CatalogService_.CDS_NAME)
-public class CatalogServiceHandler implements EventHandler {
+class CatalogServiceHandler implements EventHandler {
 
 	private final PersistenceService db;
 
-	public CatalogServiceHandler(PersistenceService db) {
+	CatalogServiceHandler(PersistenceService db) {
 		this.db = db;
 	}
 

@@ -49,7 +49,7 @@ import my.bookshop.MessageKeys;
  */
 @Component
 @ServiceName(AdminService_.CDS_NAME)
-public class AdminServiceHandler implements EventHandler {
+class AdminServiceHandler implements EventHandler {
 
 	private final DraftService adminService;
 
@@ -59,7 +59,7 @@ public class AdminServiceHandler implements EventHandler {
 
 	private final CqnAnalyzer analyzer;
 
-	public AdminServiceHandler(@Qualifier(AdminService_.CDS_NAME) DraftService adminService, PersistenceService db, Messages messages, CdsModel model) {
+	AdminServiceHandler(@Qualifier(AdminService_.CDS_NAME) DraftService adminService, PersistenceService db, Messages messages, CdsModel model) {
 		this.adminService = adminService;
 		this.db = db;
 		this.messages = messages;

@@ -14,7 +14,7 @@ import com.sap.cds.services.mt.MtUnsubscribeEventContext;
 @Component
 @Profile("cloud")
 @ServiceName(MtSubscriptionService.DEFAULT_NAME)
-public class SubscriptionHandler implements EventHandler {
+class SubscriptionHandler implements EventHandler {
 
 	@Before(event = MtSubscriptionService.EVENT_UNSUBSCRIBE)
 	public void beforeUnsubscribe(MtUnsubscribeEventContext context) {
