@@ -19,11 +19,11 @@
 		},
 		{
 			"name": "$XSAPPNAME.ExtendCDS",
-			"description": "Extend tenant models"
+			"description": "Extend your own tenant's models"
 		},
 		{
 			"name": "$XSAPPNAME.ExtendCDSdelete",
-			"description": "Undeploy extensions"
+			"description": "Undeploy your own tenant's extensions"
 		}
 	],
 	"attributes": [],
