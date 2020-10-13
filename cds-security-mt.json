@@ -35,6 +35,22 @@
 				"$XSAPPNAME.admin"
 			],
 			"attribute-references": []
+		},
+		{
+			"name": "Extension_Developer",
+			"description": "CDS Extension Developer",
+			"scope-references": [
+				"$XSAPPNAME.ExtendCDS"
+			],
+			"attribute-references": []
+		},
+		{
+			"name": "Extension_Admin",
+			"description": "CDS Extension Administrator",
+			"scope-references": [
+				"$XSAPPNAME.ExtendCDS",
+				"$XSAPPNAME.ExtendCDSdelete"
+			]
 		}
 	]
 }
