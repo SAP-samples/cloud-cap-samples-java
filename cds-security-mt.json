@@ -2,29 +2,55 @@
 	"xsappname": "bookshop-java-public",
 	"tenant-mode": "shared",
 	"scopes": [
-	  {
-		"name": "$XSAPPNAME.admin",
-		"description": "admin"
-	  },
-	  {
-		"name": "$XSAPPNAME.mtcallback",
-		"description": "Multi Tenancy Callback Access",
-		"grant-as-authority-to-apps": ["$XSAPPNAME(application,sap-provisioning,tenant-onboarding)"]
-	  },
-	  {
-		  "name": "$XSAPPNAME.mtdeployment",
-		  "description": "Scope to trigger a re-deployment of the database artifacts"
-	  }
+		{
+			"name": "$XSAPPNAME.admin",
+			"description": "admin"
+		},
+		{
+			"name": "$XSAPPNAME.mtcallback",
+			"description": "Multi Tenancy Callback Access",
+			"grant-as-authority-to-apps": [
+				"$XSAPPNAME(application,sap-provisioning,tenant-onboarding)"
+			]
+		},
+		{
+			"name": "$XSAPPNAME.mtdeployment",
+			"description": "Scope to trigger a re-deployment of the database artifacts"
+		},
+		{
+			"name": "$XSAPPNAME.ExtendCDS",
+			"description": "Extend your own tenant's models"
+		},
+		{
+			"name": "$XSAPPNAME.ExtendCDSdelete",
+			"description": "Undeploy your own tenant's extensions"
+		}
 	],
 	"attributes": [],
 	"role-templates": [
-	  {
-		"name": "admin",
-		"description": "generated",
-		"scope-references": [
-		  "$XSAPPNAME.admin"
-		],
-		"attribute-references": []
-	  }
+		{
+			"name": "admin",
+			"description": "generated",
+			"scope-references": [
+				"$XSAPPNAME.admin"
+			],
+			"attribute-references": []
+		},
+		{
+			"name": "Extension_Developer",
+			"description": "CDS Extension Developer",
+			"scope-references": [
+				"$XSAPPNAME.ExtendCDS"
+			],
+			"attribute-references": []
+		},
+		{
+			"name": "Extension_Admin",
+			"description": "CDS Extension Administrator",
+			"scope-references": [
+				"$XSAPPNAME.ExtendCDS",
+				"$XSAPPNAME.ExtendCDSdelete"
+			]
+		}
 	]
-  }
+}
