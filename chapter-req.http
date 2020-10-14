@@ -1,0 +1,68 @@
+### Deep Insert
+
+POST http://localhost:8080/api/ChapterService/Chapters
+Content-Type: application/json
+
+{
+	"ID": "c6129637-98a5-4631-a7ba-b2e4cd04cf1d",
+	"book": "The greatest Book of all",
+	"number": 1,
+	"title": "First chapter",
+	"pages": [
+		{
+			"ID": "43656f84-410d-442a-80bb-7c94edb03de7",
+			"number": 1,
+			"content": "What a great page!"
+		},
+		{
+			"number": 2,
+			"content": "The second is even better!"
+		}
+	]
+}
+
+### Check Word Count
+
+GET http://localhost:8080/api/ChapterService/Chapters?$expand=pages
+
+### Deep Insert with error
+
+POST http://localhost:8080/api/ChapterService/Chapters
+Content-Type: application/json
+
+{
+	"book": "Not so great Book",
+	"number": 1,
+	"title": "First chapter",
+	"pages": [
+		{
+			"number": 1,
+			"content": "The start is okay."
+		},
+		{
+			"number": 3,
+			"content": "The third is dangling."
+		}
+	]
+}
+
+### Chapter update with error
+
+PATCH http://localhost:8080/api/ChapterService/Chapters(c6129637-98a5-4631-a7ba-b2e4cd04cf1d)
+Content-Type: application/json
+
+{
+	"book": "The greatest Book of all",
+	"number": 2,
+	"title": "First chapter"
+}
+
+### Page update with error
+
+PATCH http://localhost:8080/api/ChapterService/Chapters(c6129637-98a5-4631-a7ba-b2e4cd04cf1d)/pages(43656f84-410d-442a-80bb-7c94edb03de7)
+Content-Type: application/json
+
+{
+	"number": 100,
+	"content": "What a great page!"
+}

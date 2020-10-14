@@ -1,0 +1,96 @@
+### Batch Insert with successful and error changeset
+
+POST http://localhost:8080/api/ChapterService/$batch
+Content-Type: multipart/mixed; boundary=batch_1
+
+--batch_1
+Content-Type: multipart/mixed; boundary=changeset_2
+
+--changeset_2
+Content-Type: application/http
+Content-Transfer-Encoding: binary
+Content-ID: 1
+
+POST Chapters HTTP/1.1
+Content-Type: application/json
+
+{
+	"book": "The greatest batched Book of all",
+	"number": 1,
+	"title": "First chapter"
+}
+
+--changeset_2
+Content-Type: application/http
+Content-Transfer-Encoding: binary
+Content-ID: 2
+
+POST $1/pages HTTP/1.1
+Content-Type: application/json
+
+{
+	"number": 2,
+	"content": "The second is even better!"
+}
+
+--changeset_2
+Content-Type: application/http
+Content-Transfer-Encoding: binary
+Content-ID: 3
+
+POST $1/pages HTTP/1.1
+Content-Type: application/json
+
+{
+	"number": 1,
+	"content": "What a great page!"
+}
+
+--changeset_2--
+
+--batch_1
+Content-Type: multipart/mixed; boundary=changeset_3
+
+--changeset_3
+Content-Type: application/http
+Content-Transfer-Encoding: binary
+Content-ID: 1
+
+POST Chapters HTTP/1.1
+Content-Type: application/json
+
+{
+	"book": "Not so great Book",
+	"number": 1,
+	"title": "First chapter"
+}
+
+--changeset_3
+Content-Type: application/http
+Content-Transfer-Encoding: binary
+Content-ID: 2
+
+POST $1/pages HTTP/1.1
+Content-Type: application/json
+
+{
+	"number": 3,
+	"content": "The third is dangling."
+}
+
+--changeset_3
+Content-Type: application/http
+Content-Transfer-Encoding: binary
+Content-ID: 3
+
+POST $1/pages HTTP/1.1
+Content-Type: application/json
+
+{
+	"number": 1,
+	"content": "The start is okay."
+}
+
+--changeset_3--
+
+--batch_1--
