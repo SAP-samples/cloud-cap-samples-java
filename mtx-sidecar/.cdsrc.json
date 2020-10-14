@@ -28,15 +28,12 @@
             }
         ]
     },
-    "odata": {
-        "version": "v4"
-    },
     "requires": {
         "db": {
             "kind": "hana",
             "multiTenant": true,
             "vcap": {
-				"label": "service-manager"
+		"label": "service-manager"
             }
         },
         "uaa": {
