@@ -17,7 +17,7 @@ annotate AdminService.Books with @cds.search : {descr, title};
 
 // Enable Fiori Draft for Orders
 annotate AdminService.Orders with @odata.draft.enabled;
-annotate AdminService.Books with @odata.draft.enabled @Capabilities.Insertable: false;
+annotate AdminService.Books with @odata.draft.enabled @Capabilities.InsertRestrictions.Insertable: false;
 
 // workaround to enable the value help for languages
 // Necessary because auto exposure is currently not working
