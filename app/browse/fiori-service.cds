@@ -11,6 +11,9 @@ using CatalogService from '../../srv/cat-service';
 annotate CatalogService.Books with @(
 	UI: {
 		HeaderInfo: {
+			TypeName: '{i18n>Book}',
+			TypeNamePlural: '{i18n>Books}',
+			Title: {Value: title},
 			Description: {Value: author}
 		},
 		HeaderFacets: [
