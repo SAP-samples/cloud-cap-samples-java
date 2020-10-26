@@ -44,6 +44,9 @@ modules:
     parameters:
       memory: 256M
       disk-quota: 512M
+    build-parameters:
+      requires:
+        - name: bookshop-java-public-srv
     requires:
       - name: bookshop-java-public-service-manager
       - name: bookshop-java-public-uaa

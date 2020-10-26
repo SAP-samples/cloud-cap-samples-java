@@ -33,6 +33,9 @@ modules:
 # -----------------------------------------------------------
     type: nodejs
     path: db
+    build-parameters:
+      requires:
+        - name: bookshop-java-public-srv
     parameters:
       memory: 256M
       disk-quota: 512M
