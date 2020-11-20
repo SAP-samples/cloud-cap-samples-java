@@ -51,6 +51,11 @@
 			<artifactId>resilience</artifactId>
 		</dependency>
 
+		<dependency>
+			<groupId>com.sap.cloud.sdk.cloudplatform</groupId>
+			<artifactId>scp-cf</artifactId>
+		</dependency>
+
 		<!-- OTHER DEPENDENCIES -->
 		<dependency>
 			<groupId>org.xerial</groupId>

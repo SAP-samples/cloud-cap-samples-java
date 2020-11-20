@@ -16,7 +16,7 @@ cds:
       - admin
       attributes:
         businessPartner:
-        - SAPSE
+        - "10401010"
     - name: user
       password: user
 
@@ -32,6 +32,7 @@ cds:
         name: "s4-business-partner-api"
         suffix: "sap/opu/odata/sap/"
         type: "odata-v2"
+        api-key: "" # Place API Key from API Business Hub here
 
 ---
 spring:
