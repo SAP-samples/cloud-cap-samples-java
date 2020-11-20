@@ -149,7 +149,9 @@ class AdminServiceHandler implements EventHandler {
 	@Before(event = DraftService.EVENT_DRAFT_CANCEL, entity = OrderItems_.CDS_NAME)
 	public void cancelOrderItems(DraftCancelEventContext context) {
 		String orderItemId = (String) analyzer.analyze(context.getCqn()).targetKeys().get(OrderItems.ID);
-		calculateNetAmountInDraft(orderItemId, 0, null);
+		if(orderItemId != null) {
+			calculateNetAmountInDraft(orderItemId, 0, null);
+		}
 	}
 
 	private BigDecimal calculateNetAmountInDraft(String orderItemId, Integer newAmount, String newBookId) {
