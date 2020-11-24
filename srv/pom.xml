@@ -41,6 +41,12 @@
 
 		<dependency>
 			<groupId>com.sap.cds</groupId>
+			<artifactId>cds-feature-enterprise-messaging</artifactId>
+			<scope>runtime</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>com.sap.cds</groupId>
 			<artifactId>cds-feature-remote-odata</artifactId>
 			<scope>runtime</scope>
 		</dependency>

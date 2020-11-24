@@ -2,7 +2,9 @@ package my.bookshop.handlers;
 
 import java.time.Duration;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -14,7 +16,11 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sap.cds.Result;
+import com.sap.cds.Struct;
 import com.sap.cds.ql.CQL;
 import com.sap.cds.ql.Select;
 import com.sap.cds.ql.Upsert;
@@ -30,21 +36,21 @@ import com.sap.cds.services.handler.EventHandler;
 import com.sap.cds.services.handler.annotations.Before;
 import com.sap.cds.services.handler.annotations.On;
 import com.sap.cds.services.handler.annotations.ServiceName;
+import com.sap.cds.services.messaging.TopicMessageEventContext;
 import com.sap.cds.services.persistence.PersistenceService;
 import com.sap.cloud.sdk.cloudplatform.resilience.ResilienceConfiguration;
 import com.sap.cloud.sdk.cloudplatform.resilience.ResilienceConfiguration.TimeLimiterConfiguration;
 import com.sap.cloud.sdk.cloudplatform.resilience.ResilienceDecorator;
 
+import cds.gen.adminservice.Addresses;
 import cds.gen.adminservice.AdminService_;
 import cds.gen.adminservice.Orders;
 import cds.gen.api_business_partner.ABusinessPartnerAddress;
 import cds.gen.api_business_partner.ABusinessPartnerAddress_;
 import cds.gen.api_business_partner.ApiBusinessPartner_;
-import cds.gen.api_business_partner.bo.businesspartner.Changed;
-import cds.gen.my.bookshop.Addresses;
+import cds.gen.api_business_partner.BOBusinessPartnerChanged;
 import cds.gen.my.bookshop.Addresses_;
 import my.bookshop.MessageKeys;
-import my.bookshop.context.BusinessPartnerChangedEventContext;
 
 /**
  * Custom handler for the Admin Service Addresses, which come from a remote S/4 System
@@ -137,10 +143,11 @@ public class AdminServiceAddressHandler implements EventHandler {
 		});
 	}
 
-	@On(service = ApiBusinessPartner_.CDS_NAME)
-	public void updateBusinessPartnerAddresses(BusinessPartnerChangedEventContext context) {
-		logger.info(">> received: " + context.getData().toJson());
-		for(Changed.Key key : context.getData().getKey()) {
+	@On(service = "bupa-messaging", event = "BO/BusinessPartner/Changed")
+	public void updateBusinessPartnerAddresses(TopicMessageEventContext context) {
+		logger.info(">> received: " + context.getData());
+		BOBusinessPartnerChanged payload = Struct.access(payloadMap(context.getData())).as(BOBusinessPartnerChanged.class);
+		for(BOBusinessPartnerChanged.Key key : payload.getKey()) {
 			String businessPartner = key.getBusinesspartner(); // S/4 HANA's payload format
 			if(businessPartner != null) {
 				// fetch affected entries from local replicas
@@ -164,6 +171,19 @@ public class AdminServiceAddressHandler implements EventHandler {
 			}
 		}
 		context.setCompleted();
+	}
+
+	@SuppressWarnings("unchecked")
+	private Map<String, Object> payloadMap(String json) {
+		try {
+			Map<String, Object> event = new ObjectMapper().readValue(json, new TypeReference<Map<String, Object>>() {});
+			if(event.get("data") instanceof Map) {
+				return (Map<String, Object>) event.get("data");
+			}
+			return new HashMap<>();
+		} catch (JsonProcessingException e) {
+			return new HashMap<>();
+		}
 	}
 
 }

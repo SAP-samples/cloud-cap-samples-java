@@ -21,7 +21,7 @@ extend service external with {
   /**
    * Add asynchronous eventing API
    */
-  event BO.BusinessPartner.Changed {
+  event BO_BusinessPartner_Changed {
     ![KEY]: Array of {
       BUSINESSPARTNER: String;
     };
