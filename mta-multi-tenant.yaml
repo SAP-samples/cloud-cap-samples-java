@@ -4,12 +4,6 @@ version: 1.0.0
 description: "Multitenant Bookshop CAP Java Project with UI"
 parameters:
   enable-parallel-deployments: true
-build-parameters:
-  before-all:
-    - builder: custom
-      commands:
-        - mvn clean package -DskipTests=true
-
 modules:
 # --------------------- SERVER MODULE ------------------------
   - name: bookshop-java-public-srv
@@ -25,7 +19,8 @@ modules:
       CDS_MULTITENANCY_APPUI_TENANTSEPARATOR: "-"
     build-parameters:
       builder: custom
-      commands: []
+      commands:
+        - mvn clean package -DskipTests=true
       build-result: target/*-exec.jar
     requires:
       - name: bookshop-java-public-service-manager

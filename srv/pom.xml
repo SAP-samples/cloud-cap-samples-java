@@ -111,7 +111,7 @@
 						</goals>
 						<configuration>
 							<commands>
-								<command>build/all --clean</command>
+								<command>build --for java-cf --clean</command>
 
 								<command>deploy --to sqlite --dry >
 									${project.basedir}/src/main/resources/schema.sql</command>
