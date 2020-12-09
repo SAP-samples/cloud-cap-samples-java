@@ -18,7 +18,13 @@
 	<dependencies>
 		<dependency>
 			<groupId>com.sap.cds</groupId>
-			<artifactId>cds-starter-spring-boot-odata</artifactId>
+			<artifactId>cds-starter-spring-boot</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>com.sap.cds</groupId>
+			<artifactId>cds-adapter-odata-v4</artifactId>
+			<scope>runtime</scope>
 		</dependency>
 
 		<dependency>
