@@ -76,7 +76,7 @@
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>flatten-maven-plugin</artifactId>
-				<version>1.2.4</version>
+				<version>1.2.5</version>
 				<configuration>
 					<updatePomFile>true</updatePomFile>
 					<flattenMode>resolveCiFriendliesOnly</flattenMode>
@@ -118,12 +118,6 @@
 								<requireJavaVersion>
 									<version>${jdk.version}</version>
 								</requireJavaVersion>
-								<requireProperty>
-									<property>project.artifactId</property>
-									<regex>[^_]+</regex>
-									<regexMessage>"The artifactId should not contain underscores
-										(_) as this causes issues when deploying to Cloud Foundry."</regexMessage>
-								</requireProperty>
 								<reactorModuleConvergence />
 							</rules>
 							<fail>true</fail>
