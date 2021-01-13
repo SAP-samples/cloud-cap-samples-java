@@ -26,7 +26,7 @@ import cds.gen.api_business_partner.BOBusinessPartnerChanged;
  */
 @Component
 @ServiceName(ApiBusinessPartner_.CDS_NAME)
-@ConditionalOnProperty(value = "cds.application.services.abp.destination", havingValue = "false", matchIfMissing = true)
+@ConditionalOnProperty(value = "cds.remote.services[0].destination.name", havingValue = "false", matchIfMissing = true)
 public class ApiBusinessPartnerEventMockHandler implements EventHandler {
 
 	private final static Logger logger = LoggerFactory.getLogger(ApiBusinessPartnerEventMockHandler.class);

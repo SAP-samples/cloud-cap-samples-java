@@ -25,9 +25,8 @@ cds:
     bupa-messaging:
       kind: enterprise-messaging
       topic-namespace: sap/S4HANAOD/dkom
-  application.services.abp:
-    name: API_BUSINESS_PARTNER
-    serve.ignore: true
+  remote.services:
+  - name: API_BUSINESS_PARTNER
     destination:
       name: "s4-business-partner-api"
       suffix: "sap/opu/odata/sap/"
