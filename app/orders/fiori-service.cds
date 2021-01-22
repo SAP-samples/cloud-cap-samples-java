@@ -138,12 +138,8 @@ annotate AdminService.Orders with @(
 			SourceProperties: [
 				shippingAddress_AddressID
 			],
-			TargetProperties: [
-				shippingAddress.Country,
-				shippingAddress.HouseNumber,
-				shippingAddress.StreetName,
-				shippingAddress.CityName,
-				shippingAddress.PostalCode
+			TargetEntities: [
+				shippingAddress
 			]
 		}
 	}
