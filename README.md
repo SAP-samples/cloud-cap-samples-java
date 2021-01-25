@@ -68,7 +68,7 @@ User Interface related Features:
 
 - Support for [SAP Fiori Elements](https://cap.cloud.sap/docs/guides/fiori/#fiori-draft-support)
 - [SAP Fiori Draft based Editing](https://cap.cloud.sap/docs/guides/fiori/#fiori-draft-support) for [Books and Authors](srv/admin-service.cds)
-- [SAP Fiori annotations](https://cap.cloud.sap/docs/guides/fiori/#fiori-annotations) specific for [Browse Books](app/browse/fiori-service.cds), [Manage Books](app/admin/fiori-service.cds), [Manage Orders](app/orders/fiori-service.cds) and [common annotations](app/common.cds), which apply to all UI's
+- [SAP Fiori annotations](https://cap.cloud.sap/docs/advanced/fiori#fiori-annotations) specific for [Browse Books](app/browse/fiori-service.cds), [Manage Books](app/admin/fiori-service.cds), [Manage Orders](app/orders/fiori-service.cds) and [common annotations](app/common.cds), which apply to all UI's
 - UI Annotations for custom actions in the [Manage Books](app/admin/fiori-service.cds) UI, including annotations for a button and a popup
 - [Value Help](https://cap.cloud.sap/docs/cds/annotations#odata) for [Books](app/orders/fiori-service.cds) and [Authors](app/common.cds)
 - [Model Localization](https://cap.cloud.sap/docs/guides/i18n) for [English](app/_i18n/i18n.properties) and [German](app/_i18n/i18n_de.properties) language for static texts
