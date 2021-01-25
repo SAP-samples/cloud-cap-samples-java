@@ -31,13 +31,13 @@ This sample uses Spring Boot as an **application framework**. Although a CAP Jav
 
 The **domain models** are defined using [CDS entity definitions](https://cap.cloud.sap/docs/cds/cdl#entity-and-type-definitions).
 
-By default, an in-memory or optionally a file-based SQLite database is used for **data persistency**. Once productively deployed to SAP Cloud Platform, SAP HANA can be used.
+By default, an in-memory or optionally a file-based SQLite database is used for **data persistency**. Once productively deployed to SAP Business Platform, SAP HANA can be used.
 
 **Services** are defined using [CDS Service Models](https://cap.cloud.sap/docs/cds/cdl#services). The **OData V4 Protocol Adapter** translates the CDS service models into corresponding OData schemas and maps the incoming OData requests to the corresponding CDS services.
 
 Although CAP provides generic **event handlers** to serve most CRUD requests out-of-the-box, it’s possible to add business logic through [Custom Event Handlers](https://cap.cloud.sap/docs/get-started/in-a-nutshell#adding-custom-logic).
 
-A Fiori UI is added using predefined SAP Fiori elements templates. **[Fiori annotations](https://cap.cloud.sap/docs/guides/fiori/#fiori-annotations)** add information to the service definitions, on how to render the data.
+A SAP Fiori UI is added using predefined SAP Fiori elements templates. **[SAP Fiori annotations](https://cap.cloud.sap/docs/advanced/fiori#fiori-annotations)** add information to the service definitions, on how to render the data.
 
 ## Demonstrated Features
 
@@ -66,9 +66,9 @@ Service Model related Features:
 
 User Interface related Features:
 
-- Support for SAP [Fiori Elements](https://cap.cloud.sap/docs/guides/fiori/#fiori-draft-support)
-- [Fiori Draft based Editing](https://cap.cloud.sap/docs/guides/fiori/#fiori-draft-support) for [Books and Authors](srv/admin-service.cds)
-- [Fiori annotations](https://cap.cloud.sap/docs/guides/fiori/#fiori-annotations) specific for [Browse Books](app/browse/fiori-service.cds), [Manage Books](app/admin/fiori-service.cds), [Manage Orders](app/orders/fiori-service.cds) and [common annotations](app/common.cds), which apply to all UI's
+- Support for [SAP Fiori Elements](https://cap.cloud.sap/docs/guides/fiori/#fiori-draft-support)
+- [SAP Fiori Draft based Editing](https://cap.cloud.sap/docs/guides/fiori/#fiori-draft-support) for [Books and Authors](srv/admin-service.cds)
+- [SAP Fiori annotations](https://cap.cloud.sap/docs/guides/fiori/#fiori-annotations) specific for [Browse Books](app/browse/fiori-service.cds), [Manage Books](app/admin/fiori-service.cds), [Manage Orders](app/orders/fiori-service.cds) and [common annotations](app/common.cds), which apply to all UI's
 - UI Annotations for custom actions in the [Manage Books](app/admin/fiori-service.cds) UI, including annotations for a button and a popup
 - [Value Help](https://cap.cloud.sap/docs/cds/annotations#odata) for [Books](app/orders/fiori-service.cds) and [Authors](app/common.cds)
 - [Model Localization](https://cap.cloud.sap/docs/guides/i18n) for [English](app/_i18n/i18n.properties) and [German](app/_i18n/i18n_de.properties) language for static texts
@@ -186,14 +186,14 @@ To switch from the default in-memory SQLite database to a file-based SQLite data
 
 2.  Edit your Run Configuration via **Run** > **Run Configurations...** and select enter the **Profile** `sqlite` on tab **Spring** and click **Run**.
 
-## Deploy to SAP Cloud Platform
+## Deploy to SAP Business Technology Platform
 
-CAP Java applications can be deployed to the SAP Cloud Platform either in single tenant or in multitenancy mode. See [Multitenancy in CAP Java](https://cap.cloud.sap/docs/java/multitenancy) for more information.
+CAP Java applications can be deployed to the SAP Business Technology Platform either in single tenant or in multitenancy mode. See [Multitenancy in CAP Java](https://cap.cloud.sap/docs/java/multitenancy) for more information.
 
 Prerequisites:
 - Install the [Cloud MTA Build Tool](https://sap.github.io/cloud-mta-build-tool/): `npm install -g mbt`.
 - Install the [Cloud Foundry Command Line Interface](https://docs.cloudfoundry.org/cf-cli/install-go-cli.html).
-- Get an SAP Cloud Platform account to deploy the services and applications.
+- Get an SAP Business Technology Platform account to deploy the services and applications.
 
 Deploy as Single Tenant Application:
 - Rename `mta-single-tenant.yaml` to `mta.yaml`
@@ -202,7 +202,7 @@ Deploy as Single Tenant Application:
 - Run `cf deploy mta_archives/bookshop-java-public_1.0.0.mtar`
 
 Deploy as Multitenant Application:
-- Create an SAP HANA Cloud Instance in your SAP Cloud Platform space.
+- Create an SAP HANA Cloud Instance in your SAP Business Technology Platform space.
 - Rename `mta-multi-tenant.yaml` to `mta.yaml`
 - Run `mbt build`
 - Run `cf login`
@@ -217,4 +217,4 @@ In case you have a question, find a bug, or otherwise need support, please use o
 
 # License
 
-Copyright (c) 2020 SAP SE or an SAP affiliate company. All rights reserved. This file is licensed under the Apache Software License, version 2.0 except as noted otherwise in the [LICENSE](LICENSES/Apache-2.0.txt) file.
+Copyright (c) 2021 SAP SE or an SAP affiliate company. All rights reserved. This file is licensed under the Apache Software License, version 2.0 except as noted otherwise in the [LICENSE](LICENSES/Apache-2.0.txt) file.
