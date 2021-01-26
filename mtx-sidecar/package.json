@@ -11,6 +11,7 @@
         "passport": "^0.4.1"
     },
     "scripts": {
+        "postinstall": "cd .. && cds build --for mtx",
         "start": "node server.js"
     }
 }
