@@ -31,7 +31,7 @@ This sample uses Spring Boot as an **application framework**. Although a CAP Jav
 
 The **domain models** are defined using [CDS entity definitions](https://cap.cloud.sap/docs/cds/cdl#entity-and-type-definitions).
 
-By default, an in-memory or optionally a file-based SQLite database is used for **data persistency**. Once productively deployed to SAP Business Platform, SAP HANA can be used.
+By default, an in-memory or optionally a file-based SQLite database is used for **data persistency**. Once productively deployed to SAP Business Technology Platform, SAP HANA can be used.
 
 **Services** are defined using [CDS Service Models](https://cap.cloud.sap/docs/cds/cdl#services). The **OData V4 Protocol Adapter** translates the CDS service models into corresponding OData schemas and maps the incoming OData requests to the corresponding CDS services.
 
