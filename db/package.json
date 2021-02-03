@@ -4,6 +4,7 @@
     "@sap/hdi-deploy": "^3"
   },
   "scripts": {
+    "postinstall": "cd .. && cds build --for hana",
     "start": "node node_modules/@sap/hdi-deploy --exit"
   }
 }
