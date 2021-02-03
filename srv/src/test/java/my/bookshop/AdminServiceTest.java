@@ -1,18 +1,19 @@
 package my.bookshop;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.util.Collections;
 
 import javax.annotation.Resource;
 
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.test.context.support.WithMockUser;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import com.sap.cds.Result;
 import com.sap.cds.ql.Insert;
@@ -25,7 +26,7 @@ import cds.gen.adminservice.Authors_;
 import cds.gen.adminservice.Orders;
 import cds.gen.adminservice.Orders_;
 
-@RunWith(SpringRunner.class)
+@ExtendWith(SpringExtension.class)
 @SpringBootTest
 @AutoConfigureMockMvc
 public class AdminServiceTest {
@@ -41,18 +42,22 @@ public class AdminServiceTest {
 		assertNotNull(order.getId());
 	}
 
-	@Test(expected = ServiceException.class)
+	@Test
 	@WithMockUser(username = "user")
 	public void testUnauthorizedAccess() {
-		adminService.newDraft(Insert.into(Orders_.class).entry(Collections.emptyMap()));
+		assertThrows(ServiceException.class, () -> {
+			adminService.newDraft(Insert.into(Orders_.class).entry(Collections.emptyMap()));
+		});
 	}
 
-	@Test(expected = ServiceException.class)
+	@Test
 	@WithMockUser(username = "admin")
 	public void testInvalidAuthorName() {
-		Authors author = Authors.create();
-		author.setName("little Joey");
-		adminService.run(Insert.into(Authors_.class).entry(author));
+		assertThrows(ServiceException.class, () -> {
+			Authors author = Authors.create();
+			author.setName("little Joey");
+			adminService.run(Insert.into(Authors_.class).entry(author));
+		});
 	}
 
 	@Test
