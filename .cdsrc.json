@@ -6,50 +6,19 @@
         "target": ".",
         "tasks": [
             {
-                "for": "java-cf",
-                "src": "srv",
-                "options": {
-                    "model": [
-                        "db",
-                        "srv",
-                        "app"
-                    ]
-                }
+                "for": "java-cf"
             },
             {
                 "for": "mtx",
                 "src": ".",
-                "dest": "mtx-sidecar",
-                "options": {
-                    "model": [
-                        "db",
-                        "srv",
-                        "app"
-                    ]
-                }
+                "dest": "mtx-sidecar"
             },
             {
-                "for": "hana",
-                "src": "db",
-                "options": {
-                    "model": [
-                        "db",
-                        "srv",
-                        "app"
-                    ]
-                }
+                "for": "hana"
             }
         ]
     },
     "hana": {
         "deploy-format": "hdbtable"
-    },
-    "requires": {
-        "db": {
-            "kind": "sql"
-        }
-    },
-    "odata": {
-        "version": "v4"
     }
 }

@@ -2,8 +2,6 @@ const app = require('express')();
 const cds = require('@sap/cds');
 
 const main = async () => {
-	app.use(require('express').json());
-
 	await cds.connect.to('db');
 	const PORT = process.env.PORT || 4004;
 	await cds.mtx.in(app);

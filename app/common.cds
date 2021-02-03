@@ -86,3 +86,13 @@ annotate my.Addresses with {
 	Country @title:'{i18n>Country}';
 	HouseNumber @title:'{i18n>HouseNumber}';
 }
+
+////////////////////////////////////////////////////////////////////////////
+//
+//	Fiori requires generated IDs to be annotated with @Core.Computed
+//
+using { cuid } from '@sap/cds/common';
+
+annotate cuid with {
+	ID @Core.Computed
+}

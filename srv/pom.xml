@@ -19,7 +19,13 @@
 		<!-- CDS DEPENDENCIES -->
 		<dependency>
 			<groupId>com.sap.cds</groupId>
-			<artifactId>cds-starter-spring-boot-odata</artifactId>
+			<artifactId>cds-starter-spring-boot</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>com.sap.cds</groupId>
+			<artifactId>cds-adapter-odata-v4</artifactId>
+			<scope>runtime</scope>
 		</dependency>
 
 		<dependency>
@@ -131,7 +137,7 @@
 						</goals>
 						<configuration>
 							<commands>
-								<command>build/all --clean</command>
+								<command>build --for java-cf</command>
 								<command>deploy --to sqlite --with-mocks --dry >
 									${project.basedir}/src/main/resources/schema.sql</command>
 							</commands>

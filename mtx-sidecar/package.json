@@ -1,7 +1,7 @@
 {
     "name": "deploy",
     "dependencies": {
-        "@sap/cds": "^4.1.7",
+        "@sap/cds": "^4.2.4",
         "@sap/cds-mtx": "^1.0.17",
         "@sap/hdi-deploy": "^3.11.11",
         "@sap/instance-manager": "^2.2.0",
@@ -11,6 +11,7 @@
         "passport": "^0.4.1"
     },
     "scripts": {
+        "postinstall": "cd .. && cds build --for mtx",
         "start": "node server.js"
     }
 }

@@ -118,21 +118,20 @@ annotate AdminService.Orders with @(
 		}
 	},
 	Common: {
-		SideEffects#AmountChanges: {
+		SideEffects#ItemsChanges: {
 			SourceEntities: [
 				Items
 			],
 			TargetProperties: [
-				total
+				'total'
 			]
 		},
 		SideEffects#CurrencyChanges: {
 			SourceProperties: [
 				currency_code
 			],
-			TargetProperties: [
-				currency.code,
-				total
+			TargetEntities: [
+				currency
 			]
 		},
 		SideEffects#AddressChanges: {
@@ -198,15 +197,18 @@ annotate AdminService.OrderItems with @(
 				amount
 			],
 			TargetProperties: [
-				netAmount, parent.total
+				'netAmount'
 			]
 		},
 		SideEffects#BookChanges: {
 			SourceProperties: [
 				book_ID
 			],
+			TargetEntities: [
+				book
+			],
 			TargetProperties: [
-				netAmount, book.price, parent.total
+				'netAmount'
 			]
 		}
 	}

@@ -1,6 +1,9 @@
 <!-- omit in toc -->
 # Welcome to CAP Samples for Java
 
+![CI status](https://github.com/SAP-samples/cloud-cap-samples-java/workflows/Java%20CI%20with%20Maven/badge.svg)
+[![REUSE status](https://api.reuse.software/badge/github.com/SAP-samples/cloud-cap-samples-java)](https://api.reuse.software/info/github.com/SAP-samples/cloud-cap-samples-java)
+
 Welcome to the bookshop-java project. It demonstrates how to build business applications using the [CAP Java SDK](https://cap.cloud.sap) providing a book shop web application as an example. The application in this project enables browsing books, managing books, and managing orders.
 
 ![Application Overview in Fiori Launchpad](assets/readmeImages/FioriHome.jpg)
@@ -28,17 +31,17 @@ This sample uses Spring Boot as an **application framework**. Although a CAP Jav
 
 The **domain models** are defined using [CDS entity definitions](https://cap.cloud.sap/docs/cds/cdl#entity-and-type-definitions).
 
-By default, an in-memory or optionally a file-based SQLite database is used for **data persistency**. Once productively deployed to SAP Cloud Platform, SAP HANA can be used.
+By default, an in-memory or optionally a file-based SQLite database is used for **data persistency**. Once productively deployed to SAP Business Technology Platform, SAP HANA can be used.
 
 **Services** are defined using [CDS Service Models](https://cap.cloud.sap/docs/cds/cdl#services). The **OData V4 Protocol Adapter** translates the CDS service models into corresponding OData schemas and maps the incoming OData requests to the corresponding CDS services.
 
 Although CAP provides generic **event handlers** to serve most CRUD requests out-of-the-box, it’s possible to add business logic through [Custom Event Handlers](https://cap.cloud.sap/docs/get-started/in-a-nutshell#adding-custom-logic).
 
-A Fiori UI is added using predefined SAP Fiori elements templates. **[Fiori annotations](https://cap.cloud.sap/docs/guides/fiori/#fiori-annotations)** add information to the service definitions, on how to render the data.
+A SAP Fiori UI is added using predefined SAP Fiori elements templates. **[SAP Fiori annotations](https://cap.cloud.sap/docs/advanced/fiori#fiori-annotations)** add information to the service definitions, on how to render the data.
 
 ## Demonstrated Features
 
-Framework and Infrastructure-related Features:
+Framework and Infrastructure related Features:
 
 - [Application configuration](https://cap.cloud.sap/docs/java/development#application-configuration) for Spring and CDS using [application.yaml](srv/src/main/resources/application.yaml)
 - [Mocking users](/srv/src/main/resources/application.yaml) for local development
@@ -63,20 +66,20 @@ Service Model related Features:
 
 User Interface related Features:
 
-- Support for SAP [Fiori Elements](https://cap.cloud.sap/docs/guides/fiori/#fiori-draft-support)
-- [Fiori Draft based Editing](https://cap.cloud.sap/docs/guides/fiori/#fiori-draft-support) for [Books and Authors](srv/admin-service.cds)
-- [Fiori annotations](https://cap.cloud.sap/docs/guides/fiori/#fiori-annotations) specific for [Browse Books](app/browse/fiori-service.cds), [Manage Books](app/admin/fiori-service.cds), [Manage Orders](app/orders/fiori-service.cds) and [common annotations](app/common.cds), which apply to all UI's
+- Support for [SAP Fiori Elements](https://cap.cloud.sap/docs/guides/fiori/#fiori-draft-support)
+- [SAP Fiori Draft based Editing](https://cap.cloud.sap/docs/guides/fiori/#fiori-draft-support) for [Books and Authors](srv/admin-service.cds)
+- [SAP Fiori annotations](https://cap.cloud.sap/docs/advanced/fiori#fiori-annotations) specific for [Browse Books](app/browse/fiori-service.cds), [Manage Books](app/admin/fiori-service.cds), [Manage Orders](app/orders/fiori-service.cds) and [common annotations](app/common.cds), which apply to all UI's
 - UI Annotations for custom actions in the [Manage Books](app/admin/fiori-service.cds) UI, including annotations for a button and a popup
 - [Value Help](https://cap.cloud.sap/docs/cds/annotations#odata) for [Books](app/orders/fiori-service.cds) and [Authors](app/common.cds)
 - [Model Localization](https://cap.cloud.sap/docs/guides/i18n) for [English](app/_i18n/i18n.properties) and [German](app/_i18n/i18n_de.properties) language for static texts
 
 CDS Maven Plugin Features:
 
-- Install [Node.js](srv/pom.xml#L87) in the specified version
-- Install the latest version of [@sap/cds-dk](srv/pom.xml#L97)
-- Execute arbitrary [CDS](srv/pom.xml#L107) commands
-- [Generate](srv/pom.xml#L122) Java POJOs for type-safe access to the CDS model
-- [Clean](srv/pom.xml#L80) project from artifacts of the previous build
+- Install [Node.js](srv/pom.xml#L87) in the specified version.
+- Install the latest version of [@sap/cds-dk](srv/pom.xml#L97).
+- Execute arbitrary [CDS](srv/pom.xml#L107) commands.
+- [Generate](srv/pom.xml#L122) Java POJOs for type-safe access to the CDS model.
+- [Clean](srv/pom.xml#L80) project from artifacts of the previous build.
 
 # Getting Started
 
@@ -110,7 +113,6 @@ Optionally, use the following steps to import the project to Eclipse:
 
 2.  In Project Explorer, change the property "Package Presentation" from "Flat" to "Hierarchical" for better understanding.
 
-
 ### Building and Running
 
 1.  To **compile** the project, right-click the file `pom.xml` in the `bookshop-parent` project root folder and select
@@ -133,13 +135,29 @@ Optionally, use the following steps to import the project to Eclipse:
 4.  Use the following links in the browser to check if everything works fine:
 
     <http://localhost:8080/>: This should show the automatically generated index page of served paths.
-    <http://localhost:8080/fiori.html>: This is the actual bookshop application UI
+    <http://localhost:8080/fiori.html>: This is the actual bookshop application UI.
 
-    You'll start with an empty stock of books as this procedure starts the bookshop application with an empty in-memory sqlite database.
+    You'll start with an empty stock of books as this procedure starts the bookshop application with an empty in-memory SQLite database.
 
     Two mock users are defined for local development:
     - User: `user`, password: `user` to browse books
     - User: `admin`, password: `admin` to manage books and orders
+    
+## Using IntelliJ Idea (Community and Ultimate)
+
+IntelliJ can handle the project more or less out-of-the-box. Since some of the event handlers in the project rely on
+the code generated from the CDS model the build path of the project (module) needs to be extended
+with the folder containing the generated code. In order to add the generated code you need to add the 'gen' folder
+to the build path:
+
+* Open the project settings 
+* Navigate to the 'modules' section
+* Select the srv/src/gen folder and mark it as 'sources'.
+* Save and leave the project settings
+* Trigger a rebuild
+
+After the generated code is considered by IntelliJ's build the application can be handled just as any other Spring Boot
+application in IntelliJ.
 
 ## Database Setup and Spring Profiles
 
@@ -153,14 +171,14 @@ The application comes with three predefined profiles: `default`, `sqlite`, and `
   This database needs to be created first, to ensure it’s initialized with the correct schema and with the CSV-based example data.
   To initialize the database, simply run `cds deploy --to sql:sqlite.db --no-save` from the project's root directory. Repeat this step, once you make changes to the CDS model.
 
-- When deploying the application to the CloudFoundry, the CF Java Buildpack automatically configures the `cloud` Spring profile.
-  This profile doesn’t specify any datasource location. In that case CAP Java can automatically detect HANA service bindings available in the environment.
+- When deploying the application to Cloud Foundry, the CF Java Buildpack automatically configures the `cloud` Spring profile.
+  This profile doesn’t specify any datasource location. In that case CAP Java can automatically detect SAP HANA service bindings available in the environment.
 
 ## Using a File-Based SQLite Database
 
-To switch from the default in-memory SQLite database to a file-based SQLite database in this sample application perform the following steps:
+To switch from the default in-memory SQLite database to a file-based SQLite database in this sample application, perform the following steps:
 
-1.  Deploy the example data stored in .csv files in the folder ``db/data`` to a file-based SQLite database by executing the command-line utility
+1.  Deploy the example data stored in .csv files in the folder `db/data` to a file-based SQLite database by executing the command-line utility
 
     ```cds deploy --to sql:sqlite.db --no-save```
 
@@ -168,29 +186,29 @@ To switch from the default in-memory SQLite database to a file-based SQLite data
 
 2.  Edit your Run Configuration via **Run** > **Run Configurations...** and select enter the **Profile** `sqlite` on tab **Spring** and click **Run**.
 
-## Deploy to SAP Cloud Platform
+## Deploy to SAP Business Technology Platform
 
-CAP Java applications can be deployed to the SAP Cloud Platform either in single tenant or in multitenancy mode (see [Multitenancy in CAP Java](https://cap.cloud.sap/docs/java/multitenancy) for more information.
+CAP Java applications can be deployed to the SAP Business Technology Platform either in single tenant or in multitenancy mode. See [Multitenancy in CAP Java](https://cap.cloud.sap/docs/java/multitenancy) for more information.
 
 Prerequisites:
-- Install the [Cloud MTA Build Tool](https://sap.github.io/cloud-mta-build-tool/): `npm install -g mbt
-- Install the [Cloud Foundry Command Line Interface](https://docs.cloudfoundry.org/cf-cli/install-go-cli.html)
-- Get a SAP Cloud Platform account to deploy the services and applications
+- Install the [Cloud MTA Build Tool](https://sap.github.io/cloud-mta-build-tool/): `npm install -g mbt`.
+- Install the [Cloud Foundry Command Line Interface](https://docs.cloudfoundry.org/cf-cli/install-go-cli.html).
+- Get an SAP Business Technology Platform account to deploy the services and applications.
 
-Deploy as Single Tenant Application
+Deploy as Single Tenant Application:
 - Rename `mta-single-tenant.yaml` to `mta.yaml`
 - Run `mbt build`
 - Run `cf login`
 - Run `cf deploy mta_archives/bookshop-java-public_1.0.0.mtar`
 
 Deploy as Multitenant Application:
-- Create a SAP HANA Cloud Instance in your SAP Cloud Platform space
+- Create an SAP HANA Cloud Instance in your SAP Business Technology Platform space.
 - Rename `mta-multi-tenant.yaml` to `mta.yaml`
 - Run `mbt build`
 - Run `cf login`
 - Run `cf deploy mta_archives/bookshop-java-public_1.0.0.mtar`
-- Go to another subaccount in your global account, under subscriptions and subscribe to the application you deployed
-- Run `cf map-route bookshop-java-public-approuter <YOUR DOMAIN> --hostname <SUBSCRIBER TENANT>-<ORG>-<SPACE>-bookshop-java-public-approuter` or create and bind the route manually
+- Go to another subaccount in your global account, under subscriptions and subscribe to the application you deployed.
+- Run `cf map-route bookshop-java-public-approuter <YOUR DOMAIN> --hostname <SUBSCRIBER TENANT>-<ORG>-<SPACE>-bookshop-java-public-approuter` or create and bind the route manually.
 
 # Get Support
 
@@ -199,4 +217,4 @@ In case you have a question, find a bug, or otherwise need support, please use o
 
 # License
 
-Copyright (c) 2020 SAP SE or an SAP affiliate company. All rights reserved. This file is licensed under the Apache Software License, version 2.0 except as noted otherwise in the [LICENSE](LICENSE) file.
+Copyright (c) 2021 SAP SE or an SAP affiliate company. All rights reserved. This file is licensed under the Apache Software License, version 2.0 except as noted otherwise in the [LICENSE](LICENSES/Apache-2.0.txt) file.
