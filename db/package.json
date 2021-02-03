@@ -1,11 +1,9 @@
 {
   "name": "deploy",
   "dependencies": {
-    "@sap/hdi-deploy": "^3",
-    "@sap/cds-dk": "^3"
+    "@sap/hdi-deploy": "^3"
   },
   "scripts": {
-    "postinstall": "cd .. && db/node_modules/.bin/cds build --for hana || echo \"Skipping cds build...\"",
     "start": "node node_modules/@sap/hdi-deploy --exit"
   }
 }
