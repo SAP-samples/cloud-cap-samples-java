@@ -1,7 +1,4 @@
 {
-    "features": {
-        "snapi": true
-    },
     "build": {
         "target": ".",
         "tasks": [
