@@ -25,7 +25,22 @@
 		"authenticationType": "xsuaa"
 	  },
 	  {
+		"source": "^/reviews/webapp/(.*)$",
+		"localDir": "./",
+		"authenticationType": "xsuaa"
+	  },
+	  {
 		"source": "^/api/admin/(.*)",
+		"authenticationType": "xsuaa",
+		"destination": "backend"
+	  },
+	  {
+		"source": "^/api/browse/(.*)",
+		"authenticationType": "xsuaa",
+		"destination": "backend"
+	  },
+	  {
+		"source": "^/api/review/(.*)",
 		"authenticationType": "xsuaa",
 		"destination": "backend"
 	  },
