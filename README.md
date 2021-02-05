@@ -212,8 +212,7 @@ Deploy as Multitenant Application:
 
 # Get Support
 
-Check out the documentation at [https://cap.cloud.sap](https://cap.cloud.sap).
-In case you have a question, find a bug, or otherwise need support, please use our [community](https://answers.sap.com/tags/9f13aee1-834c-4105-8e43-ee442775e5ce).
+In case you have a question, find a bug, or otherwise need support, please use our [community](https://answers.sap.com/tags/9f13aee1-834c-4105-8e43-ee442775e5ce). See the documentation at [https://cap.cloud.sap](https://cap.cloud.sap) for more details about CAP.
 
 # License
 
