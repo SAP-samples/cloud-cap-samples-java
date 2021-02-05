@@ -2,20 +2,28 @@
 	"xsappname": "bookshop-java-public",
 	"tenant-mode": "dedicated",
 	"scopes": [
-	  {
-		"name": "$XSAPPNAME.admin",
-		"description": "admin"
-	  }
+		{
+			"name": "$XSAPPNAME.admin",
+			"description": "admin"
+		}
 	],
-	"attributes": [],
+	"attributes": [
+		{
+			"name": "businessPartner",
+			"description": "S/4 BusinessPartner ID assigned to the user",
+			"valueType": "string"
+		}
+	],
 	"role-templates": [
-	  {
-		"name": "admin",
-		"description": "generated",
-		"scope-references": [
-		  "$XSAPPNAME.admin"
-		],
-		"attribute-references": []
-	  }
+		{
+			"name": "admin",
+			"description": "generated",
+			"scope-references": [
+				"$XSAPPNAME.admin"
+			],
+			"attribute-references": [
+				"businessPartner"
+			]
+		}
 	]
-  }
+}
