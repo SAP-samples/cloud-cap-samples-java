@@ -1,6 +1,8 @@
 ---
 spring:
-  resources.static-locations: "file:./app"
+  web:
+    resources:
+      static-locations: "file:./app"
 cds:
   odata-v4.endpoint.path: "/api"
   security.mock.users:
