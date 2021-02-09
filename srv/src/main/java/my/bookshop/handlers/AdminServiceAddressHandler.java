@@ -9,11 +9,9 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import javax.annotation.Resource;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -62,18 +60,21 @@ public class AdminServiceAddressHandler implements EventHandler {
 	private final static Logger logger = LoggerFactory.getLogger(AdminServiceAddressHandler.class);
 
 	// We are mashing up the AdminService with two other services...
-	@Autowired
-	private PersistenceService db;
+	private final PersistenceService db;
 
-	@Resource(name = ApiBusinessPartner_.CDS_NAME)
-	private CdsService bupa;
+	private final CdsService bupa;
+
+	AdminServiceAddressHandler(PersistenceService db, @Qualifier(ApiBusinessPartner_.CDS_NAME) CdsService bupa, CdsModel model) {
+		this.db = db;
+		this.bupa = bupa;
+		this.model = model;
+	}
 
 	// Using reflected definitions from the model (request-dependant, and therefore tenant-dependant)
 	private Class<Addresses_> addresses = Addresses_.class;
 	private Class<ABusinessPartnerAddress_> externalAddresses = ABusinessPartnerAddress_.class;
 
-	@Autowired
-	private CdsModel model;
+	private final CdsModel model;
 
 	private String[] getRelevantColumns() {
 		// determine columns from simplified Address entity definition
