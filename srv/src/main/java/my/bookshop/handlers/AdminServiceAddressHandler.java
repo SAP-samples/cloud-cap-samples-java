@@ -135,6 +135,7 @@ public class AdminServiceAddressHandler implements EventHandler {
 							.where(a -> a.BusinessPartner().eq(businessPartner).and(a.AddressID().eq(addressId))));
 
 					if(remoteAddresses.rowCount() == 1) {
+						// TODO in case another parallel transaction also replicates this address this might cause a conflict
 						db.run(Upsert.into(addresses).entries(remoteAddresses));
 					} else {
 						logger.warn("Unexpected number of shipping addresses for ID '{}': {}", addressId, remoteAddresses.rowCount());
