@@ -16,6 +16,7 @@
 
 	<!-- ACTUAL DEPENDENCIES -->
 	<dependencies>
+		<!-- CDS DEPENDENCIES -->
 		<dependency>
 			<groupId>com.sap.cds</groupId>
 			<artifactId>cds-starter-spring-boot</artifactId>
@@ -32,6 +33,30 @@
 			<artifactId>cds-starter-cloudfoundry</artifactId>
 		</dependency>
 
+		<dependency>
+			<groupId>com.sap.cds</groupId>
+			<artifactId>cds-feature-enterprise-messaging</artifactId>
+			<scope>runtime</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>com.sap.cds</groupId>
+			<artifactId>cds-feature-remote-odata</artifactId>
+			<scope>runtime</scope>
+		</dependency>
+
+		<!-- CLOUD SDK dependencies -->
+		<dependency>
+			<groupId>com.sap.cloud.sdk.cloudplatform</groupId>
+			<artifactId>resilience</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>com.sap.cloud.sdk.cloudplatform</groupId>
+			<artifactId>scp-cf</artifactId>
+		</dependency>
+
+		<!-- OTHER DEPENDENCIES -->
 		<dependency>
 			<groupId>org.xerial</groupId>
 			<artifactId>sqlite-jdbc</artifactId>
@@ -118,8 +143,7 @@
 						<configuration>
 							<commands>
 								<command>build --for java-cf</command>
-
-								<command>deploy --to sqlite --dry >
+								<command>deploy --to sqlite --with-mocks --dry >
 									${project.basedir}/src/main/resources/schema.sql</command>
 							</commands>
 						</configuration>

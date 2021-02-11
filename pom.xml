@@ -18,6 +18,7 @@
 		<jdk.version>1.8</jdk.version>
 		<cds.services.version>1.13.0</cds.services.version>
 		<spring.boot.version>2.4.1</spring.boot.version>
+		<cloud.sdk.version>3.37.0</cloud.sdk.version>
 
 		<node.version>v12.16.2</node.version>
 	</properties>
@@ -44,6 +45,22 @@
 				<version>${spring.boot.version}</version>
 				<type>pom</type>
 				<scope>import</scope>
+			</dependency>
+
+			<!-- CLOUD SDK -->
+			<dependency>
+				<groupId>com.sap.cloud.sdk</groupId>
+				<artifactId>sdk-bom</artifactId>
+				<version>${cloud.sdk.version}</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+
+			<!-- MANAGE Spring XSUAA Library, because of Spring 2.4 incompatible version in Cloud SDK BOM -->
+			<dependency>
+				<groupId>com.sap.cloud.security.xsuaa</groupId>
+				<artifactId>xsuaa-spring-boot-starter</artifactId>
+				<version>2.8.1</version>
 			</dependency>
 		</dependencies>
 	</dependencyManagement>

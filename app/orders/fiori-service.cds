@@ -24,7 +24,32 @@ annotate AdminService.OrderItems with {
 	);
 }
 
+annotate AdminService.Orders with {
+	shippingAddress @(
+		Common: {
+			FieldControl: #Mandatory,
+			ValueList: {
+				CollectionPath: 'Addresses',
+				Label: 'Addresses',
+				SearchSupported: 'true',
+				Parameters: [
+					{ $Type: 'Common.ValueListParameterOut', LocalDataProperty: 'shippingAddress_AddressID', ValueListProperty: 'AddressID'},
+					{ $Type: 'Common.ValueListParameterOut', LocalDataProperty: 'shippingAddress_BusinessPartner', ValueListProperty: 'BusinessPartner'},
+					{ $Type: 'Common.ValueListParameterDisplayOnly', ValueListProperty: 'PostalCode'},
+					{ $Type: 'Common.ValueListParameterDisplayOnly', ValueListProperty: 'CityName'},
+					{ $Type: 'Common.ValueListParameterDisplayOnly', ValueListProperty: 'Country'},
+					{ $Type: 'Common.ValueListParameterDisplayOnly', ValueListProperty: 'StreetName'},
+					{ $Type: 'Common.ValueListParameterDisplayOnly', ValueListProperty: 'HouseNumber'},
+				]
+			}
+		}
+	);
+}
 
+////////////////////////////////////////////////////////////////////////////
+//
+//	UI
+//
 annotate AdminService.Orders with @(
 	UI: {
 		////////////////////////////////////////////////////////////////////////////
@@ -53,12 +78,14 @@ annotate AdminService.Orders with @(
 			{Value: createdBy, Label:'{i18n>CreatedBy}'},
 			{Value: createdAt, Label:'{i18n>CreatedAt}'},
 			{Value: OrderNo },
+			{Value: 'shippingAddress', Label: '{i18n>AddressID}'}
 		],
 		HeaderFacets: [
 			{$Type: 'UI.ReferenceFacet', Label: '{i18n>Created}', Target: '@UI.FieldGroup#Created'},
 			{$Type: 'UI.ReferenceFacet', Label: '{i18n>Modified}', Target: '@UI.FieldGroup#Modified'},
 		],
 		Facets: [
+			{$Type: 'UI.ReferenceFacet', Label: '{i18n>ShippingAddress}', Target: '@UI.FieldGroup#ShippingAddress'},
 			{$Type: 'UI.ReferenceFacet', Label: '{i18n>Details}', Target: '@UI.FieldGroup#Details'},
 			{$Type: 'UI.ReferenceFacet', Label: '{i18n>OrderItems}', Target: 'Items/@UI.LineItem'},
 		],
@@ -80,6 +107,15 @@ annotate AdminService.Orders with @(
 				{Value: modifiedAt},
 			]
 		},
+		FieldGroup#ShippingAddress: {
+			Data: [
+				{Value: shippingAddress_AddressID, Label:'{i18n>ShippingAddress}'},
+				{Value: shippingAddress.HouseNumber, Label:'{i18n>HouseNumber}'},
+				{Value: shippingAddress.StreetName, Label:'{i18n>StreetName}'},
+				{Value: shippingAddress.CityName, Label:'{i18n>CityName}'},
+				{Value: shippingAddress.PostalCode, Label:'{i18n>PostalCode}'},
+			]
+		}
 	},
 	Common: {
 		SideEffects#ItemsChanges: {
@@ -97,6 +133,14 @@ annotate AdminService.Orders with @(
 			TargetEntities: [
 				currency
 			]
+		},
+		SideEffects#AddressChanges: {
+			SourceProperties: [
+				shippingAddress_AddressID
+			],
+			TargetEntities: [
+				shippingAddress
+			]
 		}
 	}
 ) {
@@ -108,8 +152,6 @@ annotate AdminService.Orders with @(
 		//In all services we always find currency as the code and not as an object that contains a property code
 		//it seems to work but at least to me this is unconventional modeling.
 };
-
-
 
 //The enity types name is AdminService.my_bookshop_OrderItems
 //The annotations below are not generated in edmx WHY?

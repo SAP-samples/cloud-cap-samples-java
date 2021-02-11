@@ -3,17 +3,35 @@ spring:
   web.resources.static-locations: "file:./app"
 cds:
   odata-v4.endpoint.path: "/api"
+  messaging.services:
+    bupa-messaging:
+      kind: file-based-messaging
   security.mock.users:
     - name: admin
       password: admin
       roles:
       - admin
+      attributes:
+        businessPartner:
+        - "10401010"
     - name: user
       password: user
 
 ---
 spring:
   config.activate.on-profile: cloud
+cds:
+  messaging.services:
+    bupa-messaging:
+      kind: enterprise-messaging
+      topic-namespace: sap/S4HANAOD/dkom
+  remote.services:
+  - name: API_BUSINESS_PARTNER
+    destination:
+      name: "s4-business-partner-api"
+      suffix: "sap/opu/odata/sap/"
+      type: "odata-v2"
+      api-key: "" # Place API Key from API Business Hub here
 
 ---
 spring:
