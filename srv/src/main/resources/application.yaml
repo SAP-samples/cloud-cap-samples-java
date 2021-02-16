@@ -31,8 +31,8 @@ cds:
       name: "s4-business-partner-api"
       suffix: "sap/opu/odata/sap/"
       type: "odata-v2"
-      api-key: "" # Place API Key from API Business Hub here
-
+api-hub:
+  api-key: "" # Place API Key from SAP API Business Hub here
 ---
 spring:
   config.activate.on-profile: sqlite
