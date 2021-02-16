@@ -15,7 +15,7 @@ import com.sap.cloud.sdk.cloudplatform.connectivity.DestinationAccessor;
 @ServiceName(ApplicationLifecycleService.DEFAULT_NAME)
 public class DestinationConfiguration implements EventHandler {
 
-	@Value("${cds.remote.services[0].destination.api-key:}")
+	@Value("${api-hub.api-key:}")
 	private String apiKey;
 
 	@Before(event = ApplicationLifecycleService.EVENT_APPLICATION_PREPARED)
