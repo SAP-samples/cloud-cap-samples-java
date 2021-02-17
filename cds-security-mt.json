@@ -26,7 +26,13 @@
 			"description": "Undeploy your own tenant's extensions"
 		}
 	],
-	"attributes": [],
+	"attributes": [
+		{
+			"name": "businessPartner",
+			"description": "S/4 BusinessPartner ID assigned to the user",
+			"valueType": "string"
+		}
+	],
 	"role-templates": [
 		{
 			"name": "admin",
@@ -34,7 +40,9 @@
 			"scope-references": [
 				"$XSAPPNAME.admin"
 			],
-			"attribute-references": []
+			"attribute-references": [
+				"businessPartner"
+			]
 		},
 		{
 			"name": "Extension_Developer",

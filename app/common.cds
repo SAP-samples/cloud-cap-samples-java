@@ -75,6 +75,20 @@ annotate my.Authors with {
 
 ////////////////////////////////////////////////////////////////////////////
 //
+//	Addresses Elements
+//
+annotate my.Addresses with {
+	AddressID @title:'{i18n>AddressID}';
+	BusinessPartner @title:'{i18n>BusinessPartner}';
+	CityName @title:'{i18n>CityName}';
+	StreetName @title:'{i18n>StreetName}';
+	PostalCode @title:'{i18n>PostalCode}';
+	Country @title:'{i18n>Country}';
+	HouseNumber @title:'{i18n>HouseNumber}';
+}
+
+////////////////////////////////////////////////////////////////////////////
+//
 //	Fiori requires generated IDs to be annotated with @Core.Computed
 //
 using { cuid } from '@sap/cds/common';

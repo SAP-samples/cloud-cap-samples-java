@@ -1,0 +1,4 @@
+PATCH http://localhost:8080/api/API_BUSINESS_PARTNER/A_BusinessPartnerAddress(BusinessPartner='10401010',AddressID='200')
+Content-Type: application/json
+
+{"HouseNumber": "30"}
