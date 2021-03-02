@@ -18,6 +18,7 @@ import com.sap.cds.ql.Select;
 import com.sap.cds.reflect.CdsModel;
 import com.sap.cds.services.ServiceException;
 import com.sap.cds.services.cds.CdsService;
+import com.sap.cds.services.messages.Messages;
 import com.sap.cds.services.persistence.PersistenceService;
 
 import cds.gen.catalogservice.AddReviewContext;
@@ -40,6 +41,9 @@ public class CatalogServiceHandlerTest {
 
 	@Autowired
 	private CdsModel model;
+	
+	@Autowired
+	private Messages messages;
 
 	@Autowired
 	private BookRatingService bookRatingService;
@@ -53,7 +57,7 @@ public class CatalogServiceHandlerTest {
 		book2.setTitle("Book 2");
 		book2.setStock(200);
 
-		CatalogServiceHandler handler = new CatalogServiceHandler(db, bookRatingService, model);
+		CatalogServiceHandler handler = new CatalogServiceHandler(db, messages, bookRatingService, model);
 		handler.discountBooks(Stream.of(book1, book2));
 
 		assertEquals("Book 1", book1.getTitle(), "Book 1 was discounted");

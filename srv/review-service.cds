@@ -42,6 +42,11 @@ service ReviewService
         {
             grant : 'DELETE',
             to : 'admin'
+        },
+		{
+            grant : 'DELETE',
+            to : 'authenticated-user',
+            where : 'reviewer=$user'
         }
     ];
 }
