@@ -30,6 +30,11 @@
 		"authenticationType": "xsuaa"
 	  },
 	  {
+		"source": "^/vue/(.*)$",
+		"localDir": "./",
+		"authenticationType": "xsuaa"
+	  },
+	  {
 		"source": "^/api/admin/(.*)",
 		"authenticationType": "xsuaa",
 		"destination": "backend"

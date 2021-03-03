@@ -59,16 +59,7 @@ service CatalogService {
     {
         grant : 'DELETE',
         to    : 'authenticated-user',
-        where : 'user=$user'
-    },
-    {
-        grant : 'like',
-        to    : 'identified-user'
-    },
-    {
-        grant : 'unlike',
-        to    : 'identified-user',
-        where : 'user=$user'
+        where : 'reviewer=$user'
     }
     ];
 }
