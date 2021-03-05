@@ -16,9 +16,9 @@
 
 		<!-- DEPENDENCIES VERSION -->
 		<jdk.version>1.8</jdk.version>
-		<cds.services.version>1.13.1</cds.services.version>
-		<spring.boot.version>2.4.1</spring.boot.version>
-		<cloud.sdk.version>3.37.0</cloud.sdk.version>
+		<cds.services.version>1.14.0</cds.services.version>
+		<spring.boot.version>2.4.3</spring.boot.version>
+		<cloud.sdk.version>3.38.0</cloud.sdk.version>
 
 		<node.version>v12.16.2</node.version>
 	</properties>
