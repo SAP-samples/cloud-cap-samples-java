@@ -134,7 +134,7 @@ class AdminServiceHandler implements EventHandler {
 		// check if amount or book was updated
 		Integer amount = orderItem.getAmount();
 		String bookId = orderItem.getBookId();
-		String orderItemId = (String) analyzer.analyze(context.getCqn()).targetKeys().get(OrderItems.ID);
+		String orderItemId = orderItem.getId();
 		BigDecimal netAmount = calculateNetAmountInDraft(orderItemId, amount, bookId);
 		if (netAmount != null) {
 			orderItem.setNetAmount(netAmount);
