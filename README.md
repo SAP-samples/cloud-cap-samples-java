@@ -6,7 +6,7 @@
 
 Welcome to the bookshop-java project. It demonstrates how to build business applications using the [CAP Java SDK](https://cap.cloud.sap) providing a book shop web application as an example. The application in this project enables browsing books, managing books, and managing orders.
 
-![Application Overview in Fiori Launchpad](assets/readmeImages/FioriHome.png)
+![Book Object Page](assets/readmeImages/BookPage.png)
 
 <!-- omit in toc -->
 ## Outline
@@ -22,6 +22,7 @@ Welcome to the bookshop-java project. It demonstrates how to build business appl
   - [Using a File-Based SQLite Database](#using-a-file-based-sqlite-database)
 - [Get Support](#get-support)
 - [License](#license)
+
 
 # Overview
 
