@@ -85,5 +85,5 @@ resources:
   - name: bookshop-java-public-hdi-container
     type: org.cloudfoundry.managed-service
     parameters:
-      service: hana
+      service: hanatrial
       service-plan: hdi-shared

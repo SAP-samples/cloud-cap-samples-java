@@ -45,7 +45,7 @@ public class BookRatingService {
 	 * @param bookId
 	 */
 	public void setBookRating(String bookId) {
-		Result run = db.run(Select.from(Bookshop_.REVIEWS).where(r -> r.book_ID().eq(bookId)));
+		Result run = db.run(Select.from(Bookshop_.BOOKS, b -> b.filter(b.ID().eq(bookId)).reviews()));
 
 		Stream<Double> ratings = run.streamOf(Reviews.class).map(r -> r.getRating().doubleValue());
 		BigDecimal rating = getAvgRating(ratings);

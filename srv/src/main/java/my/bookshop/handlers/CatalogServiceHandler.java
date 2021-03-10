@@ -10,8 +10,8 @@ import java.util.stream.Stream;
 
 import org.springframework.stereotype.Component;
 
+import com.sap.cds.EmptyResultException;
 import com.sap.cds.Result;
-import com.sap.cds.Row;
 import com.sap.cds.ql.Insert;
 import com.sap.cds.ql.Select;
 import com.sap.cds.ql.Update;
@@ -44,9 +44,9 @@ import my.bookshop.MessageKeys;
  * Custom business logic for the "Catalog Service" (see cat-service.cds)
  *
  * Handles Reading of Books
- * 
+ *
  * Adds Discount Message to the Book Title if too much stock is available
- * 
+ *
  * Provides adding book reviews
  */
 @Component
@@ -60,9 +60,9 @@ class CatalogServiceHandler implements EventHandler {
 	private final BookRatingService bookRatingService;
 
 	private final CqnAnalyzer analyzer;
-	
 
-	CatalogServiceHandler(PersistenceService db, Messages messages, BookRatingService bookRatingService, CdsModel model) {
+	CatalogServiceHandler(PersistenceService db, Messages messages, BookRatingService bookRatingService,
+			CdsModel model) {
 		this.db = db;
 		this.messages = messages;
 		this.bookRatingService = bookRatingService;
@@ -71,7 +71,7 @@ class CatalogServiceHandler implements EventHandler {
 
 	/**
 	 * Invokes some validations before creating a review.
-	 * 
+	 *
 	 * @param context {@link ReviewContext}
 	 */
 	@Before(entity = Books_.CDS_NAME)
@@ -91,7 +91,7 @@ class CatalogServiceHandler implements EventHandler {
 
 	/**
 	 * Handles the review creation from the given context.
-	 * 
+	 *
 	 * @param context {@link ReviewContext}
 	 */
 	@On(entity = Books_.CDS_NAME)
@@ -101,7 +101,10 @@ class CatalogServiceHandler implements EventHandler {
 		String text = context.getText();
 
 		String username = context.getUserInfo().getName();
-		String bookId = (String) analyzer.analyze(context.getCqn()).targetKeys().get(Books.ID);
+		// String bookId = (String)
+		// analyzer.analyze(context.getCqn()).targetKeys().get(Books.ID);
+
+		String bookId = validateReviewAndReturnBookId(context);
 
 		Reviews review = Reviews.create();
 		review.setBookId(bookId);
@@ -110,24 +113,23 @@ class CatalogServiceHandler implements EventHandler {
 		review.setTitle(title);
 		review.setText(text);
 
-		validateReview(review);
+		// validateReview(review);
 
 		Result res = db.run(Insert.into(CatalogService_.REVIEWS).entry(review));
-		Optional<Reviews> inserted = res.first(Reviews.class);
+		Reviews inserted = res.single(Reviews.class);
 
 		messages.success(MessageKeys.REVIEW_ADDED);
-		inserted.ifPresent(r -> context.setResult(r));
+		context.setResult(inserted);
 	}
 
 	/**
 	 * Recalculates and sets the book rating after a new review for the given book.
-	 * 
+	 *
 	 * @param context {@link ReviewContext}
 	 */
 	@After(entity = Books_.CDS_NAME)
 	public void afterAddReview(AddReviewContext context) {
-		String bookId = (String) analyzer.analyze(context.getCqn()).targetKeys().get(Books.ID);
-		bookRatingService.setBookRating(bookId);
+		bookRatingService.setBookRating(context.getResult().getBookId());
 	}
 
 	@After(event = CdsService.EVENT_READ)
@@ -191,34 +193,26 @@ class CatalogServiceHandler implements EventHandler {
 		}
 	}
 
-	private void validateReview(Reviews review) {
-		validateBook(review);
-		validateRating(review);
+	private String validateReviewAndReturnBookId(AddReviewContext context) {
+		validateRating(context);
+		return validateBook(context);
 	}
 
-	private void validateRating(Reviews review) {
-		Integer rating = review.getRating();
-		if (rating == null) {
-			long r = Math.round(Math.random() * 4) + 1;
-			review.setRating(Integer.valueOf((int) r));
-		} else {
-			if (rating < 1 || rating > 5) {
-				throw new ServiceException(ErrorStatuses.BAD_REQUEST, MessageKeys.REVIEW_INVALID_RATING)
-						.messageTarget(Reviews_.class, r -> r.rating());
-			}
+	private void validateRating(AddReviewContext context) {
+		Integer rating = context.getRating();
+		if (rating == null || rating < 1 || rating > 5) {
+			throw new ServiceException(ErrorStatuses.BAD_REQUEST, MessageKeys.REVIEW_INVALID_RATING)
+			.messageTarget(Reviews_.class, r -> r.rating());
 		}
 	}
 
-	private void validateBook(Reviews review) {
-		if (review.getBookId() == null) {
-			throw new ServiceException(ErrorStatuses.BAD_REQUEST, MessageKeys.BOOK_MISSING)
-					.messageTarget(Reviews_.class, r -> r.book_ID());
+	private String validateBook(AddReviewContext context) {
+		try {
+			Books book = db.run(context.getCqn()).single(Books.class);
+			return book.getId();
+		} catch (EmptyResultException ex) {
+			throw new ServiceException(ErrorStatuses.BAD_REQUEST, MessageKeys.BOOK_MISSING);
 		}
-
-		Optional<Row> row = db.run(Select.from(CatalogService_.BOOKS).byId(review.getBookId())).first();
-
-		row.orElseThrow(() -> new ServiceException(ErrorStatuses.BAD_REQUEST, MessageKeys.BOOK_MISSING)
-				.messageTarget(Reviews_.class, r -> r.book_ID()));
 	}
 
 }

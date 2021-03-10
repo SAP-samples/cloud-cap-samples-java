@@ -11,6 +11,9 @@ import java.util.UUID;
 import java.util.function.Supplier;
 import java.util.stream.Stream;
 
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Component;
+
 import com.sap.cds.Result;
 import com.sap.cds.ql.Select;
 import com.sap.cds.ql.Update;
@@ -28,9 +31,6 @@ import com.sap.cds.services.handler.annotations.On;
 import com.sap.cds.services.handler.annotations.ServiceName;
 import com.sap.cds.services.messages.Messages;
 import com.sap.cds.services.persistence.PersistenceService;
-
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.stereotype.Component;
 
 import cds.gen.adminservice.AddToOrderContext;
 import cds.gen.adminservice.AdminService_;
@@ -70,10 +70,10 @@ class AdminServiceHandler implements EventHandler {
 	}
 
 	/**
-	 * Validate correctness of an order before finishing the order proces: 1. Check
-	 * Order amount for each Item and return a message if amount is empty or <= 0 2.
-	 * Check Order amount for each Item is available, return message if the stock is
-	 * too low
+	 * Validate correctness of an order before finishing the order process:
+	 *
+	 * 1. Check Order amount for each Item and return a message if amount is empty or <= 0
+	 * 2. Check Order amount for each Item is available, return message if the stock is too low
 	 *
 	 * @param orders
 	 */
@@ -89,9 +89,9 @@ class AdminServiceHandler implements EventHandler {
 					// exceptions with localized messages from property files
 					// exceptions abort the request and set an error http status code
 					throw new ServiceException(ErrorStatuses.BAD_REQUEST, MessageKeys.AMOUNT_REQUIRE_MINIMUM)
-							.messageTarget("in", ORDERS,
-									o -> o.Items(i -> i.ID().eq(orderItem.getId()).and(i.IsActiveEntity().eq(false)))
-											.amount());
+					.messageTarget("in", ORDERS,
+							o -> o.Items(i -> i.ID().eq(orderItem.getId()).and(i.IsActiveEntity().eq(false)))
+							.amount());
 				}
 
 				String bookId = orderItem.getBookId();
@@ -106,7 +106,7 @@ class AdminServiceHandler implements EventHandler {
 				// handled
 				int diffAmount = amount
 						- db.run(Select.from(Bookshop_.ORDER_ITEMS).columns(i -> i.amount()).byId(orderItem.getId()))
-								.first(OrderItems.class).map(i -> i.getAmount()).orElse(0);
+						.first(OrderItems.class).map(i -> i.getAmount()).orElse(0);
 
 				// check if enough books are available
 				Result result = db
@@ -224,7 +224,7 @@ class AdminServiceHandler implements EventHandler {
 
 	/**
 	 * Adds a book to an order
-	 * 
+	 *
 	 * @param context
 	 */
 	@On(entity = Books_.CDS_NAME)
