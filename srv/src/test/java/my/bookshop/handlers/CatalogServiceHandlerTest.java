@@ -1,5 +1,6 @@
 package my.bookshop.handlers;
 
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
@@ -131,6 +132,23 @@ public class CatalogServiceHandlerTest {
 			assertThrows(ServiceException.class, () -> catalogService.emit(context), testCase.exceptionMessage);
 
 		});
+	}
+
+	@Test
+	@WithMockUser(username = "user")
+	public void testAddReviewSameBookMoreThanOnceBySameUser() {
+
+		String bookId = "f846b0b9-01d4-4f6d-82a4-d79204f62278";
+		String anotherBookId = "9b084139-0b1e-43b6-b12a-7b3669d75f02";
+
+		AddReviewContext firstReview = addReviewContext(bookId, 1, "quite bad", "disappointing...");
+		AddReviewContext secondReview = addReviewContext(bookId, 5, "great read", "just amazing...");
+		AddReviewContext anotherReview = addReviewContext(anotherBookId, 4, "very good", "entertaining...");
+
+		assertDoesNotThrow(() -> catalogService.emit(firstReview));
+		assertThrows(ServiceException.class, () -> catalogService.emit(secondReview),
+				"User not allowed to add more than one review for a given book");
+		assertDoesNotThrow(() -> catalogService.emit(anotherReview));
 	}
 
 	/*
