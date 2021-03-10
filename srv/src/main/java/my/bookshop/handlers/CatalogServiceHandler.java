@@ -8,9 +8,9 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
-import com.sap.cds.EmptyResultException;
 import com.sap.cds.Result;
 import com.sap.cds.ql.Insert;
 import com.sap.cds.ql.Select;
@@ -21,6 +21,7 @@ import com.sap.cds.services.ErrorStatuses;
 import com.sap.cds.services.ServiceException;
 import com.sap.cds.services.cds.CdsReadEventContext;
 import com.sap.cds.services.cds.CdsService;
+import com.sap.cds.services.draft.DraftService;
 import com.sap.cds.services.handler.EventHandler;
 import com.sap.cds.services.handler.annotations.After;
 import com.sap.cds.services.handler.annotations.Before;
@@ -37,6 +38,7 @@ import cds.gen.catalogservice.ReturnCatalogServiceSubmitOrder;
 import cds.gen.catalogservice.Reviews;
 import cds.gen.catalogservice.Reviews_;
 import cds.gen.catalogservice.SubmitOrderContext;
+import cds.gen.reviewservice.ReviewService_;
 import my.bookshop.BookRatingService;
 import my.bookshop.MessageKeys;
 
@@ -55,15 +57,18 @@ class CatalogServiceHandler implements EventHandler {
 
 	private final PersistenceService db;
 
+	private final DraftService reviewService;
+
 	private final Messages messages;
 
 	private final BookRatingService bookRatingService;
 
 	private final CqnAnalyzer analyzer;
 
-	CatalogServiceHandler(PersistenceService db, Messages messages, BookRatingService bookRatingService,
-			CdsModel model) {
+	CatalogServiceHandler(PersistenceService db, @Qualifier(ReviewService_.CDS_NAME) DraftService reviewService,
+			Messages messages, BookRatingService bookRatingService, CdsModel model) {
 		this.db = db;
+		this.reviewService = reviewService;
 		this.messages = messages;
 		this.bookRatingService = bookRatingService;
 		this.analyzer = CqnAnalyzer.create(model);
@@ -101,25 +106,20 @@ class CatalogServiceHandler implements EventHandler {
 		String text = context.getText();
 
 		String username = context.getUserInfo().getName();
-		// String bookId = (String)
-		// analyzer.analyze(context.getCqn()).targetKeys().get(Books.ID);
+		String bookId = (String) analyzer.analyze(context.getCqn()).targetKeys().get(Books.ID);
 
-		String bookId = validateReviewAndReturnBookId(context);
-
-		Reviews review = Reviews.create();
+		cds.gen.reviewservice.Reviews review = cds.gen.reviewservice.Reviews.create();
 		review.setBookId(bookId);
 		review.setReviewer(username);
 		review.setRating(rating);
 		review.setTitle(title);
 		review.setText(text);
 
-		// validateReview(review);
-
-		Result res = db.run(Insert.into(CatalogService_.REVIEWS).entry(review));
-		Reviews inserted = res.single(Reviews.class);
+		Result res = reviewService.run(Insert.into(ReviewService_.REVIEWS).entry(review));
+		cds.gen.reviewservice.Reviews inserted = res.single(cds.gen.reviewservice.Reviews.class);
 
 		messages.success(MessageKeys.REVIEW_ADDED);
-		context.setResult(inserted);
+		context.setResult(toCatalogServiceReviews(inserted));
 	}
 
 	/**
@@ -142,11 +142,15 @@ class CatalogServiceHandler implements EventHandler {
 
 	@After
 	public void setIsReviewable(CdsReadEventContext context, List<Books> books) {
-		String user = context.getUserInfo().getName();
 
-		Result result = db
-				.run(Select.from(CatalogService_.REVIEWS).columns(Reviews_::book_ID).where(r -> r.reviewer().eq(user)));
-		Set<String> reviewedBooks = result.streamOf(Reviews.class).map(Reviews::getBookId).collect(Collectors.toSet());
+		String user = context.getUserInfo().getName();
+		List<String> bookIds = books.stream().map(b -> b.getId()).collect(Collectors.toList());
+
+		Select<Reviews_> query = Select.from(CatalogService_.BOOKS, b -> b.filter(b.ID().in(bookIds)).reviews())
+				.where(r -> r.reviewer().eq(user));
+
+		Set<String> reviewedBooks = db.run(query).streamOf(Reviews.class).map(Reviews::getBookId)
+				.collect(Collectors.toSet());
 
 		for (Books book : books) {
 			if (reviewedBooks.contains(book.getId())) {
@@ -193,26 +197,20 @@ class CatalogServiceHandler implements EventHandler {
 		}
 	}
 
-	private String validateReviewAndReturnBookId(AddReviewContext context) {
-		validateRating(context);
-		return validateBook(context);
-	}
-
-	private void validateRating(AddReviewContext context) {
-		Integer rating = context.getRating();
-		if (rating == null || rating < 1 || rating > 5) {
-			throw new ServiceException(ErrorStatuses.BAD_REQUEST, MessageKeys.REVIEW_INVALID_RATING)
-			.messageTarget(Reviews_.class, r -> r.rating());
-		}
-	}
-
-	private String validateBook(AddReviewContext context) {
-		try {
-			Books book = db.run(context.getCqn()).single(Books.class);
-			return book.getId();
-		} catch (EmptyResultException ex) {
-			throw new ServiceException(ErrorStatuses.BAD_REQUEST, MessageKeys.BOOK_MISSING);
-		}
+	private Reviews toCatalogServiceReviews(cds.gen.reviewservice.Reviews review) {
+		Reviews r = Reviews.create();
+		r.setId(review.getId());
+		r.setDate(review.getDate());
+		r.setCreatedBy(review.getCreatedBy());
+		r.setCreatedAt(review.getCreatedAt());
+		r.setBookId(review.getBookId());
+		r.setModifiedAt(review.getModifiedAt());
+		r.setModifiedBy(review.getModifiedBy());
+		r.setRating(review.getRating());
+		r.setReviewer(review.getReviewer());
+		r.setText(review.getText());
+		r.setTitle(review.getTitle());
+		return r;
 	}
 
 }

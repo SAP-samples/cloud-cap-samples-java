@@ -11,27 +11,27 @@ import com.sap.cds.ql.Select;
 import com.sap.cds.services.ErrorStatuses;
 import com.sap.cds.services.ServiceException;
 import com.sap.cds.services.cds.CdsService;
+import com.sap.cds.services.draft.DraftService;
 import com.sap.cds.services.handler.EventHandler;
 import com.sap.cds.services.handler.annotations.Before;
 import com.sap.cds.services.handler.annotations.ServiceName;
 
-import cds.gen.catalogservice.CatalogService_;
-import cds.gen.my.bookshop.Reviews;
-import cds.gen.my.bookshop.Reviews_;
 import cds.gen.reviewservice.ReviewService_;
+import cds.gen.reviewservice.Reviews;
+import cds.gen.reviewservice.Reviews_;
 import my.bookshop.MessageKeys;
 
 @Component
 @ServiceName(ReviewService_.CDS_NAME)
 public class ReviewServiceHandler implements EventHandler {
 
-	private CdsService catalogService;
+	private DraftService reviewService;
 
-	ReviewServiceHandler(@Qualifier(CatalogService_.CDS_NAME) CdsService catalogService) {
-		this.catalogService = catalogService;
+	ReviewServiceHandler(@Qualifier(ReviewService_.CDS_NAME) DraftService reviewService) {
+		this.reviewService = reviewService;
 	}
 
-	@Before(event = { CdsService.EVENT_CREATE, CdsService.EVENT_UPDATE })
+	@Before(event = { CdsService.EVENT_CREATE, CdsService.EVENT_UPSERT, CdsService.EVENT_UPDATE })
 	public void beforeAddReview(Stream<Reviews> reviews) {
 		reviews.forEach(review -> {
 			validateBook(review);
@@ -43,17 +43,16 @@ public class ReviewServiceHandler implements EventHandler {
 		Integer rating = review.getRating();
 		if (rating < 0 || rating > 5) {
 			throw new ServiceException(ErrorStatuses.BAD_REQUEST, MessageKeys.REVIEW_INVALID_RATING)
-					.messageTarget(Reviews_.class, r -> r.rating());
+			.messageTarget(Reviews_.class, r -> r.rating());
 		}
 	}
 
 	private void validateBook(Reviews review) {
 		if (review.getBookId() == null) {
 			throw new ServiceException(ErrorStatuses.BAD_REQUEST, MessageKeys.BOOK_MISSING)
-					.messageTarget(Reviews_.class, r -> r.book_ID());
+			.messageTarget(Reviews_.class, r -> r.book_ID());
 		}
-
-		Optional<Row> row = catalogService.run(Select.from(CatalogService_.BOOKS).byId(review.getBookId())).first();
+		Optional<Row> row = reviewService.run(Select.from(ReviewService_.BOOKS).byId(review.getBookId())).first();
 		row.orElseThrow(() -> new ServiceException(ErrorStatuses.BAD_REQUEST, MessageKeys.BOOK_MISSING)
 				.messageTarget(Reviews_.class, r -> r.book_ID()));
 	}

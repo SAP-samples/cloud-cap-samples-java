@@ -18,6 +18,7 @@ import com.sap.cds.ql.Select;
 import com.sap.cds.reflect.CdsModel;
 import com.sap.cds.services.ServiceException;
 import com.sap.cds.services.cds.CdsService;
+import com.sap.cds.services.draft.DraftService;
 import com.sap.cds.services.messages.Messages;
 import com.sap.cds.services.persistence.PersistenceService;
 
@@ -25,6 +26,7 @@ import cds.gen.catalogservice.AddReviewContext;
 import cds.gen.catalogservice.Books;
 import cds.gen.catalogservice.CatalogService_;
 import cds.gen.catalogservice.Reviews;
+import cds.gen.reviewservice.ReviewService_;
 import my.bookshop.BookRatingService;
 
 @ExtendWith(MockitoExtension.class)
@@ -41,12 +43,16 @@ public class CatalogServiceHandlerTest {
 
 	@Autowired
 	private CdsModel model;
-	
+
 	@Autowired
 	private Messages messages;
 
 	@Autowired
 	private BookRatingService bookRatingService;
+
+	@Autowired
+	@Qualifier(ReviewService_.CDS_NAME)
+	private DraftService reviewService;
 
 	@Test
 	public void testDiscountHandler() {
@@ -57,7 +63,8 @@ public class CatalogServiceHandlerTest {
 		book2.setTitle("Book 2");
 		book2.setStock(200);
 
-		CatalogServiceHandler handler = new CatalogServiceHandler(db, messages, bookRatingService, model);
+		CatalogServiceHandler handler = new CatalogServiceHandler(db, reviewService, messages, bookRatingService,
+				model);
 		handler.discountBooks(Stream.of(book1, book2));
 
 		assertEquals("Book 1", book1.getTitle(), "Book 1 was discounted");
