@@ -26,7 +26,6 @@ public class CatalogServiceITest {
 
 	private static final String USER_USER_STRING = "user";
 	private static final String ADMIN_USER_STRING = "admin";
-	private static final String ANONYMOUS_USER_STRING = "anonymous";
 
 	@Autowired
 	private MockMvc mockMvc;
@@ -34,17 +33,17 @@ public class CatalogServiceITest {
 	@Test
 	public void testDiscountApplied() throws Exception {
 		mockMvc.perform(get(booksURI + "?$filter=stock gt 200&top=1")).andExpect(status().isOk())
-				.andExpect(jsonPath("$.value[0].title").value(containsString("11% discount")));
+		.andExpect(jsonPath("$.value[0].title").value(containsString("11% discount")));
 	}
 
 	@Test
 	public void testDiscountNotApplied() throws Exception {
 		mockMvc.perform(get(booksURI + "?$filter=stock lt 100&top=1")).andExpect(status().isOk())
-				.andExpect(jsonPath("$.value[0].title").value(not(containsString("11% discount"))));
+		.andExpect(jsonPath("$.value[0].title").value(not(containsString("11% discount"))));
 	}
 
 	@Test
-	public void testCreateReview() throws Exception {
+	public void testCreateReviewNotAuthenticated() throws Exception {
 		String bookId = "f846b0b9-01d4-4f6d-82a4-d79204f62278";
 		Integer rating = 1;
 		String title = "title";
@@ -53,10 +52,8 @@ public class CatalogServiceITest {
 		String uri = String.format("%s(ID=%s)/CatalogService.addReview", booksURI, bookId);
 		String payload = String.format("{ \"rating\": %d, \"title\": \"%s\", \"text\": \"%s\" }", rating, title, text);
 
-		mockMvc.perform(post(uri).contentType(MediaType.APPLICATION_JSON).content(payload)).andExpect(status().isOk())
-				.andExpect(jsonPath("$.book_ID").value(bookId)).andExpect(jsonPath("$.rating").value(rating))
-				.andExpect(jsonPath("$.title").value(title)).andExpect(jsonPath("$.text").value(text))
-				.andExpect(jsonPath("$.reviewer").value(ANONYMOUS_USER_STRING));
+		mockMvc.perform(post(uri).contentType(MediaType.APPLICATION_JSON).content(payload))
+		.andExpect(status().isForbidden());
 	}
 
 	@Test
@@ -71,7 +68,7 @@ public class CatalogServiceITest {
 		String payload = String.format("{ \"rating\": %d, \"title\": \"%s\", \"text\": \"%s\" }", rating, title, text);
 
 		mockMvc.perform(post(uri).contentType(MediaType.APPLICATION_JSON).content(payload))
-				.andExpect(jsonPath("$.reviewer").value(USER_USER_STRING));
+		.andExpect(jsonPath("$.reviewer").value(USER_USER_STRING));
 	}
 
 	@Test
@@ -86,7 +83,7 @@ public class CatalogServiceITest {
 		String payload = String.format("{ \"rating\": %d, \"title\": \"%s\", \"text\": \"%s\" }", rating, title, text);
 
 		mockMvc.perform(post(uri).contentType(MediaType.APPLICATION_JSON).content(payload))
-				.andExpect(jsonPath("$.reviewer").value(ADMIN_USER_STRING));
+		.andExpect(jsonPath("$.reviewer").value(ADMIN_USER_STRING));
 	}
 
 }

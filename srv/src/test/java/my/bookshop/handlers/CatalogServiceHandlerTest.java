@@ -77,7 +77,7 @@ public class CatalogServiceHandlerTest {
 	public void testCreateReviewHandler() {
 		Stream<BookReview> bookReviews = Stream.of(
 				new BookReview("f846b0b9-01d4-4f6d-82a4-d79204f62278", 1, "quite bad", "disappointing..."),
-				new BookReview("9b084139-0b1e-43b6-b12a-7b3669d75f02", 5, "great read", "just amazing..."));
+				new BookReview("aebdfc8a-0dfa-4468-bd36-48aabd65e663", 5, "great read", "just amazing..."));
 
 		bookReviews.forEach(bookReview -> {
 			AddReviewContext context = addReviewContext(bookReview.bookId, bookReview.rating, bookReview.title,
@@ -138,7 +138,7 @@ public class CatalogServiceHandlerTest {
 	@WithMockUser(username = "user")
 	public void testAddReviewSameBookMoreThanOnceBySameUser() {
 
-		String bookId = "f846b0b9-01d4-4f6d-82a4-d79204f62278";
+		String bookId = "4a519e61-3c3a-4bd9-ab12-d7e0c5329933";
 		String anotherBookId = "9b084139-0b1e-43b6-b12a-7b3669d75f02";
 
 		AddReviewContext firstReview = addReviewContext(bookId, 1, "quite bad", "disappointing...");

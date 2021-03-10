@@ -41,7 +41,7 @@ public class ReviewServiceHandler implements EventHandler {
 
 	private void validateRating(Reviews review) {
 		Integer rating = review.getRating();
-		if (rating < 0 || rating > 5) {
+		if (rating < 1 || rating > 5) {
 			throw new ServiceException(ErrorStatuses.BAD_REQUEST, MessageKeys.REVIEW_INVALID_RATING)
 			.messageTarget(Reviews_.class, r -> r.rating());
 		}
