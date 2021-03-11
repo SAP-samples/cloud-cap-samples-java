@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
 import com.sap.cds.Result;
+import com.sap.cds.Struct;
 import com.sap.cds.ql.Insert;
 import com.sap.cds.ql.Select;
 import com.sap.cds.ql.Update;
@@ -119,7 +120,8 @@ class CatalogServiceHandler implements EventHandler {
 		cds.gen.reviewservice.Reviews inserted = res.single(cds.gen.reviewservice.Reviews.class);
 
 		messages.success(MessageKeys.REVIEW_ADDED);
-		context.setResult(toCatalogServiceReviews(inserted));
+
+		context.setResult(Struct.access(inserted).as(Reviews.class));
 	}
 
 	/**
@@ -195,22 +197,6 @@ class CatalogServiceHandler implements EventHandler {
 			b.setStock(
 					db.run(Select.from(BOOKS).byId(b.getId()).columns(Books_::stock)).single(Books.class).getStock());
 		}
-	}
-
-	private Reviews toCatalogServiceReviews(cds.gen.reviewservice.Reviews review) {
-		Reviews r = Reviews.create();
-		r.setId(review.getId());
-		r.setDate(review.getDate());
-		r.setCreatedBy(review.getCreatedBy());
-		r.setCreatedAt(review.getCreatedAt());
-		r.setBookId(review.getBookId());
-		r.setModifiedAt(review.getModifiedAt());
-		r.setModifiedBy(review.getModifiedBy());
-		r.setRating(review.getRating());
-		r.setReviewer(review.getReviewer());
-		r.setText(review.getText());
-		r.setTitle(review.getTitle());
-		return r;
 	}
 
 }
