@@ -90,9 +90,8 @@ class CatalogServiceHandler implements EventHandler {
 				.where(review -> review.book_ID().eq(bookId).and(review.createdBy().eq(user))));
 
 		if (result.first().isPresent()) {
-			throw new ServiceException(ErrorStatuses.METHOD_NOT_ALLOWED,
-					"User not allowed to add more than one review for a given book").messageTarget(Reviews_.class,
-							r -> r.createdBy());
+			throw new ServiceException(ErrorStatuses.METHOD_NOT_ALLOWED, MessageKeys.REVIEW_ADD_FORBIDDEN)
+					.messageTarget(Reviews_.class, r -> r.createdBy());
 		}
 	}
 
@@ -191,7 +190,8 @@ class CatalogServiceHandler implements EventHandler {
 
 	private void loadStockIfNotSet(Books b) {
 		if (b.getId() != null && b.getStock() == null) {
-			b.setStock(db.run(Select.from(BOOKS).byId(b.getId()).columns(Books_::stock)).single(Books.class).getStock());
+			b.setStock(
+					db.run(Select.from(BOOKS).byId(b.getId()).columns(Books_::stock)).single(Books.class).getStock());
 		}
 	}
 

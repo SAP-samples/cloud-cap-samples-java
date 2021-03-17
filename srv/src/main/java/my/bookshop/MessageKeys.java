@@ -12,5 +12,6 @@ public class MessageKeys {
 	public static final String BUPA_MISSING = "bupa.missing";
 	public static final String REVIEW_INVALID_RATING = "review.invalid.rating";
 	public static final String REVIEW_ADDED = "review.added";
+	public static final String REVIEW_ADD_FORBIDDEN = "review.add.forbidden";
 	public static final String ORDER_EXCEEDS_STOCK = "order.exceeds.stock";
 }
