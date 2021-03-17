@@ -80,7 +80,7 @@ annotate AdminService.Orders with @(
         LineItem                    : [
             {
                 Value : createdBy,
-                Label : '{i18n>CreatedBy}'
+                Label : '{i18n>Customer}'
             },
             {
                 Value : total,
@@ -88,7 +88,7 @@ annotate AdminService.Orders with @(
             },
             {
                 Value : createdAt,
-                Label : '{i18n>CreatedAt}'
+                Label : '{i18n>Date}'
             }
         ],
         ////////////////////////////////////////////////////////////////////////////
@@ -107,11 +107,11 @@ annotate AdminService.Orders with @(
         Identification              : [ //Is the main field group
             {
                 Value : createdBy,
-                Label : '{i18n>CreatedBy}'
+                Label : '{i18n>Customer}'
             },
             {
                 Value : createdAt,
-                Label : '{i18n>CreatedAt}'
+                Label : '{i18n>Date}'
             },
             {Value : OrderNo},
             {

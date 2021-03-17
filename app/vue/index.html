@@ -66,8 +66,8 @@
 	            <th> Title </th>
 	        </thead>
 	        <tr v-for="review in reviews" v-bind:id="review.ID" v-on:click="inspectReview">
-	            <td>{{ review.date | datetime }}</td>
-	            <td>{{ review.reviewer }}</td>
+	            <td>{{ review.modifiedAt | datetime }}</td>
+	            <td>{{ review.createdBy }}</td>
 	            <td class="rating-stars">
 	            	{{ ('★'.repeat(Math.round(review.rating))+'☆☆☆☆☆').slice(0,5) }}
 	            </td>

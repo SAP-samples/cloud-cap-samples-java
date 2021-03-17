@@ -8,15 +8,13 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.stereotype.Component;
-
 import com.sap.cds.Result;
 import com.sap.cds.Struct;
 import com.sap.cds.ql.Insert;
 import com.sap.cds.ql.Select;
 import com.sap.cds.ql.Update;
 import com.sap.cds.ql.cqn.CqnAnalyzer;
+import com.sap.cds.ql.cqn.CqnSelect;
 import com.sap.cds.reflect.CdsModel;
 import com.sap.cds.services.ErrorStatuses;
 import com.sap.cds.services.ServiceException;
@@ -31,6 +29,9 @@ import com.sap.cds.services.handler.annotations.ServiceName;
 import com.sap.cds.services.messages.Messages;
 import com.sap.cds.services.persistence.PersistenceService;
 
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Component;
+
 import cds.gen.catalogservice.AddReviewContext;
 import cds.gen.catalogservice.Books;
 import cds.gen.catalogservice.Books_;
@@ -40,8 +41,8 @@ import cds.gen.catalogservice.Reviews;
 import cds.gen.catalogservice.Reviews_;
 import cds.gen.catalogservice.SubmitOrderContext;
 import cds.gen.reviewservice.ReviewService_;
-import my.bookshop.BookRatingService;
 import my.bookshop.MessageKeys;
+import my.bookshop.RatingCalculator;
 
 /**
  * Custom business logic for the "Catalog Service" (see cat-service.cds)
@@ -62,12 +63,12 @@ class CatalogServiceHandler implements EventHandler {
 
 	private final Messages messages;
 
-	private final BookRatingService bookRatingService;
+	private final RatingCalculator bookRatingService;
 
 	private final CqnAnalyzer analyzer;
 
 	CatalogServiceHandler(PersistenceService db, @Qualifier(ReviewService_.CDS_NAME) DraftService reviewService,
-			Messages messages, BookRatingService bookRatingService, CdsModel model) {
+			Messages messages, RatingCalculator bookRatingService, CdsModel model) {
 		this.db = db;
 		this.reviewService = reviewService;
 		this.messages = messages;
@@ -82,16 +83,16 @@ class CatalogServiceHandler implements EventHandler {
 	 */
 	@Before(entity = Books_.CDS_NAME)
 	public void beforeAddReview(AddReviewContext context) {
-		String reviewer = context.getUserInfo().getName();
+		String user = context.getUserInfo().getName();
 		String bookId = (String) analyzer.analyze(context.getCqn()).targetKeys().get(Books.ID);
 
 		Result result = db.run(Select.from(CatalogService_.REVIEWS)
-				.where(review -> review.book_ID().eq(bookId).and(review.reviewer().eq(reviewer))));
+				.where(review -> review.book_ID().eq(bookId).and(review.createdBy().eq(user))));
 
 		if (result.first().isPresent()) {
 			throw new ServiceException(ErrorStatuses.METHOD_NOT_ALLOWED,
 					"User not allowed to add more than one review for a given book").messageTarget(Reviews_.class,
-							r -> r.reviewer());
+							r -> r.createdBy());
 		}
 	}
 
@@ -106,12 +107,10 @@ class CatalogServiceHandler implements EventHandler {
 		String title = context.getTitle();
 		String text = context.getText();
 
-		String username = context.getUserInfo().getName();
 		String bookId = (String) analyzer.analyze(context.getCqn()).targetKeys().get(Books.ID);
 
 		cds.gen.reviewservice.Reviews review = cds.gen.reviewservice.Reviews.create();
 		review.setBookId(bookId);
-		review.setReviewer(username);
 		review.setRating(rating);
 		review.setTitle(title);
 		review.setText(text);
@@ -144,12 +143,11 @@ class CatalogServiceHandler implements EventHandler {
 
 	@After
 	public void setIsReviewable(CdsReadEventContext context, List<Books> books) {
-
 		String user = context.getUserInfo().getName();
 		List<String> bookIds = books.stream().map(b -> b.getId()).collect(Collectors.toList());
 
-		Select<Reviews_> query = Select.from(CatalogService_.BOOKS, b -> b.filter(b.ID().in(bookIds)).reviews())
-				.where(r -> r.reviewer().eq(user));
+		CqnSelect query = Select.from(CatalogService_.BOOKS, b -> b.filter(b.ID().in(bookIds)).reviews())
+				.where(r -> r.createdBy().eq(user));
 
 		Set<String> reviewedBooks = db.run(query).streamOf(Reviews.class).map(Reviews::getBookId)
 				.collect(Collectors.toSet());
@@ -171,7 +169,7 @@ class CatalogServiceHandler implements EventHandler {
 		book.orElseThrow(() -> new ServiceException(ErrorStatuses.NOT_FOUND, MessageKeys.BOOK_MISSING)
 				.messageTarget(Books_.class, b -> b.ID()));
 
-		Integer stock = book.map(Books::getStock).get();
+		int stock = book.map(Books::getStock).get();
 
 		if (stock >= amount) {
 			db.run(Update.entity(BOOKS).byId(bookId).data(Books.STOCK, stock -= amount));
@@ -180,9 +178,8 @@ class CatalogServiceHandler implements EventHandler {
 			result.setStock(stock);
 
 			context.setResult(result);
-			context.setCompleted();
 		} else {
-			throw new ServiceException(ErrorStatuses.CONFLICT, String.format("%d exceeds stock for book", amount));
+			throw new ServiceException(ErrorStatuses.CONFLICT, MessageKeys.ORDER_EXCEEDS_STOCK, amount);
 		}
 	}
 
@@ -194,8 +191,7 @@ class CatalogServiceHandler implements EventHandler {
 
 	private void loadStockIfNotSet(Books b) {
 		if (b.getId() != null && b.getStock() == null) {
-			b.setStock(
-					db.run(Select.from(BOOKS).byId(b.getId()).columns(Books_::stock)).single(Books.class).getStock());
+			b.setStock(db.run(Select.from(BOOKS).byId(b.getId()).columns(Books_::stock)).single(Books.class).getStock());
 		}
 	}
 

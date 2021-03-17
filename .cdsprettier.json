@@ -1,12 +1,12 @@
 {
-  "alignExpressionsAndConditions": false,
-  "alignExprAndCondWithinBlock": false,
-  "alignCompositionStructToRight": false,
+  "alignExpressionsAndConditions": true,
+  "alignExprAndCondWithinBlock": true,
+  "alignCompositionStructToRight": true,
   "keepOriginalEmptyLines": false,
-  "openingBraceInNewLine": true,
-  "alignValuesInAnnotations": false,
-  "alignColonsInAnnotations": false,
-  "alignPostAnnotations": false,
-  "alignPreAnnotations": false,
-  "alignTypes": false
+  "openingBraceInNewLine": false,
+  "alignValuesInAnnotations": true,
+  "alignColonsInAnnotations": true,
+  "alignPostAnnotations": true,
+  "alignPreAnnotations": true,
+  "alignTypes": true
 }

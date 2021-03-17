@@ -1,39 +1,31 @@
 namespace my.bookshop;
 
-using
-{
+using {
     my.bookshop as my,
     User,
     managed,
     cuid
 } from '@sap/cds/common';
 
-entity Reviews : cuid, managed
-{
+entity Reviews : cuid, managed {
     @cds.odata.ValueList
-    book : Association to my.Books;
-    @Core.Computed
-    reviewer : User;
-    rating : Rating;
-    title : String(111);
-    text : String(1111);
-    @Core.Computed
-    date : DateTime;
+    book     : Association to my.Books;
+    rating   : Rating;
+    title    : String(111);
+    text     : String(1111);
 }
 
-// Auto-fill reviewers and review dates
-annotate Reviews with
-{
-    reviewer @cds.on.insert : $user;
-    date @cds.on.insert : $now;
-    date @cds.on.update : $now;
+// input validation
+annotate Reviews with {
+    subject @mandatory;
+    title @mandatory;
+    rating @assert.enum;
 }
 
-type Rating : Integer enum
-{
-    Best = 5;
-    Good = 4;
-    Avg = 3;
-    Poor = 2;
+type Rating : Integer enum {
+    Best  = 5;
+    Good  = 4;
+    Avg   = 3;
+    Poor  = 2;
     Worst = 1;
 }

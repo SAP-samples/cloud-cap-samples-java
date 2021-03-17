@@ -1,3 +1,7 @@
+server.servlet.encoding:
+  charset: UTF-8
+  force: true
+
 ---
 spring:
   web.resources.static-locations: "file:./app"

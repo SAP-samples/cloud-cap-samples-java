@@ -1,8 +1,7 @@
 /*
   Common Annotations shared by all apps
 */
-using
-{my.bookshop as my} from '../db/index';
+using {my.bookshop as my} from '../db/index';
 
 
 ////////////////////////////////////////////////////////////////////////////
@@ -12,10 +11,8 @@ using
 annotate my.Books with
 @(
     Common.SemanticKey : [title],
-    UI :
-    {
-        Identification : [
-        {Value : title}],
+    UI : {
+        Identification : [{Value : title}],
         SelectionFields : [
             ID,
             author_ID,
@@ -43,8 +40,7 @@ annotate my.Books with
             },
         ]
     }
-)
-{
+) {
     author
     @ValueList.entity : 'Authors';
 };
@@ -55,15 +51,11 @@ annotate my.Books with
 //	Books Details
 //
 annotate my.Books with
-@(UI :
-{HeaderInfo :
-{
+@(UI : {HeaderInfo : {
     TypeName : '{i18n>Book}',
     TypeNamePlural : '{i18n>Books}',
-    Title :
-    {Value : title},
-    Description :
-    {Value : author.name}
+    Title : {Value : title},
+    Description : {Value : author.name}
 }, });
 
 
@@ -71,8 +63,7 @@ annotate my.Books with
 //
 //	Books Elements
 //
-annotate my.Books with
-{
+annotate my.Books with {
     ID
     @title : '{i18n>ID}'
     @UI.HiddenFilter;
@@ -80,15 +71,13 @@ annotate my.Books with
     @title : '{i18n>Title}';
     genre
     @title : '{i18n>Genre}'
-    @Common :
-    {
+    @Common : {
         Text : genre.name,
         TextArrangement : #TextOnly
     };
     author
     @title : '{i18n>Author}'
-    @Common :
-    {
+    @Common : {
         Text : author.name,
         TextArrangement : #TextOnly
     };
@@ -107,8 +96,7 @@ annotate my.Books with
 //	Reviews List
 //
 annotate my.Reviews with
-@(UI :
-{
+@(UI : {
     Identification : [
         {
             Value : ID,
@@ -122,11 +110,11 @@ annotate my.Reviews with
     ],
     LineItem : [
         {
-            Value : date,
+            Value : modifiedAt,
             Label : 'Date'
         },
         {
-            Value : reviewer,
+            Value : createdBy,
             Label : '{i18n>User}'
         },
         {
@@ -144,13 +132,11 @@ annotate my.Reviews with
             Label : '{i18n>Review}'
         }
     ],
-    FieldGroup #BookAndAuthor :
-    {Data : [
+    FieldGroup #BookAndAuthor : {Data : [
         {Value : book.title},
         {Value : book.author.name}
     ]},
-    DataPoint #rating :
-    {
+    DataPoint #rating : {
         Value : rating,
         Visualization : #Rating,
         MinimumValue : 0,
@@ -158,8 +144,7 @@ annotate my.Reviews with
     }
 });
 
-annotate my.Reviews with
-{
+annotate my.Reviews with {
     ID
     @title : '{i18n>ID}'
     @UI.HiddenFilter;
@@ -168,8 +153,7 @@ annotate my.Reviews with
     book
     @ValueList.entity : 'Books'
     @title : '{i18n>Book}'
-    @Common :
-    {
+    @Common : {
         Text : book.title,
         TextArrangement : #TextOnly
     };
@@ -190,8 +174,7 @@ annotate my.Reviews with
 annotate my.Genres with
 @(
     Common.SemanticKey : [name],
-    UI :
-    {
+    UI : {
         SelectionFields : [name],
         LineItem : [
             {Value : name},
@@ -209,21 +192,15 @@ annotate my.Genres with
 //	Genre Details
 //
 annotate my.Genres with
-@(UI :
-{
-    Identification : [
-    {Value : name}],
-    HeaderInfo :
-    {
+@(UI : {
+    Identification : [{Value : name}],
+    HeaderInfo : {
         TypeName : '{i18n>Genre}',
         TypeNamePlural : '{i18n>Genres}',
-        Title :
-        {Value : name},
-        Description :
-        {Value : ID}
+        Title : {Value : name},
+        Description : {Value : ID}
     },
-    Facets : [
-    {
+    Facets : [{
         $Type : 'UI.ReferenceFacet',
         Label : '{i18n>SubGenres}',
         Target : 'children/@UI.LineItem'
@@ -235,8 +212,7 @@ annotate my.Genres with
 //
 //	Genres Elements
 //
-annotate my.Genres with
-{
+annotate my.Genres with {
     ID
     @title : '{i18n>ID}';
     name
@@ -251,10 +227,8 @@ annotate my.Genres with
 annotate my.Authors with
 @(
     Common.SemanticKey : [name],
-    UI :
-    {
-        Identification : [
-        {Value : name}],
+    UI : {
+        Identification : [{Value : name}],
         SelectionFields : [name],
         LineItem : [
             {Value : ID},
@@ -273,19 +247,14 @@ annotate my.Authors with
 //	Author Details
 //
 annotate my.Authors with
-@(UI :
-{
-    HeaderInfo :
-    {
+@(UI : {
+    HeaderInfo : {
         TypeName : '{i18n>Author}',
         TypeNamePlural : '{i18n>Authors}',
-        Title :
-        {Value : name},
-        Description :
-        {Value : dateOfBirth}
+        Title : {Value : name},
+        Description : {Value : dateOfBirth}
     },
-    Facets : [
-    {
+    Facets : [{
         $Type : 'UI.ReferenceFacet',
         Target : 'books/@UI.LineItem'
     }, ],
@@ -296,8 +265,7 @@ annotate my.Authors with
 //
 //	Authors Elements
 //
-annotate my.Authors with
-{
+annotate my.Authors with {
     ID
     @title : '{i18n>ID}'
     @UI.HiddenFilter;
@@ -321,10 +289,8 @@ annotate my.Authors with
 annotate common.Languages with
 @(
     Common.SemanticKey : [code],
-    Identification : [
-    {Value : code}],
-    UI :
-    {
+    Identification : [{Value : code}],
+    UI : {
         SelectionFields : [
             name,
             descr
@@ -342,25 +308,19 @@ annotate common.Languages with
 //	Language Details
 //
 annotate common.Languages with
-@(UI :
-{
-    HeaderInfo :
-    {
+@(UI : {
+    HeaderInfo : {
         TypeName : '{i18n>Language}',
         TypeNamePlural : '{i18n>Languages}',
-        Title :
-        {Value : name},
-        Description :
-        {Value : descr}
+        Title : {Value : name},
+        Description : {Value : descr}
     },
-    Facets : [
-    {
+    Facets : [{
         $Type : 'UI.ReferenceFacet',
         Label : '{i18n>Details}',
         Target : '@UI.FieldGroup#Details'
     }, ],
-    FieldGroup #Details :
-    {Data : [
+    FieldGroup #Details : {Data : [
         {Value : code},
         {Value : name},
         {Value : descr}
@@ -375,10 +335,8 @@ annotate common.Languages with
 annotate common.Currencies with
 @(
     Common.SemanticKey : [code],
-    Identification : [
-    {Value : code}],
-    UI :
-    {
+    Identification : [{Value : code}],
+    UI : {
         SelectionFields : [
             name,
             descr
@@ -397,16 +355,12 @@ annotate common.Currencies with
 //	Currency Details
 //
 annotate common.Currencies with
-@(UI :
-{
-    HeaderInfo :
-    {
+@(UI : {
+    HeaderInfo : {
         TypeName : '{i18n>Currency}',
         TypeNamePlural : '{i18n>Currencies}',
-        Title :
-        {Value : descr},
-        Description :
-        {Value : code}
+        Title : {Value : descr},
+        Description : {Value : code}
     },
     Facets : [
         {
@@ -420,15 +374,13 @@ annotate common.Currencies with
             Target : '@UI.FieldGroup#Extended'
         },
     ],
-    FieldGroup #Details :
-    {Data : [
+    FieldGroup #Details : {Data : [
         {Value : name},
         {Value : symbol},
         {Value : code},
         {Value : descr}
     ]},
-    FieldGroup #Extended :
-    {Data : [
+    FieldGroup #Extended : {Data : [
         {Value : numcode},
         {Value : minor},
         {Value : exponent}
@@ -440,8 +392,7 @@ annotate common.Currencies with
 //
 //	Currencies Elements
 //
-annotate common.Currencies with
-{
+annotate common.Currencies with {
     numcode
     @title : '{i18n>NumCode}';
     minor
@@ -454,11 +405,9 @@ annotate common.Currencies with
 //
 //	Fiori requires generated IDs to be annotated with @Core.Computed
 //
-using
-{cuid} from '@sap/cds/common';
+using {cuid} from '@sap/cds/common';
 
-annotate cuid with
-{
+annotate cuid with {
     ID
     @Core.Computed
 }

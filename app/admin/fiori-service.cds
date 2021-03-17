@@ -9,8 +9,7 @@ using AdminService from '../../srv/admin-service';
 //
 //	Books Object Page
 //
-annotate AdminService.Books with @(UI :
-{
+annotate AdminService.Books with @(UI : {
     Facets : [
         {
             $Type : 'UI.ReferenceFacet',
@@ -33,15 +32,13 @@ annotate AdminService.Books with @(UI :
             Target : '@UI.FieldGroup#Admin'
         },
     ],
-    FieldGroup #General :
-    {Data : [
+    FieldGroup #General : {Data : [
         {Value : title},
         {Value : author_ID},
         {Value : genre_ID},
         {Value : descr},
     ]},
-    FieldGroup #Details :
-    {Data : [
+    FieldGroup #Details : {Data : [
         {Value : stock},
         {Value : price},
         {
@@ -49,8 +46,7 @@ annotate AdminService.Books with @(UI :
             Label : '{i18n>Currency}'
         },
     ]},
-    FieldGroup #Admin :
-    {Data : [
+    FieldGroup #Admin : {Data : [
         {Value : createdBy},
         {Value : createdAt},
         {Value : modifiedBy},
@@ -67,10 +63,8 @@ annotate AdminService.Books with @(UI :
 annotate my.bookshop.Books with @fiori.draft.enabled;
 annotate AdminService.Books with @odata.draft.enabled;
 
-annotate AdminService.Books_texts with @(UI :
-{
-    Identification : [
-    {Value : title}],
+annotate AdminService.Books_texts with @(UI : {
+    Identification : [{Value : title}],
     SelectionFields : [
         locale,
         title
@@ -93,20 +87,16 @@ annotate AdminService.Books_texts with @(UI :
 
 
 // Add Value Help for Locales
-annotate AdminService.Books_texts
-{
-    locale @ValueList :
-    {
+annotate AdminService.Books_texts {
+    locale @ValueList : {
         entity : 'Languages',
         type : #fixed
     }
 }
 
-annotate AdminService.Books actions
-{
+annotate AdminService.Books actions {
     @(
-        Common.SideEffects :
-        {
+        Common.SideEffects : {
             TargetProperties : ['_it/order_ID'],
             TargetEntities : [_it]
         },
@@ -114,9 +104,7 @@ annotate AdminService.Books actions
     )
     addToOrder(order_ID @(
         title : '{i18n>Order}',
-        Common :
-        {ValueListMapping :
-        {
+        Common : {ValueListMapping : {
             Label : '{i18n>Orders}',
             CollectionPath : 'Orders',
             Parameters : [

@@ -21,11 +21,11 @@ import cds.gen.my.bookshop.Reviews;
  * ratings.
  */
 @Component
-public class BookRatingService {
+public class RatingCalculator {
 
 	private PersistenceService db;
 
-	BookRatingService(PersistenceService db) {
+	RatingCalculator(PersistenceService db) {
 		this.db = db;
 	}
 

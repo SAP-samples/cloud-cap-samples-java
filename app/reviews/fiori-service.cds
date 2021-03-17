@@ -4,23 +4,17 @@
 
 using ReviewService from '../../srv/review-service';
 
-annotate ReviewService.Reviews with @(UI :
-{
-    HeaderInfo :
-    {
+annotate ReviewService.Reviews with @(UI : {
+    HeaderInfo : {
         TypeName : '{i18n>Review}',
         TypeNamePlural : '{i18n>Reviews}',
-        Title :
-        {Value : title},
-        Description :
-        {Value : reviewer},
+        Title : {Value : title},
+        Description : {Value : createdBy},
     },
-    PresentationVariant :
-    {
+    PresentationVariant : {
         Text : 'Default',
-        SortOrder : [
-        {
-            Property : date,
+        SortOrder : [{
+            Property : modifiedAt,
             Descending : true
         }],
         Visualizations : ['@UI.LineItem']
@@ -29,8 +23,7 @@ annotate ReviewService.Reviews with @(UI :
         book_ID,
         rating
     ],
-    HeaderFacets : [
-    {
+    HeaderFacets : [{
         $Type : 'UI.ReferenceFacet',
         Target : '@UI.DataPoint#rating'
     }, ],
@@ -46,13 +39,26 @@ annotate ReviewService.Reviews with @(UI :
             Label : '{i18n>Review}',
         }
     ],
-    FieldGroup #General :
-    {Data : [
-        {Value : date},
+    FieldGroup #General : {Data : [
+        {
+            Value : createdAt,
+            Label : '{i18n>Created}'
+        },
+        {
+            Value : createdBy,
+            Label : '{i18n>CreatedBy}'
+        },
+        {
+            Value : modifiedAt,
+            Label : '{i18n>Modified}'
+        },
+        {
+            Value : modifiedBy,
+            Label : '{i18n>ModifiedBy}'
+        },
         {Value : book_ID},
     ]},
-    FieldGroup #Review :
-    {Data : [
+    FieldGroup #Review : {Data : [
         {
             Value : rating,
             Label : '{i18n>Rating}'
@@ -66,21 +72,18 @@ annotate ReviewService.Reviews with @(UI :
             Label : '{i18n>Text}'
         }
     ]},
-    FieldGroup #BookAndAuthor :
-    {Data : [
+    FieldGroup #BookAndAuthor : {Data : [
         {Value : book.title},
         {Value : book.author.name}
     ]},
-    DataPoint #rating :
-    {
+    DataPoint #rating : {
         Title : '{i18n>Rating}',
         Value : rating,
         Visualization : #Rating,
         MinimumValue : 0,
         MaximumValue : 5
     }
-})
-{
+}) {
     rating @title : '{i18n>Rating}';
     title @title : '{i18n>Title}';
     text @title : '{i18n>Text}'  @UI.MultiLineText;

@@ -8,16 +8,12 @@ using CatalogService from '../../srv/cat-service';
 //
 //	Books Object Page
 //
-annotate CatalogService.Books with @(UI :
-{
-    HeaderInfo :
-    {
+annotate CatalogService.Books with @(UI : {
+    HeaderInfo : {
         TypeName : '{i18n>Book}',
         TypeNamePlural : '{i18n>Books}',
-        Title :
-        {Value : title},
-        Description :
-        {Value : author.name}
+        Title : {Value : title},
+        Description : {Value : author.name}
     },
     Identification : [
         {Value : title},
@@ -27,11 +23,9 @@ annotate CatalogService.Books with @(UI :
             Action : 'CatalogService.addReview'
         }
     ],
-    PresentationVariant :
-    {
+    PresentationVariant : {
         Text : 'Default',
-        SortOrder : [
-        {Property : title}],
+        SortOrder : [{Property : title}],
         Visualizations : ['@UI.LineItem']
     },
     SelectionFields : [
@@ -87,35 +81,27 @@ annotate CatalogService.Books with @(UI :
             Target : 'reviews/@UI.LineItem'
         }
     ],
-    FieldGroup #AddReview :
-    {Data : [
-    {
+    FieldGroup #AddReview : {Data : [{
         $Type : 'UI.DataFieldForAction',
         Label : '{i18n>AddReview}',
         Action : 'CatalogService.addReview',
         InvocationGrouping : #ChangeSet
     }, ]},
-    FieldGroup #General :
-    {Data : [
+    FieldGroup #General : {Data : [
         {Value : title},
         {Value : author_ID},
         {Value : genre_ID}
     ]},
-    FieldGroup #Descr :
-    {Data : [
-    {Value : descr}]},
-    DataPoint #stock :
-    {
+    FieldGroup #Descr : {Data : [{Value : descr}]},
+    DataPoint #stock : {
         Value : stock,
         Title : '{i18n>Stock}'
     },
-    DataPoint #price :
-    {
+    DataPoint #price : {
         Value : price,
         Title : '{i18n>Price}'
     },
-    DataPoint #rating :
-    {
+    DataPoint #rating : {
         Value : rating,
         Title : '{i18n>Rating}',
         Visualization : #Rating,
@@ -123,28 +109,23 @@ annotate CatalogService.Books with @(UI :
         MaximumValue : 5,
         TargetValue : 5
     }
-})
-{
+}) {
     @Measures.ISOCurrency : currency_code
     price
 };
 
-annotate CatalogService.Books_texts with @(UI :
-{LineItem : [
+annotate CatalogService.Books_texts with @(UI : {LineItem : [
     {Value : locale},
     {Value : title},
     {Value : descr}
 ]});
 
-annotate CatalogService.Reviews with @(UI :
-{
-    PresentationVariant :
-    {
+annotate CatalogService.Reviews with @(UI : {
+    PresentationVariant : {
         $Type : 'UI.PresentationVariantType',
-        SortOrder : [
-        {
+        SortOrder : [{
             $Type : 'Common.SortOrderType',
-            Property : date,
+            Property : modifiedAt,
             Descending : true
         }, ],
     },
@@ -168,25 +149,21 @@ annotate CatalogService.Reviews with @(UI :
             Label : '{i18n>Text}'
         },
     ],
-    DataPoint #rating :
-    {
+    DataPoint #rating : {
         Value : rating,
         Visualization : #Rating,
         MinimumValue : 0,
         MaximumValue : 5
     },
-    FieldGroup #ReviewerAndDate :
-    {Data : [
-        {Value : reviewer},
-        {Value : date}
+    FieldGroup #ReviewerAndDate : {Data : [
+        {Value : createdBy},
+        {Value : modifiedAt}
     ]}
 });
 
-annotate CatalogService.Books actions
-{
+annotate CatalogService.Books actions {
     @(
-        Common.SideEffects :
-        {
+        Common.SideEffects : {
             TargetProperties : ['_it/rating'],
             TargetEntities : [
                 _it,

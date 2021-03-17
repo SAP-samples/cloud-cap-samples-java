@@ -68,7 +68,7 @@ public class CatalogServiceITest {
 		String payload = String.format("{ \"rating\": %d, \"title\": \"%s\", \"text\": \"%s\" }", rating, title, text);
 
 		mockMvc.perform(post(uri).contentType(MediaType.APPLICATION_JSON).content(payload))
-		.andExpect(jsonPath("$.reviewer").value(USER_USER_STRING));
+		.andExpect(jsonPath("$.createdBy").value(USER_USER_STRING));
 	}
 
 	@Test
@@ -83,7 +83,7 @@ public class CatalogServiceITest {
 		String payload = String.format("{ \"rating\": %d, \"title\": \"%s\", \"text\": \"%s\" }", rating, title, text);
 
 		mockMvc.perform(post(uri).contentType(MediaType.APPLICATION_JSON).content(payload))
-		.andExpect(jsonPath("$.reviewer").value(ADMIN_USER_STRING));
+		.andExpect(jsonPath("$.createdBy").value(ADMIN_USER_STRING));
 	}
 
 }
