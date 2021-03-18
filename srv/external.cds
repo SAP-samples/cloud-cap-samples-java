@@ -40,7 +40,7 @@ entity my.bookshop.Addresses as SELECT from external.Addresses { *, false as tom
 /**
  * Extend Orders with references to replicated external Addresses
  */
-using { my.bookshop } from '../db/schema';
+using { my.bookshop } from '../db/index';
 extend bookshop.Orders with {
   shippingAddress : Association to bookshop.Addresses;
 }

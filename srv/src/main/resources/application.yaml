@@ -16,6 +16,9 @@ cds:
         - "10401010"
     - name: user
       password: user
+server.servlet.encoding:
+  charset: UTF-8
+  force: true
 
 ---
 spring:
