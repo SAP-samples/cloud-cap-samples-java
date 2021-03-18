@@ -34,12 +34,12 @@
       "line": 66,
       "selection": {
         "start": {
-          "line": 3,
+          "line": 1,
           "character": 1
         },
         "end": {
-          "line": 3,
-          "character": 17
+          "line": 41,
+          "character": 2
         }
       }
     },
@@ -63,11 +63,11 @@
       "description": "### Event Handler\n\nAfter defining your domain model and services you can implement event handlers reacting to events triggered by these services. This file, for example, showcases an [event handler](https://cap.cloud.sap/docs/java/provisioning-api) for the `CatalogService`. There are various handler implementations reacting to specific [event phases](https://cap.cloud.sap/docs/java/provisioning-api#phases), as showcased in the next steps of this tour.",
       "selection": {
         "start": {
-          "line": 72,
+          "line": 79,
           "character": 2
         },
         "end": {
-          "line": 179,
+          "line": 183,
           "character": 3
         }
       }
@@ -75,14 +75,14 @@
     {
       "file": "srv/src/main/java/my/bookshop/handlers/CatalogServiceHandler.java",
       "description": "### Event Handler\n\nThe method `beforeAddReview` demonstrated here is used to validate reviews that are about to be persisted, checking whether the author of the review already created one for the given book. The `ServiceException` thrown in such a case aborts further processing of the current event (of adding a review). The method is bound to the `Before` [event phase](https://cap.cloud.sap/docs/java/provisioning-api#phases), meaning it will be triggerd before the core processing of the event. In the next steps you will see some other event phase handling examples.\n\nThe query run against the database for the check is constructed via the [Query Builder Java API](https://cap.cloud.sap/docs/java/query-api#the-query-builders-java-api).\n\nConcepts used:\n\n- [Event Phase: `Before`](https://cap.cloud.sap/docs/java/provisioning-api#before)\n- [Building CQN Queries](https://cap.cloud.sap/docs/java/query-api)\n- [Indicating Errors](https://cap.cloud.sap/docs/java/indicating-errors#overview)\n- [Static CDS Model](https://cap.cloud.sap/docs/java/advanced#staticmodel)",
-      "line": 91,
+      "line": 96,
       "selection": {
         "start": {
-          "line": 72,
+          "line": 79,
           "character": 2
         },
         "end": {
-          "line": 90,
+          "line": 96,
           "character": 3
         }
       }
@@ -90,14 +90,14 @@
     {
       "file": "srv/src/main/java/my/bookshop/handlers/CatalogServiceHandler.java",
       "description": "### Event Handler\n\nThe `onAddReview` method is bound to the `On` phase of the `AddReview` event, as defined by the bound action in the [`CatalogService`](srv/cat-service.cds). Aside from the `Insert` [query execution](https://cap.cloud.sap/docs/java/query-execution#queries) demonstrated here, you can also see how to [complete the event processing](https://cap.cloud.sap/docs/java/provisioning-api#eventcompletion) necessary in the `On` phase. In this example we setting the `Reviews` object from the query result in the event context.\n\nConcepts used:\n\n- [Event Phase: `On`](https://cap.cloud.sap/docs/java/provisioning-api#on)\n- [Event Contexts](https://cap.cloud.sap/docs/java/provisioning-api#eventcontext)\n- [Building CQN Queries](https://cap.cloud.sap/docs/java/query-api)\n- [Static CDS Model](https://cap.cloud.sap/docs/java/advanced#staticmodel)",
-      "line": 121,
+      "line": 123,
       "selection": {
         "start": {
-          "line": 92,
+          "line": 98,
           "character": 2
         },
         "end": {
-          "line": 120,
+          "line": 123,
           "character": 3
         }
       }
@@ -120,14 +120,14 @@
     {
       "file": "srv/cat-service.cds",
       "description": "### Unbound Action\n\nIn contrast, `submitOrder` is modeled as an [unbound action](https://cap.cloud.sap/docs/cds/cdl#actions), meaning it is not bound to an individual entity as `addReview` is bound to `Books`.",
-      "line": 32,
+      "line": 28,
       "selection": {
         "start": {
-          "line": 29,
+          "line": 26,
           "character": 5
         },
         "end": {
-          "line": 31,
+          "line": 28,
           "character": 7
         }
       }
@@ -135,7 +135,7 @@
     {
       "file": "srv/src/main/java/my/bookshop/handlers/BookRatingInitialization.java",
       "description": "### Application Start-Up\n\nYou can not only register event handlers for your services, but also handlers that are executed during application start-up. As demonstrated here, for example, we initialize the average rating for all books in the bookshop based on their review ratings, using the [`After`](https://cap.cloud.sap/docs/java/provisioning-api#after) phase of the [`ApplicationLifecycleService.EVENT_APPLICATION_PREPARED`](https://www.javadoc.io/doc/com.sap.cds/cds-services-api/latest/com/sap/cds/services/application/ApplicationPreparedEventContext.html) event.",
-      "line": 31,
+      "line": 30,
       "selection": {
         "start": {
           "line": 27,
@@ -150,7 +150,7 @@
     {
       "file": "srv/src/main/java/my/bookshop/handlers/DestinationConfiguration.java",
       "description": "### Application Start-Up\n\nAnother example of this you can find here in the `DestinationConfiguration` handler.",
-      "line": 32,
+      "line": 31,
       "selection": {
         "start": {
           "line": 21,
@@ -165,7 +165,7 @@
     {
       "file": "srv/src/main/java/my/bookshop/handlers/AdminServiceHandler.java",
       "description": "### SAP Fiori Drafts Support\n\nHere, you can see a handler bound to events of the [SAP Fiori draft](https://cap.cloud.sap/docs/java/fiori-drafts) flow. Draft-specific events are enabled by annotating entities with `@odata.draft.enabled` as in the [`AdminService`](srv/admin-service.cds).\n\nConcepts used:\n\n- [Draft-based Editing](https://cap.cloud.sap/docs/advanced/fiori#fiori-draft-support)",
-      "line": 166,
+      "line": 165,
       "selection": {
         "start": {
           "line": 135,
@@ -180,7 +180,7 @@
     {
       "file": "app/browse/fiori-service.cds",
       "description": "### SAP Fiori Elements Support\n\nCAP for Java supports SAP Fiori Elements annotations out-of-the-box. The `fiori-service.cds` files in the [app](app) folder altogether add a [SAP Fiori elements application](https://cap.cloud.sap/docs/advanced/fiori) to bookshop, thereby introducing to:\n  - [OData Annotations](https://cap.cloud.sap/docs/advanced/odata) in `.cds` files\n  - Support for [Fiori Draft](https://cap.cloud.sap/docs/advanced/fiori#fiori-draft-support)\n  - Support for [Value Helps](https://cap.cloud.sap/docs/advanced/fiori#value-help-support)\n  - Serving SAP Fiori apps locally\n\n[A Vue.js app](app/vue/index.html) is served.\n",
-      "line": 201,
+      "line": 177,
       "selection": {
         "start": {
           "line": 1,
