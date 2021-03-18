@@ -1,0 +1,12 @@
+{
+  "alignExpressionsAndConditions": true,
+  "alignExprAndCondWithinBlock": true,
+  "alignCompositionStructToRight": true,
+  "keepOriginalEmptyLines": false,
+  "openingBraceInNewLine": false,
+  "alignValuesInAnnotations": true,
+  "alignColonsInAnnotations": true,
+  "alignPostAnnotations": true,
+  "alignPreAnnotations": true,
+  "alignTypes": true
+}

@@ -1,0 +1,10 @@
+namespace my.bookshop;
+
+////////////////////////////////////////////////////////////////////////////
+//
+//	Commmon Types
+//
+type TechnicalBooleanFlag : Boolean @(
+    UI.Hidden,
+    Core.Computed
+);
