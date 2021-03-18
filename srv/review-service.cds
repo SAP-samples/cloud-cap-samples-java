@@ -27,4 +27,4 @@ service ReviewService {
     ];
 }
 
-annotate Reviews with @odata.draft.enabled;
+annotate ReviewsService.Reviews with @odata.draft.enabled;
