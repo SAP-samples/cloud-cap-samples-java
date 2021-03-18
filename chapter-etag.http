@@ -1,0 +1,56 @@
+###
+
+GET http://localhost:8080/api/ChapterService/Chapters?$expand=pages
+
+###
+### Create the Chapters with Pages
+
+POST http://localhost:8080/api/ChapterService/Chapters
+Content-Type: application/json
+
+{
+	"ID": "dc087fb2-f28c-4092-a56c-cb3a1092450b",
+	"book":"test",
+	"title": "test",
+	"number": 1,
+	"pages": [
+		{
+			"ID": "4ae4da6f-c4e0-4802-ab47-442451969c79",
+			"number": 1,
+			"content": "Bla"
+		}
+	]
+}
+
+###
+### Update chapters with combined Etag
+
+PATCH http://localhost:8080/api/ChapterService/Chapters(dc087fb2-f28c-4092-a56c-cb3a1092450b)
+If-Match: "<REPLACE WITH ETAG>"
+Content-Type: application/json
+
+{
+	"book": "Amazing Test"
+}
+
+###
+### Update pages via navigation with combined Etag
+
+PATCH http://localhost:8080/api/ChapterService/Chapters(dc087fb2-f28c-4092-a56c-cb3a1092450b)/pages(ID=4ae4da6f-c4e0-4802-ab47-442451969c79)
+If-Match: "<REPLACE WITH ETAG>"
+Content-Type: application/json
+
+{
+	"content": "Bla bla"
+}
+
+###
+### Update pages directly with combined Etag
+
+PATCH http://localhost:8080/api/ChapterService/Pages(ID=4ae4da6f-c4e0-4802-ab47-442451969c79)
+If-Match: "<REPLACE WITH ETAG>"
+Content-Type: application/json
+
+{
+	"content": "Bla bla bla"
+}

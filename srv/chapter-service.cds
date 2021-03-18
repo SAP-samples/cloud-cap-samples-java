@@ -1,4 +1,4 @@
-using { my.bookshop as my } from '../db/schema';
+using { my.bookshop as my } from '../db/chapters';
 using { cuid, managed } from '@sap/cds/common';
 
 service ChapterService {
