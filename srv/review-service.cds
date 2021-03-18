@@ -14,11 +14,11 @@ service ReviewService {
     entity Authors as projection on my.Authors;
 
     // access control restrictions
-    annotate ReviewService.Reviews with @restrict : [
+    annotate Reviews with @restrict : [
         {
             grant : '*',
             to : 'authenticated-user',
-            where: 'createdBy=$user'
+            where : 'createdBy=$user'
         },
         {
             grant : '*',
@@ -27,4 +27,4 @@ service ReviewService {
     ];
 }
 
-annotate ReviewService.Reviews with @odata.draft.enabled;
+annotate Reviews with @odata.draft.enabled;

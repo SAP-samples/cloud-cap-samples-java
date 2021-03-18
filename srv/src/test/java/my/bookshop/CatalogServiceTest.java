@@ -13,7 +13,6 @@ import com.sap.cds.services.draft.DraftService;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -25,12 +24,11 @@ import cds.gen.catalogservice.CatalogService_;
 import cds.gen.catalogservice.Reviews;
 import cds.gen.reviewservice.ReviewService_;
 
-@ExtendWith(MockitoExtension.class)
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
 public class CatalogServiceTest {
 
-    @Autowired
+	@Autowired
 	@Qualifier(CatalogService_.CDS_NAME)
 	private CdsService catalogService;
 
@@ -46,8 +44,8 @@ public class CatalogServiceTest {
 				createReview("aebdfc8a-0dfa-4468-bd36-48aabd65e663", 5, "great read", "just amazing..."));
 
 		bookReviews.forEach(bookReview -> {
-			AddReviewContext context = addReviewContext(bookReview.getBookId(), bookReview.getRating(), bookReview.getTitle(),
-					bookReview.getText());
+			AddReviewContext context = addReviewContext(bookReview.getBookId(), bookReview.getRating(),
+					bookReview.getTitle(), bookReview.getText());
 			catalogService.emit(context);
 
 			Reviews result = context.getResult();

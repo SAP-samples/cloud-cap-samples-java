@@ -7,7 +7,7 @@ import java.util.stream.Stream;
 
 import org.junit.jupiter.api.Test;
 
-public class BookRatingServiceTest {
+public class RatingCalculatorTest {
 
 	/*
 	 * Holder class for a book rating calculation test case.

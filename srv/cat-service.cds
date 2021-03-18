@@ -28,7 +28,7 @@ service CatalogService {
     };
 
     // access control restrictions
-    annotate CatalogService.Reviews with @restrict : [
+    annotate Reviews with @restrict : [
         {
             grant : 'READ',
             to : 'any'

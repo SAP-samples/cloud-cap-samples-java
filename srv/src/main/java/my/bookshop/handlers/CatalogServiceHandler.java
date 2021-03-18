@@ -63,16 +63,16 @@ class CatalogServiceHandler implements EventHandler {
 
 	private final Messages messages;
 
-	private final RatingCalculator bookRatingService;
+	private final RatingCalculator ratingCalculator;
 
 	private final CqnAnalyzer analyzer;
 
 	CatalogServiceHandler(PersistenceService db, @Qualifier(ReviewService_.CDS_NAME) DraftService reviewService,
-			Messages messages, RatingCalculator bookRatingService, CdsModel model) {
+			Messages messages, RatingCalculator ratingCalculator, CdsModel model) {
 		this.db = db;
 		this.reviewService = reviewService;
 		this.messages = messages;
-		this.bookRatingService = bookRatingService;
+		this.ratingCalculator = ratingCalculator;
 		this.analyzer = CqnAnalyzer.create(model);
 	}
 
@@ -129,7 +129,7 @@ class CatalogServiceHandler implements EventHandler {
 	 */
 	@After(entity = Books_.CDS_NAME)
 	public void afterAddReview(AddReviewContext context) {
-		bookRatingService.setBookRating(context.getResult().getBookId());
+		ratingCalculator.setBookRating(context.getResult().getBookId());
 	}
 
 	@After(event = CdsService.EVENT_READ)
