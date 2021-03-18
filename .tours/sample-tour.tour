@@ -45,7 +45,7 @@
     },
     {
       "file": "srv/admin-service.cds",
-      "description": "### Service Definitions\n\nHere is another example of a service interface, demonstrating:\n\n- [Restriction using `@require`](https://cap.cloud.sap/docs/guides/authorization#restrictions)\n- [Search Capabilities](https://cap.cloud.sap/docs/guides/generic#search-capabilities)\n- Enablement of [Draft-Based Editing](https://cap.cloud.sap/docs/advanced/fiori#fiori-draft-support) for exposed entities",
+      "description": "### Service Definitions\n\nHere is another example of a service interface, demonstrating:\n\n- [Restriction using `@require`](https://cap.cloud.sap/docs/guides/authorization#requires)\n- [Search Capabilities](https://cap.cloud.sap/docs/guides/generic#search-capabilities)\n- Enablement of [Draft-Based Editing](https://cap.cloud.sap/docs/advanced/fiori#fiori-draft-support) for exposed entities",
       "line": 46,
       "selection": {
         "start": {
@@ -74,7 +74,7 @@
     },
     {
       "file": "srv/src/main/java/my/bookshop/handlers/CatalogServiceHandler.java",
-      "description": "### Event Handler\n\nThe method `beforeAddReview` demonstrated here is used to validate reviews that are about to be persisted, checking whether the author of the review already created one for the given book. The `ServiceException` thrown in such a case aborts further processing of the current event (of adding a review). The method is bound to the `Before` [event phase](https://cap.cloud.sap/docs/java/provisioning-api#phases), meaning it will be triggerd before the core processing of the event. In the next steps you will see some other event phase handling examples.\n\nThe query run against the database for the check is constructed via the [Query Builder Java API](https://cap.cloud.sap/docs/java/query-api#the-query-builders-java-api).\n\nConcepts used:\n\n- [Event Phase: `Before`](https://cap.cloud.sap/docs/java/provisioning-api#before)\n- [Building CQN Queries](https://cap.cloud.sap/docs/java/query-api)\n- [Indicating Errors](https://cap.cloud.sap/docs/java/indicating-errors#overview)\n- [Static CDS Model](https://cap.cloud.sap/docs/java/advanced#staticmodel)",
+      "description": "### Event Handler\n\nThe method `beforeAddReview` demonstrated here is used to validate reviews that are about to be persisted, checking whether the author of the review already created one for the given book. The `ServiceException` thrown in such a case aborts further processing of the current event (of adding a review). The method is bound to the `Before` [event phase](https://cap.cloud.sap/docs/java/provisioning-api#phases), meaning it will be triggerd before the core processing of the event. In the next steps you will see some other event phase handling examples.\n\nThe query run against the database for the check is constructed via the [Query Builder Java API](https://cap.cloud.sap/docs/java/query-api#the-query-builders-java-api).\n\nConcepts used:\n\n- [Event Phase: `Before`](https://cap.cloud.sap/docs/java/provisioning-api#before)\n- [Building CQN Queries](https://cap.cloud.sap/docs/java/query-api)\n- [Indicating Errors](https://cap.cloud.sap/docs/java/indicating-errors)\n- [Static CDS Model](https://cap.cloud.sap/docs/java/advanced#staticmodel)",
       "line": 96,
       "selection": {
         "start": {
