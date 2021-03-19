@@ -30,7 +30,7 @@
     },
     {
       "file": "srv/cat-service.cds",
-      "description": "### Service Definitions\n\nA [service](https://cap.cloud.sap/docs/cds/cdl#service-definitions) interface exposes chosen entities of your domain model for consumption. The endpoint of the exposed service is usually constructed by its name following specific conventions. Here, however the endpoint path to the `CatalogService` is overwritten by the `@path : 'browse'` annotation.\n\nThis `CatalogService` showcases the API for browsing books and adding reviews and demonstrates:\n\n- [Import Directives](https://cap.cloud.sap/docs/cds/cdl#imports)\n- [Namespaces](https://cap.cloud.sap/docs/cds/cdl#namespaces)\n- [Views and Projections](https://cap.cloud.sap/docs/cds/cdl#views)\n- [Annotations](https://cap.cloud.sap/docs/cds/cdl#annotations)\n- [Bound and Unbound Actions](https://cap.cloud.sap/docs/cds/cdl#actions)\n- [Restrictions](https://cap.cloud.sap/docs/guides/authorization#restrictions)",
+      "description": "### Service Definitions\n\nA [service](https://cap.cloud.sap/docs/cds/cdl#service-definitions) interface exposes chosen entities of your domain model for consumption. The endpoint of the exposed service is usually constructed by its name following specific conventions. Here, however the endpoint path to the `CatalogService` is overwritten by the `@path : 'browse'` annotation.\n\nThis `CatalogService` showcases the API for browsing books and adding reviews and demonstrates:\n\n- [Services](https://cap.cloud.sap/docs/java/consumption-api)\n- [Import Directives](https://cap.cloud.sap/docs/cds/cdl#imports)\n- [Namespaces](https://cap.cloud.sap/docs/cds/cdl#namespaces)\n- [Views and Projections](https://cap.cloud.sap/docs/cds/cdl#views)\n- [Annotations](https://cap.cloud.sap/docs/cds/cdl#annotations)\n- [Bound and Unbound Actions](https://cap.cloud.sap/docs/cds/cdl#actions)\n- [Restrictions](https://cap.cloud.sap/docs/guides/authorization#restrictions)",
       "line": 66,
       "selection": {
         "start": {
@@ -60,7 +60,7 @@
     },
     {
       "file": "srv/src/main/java/my/bookshop/handlers/CatalogServiceHandler.java",
-      "description": "### Event Handler\n\nAfter defining your domain model and services you can implement event handlers reacting to events triggered by these services. This file, for example, showcases an [event handler](https://cap.cloud.sap/docs/java/provisioning-api) for the `CatalogService`. There are various handler implementations reacting to specific [event phases](https://cap.cloud.sap/docs/java/provisioning-api#phases), as showcased in the next steps of this tour.",
+      "description": "### Event Handler\n\nAfter defining your domain model and services you can [implement event handlers](https://cap.cloud.sap/docs/java/application-services) reacting to events triggered by these services. This file, for example, showcases an [event handler](https://cap.cloud.sap/docs/java/provisioning-api) for the `CatalogService`. There are various handler implementations reacting to specific [event phases](https://cap.cloud.sap/docs/java/provisioning-api#phases), as showcased in the next steps of this tour.",
       "selection": {
         "start": {
           "line": 79,
