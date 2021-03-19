@@ -119,7 +119,7 @@
     },
     {
       "file": "srv/cat-service.cds",
-      "description": "### Unbound Action\n\nIn contrast, `submitOrder` is modeled as an [unbound action](https://cap.cloud.sap/docs/cds/cdl#actions), meaning it is not bound to an individual entity as `addReview` is bound to `Books`.",
+      "description": "### Unbound Action\n\nIn contrast, `submitOrder` is modeled as an [unbound action](https://cap.cloud.sap/docs/cds/cdl#actions), meaning it is not bound to an individual entity as `addReview` is bound to `Books`.\n\n[Actions and Functions](https://cap.cloud.sap/docs/java/application-services#actions) as the examples shown here and in the previous step, are generally used to enhance your application service with custom operations.",
       "line": 28,
       "selection": {
         "start": {
