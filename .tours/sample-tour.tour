@@ -45,7 +45,7 @@
     },
     {
       "file": "srv/admin-service.cds",
-      "description": "### Service Definitions\n\nHere is another example of a service interface, demonstrating:\n\n- [Restriction using `@require`](https://cap.cloud.sap/docs/guides/authorization#requires)\n- [Search Capabilities](https://cap.cloud.sap/docs/guides/generic#search-capabilities)\n- Enablement of [Draft-Based Editing](https://cap.cloud.sap/docs/advanced/fiori#fiori-draft-support) for exposed entities",
+      "description": "### Service Definitions\n\nHere is another example of a service interface, demonstrating:\n\n- [Restriction using `@requires`](https://cap.cloud.sap/docs/guides/authorization#requires)\n- [Search Capabilities](https://cap.cloud.sap/docs/guides/generic#search-capabilities)\n- Enablement of [Draft-Based Editing](https://cap.cloud.sap/docs/advanced/fiori#fiori-draft-support) for exposed entities",
       "line": 46,
       "selection": {
         "start": {
@@ -179,7 +179,7 @@
     },
     {
       "file": "app/browse/fiori-service.cds",
-      "description": "### SAP Fiori Elements Support\n\nCAP for Java supports SAP Fiori Elements annotations out-of-the-box. The `fiori-service.cds` files in the [app](app) folder altogether add a [SAP Fiori elements application](https://cap.cloud.sap/docs/advanced/fiori) to bookshop, thereby introducing to:\n  - [OData Annotations](https://cap.cloud.sap/docs/advanced/odata) in `.cds` files\n  - Support for [Fiori Draft](https://cap.cloud.sap/docs/advanced/fiori#fiori-draft-support)\n  - Support for [Value Helps](https://cap.cloud.sap/docs/advanced/fiori#value-help-support)\n  - Serving SAP Fiori apps locally\n\n[A Vue.js app](app/vue/index.html) is served.\n",
+      "description": "### SAP Fiori Elements Support\n\nCAP for Java supports SAP Fiori Elements annotations out-of-the-box. The `fiori-service.cds` files in the [app](app) folder altogether add a [SAP Fiori elements application](https://cap.cloud.sap/docs/advanced/fiori) to bookshop, thereby introducing to:\n  - [OData Annotations](https://cap.cloud.sap/docs/advanced/odata) in `.cds` files\n  - Support for [Fiori Draft](https://cap.cloud.sap/docs/advanced/fiori#fiori-draft-support)\n  - Support for [Value Helps](https://cap.cloud.sap/docs/advanced/fiori#value-help-support)\n  - Serving SAP Fiori apps locally\n\n[A Vue.js app](app/vue/index.html) is served as well.\n",
       "line": 177,
       "selection": {
         "start": {
