@@ -19,7 +19,7 @@ entity Reviews : cuid, managed {
 annotate Reviews with {
     subject @mandatory;
     title @mandatory;
-    rating @assert.enum;
+    rating @assert.range;
 }
 
 type Rating : Integer enum {
