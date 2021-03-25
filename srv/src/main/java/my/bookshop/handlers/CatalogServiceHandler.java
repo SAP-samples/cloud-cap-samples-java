@@ -146,6 +146,10 @@ class CatalogServiceHandler implements EventHandler {
 		List<String> bookIds = books.stream().filter(b -> b.getId() != null).map(b -> b.getId())
 				.collect(Collectors.toList());
 
+		if (bookIds.isEmpty()) {
+			return;
+		}
+		
 		CqnSelect query = Select.from(CatalogService_.BOOKS, b -> b.filter(b.ID().in(bookIds)).reviews())
 				.where(r -> r.createdBy().eq(user));
 
