@@ -143,7 +143,8 @@ class CatalogServiceHandler implements EventHandler {
 	@After
 	public void setIsReviewable(CdsReadEventContext context, List<Books> books) {
 		String user = context.getUserInfo().getName();
-		List<String> bookIds = books.stream().map(b -> b.getId()).collect(Collectors.toList());
+		List<String> bookIds = books.stream().filter(b -> b.getId() != null).map(b -> b.getId())
+				.collect(Collectors.toList());
 
 		CqnSelect query = Select.from(CatalogService_.BOOKS, b -> b.filter(b.ID().in(bookIds)).reviews())
 				.where(r -> r.createdBy().eq(user));
