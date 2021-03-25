@@ -16,13 +16,6 @@ service CatalogService {
     @readonly
     entity Reviews     as projection on my.Reviews;
 
-    @readonly
-    entity ListOfBooks as
-        select from Books
-        excluding {
-            descr
-        };
-
     action submitOrder(book : Books : ID, amount : Integer) returns {
         stock : Integer
     };
