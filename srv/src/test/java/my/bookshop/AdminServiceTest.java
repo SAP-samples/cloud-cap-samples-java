@@ -1,7 +1,7 @@
 package my.bookshop;
 
+import static cds.gen.adminservice.AdminService_.AUTHORS;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.util.Collections;
@@ -22,9 +22,6 @@ import com.sap.cds.services.draft.DraftService;
 
 import cds.gen.adminservice.AdminService_;
 import cds.gen.adminservice.Authors;
-import cds.gen.adminservice.Authors_;
-import cds.gen.adminservice.Orders;
-import cds.gen.adminservice.Orders_;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
@@ -35,18 +32,10 @@ public class AdminServiceTest {
 	private DraftService adminService;
 
 	@Test
-	@WithMockUser(username = "admin")
-	public void testGeneratedId() {
-		Result result = adminService.newDraft(Insert.into(Orders_.class).entry(Collections.emptyMap()));
-		Orders order = result.single(Orders.class);
-		assertNotNull(order.getId());
-	}
-
-	@Test
 	@WithMockUser(username = "user")
 	public void testUnauthorizedAccess() {
 		assertThrows(ServiceException.class, () -> {
-			adminService.newDraft(Insert.into(Orders_.class).entry(Collections.emptyMap()));
+			adminService.newDraft(Insert.into(AUTHORS).entry(Collections.emptyMap()));
 		});
 	}
 
@@ -56,7 +45,7 @@ public class AdminServiceTest {
 		assertThrows(ServiceException.class, () -> {
 			Authors author = Authors.create();
 			author.setName("little Joey");
-			adminService.run(Insert.into(Authors_.class).entry(author));
+			adminService.run(Insert.into(AUTHORS).entry(author));
 		});
 	}
 
@@ -65,7 +54,7 @@ public class AdminServiceTest {
 	public void testValidAuthorName() {
 		Authors author = Authors.create();
 		author.setName("Big Joey");
-		Result result = adminService.run(Insert.into(Authors_.class).entry(author));
+		Result result = adminService.run(Insert.into(AUTHORS).entry(author));
 		assertEquals(1, result.rowCount());
 	}
 
