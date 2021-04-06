@@ -19,8 +19,6 @@
 		<cds.services.version>1.14.3</cds.services.version>
 		<spring.boot.version>2.4.3</spring.boot.version>
 		<cloud.sdk.version>3.38.0</cloud.sdk.version>
-
-		<node.version>v12.16.2</node.version>
 	</properties>
 
 	<modules>
