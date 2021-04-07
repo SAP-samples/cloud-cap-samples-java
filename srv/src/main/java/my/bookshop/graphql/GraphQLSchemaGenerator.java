@@ -3,6 +3,7 @@ package my.bookshop.graphql;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.sap.cds.reflect.CdsAssociationType;
 import com.sap.cds.reflect.CdsElement;
 import com.sap.cds.reflect.CdsEntity;
 import com.sap.cds.reflect.CdsModel;
@@ -34,7 +35,9 @@ public class GraphQLSchemaGenerator {
 
 	private void generateEntity(CdsEntity entity) {
 		builder.append("type ").append(TypeMappings.toGraphQLTypeName(entity)).append(" {").append(NL);
-		entity.elements().forEach(this::generateEntityElement);
+		entity.elements()
+			.filter(e -> isExposed(e, entity.getQualifier()))
+			.forEach(this::generateEntityElement);
 		builder.append("}").append(NL);
 
 		// add queries for each exposed entity
@@ -43,6 +46,13 @@ public class GraphQLSchemaGenerator {
 			queries.add(generateByIdQuery(entity));
 			queries.add(generateAllQuery(entity));
 		}
+	}
+
+	private boolean isExposed(CdsElement element, String serviceName) {
+		if(element.getType().isAssociation() && !element.getType().as(CdsAssociationType.class).getTarget().getQualifier().equals(serviceName)) {
+			return false;
+		}
+		return true;
 	}
 
 	private void generateEntityElement(CdsElement element) {

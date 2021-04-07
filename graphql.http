@@ -5,7 +5,7 @@ Authorization: Basic user:user
 Content-Type: application/json
 
 {
-	"query": "{ getCatalogServiceBooksById(ID: \"f846b0b9-01d4-4f6d-82a4-d79204f62278\") { ID title author } }"
+	"query": "{ getCatalogServiceBooksById(ID: \"f846b0b9-01d4-4f6d-82a4-d79204f62278\") { ID title } }"
 }
 
 ### Localization works out-of-the box
@@ -16,7 +16,7 @@ Content-Type: application/json
 Accept-Language: de
 
 {
-	"query": "{ getCatalogServiceBooksById(ID: \"f846b0b9-01d4-4f6d-82a4-d79204f62278\") { ID title descr stock price createdAt author } }"
+	"query": "{ getCatalogServiceBooksById(ID: \"f846b0b9-01d4-4f6d-82a4-d79204f62278\") { ID title descr stock price createdAt } }"
 }
 
 ### Business logic is triggered
@@ -36,7 +36,7 @@ Authorization: Basic user:user
 Content-Type: application/json
 
 {
-	"query": "{ getCatalogServiceBooksById(ID: \"f846b0b9-01d4-4f6d-82a4-d79204f62278\") { ID price currency { code } } }"
+	"query": "{ getCatalogServiceBooksById(ID: \"f846b0b9-01d4-4f6d-82a4-d79204f62278\") { ID price author { name } currency { code } } }"
 }
 
 ### Select all books
