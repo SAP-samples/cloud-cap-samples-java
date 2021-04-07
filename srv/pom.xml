@@ -117,9 +117,6 @@
 				<groupId>com.sap.cds</groupId>
 				<artifactId>cds-maven-plugin</artifactId>
 				<version>${cds.services.version}</version>
-				<configuration>
-					<nodeVersion>${node.version}</nodeVersion>
-				</configuration>
 				<executions>
 					<execution>
 						<id>cds.clean</id>
