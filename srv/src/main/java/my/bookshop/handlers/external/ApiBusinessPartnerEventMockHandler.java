@@ -9,8 +9,8 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
 
 import com.sap.cds.ql.cqn.CqnAnalyzer;
-import com.sap.cds.services.cds.CdsService;
 import com.sap.cds.services.cds.CdsUpdateEventContext;
+import com.sap.cds.services.cds.CqnService;
 import com.sap.cds.services.handler.EventHandler;
 import com.sap.cds.services.handler.annotations.After;
 import com.sap.cds.services.handler.annotations.ServiceName;
@@ -34,7 +34,7 @@ public class ApiBusinessPartnerEventMockHandler implements EventHandler {
 	@Autowired
 	private MessagingService bupaMessaging;
 
-	@After(event = CdsService.EVENT_UPDATE, entity = ABusinessPartnerAddress_.CDS_NAME)
+	@After(event = CqnService.EVENT_UPDATE, entity = ABusinessPartnerAddress_.CDS_NAME)
 	public void businessPartnerChanged(CdsUpdateEventContext context) {
 		// Get BusinessPartner ID
 		CqnAnalyzer analyzer = CqnAnalyzer.create(context.getModel());

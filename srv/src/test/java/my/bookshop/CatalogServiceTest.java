@@ -20,7 +20,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import com.sap.cds.ql.Delete;
 import com.sap.cds.ql.Select;
 import com.sap.cds.services.ServiceException;
-import com.sap.cds.services.cds.CdsService;
+import com.sap.cds.services.cds.CqnService;
 import com.sap.cds.services.persistence.PersistenceService;
 
 import cds.gen.catalogservice.AddReviewContext;
@@ -33,7 +33,7 @@ public class CatalogServiceTest {
 
 	@Autowired
 	@Qualifier(CatalogService_.CDS_NAME)
-	private CdsService catalogService;
+	private CqnService catalogService;
 
 	@Autowired
 	private PersistenceService db;

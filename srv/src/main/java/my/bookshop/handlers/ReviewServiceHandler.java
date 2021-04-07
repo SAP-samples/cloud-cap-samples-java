@@ -10,7 +10,7 @@ import com.sap.cds.Row;
 import com.sap.cds.ql.Select;
 import com.sap.cds.services.ErrorStatuses;
 import com.sap.cds.services.ServiceException;
-import com.sap.cds.services.cds.CdsService;
+import com.sap.cds.services.cds.CqnService;
 import com.sap.cds.services.draft.DraftService;
 import com.sap.cds.services.handler.EventHandler;
 import com.sap.cds.services.handler.annotations.Before;
@@ -31,7 +31,7 @@ public class ReviewServiceHandler implements EventHandler {
 		this.reviewService = reviewService;
 	}
 
-	@Before(event = { CdsService.EVENT_CREATE, CdsService.EVENT_UPSERT, CdsService.EVENT_UPDATE })
+	@Before(event = { CqnService.EVENT_CREATE, CqnService.EVENT_UPSERT, CqnService.EVENT_UPDATE })
 	public void beforeAddReview(Stream<Reviews> reviews) {
 		reviews.forEach(review -> {
 			validateBook(review);
