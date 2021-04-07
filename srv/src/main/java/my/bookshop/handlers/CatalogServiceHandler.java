@@ -19,7 +19,7 @@ import com.sap.cds.reflect.CdsModel;
 import com.sap.cds.services.ErrorStatuses;
 import com.sap.cds.services.ServiceException;
 import com.sap.cds.services.cds.CdsReadEventContext;
-import com.sap.cds.services.cds.CdsService;
+import com.sap.cds.services.cds.CqnService;
 import com.sap.cds.services.draft.DraftService;
 import com.sap.cds.services.handler.EventHandler;
 import com.sap.cds.services.handler.annotations.After;
@@ -132,7 +132,7 @@ class CatalogServiceHandler implements EventHandler {
 		ratingCalculator.setBookRating(context.getResult().getBookId());
 	}
 
-	@After(event = CdsService.EVENT_READ)
+	@After(event = CqnService.EVENT_READ)
 	public void discountBooks(Stream<Books> books) {
 		books.filter(b -> b.getTitle() != null).forEach(b -> {
 			loadStockIfNotSet(b);
@@ -149,7 +149,7 @@ class CatalogServiceHandler implements EventHandler {
 		if (bookIds.isEmpty()) {
 			return;
 		}
-		
+
 		CqnSelect query = Select.from(CatalogService_.BOOKS, b -> b.filter(b.ID().in(bookIds)).reviews())
 				.where(r -> r.createdBy().eq(user));
 
