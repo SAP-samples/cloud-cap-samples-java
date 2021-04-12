@@ -39,9 +39,9 @@ modules:
         properties:
           CDS_MULTITENANCY_APPUI_URL: ~{url}
     provides:
-      - name: srv-url
+      - name: srv
         properties:
-          url: '${default-url}'
+          srv-url: '${default-url}'
 # --------------------- SIDECAR MODULE -----------------------
   - name: bookshop-java-public-sidecar
 # ------------------------------------------------------------
@@ -68,11 +68,11 @@ modules:
     properties:
       TENANT_HOST_PATTERN: ^(.*)-${default-uri}
     requires:
-    - name: srv-url
+    - name: srv
       group: destinations
       properties:
         name: backend
-        url: ~{url}
+        url: ~{srv-url}
         forwardAuthToken: true
         strictSSL: true
     - name: bookshop-java-public-uaa
@@ -105,7 +105,7 @@ resources:
          appName: bookshop-java-public-${org}-${space} # this is the text on the tile
          xsappname: bookshop-java-public-${org}-${space} # this is the value from xsuaa.parameters.config.xsappname
          appUrls:
-           getDependencies: ~{srv-url/url}/mt/v1.0/subscriptions/dependencies
-           onSubscription: ~{srv-url/url}/mt/v1.0/subscriptions/tenants/{tenantId}
+           getDependencies: ~{srv/srv-url}/mt/v1.0/subscriptions/dependencies
+           onSubscription: ~{srv/srv-url}/mt/v1.0/subscriptions/tenants/{tenantId}
     requires:
-      - name: srv-url
+      - name: srv
