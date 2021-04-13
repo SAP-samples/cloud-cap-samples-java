@@ -42,4 +42,4 @@ spring:
   config.activate.on-profile: default
 cds:
   datasource:
-    embedded: true
+    csv-initialization-mode: "always"
