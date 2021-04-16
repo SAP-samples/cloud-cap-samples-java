@@ -77,11 +77,11 @@ User Interface related Features:
 
 CDS Maven Plugin Features:
 
-- Install [Node.js](srv/pom.xml#L87) in the specified version.
-- Install the latest version of [@sap/cds-dk](srv/pom.xml#L97).
-- Execute arbitrary [CDS](srv/pom.xml#L107) commands.
-- [Generate](srv/pom.xml#L122) Java POJOs for type-safe access to the CDS model.
-- [Clean](srv/pom.xml#L80) project from artifacts of the previous build.
+- Install [Node.js](srv/pom.xml#L118) in the default version.
+- Install the latest version of [@sap/cds-dk](srv/pom.xml#L128).
+- Execute arbitrary [CDS](srv/pom.xml#L139) commands.
+- [Generate](srv/pom.xml#L53) Java POJOs for type-safe access to the CDS model.
+- [Clean](srv/pom.xml#L111) project from artifacts of the previous build.
 
 # Getting Started
 
@@ -144,7 +144,7 @@ Optionally, use the following steps to import the project to Eclipse:
     Two mock users are defined for local development:
     - User: `user`, password: `user` to browse books
     - User: `admin`, password: `admin` to manage books and orders
-    
+
 ## Using IntelliJ Idea (Community and Ultimate)
 
 IntelliJ can handle the project more or less out-of-the-box. Since some of the event handlers in the project rely on
@@ -152,7 +152,7 @@ the code generated from the CDS model the build path of the project (module) nee
 with the folder containing the generated code. In order to add the generated code you need to add the 'gen' folder
 to the build path:
 
-* Open the project settings 
+* Open the project settings
 * Navigate to the 'modules' section
 * Select the srv/src/gen folder and mark it as 'sources'.
 * Save and leave the project settings
