@@ -19,20 +19,19 @@ Welcome to the bookshop-java project. It demonstrates how to build business appl
   - [Using Eclipse](#using-eclipse)
     - [Building and Running](#building-and-running)
   - [Database Setup and Spring Profiles](#database-setup-and-spring-profiles)
-  - [Using a File-Based SQLite Database](#using-a-file-based-sqlite-database)
 - [Get Support](#get-support)
 - [License](#license)
 
 
 # Overview
 
-This sample application shows how to conveniently create business applications based on **CDS domain models**, persisting data with **SQLite**, or **SAP HANA**, and exposing an **OData V4** frontend with an **SAP Fiori** frontend on top.
+This sample application shows how to conveniently create business applications based on **CDS domain models**, persisting data with **H2**, or **SAP HANA**, and exposing an **OData V4** frontend with an **SAP Fiori** frontend on top.
 
 This sample uses Spring Boot as an **application framework**. Although a CAP Java application isn’t required to build on Spring Boot, it’s the first choice of framework, as it’s seamlessly integrated.
 
 The **domain models** are defined using [CDS entity definitions](https://cap.cloud.sap/docs/cds/cdl#entity-and-type-definitions).
 
-By default, an in-memory or optionally a file-based SQLite database is used for **data persistency**. Once productively deployed to SAP Business Technology Platform, SAP HANA can be used.
+By default, an in-memory H2 database is used for **data persistency**. Once productively deployed to SAP Business Technology Platform, SAP HANA can be used.
 
 **Services** are defined using [CDS Service Models](https://cap.cloud.sap/docs/cds/cdl#services). The **OData V4 Protocol Adapter** translates the CDS service models into corresponding OData schemas and maps the incoming OData requests to the corresponding CDS services.
 
@@ -139,12 +138,12 @@ Optionally, use the following steps to import the project to Eclipse:
     <http://localhost:8080/>: This should show the automatically generated index page of served paths.
     <http://localhost:8080/fiori.html>: This is the actual bookshop application UI.
 
-    You'll start with an empty stock of books as this procedure starts the bookshop application with an empty in-memory SQLite database.
+    You'll start with a predefined stock of books as this procedure starts the bookshop application with a CSV-initialized in-memory H2 database.
 
     Two mock users are defined for local development:
     - User: `user`, password: `user` to browse books
     - User: `admin`, password: `admin` to manage books and orders
-    
+
 ## Using IntelliJ Idea (Community and Ultimate)
 
 IntelliJ can handle the project more or less out-of-the-box. Since some of the event handlers in the project rely on
@@ -152,7 +151,7 @@ the code generated from the CDS model the build path of the project (module) nee
 with the folder containing the generated code. In order to add the generated code you need to add the 'gen' folder
 to the build path:
 
-* Open the project settings 
+* Open the project settings
 * Navigate to the 'modules' section
 * Select the srv/src/gen folder and mark it as 'sources'.
 * Save and leave the project settings
@@ -163,30 +162,13 @@ application in IntelliJ.
 
 ## Database Setup and Spring Profiles
 
-The application comes with three predefined profiles: `default`, `sqlite`, and `cloud` (see `srv/src/main/resources/application.yaml`).
+The application comes with two predefined profiles: `default`, and `cloud` (see `srv/src/main/resources/application.yaml`).
 
-- The `default` profile specifies to use an in-memory SQLite database.
-  The in-memory database is set up automatically during startup of the application.
-  However, example data from CSV files aren’t yet automatically imported, therefore some content needs to be created via OData V4 API requests.
-
-- The `sqlite` profile specifies to use a persistent SQLite database from root directory of the project.
-  This database needs to be created first, to ensure it’s initialized with the correct schema and with the CSV-based example data.
-  To initialize the database, simply run `cds deploy --to sql:sqlite.db --no-save` from the project's root directory. Repeat this step, once you make changes to the CDS model.
+- The `default` profile specifies to use an in-memory H2 database.
+  The in-memory database is set up automatically during startup of the application and initialized with some example data from CSV files.
 
 - When deploying the application to Cloud Foundry, the CF Java Buildpack automatically configures the `cloud` Spring profile.
   This profile doesn’t specify any datasource location. In that case CAP Java can automatically detect SAP HANA service bindings available in the environment.
-
-## Using a File-Based SQLite Database
-
-To switch from the default in-memory SQLite database to a file-based SQLite database in this sample application, perform the following steps:
-
-1.  Deploy the example data stored in .csv files in the folder `db/data` to a file-based SQLite database by executing the command-line utility
-
-    ```cds deploy --to sql:sqlite.db --no-save```
-
-    from your project root folder.
-
-2.  Edit your Run Configuration via **Run** > **Run Configurations...** and select enter the **Profile** `sqlite` on tab **Spring** and click **Run**.
 
 ## Deploy to SAP Business Technology Platform
 

@@ -58,8 +58,9 @@
 
 		<!-- OTHER DEPENDENCIES -->
 		<dependency>
-			<groupId>org.xerial</groupId>
-			<artifactId>sqlite-jdbc</artifactId>
+			<groupId>com.h2database</groupId>
+			<artifactId>h2</artifactId>
+			<scope>runtime</scope>
 		</dependency>
 
 		<dependency>
@@ -141,7 +142,7 @@
 						<configuration>
 							<commands>
 								<command>build --for java-cf</command>
-								<command>deploy --to sqlite --with-mocks --dry >
+								<command>deploy --to sql --with-mocks --dry >
 									${project.basedir}/src/main/resources/schema.sql</command>
 							</commands>
 						</configuration>
