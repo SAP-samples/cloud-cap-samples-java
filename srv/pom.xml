@@ -131,7 +131,7 @@
 							<goal>install-cdsdk</goal>
 						</goals>
 						<configuration>
-							<version>4.0.3</version>
+							<version>4.0.7</version>
 							<skip>${cdsdk-global}</skip>
 						</configuration>
 					</execution>
