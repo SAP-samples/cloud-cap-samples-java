@@ -16,7 +16,7 @@
 
 		<!-- DEPENDENCIES VERSION -->
 		<jdk.version>1.8</jdk.version>
-		<cds.services.version>1.15.1</cds.services.version>
+		<cds.services.version>1.15.2</cds.services.version>
 		<spring.boot.version>2.4.4</spring.boot.version>
 		<cloud.sdk.version>3.41.0</cloud.sdk.version>
 	</properties>
@@ -75,7 +75,6 @@
 				<artifactId>spring-boot-maven-plugin</artifactId>
 				<version>${spring.boot.version}</version>
 				<configuration>
-					<fork>false</fork>
 					<skip>true</skip>
 				</configuration>
 			</plugin>

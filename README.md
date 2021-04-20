@@ -19,20 +19,19 @@ Welcome to the bookshop-java project. It demonstrates how to build business appl
   - [Using Eclipse](#using-eclipse)
     - [Building and Running](#building-and-running)
   - [Database Setup and Spring Profiles](#database-setup-and-spring-profiles)
-  - [Using a File-Based SQLite Database](#using-a-file-based-sqlite-database)
 - [Get Support](#get-support)
 - [License](#license)
 
 
 # Overview
 
-This sample application shows how to conveniently create business applications based on **CDS domain models**, persisting data with **SQLite**, or **SAP HANA**, and exposing an **OData V4** frontend with an **SAP Fiori** frontend on top.
+This sample application shows how to conveniently create business applications based on **CDS domain models**, persisting data with **H2**, or **SAP HANA**, and exposing an **OData V4** frontend with an **SAP Fiori** frontend on top.
 
 This sample uses Spring Boot as an **application framework**. Although a CAP Java application isn’t required to build on Spring Boot, it’s the first choice of framework, as it’s seamlessly integrated.
 
 The **domain models** are defined using [CDS entity definitions](https://cap.cloud.sap/docs/cds/cdl#entity-and-type-definitions).
 
-By default, an in-memory or optionally a file-based SQLite database is used for **data persistency**. Once productively deployed to SAP Business Technology Platform, SAP HANA can be used.
+By default, an in-memory H2 database is used for **data persistency**. Once productively deployed to SAP Business Technology Platform, SAP HANA can be used.
 
 **Services** are defined using [CDS Service Models](https://cap.cloud.sap/docs/cds/cdl#services). The **OData V4 Protocol Adapter** translates the CDS service models into corresponding OData schemas and maps the incoming OData requests to the corresponding CDS services.
 
@@ -46,7 +45,7 @@ Framework and Infrastructure related Features:
 
 - [Application configuration](https://cap.cloud.sap/docs/java/development#application-configuration) for Spring and CDS using [application.yaml](srv/src/main/resources/application.yaml)
 - [Mocking users](/srv/src/main/resources/application.yaml) for local development
-- [Authentication & Authorization](https://cap.cloud.sap/docs/java/advanced#security) (including user-specific restrictions with `@restrict` in the [Admin Service](/srv/admin-service.cds))
+- [Authentication & Authorization](https://cap.cloud.sap/docs/java/security) (including user-specific restrictions with `@restrict` in the [Admin Service](/srv/admin-service.cds))
 - [Cloud Foundry Deployment using MTA](https://cap.cloud.sap/docs/advanced/deploy-to-cloud#deploy-using-mta) with XSUAA [Service Bindings](mta-single-tenant.yaml)
 - Application Router configuration including authentication via the XSUAA Service. See [package.json](app/package.json), [xs-app.json](app/xs-app.json) and [cds-security.json](cds-security.json)
 - [Multitenancy configuration](https://cap.cloud.sap/docs/java/multitenancy) via [mta-multi-tenant.yaml](mta-multi-tenant.yaml), [.cdsrc.json](.cdsrc.json), [sidecar module](mtx-sidecar)
@@ -63,13 +62,13 @@ Service Model related Features:
 - [Custom event handlers](https://cap.cloud.sap/docs/java/provisioning-api) such as the [Custom business logic for the Admin Service](srv/src/main/java/my/bookshop/handlers/AdminServiceHandler.java)
 - [Custom actions](https://cap.cloud.sap/docs/cds/cdl#actions) such as `addToOrder` in the [Admin Service](srv/admin-service.cds). The Action implementation is in the [Admin Service Event Handler](srv/src/main/java/my/bookshop/handlers/AdminServiceHandler.java)
 - Add annotations for [searchable elements](https://github.wdf.sap.corp/pages/cap/java/query-api#select) in the [Admin Service](srv/admin-service.cds)
-- [Localized Messages](https://cap.cloud.sap/docs/java/provisioning-api#indicating-errors) in the [Admin Service Event Handler](srv/src/main/java/my/bookshop/handlers/AdminServiceHandler.java)
+- [Localized Messages](https://cap.cloud.sap/docs/java/indicating-errors) in the [Admin Service Event Handler](srv/src/main/java/my/bookshop/handlers/AdminServiceHandler.java)
 - role-based restrictions in [AdminService](srv/admin-service.cds) and [ReviewService](srv/review-service.cds)
 
 User Interface related Features:
 
 - Support for [SAP Fiori Elements](https://cap.cloud.sap/docs/advanced/fiori)
-- [SAP Fiori Draft based Editing](https://cap.cloud.sap/docs/advanced/fiori#fiori-draft-support) for [Books, Orders](srv/admin-service.cds) and [Reviews](srv/review-service.cds)
+- [SAP Fiori Draft based Editing](https://cap.cloud.sap/docs/advanced/fiori#draft-support) for [Books, Orders](srv/admin-service.cds) and [Reviews](srv/review-service.cds)
 - [SAP Fiori annotations](https://cap.cloud.sap/docs/advanced/fiori#fiori-annotations) specific for [Browse Books](app/browse/fiori-service.cds), [Manage Books](app/admin/fiori-service.cds), [Manage Orders](app/orders/fiori-service.cds), [Manage Reviews](app/reviews/fiori-service.cds) and [common annotations](app/common.cds), which apply to all UI's
 - UI Annotations for custom actions in the [Browse Books](app/browse/fiori-service.cds) and [Manage Books](app/admin/fiori-service.cds) UI, including annotations for a button and a popup
 - [Value Help](https://cap.cloud.sap/docs/cds/annotations#odata) for [Books](app/orders/fiori-service.cds) and [Authors](app/common.cds)
@@ -139,7 +138,7 @@ Optionally, use the following steps to import the project to Eclipse:
     <http://localhost:8080/>: This should show the automatically generated index page of served paths.
     <http://localhost:8080/fiori.html>: This is the actual bookshop application UI.
 
-    You'll start with an empty stock of books as this procedure starts the bookshop application with an empty in-memory SQLite database.
+    You'll start with a predefined stock of books as this procedure starts the bookshop application with a CSV-initialized in-memory H2 database.
 
     Two mock users are defined for local development:
     - User: `user`, password: `user` to browse books
@@ -163,30 +162,13 @@ application in IntelliJ.
 
 ## Database Setup and Spring Profiles
 
-The application comes with three predefined profiles: `default`, `sqlite`, and `cloud` (see `srv/src/main/resources/application.yaml`).
+The application comes with two predefined profiles: `default`, and `cloud` (see `srv/src/main/resources/application.yaml`).
 
-- The `default` profile specifies to use an in-memory SQLite database.
-  The in-memory database is set up automatically during startup of the application.
-  However, example data from CSV files aren’t yet automatically imported, therefore some content needs to be created via OData V4 API requests.
-
-- The `sqlite` profile specifies to use a persistent SQLite database from root directory of the project.
-  This database needs to be created first, to ensure it’s initialized with the correct schema and with the CSV-based example data.
-  To initialize the database, simply run `cds deploy --to sql:sqlite.db --no-save` from the project's root directory. Repeat this step, once you make changes to the CDS model.
+- The `default` profile specifies to use an in-memory H2 database.
+  The in-memory database is set up automatically during startup of the application and initialized with some example data from CSV files.
 
 - When deploying the application to Cloud Foundry, the CF Java Buildpack automatically configures the `cloud` Spring profile.
   This profile doesn’t specify any datasource location. In that case CAP Java can automatically detect SAP HANA service bindings available in the environment.
-
-## Using a File-Based SQLite Database
-
-To switch from the default in-memory SQLite database to a file-based SQLite database in this sample application, perform the following steps:
-
-1.  Deploy the example data stored in .csv files in the folder `db/data` to a file-based SQLite database by executing the command-line utility
-
-    ```cds deploy --to sql:sqlite.db --no-save```
-
-    from your project root folder.
-
-2.  Edit your Run Configuration via **Run** > **Run Configurations...** and select enter the **Profile** `sqlite` on tab **Spring** and click **Run**.
 
 ## Deploy to SAP Business Technology Platform
 
