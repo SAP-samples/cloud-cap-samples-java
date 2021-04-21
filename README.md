@@ -194,6 +194,10 @@ Deploy as Multitenant Application:
 - Go to another subaccount in your global account, under subscriptions and subscribe to the application you deployed.
 - Run `cf map-route bookshop-java-public-approuter <YOUR DOMAIN> --hostname <SUBSCRIBER TENANT>-<ORG>-<SPACE>-bookshop-java-public-approuter` or create and bind the route manually.
 
+# Code Tour
+
+Take the [guided tour](.tours) in VS Code through our CAP Samples for Java and learn which CAP features are showcased by the different parts of the repository. Just install the [CodeTour extension](https://marketplace.visualstudio.com/items?itemName=vsls-contrib.codetour) for VS Code. 
+
 # Get Support
 
 In case you have a question, find a bug, or otherwise need support, please use our [community](https://answers.sap.com/tags/9f13aee1-834c-4105-8e43-ee442775e5ce). See the documentation at [https://cap.cloud.sap](https://cap.cloud.sap) for more details about CAP.
