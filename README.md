@@ -76,11 +76,11 @@ User Interface related Features:
 
 CDS Maven Plugin Features:
 
-- Install [Node.js](srv/pom.xml#L87) in the specified version.
-- Install the latest version of [@sap/cds-dk](srv/pom.xml#L97).
-- Execute arbitrary [CDS](srv/pom.xml#L107) commands.
-- [Generate](srv/pom.xml#L122) Java POJOs for type-safe access to the CDS model.
-- [Clean](srv/pom.xml#L80) project from artifacts of the previous build.
+- Install [Node.js](srv/pom.xml#L118) in the default version.
+- Install the latest version of [@sap/cds-dk](srv/pom.xml#L128).
+- Execute arbitrary [CDS](srv/pom.xml#L139) commands.
+- [Generate](srv/pom.xml#L153) Java POJOs for type-safe access to the CDS model.
+- [Clean](srv/pom.xml#L111) project from artifacts of the previous build.
 
 # Getting Started
 
@@ -151,11 +151,11 @@ the code generated from the CDS model the build path of the project (module) nee
 with the folder containing the generated code. In order to add the generated code you need to add the 'gen' folder
 to the build path:
 
-* Open the project settings
-* Navigate to the 'modules' section
+* Open the project settings.
+* Navigate to the 'modules' section.
 * Select the srv/src/gen folder and mark it as 'sources'.
-* Save and leave the project settings
-* Trigger a rebuild
+* Save and leave the project settings.
+* Trigger a rebuild.
 
 After the generated code is considered by IntelliJ's build the application can be handled just as any other Spring Boot
 application in IntelliJ.
