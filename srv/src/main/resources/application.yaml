@@ -36,23 +36,10 @@ cds:
       type: "odata-v2"
 api-hub:
   api-key: "" # Place API Key from SAP API Business Hub here
----
-spring:
-  config.activate.on-profile: sqlite
-  datasource:
-    url: "jdbc:sqlite:sqlite.db"
-    driver-class-name: org.sqlite.JDBC
-    initialization-mode: never
-    hikari:
-      maximum-pool-size: 1
 
 ---
 spring:
   config.activate.on-profile: default
+cds:
   datasource:
-    url: "jdbc:sqlite:file::memory:?cache=shared"
-    driver-class-name: org.sqlite.JDBC
-    initialization-mode: always
-    hikari:
-      maximum-pool-size: 1
-      max-lifetime: 0
+    csv-initialization-mode: "always"

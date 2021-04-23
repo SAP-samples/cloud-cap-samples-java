@@ -36,7 +36,6 @@ import cds.gen.catalogservice.AddReviewContext;
 import cds.gen.catalogservice.Books;
 import cds.gen.catalogservice.Books_;
 import cds.gen.catalogservice.CatalogService_;
-import cds.gen.catalogservice.ReturnCatalogServiceSubmitOrder;
 import cds.gen.catalogservice.Reviews;
 import cds.gen.catalogservice.Reviews_;
 import cds.gen.catalogservice.SubmitOrderContext;
@@ -178,7 +177,7 @@ class CatalogServiceHandler implements EventHandler {
 		if (stock >= amount) {
 			db.run(Update.entity(BOOKS).byId(bookId).data(Books.STOCK, stock -= amount));
 
-			ReturnCatalogServiceSubmitOrder result = ReturnCatalogServiceSubmitOrder.create();
+			SubmitOrderContext.ReturnType result = SubmitOrderContext.ReturnType.create();
 			result.setStock(stock);
 
 			context.setResult(result);
