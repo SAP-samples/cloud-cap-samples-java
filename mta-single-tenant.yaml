@@ -31,7 +31,7 @@ modules:
       - name: bookshop-java-public-hdi-container
       - name: bookshop-java-public-uaa
     provides:
-      - name: srv-url
+      - name: srv
         properties:
           url: '${default-url}'
 # --------------------- DB MODULE ---------------------------
@@ -59,7 +59,7 @@ modules:
       memory: 256M
       disk-quota: 512M
     requires:
-    - name: srv-url
+    - name: srv
       group: destinations
       properties:
         name: backend
@@ -68,7 +68,7 @@ modules:
         strictSSL: true
     - name: bookshop-java-public-uaa
     provides:
-      - name: app-url
+      - name: app
         properties:
           url: '${default-url}'
 # --------------------- RESOURCES ---------------------
