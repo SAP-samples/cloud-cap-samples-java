@@ -4,7 +4,7 @@
         "@sap/cds": "^5.0.4",
         "@sap/cds-mtx": "^1.2.0",
         "@sap/hdi-deploy": "^4.0.4",
-        "@sap/instance-manager": "^2.2.0",
+        "@sap/instance-manager": "^3.0.0",
         "@sap/xssec": "^3",
         "@sap/hana-client": "^2.8.16",
         "express": "^4.17.1",
