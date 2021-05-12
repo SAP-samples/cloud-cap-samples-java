@@ -87,7 +87,7 @@ annotate AdminService.Books.texts with @(UI : {
 
 
 // Add Value Help for Locales
-annotate AdminService.Books_texts {
+annotate AdminService.Books.texts {
     locale @ValueList : {
         entity : 'Languages',
         type : #fixed
