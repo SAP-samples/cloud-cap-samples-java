@@ -114,7 +114,7 @@ annotate CatalogService.Books with @(UI : {
     price
 };
 
-annotate CatalogService.Books_texts with @(UI : {LineItem : [
+annotate CatalogService.Books.texts with @(UI : {LineItem : [
     {Value : locale},
     {Value : title},
     {Value : descr}
