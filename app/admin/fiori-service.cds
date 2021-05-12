@@ -61,7 +61,7 @@ annotate AdminService.Books with @(UI : {
 //
 
 annotate my.bookshop.Books with @fiori.draft.enabled;
-annotate AdminService.Books with @odata.draft.enabled; 
+annotate AdminService.Books with @odata.draft.enabled;
 
 annotate AdminService.Books.texts with @(UI : {
     Identification : [{Value : title}],
