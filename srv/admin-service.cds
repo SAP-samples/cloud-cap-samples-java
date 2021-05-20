@@ -9,6 +9,7 @@ service AdminService @(requires : 'admin') {
 
   entity Authors as projection on my.Authors;
   entity Orders  as select from my.Orders;
+  entity Csv as projection on my.Csv;
 }
 
 // Deep Search Items
