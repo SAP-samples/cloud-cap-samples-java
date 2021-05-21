@@ -260,10 +260,9 @@ class AdminServiceHandler implements EventHandler {
 		context.setResult(updatedOrder);
 	}
 
-	@On(entity = Csv_.CDS_NAME)
-	public void getCsvSingleton(CdsReadEventContext context) {
-		Result result = ResultBuilder.selectedRows(Arrays.asList(Csv.create())).result();
-		context.setResult(result);
+	@On(entity = Csv_.CDS_NAME, event = CdsService.EVENT_READ)
+	public Csv getCsvSingleton() {
+		return Csv.create();
 	}
 
 	@On(event = CdsService.EVENT_UPDATE)
