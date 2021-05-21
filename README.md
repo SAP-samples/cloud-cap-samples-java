@@ -65,6 +65,7 @@ Service Model related Features:
 - Add annotations for [searchable elements](https://github.wdf.sap.corp/pages/cap/java/query-api#select) in the [Admin Service](srv/admin-service.cds)
 - [Localized Messages](https://cap.cloud.sap/docs/java/indicating-errors) in the [Admin Service Event Handler](srv/src/main/java/my/bookshop/handlers/AdminServiceHandler.java)
 - role-based restrictions in [AdminService](srv/admin-service.cds) and [ReviewService](srv/review-service.cds)
+- Use of [`@cds.persistence.skip`](https://cap.cloud.sap/docs/advanced/hana#cdspersistenceskip) in [AdminService](srv/admin-service.cds)
 - [Media Data](https://cap.cloud.sap/docs/guides/providing-services#media-data) processing in the [Admin Service Event Handler](srv/src/main/java/my/bookshop/handlers/AdminServiceHandler.java)
 
 User Interface related Features:

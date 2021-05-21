@@ -10,6 +10,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 import java.util.function.Supplier;
@@ -19,6 +20,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
 import com.sap.cds.Result;
+import com.sap.cds.ResultBuilder;
 import com.sap.cds.ql.Select;
 import com.sap.cds.ql.Update;
 import com.sap.cds.ql.Upsert;
@@ -26,6 +28,7 @@ import com.sap.cds.ql.cqn.CqnAnalyzer;
 import com.sap.cds.reflect.CdsModel;
 import com.sap.cds.services.ErrorStatuses;
 import com.sap.cds.services.ServiceException;
+import com.sap.cds.services.cds.CdsReadEventContext;
 import com.sap.cds.services.cds.CdsService;
 import com.sap.cds.services.cds.CdsUpdateEventContext;
 import com.sap.cds.services.cds.CqnService;
@@ -44,6 +47,7 @@ import cds.gen.adminservice.AdminService_;
 import cds.gen.adminservice.Books;
 import cds.gen.adminservice.Books_;
 import cds.gen.adminservice.Csv;
+import cds.gen.adminservice.Csv_;
 import cds.gen.adminservice.OrderItems;
 import cds.gen.adminservice.OrderItems_;
 import cds.gen.adminservice.Orders;
@@ -256,37 +260,41 @@ class AdminServiceHandler implements EventHandler {
 		context.setResult(updatedOrder);
 	}
 
-	@On(event = CdsService.EVENT_UPDATE)
-	public void addBooksViaCsv(CdsUpdateEventContext context, List<Csv> csvs) {
-		csvs.forEach(csv -> {
-			InputStream is = csv.getData();
-			if (is != null) {
-				try (BufferedReader br = new BufferedReader(new InputStreamReader(is))) {
-					br.lines().skip(1).forEach((line) -> {
-						String[] p = line.split(";");
-						Books book = Books.create();
-						book.setId(p[0]);
-						book.setTitle(p[1]);
-						book.setDescr(p[2]);
-						book.setAuthorId(p[3]);
-						book.setStock(Integer.valueOf(p[4]).intValue());
-						book.setPrice(BigDecimal.valueOf(Double.valueOf(p[5])));
-						book.setCurrencyCode(p[6]);
-						book.setGenreId(Integer.valueOf(p[7]));
+	@On(entity = Csv_.CDS_NAME)
+	public void getCsvSingleton(CdsReadEventContext context) {
+		Csv csv = Csv.create();
+		csv.setDataType("text/csv");
+		Result result = ResultBuilder.selectedRows(Arrays.asList(csv)).result();
+		context.setResult(result);
+	}
 
-						// separate transaction per line
-						context.getCdsRuntime().changeSetContext().run(ctx -> {
-							db.run(Upsert.into(Bookshop_.BOOKS).entry(book));
-						});
+	@On(event = CdsService.EVENT_UPDATE)
+	public void addBooksViaCsv(CdsUpdateEventContext context, Csv csv) {
+		InputStream is = csv.getData();
+		if (is != null) {
+			try (BufferedReader br = new BufferedReader(new InputStreamReader(is))) {
+				br.lines().skip(1).forEach((line) -> {
+					String[] p = line.split(";");
+					Books book = Books.create();
+					book.setId(p[0]);
+					book.setTitle(p[1]);
+					book.setDescr(p[2]);
+					book.setAuthorId(p[3]);
+					book.setStock(Integer.valueOf(p[4]).intValue());
+					book.setPrice(BigDecimal.valueOf(Double.valueOf(p[5])));
+					book.setCurrencyCode(p[6]);
+					book.setGenreId(Integer.valueOf(p[7]));
+
+					// separate transaction per line
+					context.getCdsRuntime().changeSetContext().run(ctx -> {
+						db.run(Upsert.into(Bookshop_.BOOKS).entry(book));
 					});
-				} catch (IOException e) {
-					messages.error(MessageKeys.BOOK_IMPORT_FAILED);
-				}
-			} else {
-				db.run(Upsert.into(Bookshop_.CSV).entry(csv));
+				});
+			} catch (IOException e) {
+				messages.error(MessageKeys.BOOK_IMPORT_FAILED);
 			}
-		});
-		context.setResult(csvs);
+		}
+		context.setResult(Arrays.asList(csv));
 	}
 
 	private Supplier<ServiceException> notFound(String message) {

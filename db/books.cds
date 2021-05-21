@@ -8,11 +8,6 @@ using {
     cuid
 } from '@sap/cds/common';
 
-entity Csv @odata.singleton {
-    data     : LargeBinary @Core.MediaType : dataType;
-    dataType : String @Core.IsMediaType;
-}
-
 @fiori.draft.enabled
 entity Books : cuid, managed {
     title        : localized String(111);
