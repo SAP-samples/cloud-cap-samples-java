@@ -9,6 +9,11 @@ service AdminService @(requires : 'admin') {
 
   entity Authors as projection on my.Authors;
   entity Orders  as select from my.Orders;
+
+  @cds.persistence.skip
+  entity Csv @odata.singleton {
+    data     : LargeBinary @Core.MediaType : 'text/csv';
+  }
 }
 
 // Deep Search Items
