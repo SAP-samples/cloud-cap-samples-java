@@ -262,9 +262,7 @@ class AdminServiceHandler implements EventHandler {
 
 	@On(entity = Csv_.CDS_NAME)
 	public void getCsvSingleton(CdsReadEventContext context) {
-		Csv csv = Csv.create();
-		csv.setDataType("text/csv");
-		Result result = ResultBuilder.selectedRows(Arrays.asList(csv)).result();
+		Result result = ResultBuilder.selectedRows(Arrays.asList(Csv.create())).result();
 		context.setResult(result);
 	}
 

@@ -12,8 +12,7 @@ service AdminService @(requires : 'admin') {
 
   @cds.persistence.skip
   entity Csv @odata.singleton {
-    data     : LargeBinary @Core.MediaType : dataType;
-    dataType : String @Core.IsMediaType;
+    data     : LargeBinary @Core.MediaType : 'text/csv';
   }
 }
 
