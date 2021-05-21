@@ -56,7 +56,7 @@ Domain Model related Features:
 - Use of [Aspects](https://cap.cloud.sap/docs/cds/cdl#aspects) in the Model Definition such as the [`managed` or `cuid` Aspect](https://cap.cloud.sap/docs/cds/common#common-reuse-aspects) in [Books](db/books.cds)
 - [Input validation](https://cap.cloud.sap/docs/cds/annotations#input-validation) using model annotation `@assert.format`
 - [Data Localization](https://cap.cloud.sap/docs/guides/localized-data) for [Books](db/books.cds)
-- Use of [Media Data](https://cap.cloud.sap/docs/guides/providing-services#media-data) in [Books](db/books.cds)
+- Use of [Media Data](https://cap.cloud.sap/docs/guides/providing-services#media-data) in [Books](db/books.cds) and [AdminService](srv/admin-service.cds)
 
 Service Model related Features:
 
