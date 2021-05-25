@@ -20,7 +20,6 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
 import com.sap.cds.Result;
-import com.sap.cds.ResultBuilder;
 import com.sap.cds.ql.Select;
 import com.sap.cds.ql.Update;
 import com.sap.cds.ql.Upsert;
@@ -28,7 +27,6 @@ import com.sap.cds.ql.cqn.CqnAnalyzer;
 import com.sap.cds.reflect.CdsModel;
 import com.sap.cds.services.ErrorStatuses;
 import com.sap.cds.services.ServiceException;
-import com.sap.cds.services.cds.CdsReadEventContext;
 import com.sap.cds.services.cds.CdsService;
 import com.sap.cds.services.cds.CdsUpdateEventContext;
 import com.sap.cds.services.cds.CqnService;
@@ -260,11 +258,19 @@ class AdminServiceHandler implements EventHandler {
 		context.setResult(updatedOrder);
 	}
 
+	/**
+	 * @return the static CSV singleton upload entity
+	 */
 	@On(entity = Csv_.CDS_NAME, event = CdsService.EVENT_READ)
 	public Csv getCsvSingleton() {
 		return Csv.create();
 	}
 
+	/**
+	 * Handles CSV uploads with book data
+	 * @param context
+	 * @param csv
+	 */
 	@On(event = CdsService.EVENT_UPDATE)
 	public void addBooksViaCsv(CdsUpdateEventContext context, Csv csv) {
 		InputStream is = csv.getData();
