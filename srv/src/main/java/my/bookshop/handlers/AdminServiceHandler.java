@@ -16,9 +16,6 @@ import java.util.UUID;
 import java.util.function.Supplier;
 import java.util.stream.Stream;
 
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.stereotype.Component;
-
 import com.sap.cds.Result;
 import com.sap.cds.ql.Select;
 import com.sap.cds.ql.Update;
@@ -40,12 +37,15 @@ import com.sap.cds.services.handler.annotations.ServiceName;
 import com.sap.cds.services.messages.Messages;
 import com.sap.cds.services.persistence.PersistenceService;
 
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Component;
+
 import cds.gen.adminservice.AddToOrderContext;
 import cds.gen.adminservice.AdminService_;
 import cds.gen.adminservice.Books;
 import cds.gen.adminservice.Books_;
-import cds.gen.adminservice.Csv;
-import cds.gen.adminservice.Csv_;
+import cds.gen.adminservice.CsvStream;
+import cds.gen.adminservice.CsvStream_;
 import cds.gen.adminservice.OrderItems;
 import cds.gen.adminservice.OrderItems_;
 import cds.gen.adminservice.Orders;
@@ -261,9 +261,9 @@ class AdminServiceHandler implements EventHandler {
 	/**
 	 * @return the static CSV singleton upload entity
 	 */
-	@On(entity = Csv_.CDS_NAME, event = CdsService.EVENT_READ)
-	public Csv getCsvSingleton() {
-		return Csv.create();
+	@On(entity = CsvStream_.CDS_NAME, event = CdsService.EVENT_READ)
+	public CsvStream getCsvSingleton() {
+		return CsvStream.create();
 	}
 
 	/**
@@ -272,8 +272,8 @@ class AdminServiceHandler implements EventHandler {
 	 * @param csv
 	 */
 	@On(event = CdsService.EVENT_UPDATE)
-	public void addBooksViaCsv(CdsUpdateEventContext context, Csv csv) {
-		InputStream is = csv.getData();
+	public void addBooksViaCsv(CdsUpdateEventContext context, CsvStream csvStream) {
+		InputStream is = csvStream.getData();
 		if (is != null) {
 			try (BufferedReader br = new BufferedReader(new InputStreamReader(is))) {
 				br.lines().skip(1).forEach((line) -> {
@@ -294,10 +294,12 @@ class AdminServiceHandler implements EventHandler {
 					});
 				});
 			} catch (IOException e) {
-				messages.error(MessageKeys.BOOK_IMPORT_FAILED);
+				throw new ServiceException(ErrorStatuses.SERVER_ERROR, MessageKeys.BOOK_IMPORT_FAILED, e);
+			} catch (IndexOutOfBoundsException e) {
+				throw new ServiceException(ErrorStatuses.SERVER_ERROR, MessageKeys.BOOK_IMPORT_INVALID_CSV, e);
 			}
 		}
-		context.setResult(Arrays.asList(csv));
+		context.setResult(Arrays.asList(csvStream));
 	}
 
 	private Supplier<ServiceException> notFound(String message) {
