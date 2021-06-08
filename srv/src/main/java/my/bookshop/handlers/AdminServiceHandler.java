@@ -44,11 +44,11 @@ import cds.gen.adminservice.AddToOrderContext;
 import cds.gen.adminservice.AdminService_;
 import cds.gen.adminservice.Books;
 import cds.gen.adminservice.Books_;
-import cds.gen.adminservice.CsvStream;
-import cds.gen.adminservice.CsvStream_;
 import cds.gen.adminservice.OrderItems;
 import cds.gen.adminservice.OrderItems_;
 import cds.gen.adminservice.Orders;
+import cds.gen.adminservice.Upload;
+import cds.gen.adminservice.Upload_;
 import cds.gen.my.bookshop.Bookshop_;
 import my.bookshop.MessageKeys;
 
@@ -261,9 +261,9 @@ class AdminServiceHandler implements EventHandler {
 	/**
 	 * @return the static CSV singleton upload entity
 	 */
-	@On(entity = CsvStream_.CDS_NAME, event = CdsService.EVENT_READ)
-	public CsvStream getCsvSingleton() {
-		return CsvStream.create();
+	@On(entity = Upload_.CDS_NAME, event = CdsService.EVENT_READ)
+	public Upload getCsvSingleton() {
+		return Upload.create();
 	}
 
 	/**
@@ -272,8 +272,8 @@ class AdminServiceHandler implements EventHandler {
 	 * @param csv
 	 */
 	@On(event = CdsService.EVENT_UPDATE)
-	public void addBooksViaCsv(CdsUpdateEventContext context, CsvStream csvStream) {
-		InputStream is = csvStream.getData();
+	public void addBooksViaCsv(CdsUpdateEventContext context, Upload upload) {
+		InputStream is = upload.getCsv();
 		if (is != null) {
 			try (BufferedReader br = new BufferedReader(new InputStreamReader(is))) {
 				br.lines().skip(1).forEach((line) -> {
@@ -299,7 +299,7 @@ class AdminServiceHandler implements EventHandler {
 				throw new ServiceException(ErrorStatuses.SERVER_ERROR, MessageKeys.BOOK_IMPORT_INVALID_CSV, e);
 			}
 		}
-		context.setResult(Arrays.asList(csvStream));
+		context.setResult(Arrays.asList(upload));
 	}
 
 	private Supplier<ServiceException> notFound(String message) {
