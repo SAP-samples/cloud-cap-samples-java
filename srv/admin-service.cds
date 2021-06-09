@@ -11,8 +11,8 @@ service AdminService @(requires : 'admin') {
   entity Orders  as select from my.Orders;
 
   @cds.persistence.skip
-  entity Csv @odata.singleton {
-    data     : LargeBinary @Core.MediaType : 'text/csv';
+  entity Upload @odata.singleton {
+    csv : LargeBinary @Core.MediaType : 'text/csv';
   }
 }
 

@@ -7,7 +7,7 @@
                     id="uploader"
                     fileType="csv"
                     multiple="false"
-                    uploadUrl="/api/admin/Csv/data"
+                    uploadUrl="/api/admin/Upload/csv"
                     fileAllowed=".onFileAllowed"
                     fileEmpty=".onFileEmpty"
                     uploadComplete=".onUploadComplete"
