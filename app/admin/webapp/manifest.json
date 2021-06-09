@@ -78,6 +78,16 @@
                                         "route" : "BooksDetails"
                                     }
                                 }
+                            },
+                            "content": {
+                                "header": {
+                                    "actions": {
+                                        "upload": {
+                                            "press": "admin.extension.Upload.showUploadDialog",
+                                            "text": "Import Books"
+                                        }
+                                    }
+                                }
                             }
                         }
                     }

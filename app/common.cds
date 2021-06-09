@@ -54,6 +54,7 @@ annotate my.Books with
 @(UI : {HeaderInfo : {
     TypeName : '{i18n>Book}',
     TypeNamePlural : '{i18n>Books}',
+    TypeImageUrl : 'sap-icon://course-book',
     Title : {Value : title},
     Description : {Value : author.name}
 }, });

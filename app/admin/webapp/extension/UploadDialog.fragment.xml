@@ -1,0 +1,27 @@
+<core:FragmentDefinition xmlns:core="sap.ui.core" xmlns:u="sap.ui.unified"
+                         xmlns="sap.m">
+    <Dialog title="Import Books" class="sapUiResponsiveContentPadding" beforeOpen=".onBeforeOpen"
+            afterClose=".onAfterClose">
+        <content>
+            <u:FileUploader
+                    id="uploader"
+                    fileType="csv"
+                    multiple="false"
+                    uploadUrl="/api/admin/Upload/csv"
+                    fileAllowed=".onFileAllowed"
+                    fileEmpty=".onFileEmpty"
+                    uploadComplete=".onUploadComplete"
+                    typeMissmatch=".onTypeMismatch"
+                    sendXHR="true"
+                    useMultipart="false"
+                    placeholder="Choose a CSV file..."
+                    httpRequestMethod="Put"/>
+        </content>
+        <beginButton>
+            <Button id="ok" text="OK" press=".onOk" type="Emphasized" enabled="false"/>
+        </beginButton>
+        <endButton>
+            <Button id="cancel" text="Cancel" press=".onCancel"/>
+        </endButton>
+    </Dialog>
+</core:FragmentDefinition>
