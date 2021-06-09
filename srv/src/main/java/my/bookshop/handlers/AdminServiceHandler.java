@@ -262,7 +262,7 @@ class AdminServiceHandler implements EventHandler {
 	 * @return the static CSV singleton upload entity
 	 */
 	@On(entity = Upload_.CDS_NAME, event = CdsService.EVENT_READ)
-	public Upload getCsvSingleton() {
+	public Upload getUploadSingleton() {
 		return Upload.create();
 	}
 
