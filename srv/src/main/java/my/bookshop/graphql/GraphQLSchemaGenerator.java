@@ -43,7 +43,9 @@ public class GraphQLSchemaGenerator {
 		// add queries for each exposed entity
 		if(!entity.findAnnotation("cds.autoexposed").map(a -> (Boolean) a.getValue()).orElse(false) && !entity.getName().endsWith("_drafts")) {
 			// byId query
-			queries.add(generateByIdQuery(entity));
+			if(entity.keyElements().count() > 0) {
+				queries.add(generateByIdQuery(entity));
+			}
 			queries.add(generateAllQuery(entity));
 		}
 	}
