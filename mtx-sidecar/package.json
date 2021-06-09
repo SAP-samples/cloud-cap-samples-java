@@ -1,12 +1,12 @@
 {
     "name": "deploy",
     "dependencies": {
-        "@sap/cds": "^4.2.4",
-        "@sap/cds-mtx": "^1.0.17",
-        "@sap/hdi-deploy": "^3.11.11",
-        "@sap/instance-manager": "^2.2.0",
-        "@sap/xssec": "^3.0.9",
-        "@sap/hana-client": "^2.5.105",
+        "@sap/cds": "^5.0.4",
+        "@sap/cds-mtx": "^1.2.0",
+        "@sap/hdi-deploy": "^4.0.4",
+        "@sap/instance-manager": "^3.0.0",
+        "@sap/xssec": "^3",
+        "@sap/hana-client": "^2.8.16",
         "express": "^4.17.1",
         "passport": "^0.4.1"
     },

@@ -14,4 +14,6 @@ public class MessageKeys {
 	public static final String REVIEW_ADDED = "review.added";
 	public static final String REVIEW_ADD_FORBIDDEN = "review.add.forbidden";
 	public static final String ORDER_EXCEEDS_STOCK = "order.exceeds.stock";
+	public static final String BOOK_IMPORT_FAILED = "book.import.failed";
+	public static final String BOOK_IMPORT_INVALID_CSV = "book.import.invalid.csv";
 }
