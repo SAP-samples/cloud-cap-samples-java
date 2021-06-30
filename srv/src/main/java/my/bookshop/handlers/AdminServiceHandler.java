@@ -16,6 +16,9 @@ import java.util.UUID;
 import java.util.function.Supplier;
 import java.util.stream.Stream;
 
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Component;
+
 import com.sap.cds.Result;
 import com.sap.cds.ql.Select;
 import com.sap.cds.ql.Update;
@@ -36,9 +39,6 @@ import com.sap.cds.services.handler.annotations.On;
 import com.sap.cds.services.handler.annotations.ServiceName;
 import com.sap.cds.services.messages.Messages;
 import com.sap.cds.services.persistence.PersistenceService;
-
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.stereotype.Component;
 
 import cds.gen.adminservice.AddToOrderContext;
 import cds.gen.adminservice.AdminService_;
@@ -94,16 +94,22 @@ class AdminServiceHandler implements EventHandler {
 				// validation of the Order creation request
 				Integer amount = orderItem.getAmount();
 				if (amount == null || amount <= 0) {
-					// exceptions with localized messages from property files
+					// errors with localized messages from property files
 					// exceptions abort the request and set an error http status code
-					throw new ServiceException(ErrorStatuses.BAD_REQUEST, MessageKeys.AMOUNT_REQUIRE_MINIMUM)
-					.messageTarget("in", ORDERS, o -> o.Items(i -> i.ID().eq(orderItem.getId()).and(i.IsActiveEntity().eq(false))).amount());
+					// messages in contrast allow to collect multiple errors
+					messages.error(MessageKeys.AMOUNT_REQUIRE_MINIMUM)
+							.target("in", ORDERS, o -> o.Items(i -> i.ID().eq(orderItem.getId()).and(i.IsActiveEntity().eq(false))).amount());
 				}
 
 				String bookId = orderItem.getBookId();
 				if (bookId == null) {
 					// Tip: using static text without localization is still possible in exceptions and messages
-					throw new ServiceException(ErrorStatuses.BAD_REQUEST, "You have to specify the book to order");
+					messages.error("You have to specify the book to order")
+							.target("in", ORDERS, o -> o.Items(i -> i.ID().eq(orderItem.getId()).and(i.IsActiveEntity().eq(false))).book_ID());
+				}
+
+				if(amount == null || amount <= 0 || bookId == null) {
+					return; // follow up validations rely on these
 				}
 
 				// calculate the actual amount difference
@@ -116,7 +122,9 @@ class AdminServiceHandler implements EventHandler {
 				Books book = result.first(Books.class).orElseThrow(notFound(MessageKeys.BOOK_MISSING));
 				if (book.getStock() < diffAmount) {
 					// Tip: you can have localized messages and use parameters in your messages
-					throw new ServiceException(ErrorStatuses.BAD_REQUEST, MessageKeys.BOOK_REQUIRE_STOCK, book.getStock());
+					messages.error(MessageKeys.BOOK_REQUIRE_STOCK, book.getStock())
+							.target("in", ORDERS, o -> o.Items(i -> i.ID().eq(orderItem.getId()).and(i.IsActiveEntity().eq(false))).amount());
+					return; // no need to update follow-up values with invalid amount / stock
 				}
 
 				// update the book with the new stock
@@ -131,6 +139,9 @@ class AdminServiceHandler implements EventHandler {
 				order.setTotal(order.getTotal().add(updatedNetAmount));
 			});
 		});
+
+		// aborts the request with an exception, in case errors have been collected before
+		messages.throwIfError();
 	}
 
 	/**
