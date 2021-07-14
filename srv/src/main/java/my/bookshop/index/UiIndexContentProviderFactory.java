@@ -4,7 +4,6 @@ import java.io.PrintWriter;
 
 import com.sap.cds.adapter.IndexContentProvider;
 import com.sap.cds.adapter.IndexContentProviderFactory;
-import com.sap.cds.services.runtime.CdsRuntime;
 
 /**
  * Explicitly adds links to UI resources provided by this application to the index page
@@ -12,7 +11,7 @@ import com.sap.cds.services.runtime.CdsRuntime;
 public class UiIndexContentProviderFactory implements IndexContentProviderFactory {
 
 	@Override
-	public IndexContentProvider createContentProvider(CdsRuntime runtime) {
+	public IndexContentProvider create() {
 		return new UiIndexContentProvider();
 	}
 

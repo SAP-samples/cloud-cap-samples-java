@@ -17,8 +17,5 @@
     },
     "hana": {
         "deploy-format": "hdbtable"
-    },
-    "sql": {
-        "dialect": "plain"
     }
 }
