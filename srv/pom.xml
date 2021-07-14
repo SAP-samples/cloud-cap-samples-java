@@ -144,7 +144,6 @@
 							<goal>install-cdsdk</goal>
 						</goals>
 						<configuration>
-							<version>4.0.7</version>
 							<skip>${cdsdk-global}</skip>
 						</configuration>
 					</execution>
@@ -159,6 +158,8 @@
 								<command>build --for java-cf</command>
 								<command>deploy --to sql --with-mocks --dry >
 									${project.basedir}/src/main/resources/schema.sql</command>
+								<command>compile srv/cat-service.cds -2 openapi --openapi:url /api/browse >
+									${project.basedir}/src/main/resources/swagger/openapi.json</command>
 							</commands>
 						</configuration>
 					</execution>

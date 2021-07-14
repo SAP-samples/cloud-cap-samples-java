@@ -30,33 +30,33 @@ annotate AdminService.Orders with {
             Parameters      : [
                 {
                     $Type             : 'Common.ValueListParameterOut',
-                    LocalDataProperty : 'shippingAddress_AddressID',
-                    ValueListProperty : 'AddressID'
+                    LocalDataProperty : 'shippingAddress_ID',
+                    ValueListProperty : 'ID'
                 },
                 {
                     $Type             : 'Common.ValueListParameterOut',
-                    LocalDataProperty : 'shippingAddress_BusinessPartner',
-                    ValueListProperty : 'BusinessPartner'
+                    LocalDataProperty : 'shippingAddress_businessPartner',
+                    ValueListProperty : 'businessPartner'
                 },
                 {
                     $Type             : 'Common.ValueListParameterDisplayOnly',
-                    ValueListProperty : 'PostalCode'
+                    ValueListProperty : 'postalCode'
                 },
                 {
                     $Type             : 'Common.ValueListParameterDisplayOnly',
-                    ValueListProperty : 'CityName'
+                    ValueListProperty : 'city'
                 },
                 {
                     $Type             : 'Common.ValueListParameterDisplayOnly',
-                    ValueListProperty : 'Country'
+                    ValueListProperty : 'country'
                 },
                 {
                     $Type             : 'Common.ValueListParameterDisplayOnly',
-                    ValueListProperty : 'StreetName'
+                    ValueListProperty : 'street'
                 },
                 {
                     $Type             : 'Common.ValueListParameterDisplayOnly',
-                    ValueListProperty : 'HouseNumber'
+                    ValueListProperty : 'houseNumber'
                 },
             ]
         }
@@ -116,7 +116,7 @@ annotate AdminService.Orders with @(
             {Value : OrderNo},
             {
                 Value : 'shippingAddress',
-                Label : '{i18n>AddressID}'
+                Label : '{i18n>ID}'
             }
         ],
         HeaderFacets                : [
@@ -168,23 +168,23 @@ annotate AdminService.Orders with @(
         ]},
         FieldGroup #ShippingAddress : {Data : [
             {
-                Value : shippingAddress_AddressID,
+                Value : shippingAddress_ID,
                 Label : '{i18n>ShippingAddress}'
             },
             {
-                Value : shippingAddress.HouseNumber,
+                Value : shippingAddress.houseNumber,
                 Label : '{i18n>HouseNumber}'
             },
             {
-                Value : shippingAddress.StreetName,
+                Value : shippingAddress.street,
                 Label : '{i18n>StreetName}'
             },
             {
-                Value : shippingAddress.CityName,
+                Value : shippingAddress.city,
                 Label : '{i18n>CityName}'
             },
             {
-                Value : shippingAddress.PostalCode,
+                Value : shippingAddress.postalCode,
                 Label : '{i18n>PostalCode}'
             },
         ]}
@@ -199,7 +199,7 @@ annotate AdminService.Orders with @(
             TargetEntities   : [currency]
         },
         SideEffects #AddressChanges  : {
-            SourceProperties : [shippingAddress_AddressID],
+            SourceProperties : [shippingAddress_ID],
             TargetEntities   : [shippingAddress]
         }
     }

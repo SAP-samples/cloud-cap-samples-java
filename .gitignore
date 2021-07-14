@@ -2,6 +2,7 @@ gen/
 edmx/
 schema.sql
 default-env.json
+openapi.json
 
 bin/
 target/

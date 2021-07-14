@@ -77,6 +77,7 @@ User Interface related Features:
 - [Value Help](https://cap.cloud.sap/docs/cds/annotations#odata) for [Books](app/orders/fiori-service.cds) and [Authors](app/common.cds)
 - [Model Localization](https://cap.cloud.sap/docs/guides/i18n) for [English](app/_i18n/i18n.properties) and [German](app/_i18n/i18n_de.properties) language for static texts
 - [Custom File Upload extension](app/admin/webapp/extension/Upload.js) which provides a button for uploading `CSV` files
+- A simple Swagger UI for the CatalogService API at <http://localhost:8080/swagger/index.html>
 
 CDS Maven Plugin Features:
 
@@ -141,6 +142,7 @@ Optionally, use the following steps to import the project to Eclipse:
 
     <http://localhost:8080/>: This should show the automatically generated index page of served paths.
     <http://localhost:8080/fiori.html>: This is the actual bookshop application UI.
+    <http://localhost:8080/swagger/index.html>: This is providing a Swagger UI for the CatalogService API.
 
     You'll start with a predefined stock of books as this procedure starts the bookshop application with a CSV-initialized in-memory H2 database.
 
@@ -200,7 +202,7 @@ Deploy as Multitenant Application:
 
 # Code Tour
 
-Take the [guided tour](.tours) in VS Code through our CAP Samples for Java and learn which CAP features are showcased by the different parts of the repository. Just install the [CodeTour extension](https://marketplace.visualstudio.com/items?itemName=vsls-contrib.codetour) for VS Code. 
+Take the [guided tour](.tours) in VS Code through our CAP Samples for Java and learn which CAP features are showcased by the different parts of the repository. Just install the [CodeTour extension](https://marketplace.visualstudio.com/items?itemName=vsls-contrib.codetour) for VS Code.
 
 # Get Support
 
