@@ -70,7 +70,7 @@ public class AdminServiceAddressHandler implements EventHandler {
 		// forward the existing selected columns + where condition
 		Select<?> select = Select.from(ApiBusinessPartner_.ADDRESSES)
 			.columns(context.getCqn().items())
-			.where(a -> a.BusinessPartner().eq(businessPartner));
+			.where(a -> a.businessPartner().eq(businessPartner));
 
 		Optional<CqnPredicate> where = context.getCqn().where();
 		if(where.isPresent()) {
@@ -99,13 +99,13 @@ public class AdminServiceAddressHandler implements EventHandler {
 
 		orders.forEach(order -> {
 			// check if the address was updated
-			String addressId = order.getShippingAddressAddressID();
+			String addressId = order.getShippingAddressId();
 			if(addressId != null) {
-				Result replica = db.run(Select.from(AdminService_.ADDRESSES).where(a -> a.BusinessPartner().eq(businessPartner).and(a.AddressID().eq(addressId))));
+				Result replica = db.run(Select.from(AdminService_.ADDRESSES).where(a -> a.businessPartner().eq(businessPartner).and(a.ID().eq(addressId))));
 				// check if the address was not yet replicated
 				if(replica.rowCount() < 1) {
 					Result remoteAddresses = bupa.run(Select.from(ApiBusinessPartner_.ADDRESSES)
-							.where(a -> a.BusinessPartner().eq(businessPartner).and(a.AddressID().eq(addressId))));
+							.where(a -> a.businessPartner().eq(businessPartner).and(a.ID().eq(addressId))));
 
 					if(remoteAddresses.rowCount() == 1) {
 						// TODO in case another parallel transaction also replicates this address this might cause a conflict
@@ -126,16 +126,16 @@ public class AdminServiceAddressHandler implements EventHandler {
 			String businessPartner = key.getBusinesspartner(); // S/4 HANA's payload format
 			if(businessPartner != null) {
 				// fetch affected entries from local replicas
-				Result replicas = db.run(Select.from(AdminService_.ADDRESSES).where(a -> a.BusinessPartner().eq(businessPartner)));
+				Result replicas = db.run(Select.from(AdminService_.ADDRESSES).where(a -> a.businessPartner().eq(businessPartner)));
 				if(replicas.rowCount() > 0) {
 					logger.info("Updating Addresses for BusinessPartner '{}'", businessPartner);
 					// fetch changed data from S/4 -> might be less than local due to deletes
-					Result remoteAddresses = bupa.run(Select.from(ApiBusinessPartner_.ADDRESSES).where(a -> a.BusinessPartner().eq(businessPartner)));
+					Result remoteAddresses = bupa.run(Select.from(ApiBusinessPartner_.ADDRESSES).where(a -> a.businessPartner().eq(businessPartner)));
 					// update replicas or add tombstone if external address was deleted
 					replicas.streamOf(Addresses.class).forEach(rep -> {
 						Optional<Addresses> matching = remoteAddresses
 							.streamOf(Addresses.class)
-							.filter(ext -> ext.getAddressID().equals(rep.getAddressID()))
+							.filter(ext -> ext.getId().equals(rep.getId()))
 							.findFirst();
 
 						if(!matching.isPresent()) {
