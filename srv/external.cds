@@ -9,13 +9,13 @@ extend service external with {
    * Simplified view on external addresses
    */
   entity Addresses as projection on external.A_BusinessPartnerAddress {
-    key AddressID,
-    key BusinessPartner,
-    @readonly Country,
-    @readonly CityName,
-    @readonly PostalCode,
-    @readonly StreetName,
-    @readonly HouseNumber
+    key AddressID as ID,
+    key BusinessPartner as businessPartner,
+    @readonly Country as country,
+    @readonly CityName as city,
+    @readonly PostalCode as postalCode,
+    @readonly StreetName as street,
+    @readonly HouseNumber as houseNumber
   }
 
   /**
