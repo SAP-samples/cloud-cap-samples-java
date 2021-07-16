@@ -2,7 +2,7 @@
 <html>
 
 <head>
-    <title> Capire Bookshop </title>
+    <title> Capire Reviews </title>
     <link rel="stylesheet" href="https://unpkg.com/primitive-ui/dist/css/main.css">
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/vue"></script>
@@ -15,89 +15,47 @@
     </style>
 </head>
 
-<body class="small-container", style="margin-top: 70px;max-width: 900px">
+<body class="small-container", style="margin-top: 70px;">
 <div id='app'>
 
     <h1> {{ document.title }} </h1>
 
-    <input type="text" placeholder="Book Search..." @input="searchBooks">
-    
-    <table id='books' class="hovering">
+    <input type="text" placeholder="Search..." @input="search">
+
+    <table id='my-reviews' class="hovering">
         <thead>
-            <th> Book </th>
-            <th> Author </th>
-            <th> Genre </th>
+            <th> Subject </th>
             <th> Rating </th>
-            <th> Price </th>
+            <th> Title </th>
+            <th> Date </th>
         </thead>
-        <tr v-for="book in books" v-bind:id="book.ID" v-on:click="inspectBook">
-            <td>{{ book.title }}</td>
-            <td>{{ book.author.name }}</td>
-            <td>{{ book.genre.name }}</td>
-            <td class="rating-stars">
-                {{ ('★'.repeat(Math.round(book.rating))+'☆☆☆☆☆').slice(0,5) }}
-            </td>
-            <td>{{ book.currency && book.currency.symbol }} {{ book.price }}</td>
+        <tr v-for="review in list" v-bind:id="review.ID" v-on:click="inspect">
+            <td>{{ review.subject }}</td>
+            <td class="rating-stars">{{ review.rating | stars }}</td>
+            <td>{{ review.title }}</td>
+            <td>{{ review.date | datetime }}</td>
         </tr>
     </table>
 
-    <div v-if="book">
-        <label style="text-align:right">
-            <span class="succeeded"> {{ order.succeeded }} </span>
-            <span class="failed"> {{ order.failed }} </span>
-            &nbsp;&nbsp; {{ book.stock }} in stock
-        </label>
-        <form @submit.prevent="submitOrder" style="float:right; display:flex; flex-direction:row-reverse">
-            <input type="number" v-model="order.amount" v-bind:class="{ failed: order.failed }" style="width:5em">
-            <input type="submit" value="Order:" class="muted-button">
-        </form>
-        <h4> {{ book.title }} </h4>
-        <p> {{ book.descr }} </p>
-        
-        <h4>Reviews</h4>
-        
-        <input type="text" placeholder="Review Search..." @input="searchReviews">
-        
-        <table id='reviews' class="hovering">
-	        <thead>
-	            <th> Date </th>
-	            <th> User </th>
-	            <th> Rating </th>
-	            <th> Title </th>
-	        </thead>
-	        <tr v-for="review in reviews" v-bind:id="review.ID" v-on:click="inspectReview">
-	            <td>{{ review.modifiedAt | datetime }}</td>
-	            <td>{{ review.createdBy }}</td>
-	            <td class="rating-stars">
-	            	{{ ('★'.repeat(Math.round(review.rating))+'☆☆☆☆☆').slice(0,5) }}
-	            </td>
-	            <td>{{ review.title }}</td>
-	        </tr>
-    	</table>
-    	
-    	<button v-on:click="newReview()" class="round-button muted-button">Add Review...</button>
-    	
-    	<form v-if="review" @submit.prevent="submitReview">
-	        <input type="text" v-model="review.title" style="font-weight:bold; display:inline; width:60%">
-	        <select v-model="review.rating" style="font-weight:bold; display:inline; width:17%; float: right;">
-	            <option v-for="option in Ratings" v-bind:value="option[0]"> {{ option[1] }} </option>
-	        </select>
-	        <textarea v-model="review.text" rows="9"></textarea>
-	        <input type="submit" value="Submit" class="round-button muted-button">
-	        <span class="succeeded"> {{ message.succeeded }} </span>
-	        <span class="failed"> {{ message.failed }} </span>
-	    </form>
-	    <div v-else style="margin-top: 2em;">
-	        ( click on a row to see details... )
-	    </div>
-    	
-    </div>
-    <div v-else>
+    <button v-on:click="newReview()" class="round-button muted-button">Add Review...</button>
+
+    <form v-if="review" @submit.prevent="submitReview">
+        <input id="subject" type="text" v-model="review.subject" style="font-weight:bold; display:inline; width:20%">
+        <input type="text" v-model="review.title" style="font-weight:bold; display:inline; width:60%">
+        <select v-model="review.rating" style="font-weight:bold; display:inline; width:17%; float: right;">
+            <option v-for="option in Ratings" v-bind:value="option[0]"> {{ option[1] }} </option>
+        </select>
+        <textarea v-model="review.text" rows="9"></textarea>
+        <input type="submit" value="Submit" class="round-button muted-button">
+        <span class="succeeded"> {{ message.succeeded }} </span>
+        <span class="failed"> {{ message.failed }} </span>
+    </form>
+    <div v-else style="margin-top: 2em;">
         ( click on a row to see details... )
     </div>
-    
-</div>
 
+
+</div>
 </body>
 
 <script src="app.js"></script>

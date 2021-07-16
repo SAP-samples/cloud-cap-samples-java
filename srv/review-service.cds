@@ -1,30 +1,30 @@
-using {my.bookshop as my} from '../db/index';
+using {my.reviews } from '../db/reviews';
 
-@path : 'review'
 service ReviewService {
-    entity Reviews as projection on my.Reviews;
+    
+    // Sync API
+    entity Reviews as projection on reviews.Reviews;
 
-    @readonly
-    entity Books   as projection on my.Books excluding {
-        createdBy,
-        modifiedBy
+    // Async API
+    event reviewed : {
+     subject: type of Reviews:subject;
+     rating: Decimal(2,1)
     }
-
-    @readonly
-    entity Authors as projection on my.Authors;
 
     // access control restrictions
     annotate Reviews with @restrict : [
         {
-            grant : '*',
+            grant : 'WRITE',
             to : 'authenticated-user',
             where : 'createdBy=$user'
         },
         {
-            grant : '*',
+            grant : 'WRITE',
             to : 'admin',
+        },
+		{
+            grant : 'READ',
+            to : 'any',
         }
     ];
 }
-
-annotate ReviewService.Reviews with @odata.draft.enabled;

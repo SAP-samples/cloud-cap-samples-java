@@ -5,5 +5,4 @@
 using from './admin/fiori-service';
 using from './browse/fiori-service';
 using from './orders/fiori-service';
-using from './reviews/fiori-service';
 using from './common';

@@ -1,11 +1,17 @@
 ---
 spring:
   web.resources.static-locations: "file:./app"
+  
+server.servlet.encoding:
+  charset: UTF-8
+  force: true
+  
 cds:
   odata-v4.endpoint.path: "/api"
   messaging.services:
     bupa-messaging:
       kind: file-based-messaging
+      binding: '/Users/d040506/git/cap/samples/messaging.txt'
   security.mock.users:
     - name: admin
       password: admin
@@ -16,9 +22,14 @@ cds:
         - "10401010"
     - name: user
       password: user
-server.servlet.encoding:
-  charset: UTF-8
-  force: true
+      
+---
+spring:
+  config.activate.on-profile: remote-service
+
+cds:
+  remote.services:
+    - name: ReviewService
 
 ---
 spring:

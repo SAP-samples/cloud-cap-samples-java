@@ -1,15 +1,17 @@
-namespace my.bookshop;
+namespace my.reviews;
 
 using {
-    my.bookshop as my,
     User,
     managed,
     cuid
 } from '@sap/cds/common';
 
-entity Reviews : cuid, managed {
-    @cds.odata.ValueList
-    book     : Association to my.Books;
+// Reviewed subjects can be any entity that is uniquely identified
+// by a single key element such as a UUID
+type ReviewedSubject : String(111);
+
+entity Reviews : cuid, managed { 
+    subject  : ReviewedSubject;
     rating   : Rating;
     title    : String(111);
     text     : String(1111);

@@ -45,11 +45,6 @@
 		"destination": "backend"
 	  },
 	  {
-		"source": "^/api/review/(.*)",
-		"authenticationType": "xsuaa",
-		"destination": "backend"
-	  },
-	  {
 		"source": "^/api/(.*)$",
 		"authenticationType": "none",
 		"destination": "backend"

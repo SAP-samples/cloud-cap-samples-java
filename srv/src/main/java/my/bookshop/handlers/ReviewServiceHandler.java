@@ -1,60 +1,57 @@
 package my.bookshop.handlers;
 
-import java.util.Optional;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.util.List;
 import java.util.stream.Stream;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
 import com.sap.cds.Row;
 import com.sap.cds.ql.Select;
-import com.sap.cds.services.ErrorStatuses;
-import com.sap.cds.services.ServiceException;
 import com.sap.cds.services.cds.CqnService;
-import com.sap.cds.services.draft.DraftService;
 import com.sap.cds.services.handler.EventHandler;
-import com.sap.cds.services.handler.annotations.Before;
+import com.sap.cds.services.handler.annotations.After;
 import com.sap.cds.services.handler.annotations.ServiceName;
 
 import cds.gen.reviewservice.ReviewService_;
+import cds.gen.reviewservice.Reviewed;
+import cds.gen.reviewservice.ReviewedContext;
 import cds.gen.reviewservice.Reviews;
 import cds.gen.reviewservice.Reviews_;
-import my.bookshop.MessageKeys;
 
 @Component
 @ServiceName(ReviewService_.CDS_NAME)
 public class ReviewServiceHandler implements EventHandler {
 
-	private DraftService reviewService;
+	private static final Logger logger = LoggerFactory.getLogger(ReviewServiceHandler.class);
 
-	ReviewServiceHandler(@Qualifier(ReviewService_.CDS_NAME) DraftService reviewService) {
-		this.reviewService = reviewService;
-	}
+	@Autowired
+	@Qualifier(ReviewService_.CDS_NAME)
+	CqnService reviewService;
 
-	@Before(event = { CqnService.EVENT_CREATE, CqnService.EVENT_UPSERT, CqnService.EVENT_UPDATE })
-	public void beforeAddReview(Stream<Reviews> reviews) {
+	@After(event = { CqnService.EVENT_CREATE, CqnService.EVENT_UPSERT, CqnService.EVENT_UPDATE })
+	public void afterAddReview(Stream<Reviews> reviews) {
 		reviews.forEach(review -> {
-			validateBook(review);
-			validateRating(review);
+
+			// calculate the average rating of the subject
+			List<Row> ratings = reviewService.run(Select.from(Reviews_.CDS_NAME).columns(r -> r.get("rating").asValue()).where(r -> r.get("subject").eq(review.getSubject()))).list();
+			Double avg = ratings.stream().mapToDouble(r -> ((Integer) r.get("rating")).doubleValue()).average().orElse(0);
+
+			Reviewed event = Reviewed.create();
+			event.setSubject(review.getSubject());
+			event.setRating(BigDecimal.valueOf(avg).setScale(1, RoundingMode.HALF_UP));
+
+			ReviewedContext evContext = ReviewedContext.create();
+			evContext.setData(event);
+
+			reviewService.emit(evContext);
+
+			logger.info("The review for '{}' with avg rating '{}' was created and notified.", event.getSubject(), event.getRating());
 		});
 	}
-
-	private void validateRating(Reviews review) {
-		Integer rating = review.getRating();
-		if (rating < 1 || rating > 5) {
-			throw new ServiceException(ErrorStatuses.BAD_REQUEST, MessageKeys.REVIEW_INVALID_RATING)
-			.messageTarget(Reviews_.class, r -> r.rating());
-		}
-	}
-
-	private void validateBook(Reviews review) {
-		if (review.getBookId() == null) {
-			throw new ServiceException(ErrorStatuses.BAD_REQUEST, MessageKeys.BOOK_MISSING)
-			.messageTarget(Reviews_.class, r -> r.book_ID());
-		}
-		Optional<Row> row = reviewService.run(Select.from(ReviewService_.BOOKS).byId(review.getBookId())).first();
-		row.orElseThrow(() -> new ServiceException(ErrorStatuses.BAD_REQUEST, MessageKeys.BOOK_MISSING)
-				.messageTarget(Reviews_.class, r -> r.book_ID()));
-	}
-
 }

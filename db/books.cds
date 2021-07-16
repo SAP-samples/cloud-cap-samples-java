@@ -18,9 +18,6 @@ entity Books : cuid, managed {
     price        : Decimal(9, 2);
     currency     : Currency;
     rating       : Decimal(2, 1);
-    reviews      : Association to many my.Reviews
-                       on reviews.book = $self;
-    isReviewable : my.TechnicalBooleanFlag not null default true;
 }
 
 entity Authors : cuid, managed {
