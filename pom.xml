@@ -49,7 +49,7 @@
 			<!-- CLOUD SDK -->
 			<dependency>
 				<groupId>com.sap.cloud.sdk</groupId>
-				<artifactId>sdk-bom</artifactId>
+				<artifactId>sdk-modules-bom</artifactId>
 				<version>${cloud.sdk.version}</version>
 				<type>pom</type>
 				<scope>import</scope>
