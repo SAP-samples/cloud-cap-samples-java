@@ -1,3 +1,6 @@
+logging:
+  level:
+    com.sap.cds.services.impl.auditlog: INFO
 ---
 spring:
   web.resources.static-locations: "file:./app"

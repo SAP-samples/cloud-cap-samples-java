@@ -27,6 +27,11 @@ import com.sap.cds.ql.cqn.CqnAnalyzer;
 import com.sap.cds.reflect.CdsModel;
 import com.sap.cds.services.ErrorStatuses;
 import com.sap.cds.services.ServiceException;
+import com.sap.cds.services.auditlog.AuditLogService;
+import com.sap.cds.services.auditlog.ChangedAttribute;
+import com.sap.cds.services.auditlog.ConfigChange;
+import com.sap.cds.services.auditlog.KeyValuePair;
+import com.sap.cds.services.auditlog.Object;
 import com.sap.cds.services.cds.CdsService;
 import com.sap.cds.services.cds.CdsUpdateEventContext;
 import com.sap.cds.services.cds.CqnService;
@@ -47,6 +52,7 @@ import cds.gen.adminservice.Books_;
 import cds.gen.adminservice.OrderItems;
 import cds.gen.adminservice.OrderItems_;
 import cds.gen.adminservice.Orders;
+import cds.gen.adminservice.Orders_;
 import cds.gen.adminservice.Upload;
 import cds.gen.adminservice.Upload_;
 import cds.gen.my.bookshop.Bookshop_;
@@ -69,10 +75,14 @@ class AdminServiceHandler implements EventHandler {
 
 	private final CqnAnalyzer analyzer;
 
-	AdminServiceHandler(@Qualifier(AdminService_.CDS_NAME) DraftService adminService, PersistenceService db, Messages messages, CdsModel model) {
+	private final AuditLogService auditLogService;
+
+	AdminServiceHandler(@Qualifier(AdminService_.CDS_NAME) DraftService adminService, PersistenceService db,
+			Messages messages, CdsModel model, AuditLogService auditLogService) {
 		this.adminService = adminService;
 		this.db = db;
 		this.messages = messages;
+		this.auditLogService = auditLogService;
 
 		// model is a tenant-dependant model proxy
 		this.analyzer = CqnAnalyzer.create(model);
@@ -138,10 +148,43 @@ class AdminServiceHandler implements EventHandler {
 				// update the total
 				order.setTotal(order.getTotal().add(updatedNetAmount));
 			});
+
+			if (order.getCurrencyCode() != null) {
+				Select<Orders_> select = Select.from(ORDERS).columns(Orders_::currency_code)
+						.where(o -> o.ID().eq(order.getId()).and(o.IsActiveEntity().eq(true)));
+				Result result = db.run(select);
+				if (result.rowCount() > 0) {
+					String oldCurrencyCode = result.first(Orders.class).get().getCurrencyCode();
+					if (!order.getCurrencyCode().equals(oldCurrencyCode)) {
+						ConfigChange cfgChange = createConfigChange(order, oldCurrencyCode);
+						auditLogService.logConfigChange("Update", Arrays.asList(cfgChange));
+					}
+				}
+			}
 		});
 
 		// aborts the request with an exception, in case errors have been collected before
 		messages.throwIfError();
+	}
+
+	private ConfigChange createConfigChange(Orders order, String oldCurrencyCode) {
+		ChangedAttribute attribute = ChangedAttribute.create();
+		attribute.setName(Orders.CURRENCY_CODE);
+		attribute.setOldValue(oldCurrencyCode);
+		attribute.setNewValue(order.getCurrencyCode());
+
+		KeyValuePair id = KeyValuePair.create();
+		id.setKeyName(Orders.ID);
+		id.setValue(order.getId());
+
+		Object dataObject = Object.create();
+		dataObject.setType(Orders_.CDS_NAME);
+		dataObject.setId(Arrays.asList(id));
+
+		ConfigChange cfgChange = ConfigChange.create();
+		cfgChange.setObject(dataObject);
+		cfgChange.setAttributes(Arrays.asList(attribute));
+		return cfgChange;
 	}
 
 	/**
