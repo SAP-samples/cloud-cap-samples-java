@@ -12,10 +12,12 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.function.Supplier;
 import java.util.stream.Stream;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
@@ -31,6 +33,7 @@ import com.sap.cds.services.auditlog.Action;
 import com.sap.cds.services.auditlog.AuditLogService;
 import com.sap.cds.services.auditlog.ChangedAttribute;
 import com.sap.cds.services.auditlog.ConfigChange;
+import com.sap.cds.services.auditlog.DataModification;
 import com.sap.cds.services.auditlog.DataObject;
 import com.sap.cds.services.auditlog.KeyValuePair;
 import com.sap.cds.services.cds.CdsService;
@@ -150,42 +153,11 @@ class AdminServiceHandler implements EventHandler {
 				order.setTotal(order.getTotal().add(updatedNetAmount));
 			});
 
-			if (order.getCurrencyCode() != null) {
-				Select<Orders_> select = Select.from(ORDERS).columns(Orders_::currency_code)
-						.where(o -> o.ID().eq(order.getId()).and(o.IsActiveEntity().eq(true)));
-				Result result = db.run(select);
-				if (result.rowCount() > 0) {
-					String oldCurrencyCode = result.first(Orders.class).get().getCurrencyCode();
-					if (!order.getCurrencyCode().equals(oldCurrencyCode)) {
-						ConfigChange cfgChange = createConfigChange(order, oldCurrencyCode);
-						auditLogService.logConfigChange(Action.UPDATE, Arrays.asList(cfgChange));
-					}
-				}
-			}
+			auditChanges(order);
 		});
 
 		// aborts the request with an exception, in case errors have been collected before
 		messages.throwIfError();
-	}
-
-	private ConfigChange createConfigChange(Orders order, String oldCurrencyCode) {
-		ChangedAttribute attribute = ChangedAttribute.create();
-		attribute.setName(Orders.CURRENCY_CODE);
-		attribute.setOldValue(oldCurrencyCode);
-		attribute.setNewValue(order.getCurrencyCode());
-
-		KeyValuePair id = KeyValuePair.create();
-		id.setKeyName(Orders.ID);
-		id.setValue(order.getId());
-
-		DataObject dataObject = DataObject.create();
-		dataObject.setType(Orders_.CDS_NAME);
-		dataObject.setId(Arrays.asList(id));
-
-		ConfigChange cfgChange = ConfigChange.create();
-		cfgChange.setDataObject(dataObject);
-		cfgChange.setAttributes(Arrays.asList(attribute));
-		return cfgChange;
 	}
 
 	/**
@@ -363,6 +335,72 @@ class AdminServiceHandler implements EventHandler {
 
 	private BigDecimal defaultZero(BigDecimal decimal) {
 		return decimal == null ? BigDecimal.valueOf(0) : decimal;
+	}
+
+	// audit logging
+
+	private void auditChanges(Orders orders) {
+		if (orders.getCurrencyCode() != null || orders.getOrderNo() != null) {
+			Select<Orders_> select = Select.from(ORDERS).columns(Orders_::currency_code, Orders_::OrderNo)
+					.where(o -> o.ID().eq(orders.getId()).and(o.IsActiveEntity().eq(true)));
+			Optional<Orders> oldOrdersOpt = db.run(select).first(Orders.class);
+
+			if (oldOrdersOpt.isPresent()) {
+				Orders oldOrders = oldOrdersOpt.get();
+
+				// check if there was a config change
+				if (!orders.getCurrencyCode().equals(oldOrders.getCurrencyCode())) {
+					ConfigChange cfgChange = createConfigChange(orders, oldOrders);
+					auditLogService.logConfigChange(Action.UPDATE, Arrays.asList(cfgChange));
+				}
+
+				// check if there was a data modification
+				if (!StringUtils.equals(orders.getOrderNo(), oldOrders.getOrderNo())) {
+					DataModification dataModification = createDataModification(orders, oldOrders);
+					auditLogService.logDataModification(Arrays.asList(dataModification));
+				}
+			}
+		}
+	}
+
+	private static DataModification createDataModification(Orders orders, Orders oldOrders) {
+		ChangedAttribute attribute = createChangedAttribute(Orders.ORDER_NO, orders.getOrderNo(),
+				oldOrders.getOrderNo());
+
+		DataModification dataModification = DataModification.create();
+		dataModification.setDataObject(createDataObject(orders));
+		dataModification.setAction(Action.UPDATE);
+		dataModification.setAttributes(Arrays.asList(attribute));
+		return dataModification;
+	}
+
+	private static ConfigChange createConfigChange(Orders orders, Orders oldOrders) {
+		ChangedAttribute attribute = createChangedAttribute(Orders.CURRENCY_CODE, orders.getCurrencyCode(),
+				oldOrders.getCurrencyCode());
+
+		ConfigChange cfgChange = ConfigChange.create();
+		cfgChange.setDataObject(createDataObject(orders));
+		cfgChange.setAttributes(Arrays.asList(attribute));
+		return cfgChange;
+	}
+
+	private static DataObject createDataObject(Orders order) {
+		KeyValuePair id = KeyValuePair.create();
+		id.setKeyName(Orders.ID);
+		id.setValue(order.getId());
+
+		DataObject dataObject = DataObject.create();
+		dataObject.setType(Orders_.CDS_NAME);
+		dataObject.setId(Arrays.asList(id));
+		return dataObject;
+	}
+
+	private static ChangedAttribute createChangedAttribute(String name, String newValue, String oldValue) {
+		ChangedAttribute attribute = ChangedAttribute.create();
+		attribute.setName(name);
+		attribute.setOldValue(oldValue);
+		attribute.setNewValue(newValue);
+		return attribute;
 	}
 
 }
