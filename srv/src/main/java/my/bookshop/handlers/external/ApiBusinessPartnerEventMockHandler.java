@@ -4,7 +4,6 @@ import java.util.Arrays;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
 
@@ -14,7 +13,6 @@ import com.sap.cds.services.cds.CqnService;
 import com.sap.cds.services.handler.EventHandler;
 import com.sap.cds.services.handler.annotations.After;
 import com.sap.cds.services.handler.annotations.ServiceName;
-import com.sap.cds.services.messaging.MessagingService;
 
 import cds.gen.api_business_partner.ABusinessPartnerAddress;
 import cds.gen.api_business_partner.ABusinessPartnerAddress_;
@@ -31,8 +29,8 @@ public class ApiBusinessPartnerEventMockHandler implements EventHandler {
 
 	private final static Logger logger = LoggerFactory.getLogger(ApiBusinessPartnerEventMockHandler.class);
 
-	@Autowired
-	private MessagingService bupaMessaging;
+	//@Autowired
+	//private MessagingService bupaMessaging;
 
 	@After(event = CqnService.EVENT_UPDATE, entity = ABusinessPartnerAddress_.CDS_NAME)
 	public void businessPartnerChanged(CdsUpdateEventContext context) {
@@ -49,7 +47,7 @@ public class ApiBusinessPartnerEventMockHandler implements EventHandler {
 		// Emit Changed Event
 		String payload = "{\"data\": " + eventData.toJson() + "}"; // cloud events structure
 		logger.info("<< emitting: " + payload);
-		bupaMessaging.emit("BO/BusinessPartner/Changed", payload);
+		//bupaMessaging.emit("BO/BusinessPartner/Changed", payload);
 	}
 
 

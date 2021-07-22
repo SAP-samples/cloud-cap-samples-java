@@ -9,9 +9,9 @@ server.servlet.encoding:
 cds:
   odata-v4.endpoint.path: "/api"
   messaging.services:
-    bupa-messaging:
-      kind: file-based-messaging
-      binding: '/Users/d040506/git/cap/samples/messaging.txt'
+    messaging-em:
+      kind: enterprise-messaging
+      enabled: false
   security.mock.users:
     - name: admin
       password: admin
@@ -28,6 +28,10 @@ spring:
   config.activate.on-profile: remote-service
 
 cds:
+  messaging.services:
+    messaging-file:
+      kind: file-based-messaging
+      binding: '/Users/d040506/git/cap/samples/messaging.txt'
   remote.services:
     - name: ReviewService
 
@@ -36,17 +40,11 @@ spring:
   config.activate.on-profile: cloud
 cds:
   messaging.services:
-    bupa-messaging:
+    messaging-em:
       kind: enterprise-messaging
-      topic-namespace: sap/S4HANAOD/dkom
+      enabled: true
   remote.services:
-  - name: API_BUSINESS_PARTNER
-    destination:
-      name: "s4-business-partner-api"
-      suffix: "/sap/opu/odata/sap"
-      type: "odata-v2"
-api-hub:
-  api-key: "" # Place API Key from SAP API Business Hub here
+  - name: ReviewService
 
 ---
 spring:
