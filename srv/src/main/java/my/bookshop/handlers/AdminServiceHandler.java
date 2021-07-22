@@ -27,11 +27,12 @@ import com.sap.cds.ql.cqn.CqnAnalyzer;
 import com.sap.cds.reflect.CdsModel;
 import com.sap.cds.services.ErrorStatuses;
 import com.sap.cds.services.ServiceException;
+import com.sap.cds.services.auditlog.Action;
 import com.sap.cds.services.auditlog.AuditLogService;
 import com.sap.cds.services.auditlog.ChangedAttribute;
 import com.sap.cds.services.auditlog.ConfigChange;
+import com.sap.cds.services.auditlog.DataObject;
 import com.sap.cds.services.auditlog.KeyValuePair;
-import com.sap.cds.services.auditlog.Object;
 import com.sap.cds.services.cds.CdsService;
 import com.sap.cds.services.cds.CdsUpdateEventContext;
 import com.sap.cds.services.cds.CqnService;
@@ -157,7 +158,7 @@ class AdminServiceHandler implements EventHandler {
 					String oldCurrencyCode = result.first(Orders.class).get().getCurrencyCode();
 					if (!order.getCurrencyCode().equals(oldCurrencyCode)) {
 						ConfigChange cfgChange = createConfigChange(order, oldCurrencyCode);
-						auditLogService.logConfigChange("Update", Arrays.asList(cfgChange));
+						auditLogService.logConfigChange(Action.UPDATE, Arrays.asList(cfgChange));
 					}
 				}
 			}
@@ -177,12 +178,12 @@ class AdminServiceHandler implements EventHandler {
 		id.setKeyName(Orders.ID);
 		id.setValue(order.getId());
 
-		Object dataObject = Object.create();
+		DataObject dataObject = DataObject.create();
 		dataObject.setType(Orders_.CDS_NAME);
 		dataObject.setId(Arrays.asList(id));
 
 		ConfigChange cfgChange = ConfigChange.create();
-		cfgChange.setObject(dataObject);
+		cfgChange.setDataObject(dataObject);
 		cfgChange.setAttributes(Arrays.asList(attribute));
 		return cfgChange;
 	}
