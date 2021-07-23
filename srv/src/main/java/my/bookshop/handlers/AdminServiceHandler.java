@@ -29,13 +29,16 @@ import com.sap.cds.ql.cqn.CqnAnalyzer;
 import com.sap.cds.reflect.CdsModel;
 import com.sap.cds.services.ErrorStatuses;
 import com.sap.cds.services.ServiceException;
+import com.sap.cds.services.auditlog.Access;
 import com.sap.cds.services.auditlog.Action;
+import com.sap.cds.services.auditlog.Attribute;
 import com.sap.cds.services.auditlog.AuditLogService;
 import com.sap.cds.services.auditlog.ChangedAttribute;
 import com.sap.cds.services.auditlog.ConfigChange;
 import com.sap.cds.services.auditlog.DataModification;
 import com.sap.cds.services.auditlog.DataObject;
 import com.sap.cds.services.auditlog.KeyValuePair;
+import com.sap.cds.services.cds.CdsReadEventContext;
 import com.sap.cds.services.cds.CdsService;
 import com.sap.cds.services.cds.CdsUpdateEventContext;
 import com.sap.cds.services.cds.CqnService;
@@ -43,6 +46,7 @@ import com.sap.cds.services.draft.DraftCancelEventContext;
 import com.sap.cds.services.draft.DraftPatchEventContext;
 import com.sap.cds.services.draft.DraftService;
 import com.sap.cds.services.handler.EventHandler;
+import com.sap.cds.services.handler.annotations.After;
 import com.sap.cds.services.handler.annotations.Before;
 import com.sap.cds.services.handler.annotations.On;
 import com.sap.cds.services.handler.annotations.ServiceName;
@@ -90,6 +94,11 @@ class AdminServiceHandler implements EventHandler {
 
 		// model is a tenant-dependant model proxy
 		this.analyzer = CqnAnalyzer.create(model);
+	}
+
+	@After(event = { CqnService.EVENT_READ })
+	public void afterReadOrder(Stream<Orders> orders, CdsReadEventContext ctx) {
+		orders.forEach(this::auditAccess);
 	}
 
 	/**
@@ -338,6 +347,11 @@ class AdminServiceHandler implements EventHandler {
 	}
 
 	// audit logging
+	private void auditAccess(Orders orders) {
+		if (orders.getOrderNo() != null) {
+			auditLogService.logDataAccess(createAccess(orders));
+		}
+	}
 
 	private void auditChanges(Orders orders) {
 		if (orders.getCurrencyCode() != null || orders.getOrderNo() != null) {
@@ -361,6 +375,13 @@ class AdminServiceHandler implements EventHandler {
 				}
 			}
 		}
+	}
+
+	private Access createAccess(Orders orders) {
+		Access access = Access.create();
+		access.setDataObject(createDataObject(orders));
+		access.setAttributes(createAttributes());
+		return access;
 	}
 
 	private static DataModification createDataModification(Orders orders, Orders oldOrders) {
@@ -393,6 +414,14 @@ class AdminServiceHandler implements EventHandler {
 		dataObject.setType(Orders_.CDS_NAME);
 		dataObject.setId(Arrays.asList(id));
 		return dataObject;
+	}
+
+	private List<Attribute> createAttributes() {
+		List<Attribute> attributes = new ArrayList<>();
+		Attribute attr = Attribute.create();
+		attr.setName(Orders.ORDER_NO);
+		attributes.add(attr);
+		return attributes;
 	}
 
 	private static ChangedAttribute createChangedAttribute(String name, String newValue, String oldValue) {
