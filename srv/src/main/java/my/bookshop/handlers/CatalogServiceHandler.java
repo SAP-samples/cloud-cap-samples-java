@@ -58,7 +58,6 @@ class CatalogServiceHandler implements EventHandler {
 		this.db = db;
 	}
 
-
 	@On(service = ReviewService_.CDS_NAME)
 	private void reviewAdded(ReviewedContext context) {
 		Reviewed event = context.getData();
@@ -67,14 +66,12 @@ class CatalogServiceHandler implements EventHandler {
 		if (row != null) {
 			Books book = row.as(Books.class);
 
-			context.getCdsRuntime().requestContext().privilegedUser().run(req -> {
-				Result res = db.run(Update.entity(cds.gen.my.bookshop.Books_.CDS_NAME).byId(book.getId()).data(Books.RATING, event.getRating()));
-				if (res.rowCount() > 0) {
-					logger.info("The rating of the book '{}' has been updated to '{}'.", book.getTitle(), event.getRating());
-				} else {
+			Result res = db.run(Update.entity(cds.gen.my.bookshop.Books_.CDS_NAME).byId(book.getId()).data(Books.RATING, event.getRating()));
+			if (res.rowCount() > 0) {
+				logger.info("Rating of '{}' has been updated to '{}'.", book.getTitle(), event.getRating());
+			} else {
 
-				}
-			});
+			}
 		}
 	}
 

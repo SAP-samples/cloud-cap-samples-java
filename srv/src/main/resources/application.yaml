@@ -42,6 +42,7 @@ cds:
   messaging.services:
     messaging-em:
       kind: enterprise-messaging
+      subscribePrefix: $namespace/
       enabled: true
   remote.services:
   - name: ReviewService

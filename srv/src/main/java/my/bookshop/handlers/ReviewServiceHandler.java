@@ -51,7 +51,7 @@ public class ReviewServiceHandler implements EventHandler {
 
 			reviewService.emit(evContext);
 
-			logger.info("The review for '{}' with avg rating '{}' was created and notified.", event.getSubject(), event.getRating());
+			logger.info("Review for '{}' with avg rating '{}' was successfully created.", event.getSubject(), event.getRating());
 		});
 	}
 }
