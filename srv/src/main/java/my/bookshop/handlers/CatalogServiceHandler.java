@@ -8,6 +8,11 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Component;
+
 import com.sap.cds.Result;
 import com.sap.cds.Struct;
 import com.sap.cds.ql.Insert;
@@ -28,9 +33,6 @@ import com.sap.cds.services.handler.annotations.On;
 import com.sap.cds.services.handler.annotations.ServiceName;
 import com.sap.cds.services.messages.Messages;
 import com.sap.cds.services.persistence.PersistenceService;
-
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.stereotype.Component;
 
 import cds.gen.catalogservice.AddReviewContext;
 import cds.gen.catalogservice.Books;
@@ -55,6 +57,8 @@ import my.bookshop.RatingCalculator;
 @Component
 @ServiceName(CatalogService_.CDS_NAME)
 class CatalogServiceHandler implements EventHandler {
+
+	private static final Logger LOG = LoggerFactory.getLogger(CatalogServiceHandler.class);
 
 	private final PersistenceService db;
 
@@ -82,6 +86,9 @@ class CatalogServiceHandler implements EventHandler {
 	 */
 	@Before(entity = Books_.CDS_NAME)
 	public void beforeAddReview(AddReviewContext context) {
+
+		LOG.debug("Entering CatalogServiceHandler.beforeAddReview().");
+
 		String user = context.getUserInfo().getName();
 		String bookId = (String) analyzer.analyze(context.getCqn()).targetKeys().get(Books.ID);
 
@@ -92,6 +99,8 @@ class CatalogServiceHandler implements EventHandler {
 			throw new ServiceException(ErrorStatuses.METHOD_NOT_ALLOWED, MessageKeys.REVIEW_ADD_FORBIDDEN)
 					.messageTarget(Reviews_.class, r -> r.createdBy());
 		}
+
+		LOG.debug("Leaving CatalogServiceHandler.beforeAddReview().");
 	}
 
 	/**
@@ -101,6 +110,9 @@ class CatalogServiceHandler implements EventHandler {
 	 */
 	@On(entity = Books_.CDS_NAME)
 	public void onAddReview(AddReviewContext context) {
+
+		LOG.debug("Entering CatalogServiceHandler.onAddReview().");
+
 		Integer rating = context.getRating();
 		String title = context.getTitle();
 		String text = context.getText();
@@ -119,6 +131,8 @@ class CatalogServiceHandler implements EventHandler {
 		messages.success(MessageKeys.REVIEW_ADDED);
 
 		context.setResult(Struct.access(inserted).as(Reviews.class));
+
+		LOG.debug("Leaving CatalogServiceHandler.onAddReview().");
 	}
 
 	/**
@@ -133,14 +147,22 @@ class CatalogServiceHandler implements EventHandler {
 
 	@After(event = CqnService.EVENT_READ)
 	public void discountBooks(Stream<Books> books) {
+
+		LOG.debug("Entering CatalogServiceHandler.discountBooks().");
+
 		books.filter(b -> b.getTitle() != null).forEach(b -> {
 			loadStockIfNotSet(b);
 			discountBooksWithMoreThan111Stock(b);
 		});
+
+		LOG.debug("Leaving CatalogServiceHandler.discountBooks().");
 	}
 
 	@After
 	public void setIsReviewable(CdsReadEventContext context, List<Books> books) {
+
+		LOG.debug("Entering CatalogServiceHandler.setIsReviewable().");
+
 		String user = context.getUserInfo().getName();
 		List<String> bookIds = books.stream().filter(b -> b.getId() != null).map(b -> b.getId())
 				.collect(Collectors.toList());
@@ -160,6 +182,8 @@ class CatalogServiceHandler implements EventHandler {
 				book.setIsReviewable(false);
 			}
 		}
+
+		LOG.debug("Leaving CatalogServiceHandler.setIsReviewable().");
 	}
 
 	@On

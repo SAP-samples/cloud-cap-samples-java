@@ -16,9 +16,11 @@
 
 		<!-- DEPENDENCIES VERSION -->
 		<jdk.version>1.8</jdk.version>
-		<cds.services.version>1.18.0</cds.services.version>
+		<cds.services.version>1.19.0-SNAPSHOT</cds.services.version>
 		<spring.boot.version>2.5.2</spring.boot.version>
 		<cloud.sdk.version>3.46.0</cloud.sdk.version>
+		<cds.install-cdsdk.version>^4</cds.install-cdsdk.version>
+		<cf-java-logging-support.version>3.5.1</cf-java-logging-support.version>
 	</properties>
 
 	<modules>
@@ -52,6 +54,18 @@
 				<version>${cloud.sdk.version}</version>
 				<type>pom</type>
 				<scope>import</scope>
+			</dependency>
+
+			<!-- CF LOGGING SUPPORT -->
+			<dependency>
+				<groupId>com.sap.hcp.cf.logging</groupId>
+				<artifactId>cf-java-logging-support-servlet</artifactId>
+				<version>${cf-java-logging-support.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.sap.hcp.cf.logging</groupId>
+				<artifactId>cf-java-logging-support-logback</artifactId>
+				<version>${cf-java-logging-support.version}</version>
 			</dependency>
 		</dependencies>
 	</dependencyManagement>

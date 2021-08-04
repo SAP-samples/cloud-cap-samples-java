@@ -52,6 +52,9 @@ cds:
       name: "myself"
       suffix: "/api"
 
+logging.group.bookshop: my.bookshop.handlers.CatalogServiceHandler
+logging.level.bookshop: DEBUG
+
 ---
 spring:
   config.activate.on-profile: default
