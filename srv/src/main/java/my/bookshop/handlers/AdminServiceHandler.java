@@ -139,9 +139,6 @@ class AdminServiceHandler implements EventHandler {
 				order.setTotal(order.getTotal().add(updatedNetAmount));
 			});
 		});
-
-		// aborts the request with an exception, in case errors have been collected before
-		messages.throwIfError();
 	}
 
 	/**
