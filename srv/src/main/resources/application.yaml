@@ -23,6 +23,7 @@ server.servlet.encoding:
 ---
 spring:
   config.activate.on-profile: cloud
+  sql.init.schema-locations: "classpath:schema-nomocks.sql"
 cds:
   messaging.services:
     bupa-messaging:
@@ -35,7 +36,21 @@ cds:
       suffix: "/sap/opu/odata/sap"
       type: "odata-v2"
 api-hub:
-  api-key: "" # Place API Key from SAP API Business Hub here
+  api-key: "" # Place API Key from SAP API Business Hub here or use environment variable API_HUB_API_KEY
+
+---
+spring:
+  config.activate.on-profile: mocked
+cds:
+  application.services:
+  - name: API_BUSINESS_PARTNER_MOCKED
+    model: API_BUSINESS_PARTNER
+    serve.path: API_BUSINESS_PARTNER
+  remote.services:
+  - name: API_BUSINESS_PARTNER
+    destination:
+      name: "myself"
+      suffix: "/api"
 
 ---
 spring:
