@@ -4,14 +4,8 @@ import java.util.UUID;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.http.HttpHeaders;
-import org.springframework.security.test.context.support.WithMockUser;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.reactive.server.WebTestClient;
 
 import com.sap.cds.services.changeset.ChangeSetListener;
@@ -20,9 +14,7 @@ import com.sap.cds.services.messaging.MessagingService;
 import cds.gen.adminservice.Orders;
 import cds.gen.api_business_partner.ABusinessPartnerAddress;
 
-@ExtendWith(SpringExtension.class)
-@SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
-public abstract class AdminServiceAddressITestBase {
+public class AdminServiceAddressITestBase {
 
 	private static final String ordersURI = "/api/admin/Orders";
 	private static final String orderURI = ordersURI + "(IsActiveEntity=true,ID=%s)";
@@ -35,8 +27,6 @@ public abstract class AdminServiceAddressITestBase {
 	@Autowired
 	private MessagingService messaging;
 
-	@Test
-	@WithMockUser(username = "admin")
 	public void testAddressesValueHelp() {
 		client.get().uri(addressesURI).headers(this::adminCredentials).exchange()
 				.expectStatus().isOk()
@@ -50,7 +40,6 @@ public abstract class AdminServiceAddressITestBase {
 				.jsonPath("$.value[2].businessPartner").isEqualTo("10401010");
 	}
 
-	@Test
 	public void testOrderWithAddress() throws InterruptedException {
 		Orders order = Orders.create();
 		order.setOrderNo("1337");
