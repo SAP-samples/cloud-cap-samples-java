@@ -5,10 +5,11 @@ import java.util.Arrays;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
 import com.sap.cds.ql.cqn.CqnAnalyzer;
+import com.sap.cds.services.cds.ApplicationService;
 import com.sap.cds.services.cds.CdsUpdateEventContext;
 import com.sap.cds.services.cds.CqnService;
 import com.sap.cds.services.handler.EventHandler;
@@ -25,8 +26,8 @@ import cds.gen.api_business_partner.BOBusinessPartnerChanged;
  * This class mocks the event emitting of the S/4 API
  */
 @Component
-@ServiceName(ApiBusinessPartner_.CDS_NAME)
-@ConditionalOnProperty(value = "cds.remote.services[0].destination.name", havingValue = "false", matchIfMissing = true)
+@Profile("!cloud")
+@ServiceName(value = { ApiBusinessPartner_.CDS_NAME, ApiBusinessPartner_.CDS_NAME + "_MOCKED"}, type = ApplicationService.class)
 public class ApiBusinessPartnerEventMockHandler implements EventHandler {
 
 	private final static Logger logger = LoggerFactory.getLogger(ApiBusinessPartnerEventMockHandler.class);
