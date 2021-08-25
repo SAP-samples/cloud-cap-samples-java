@@ -2,7 +2,7 @@
     "name": "deploy",
     "dependencies": {
         "@sap/cds": "^5.0.4",
-        "@sap/cds-mtx": "^1.2.0",
+        "@sap/cds-mtx": "2.2.1",
         "@sap/hdi-deploy": "^4.0.4",
         "@sap/instance-manager": "^3.0.0",
         "@sap/xssec": "^3",
@@ -14,6 +14,6 @@
         "start": "node server.js"
     },
     "engines": {
-        "node": ">=12.18"
+        "node": "16.2.0"
     }
 }
