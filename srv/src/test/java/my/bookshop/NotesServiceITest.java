@@ -110,7 +110,7 @@ public class NotesServiceITest {
 
 	@Test
 	public void testGetNotesToSupplier() throws Exception {
-		client.get().uri(notesURI + "(5efc842c-c70d-4ee2-af1d-81c7d257aff7)/address").exchange()
+		client.get().uri(notesURI + "(ID=5efc842c-c70d-4ee2-af1d-81c7d257aff7,IsActiveEntity=true)/address").exchange()
 				.expectStatus().isOk()
 				.expectBody()
 				.jsonPath("$.['@context']").isEqualTo("$metadata#Addresses/$entity")
@@ -133,6 +133,17 @@ public class NotesServiceITest {
 				.jsonPath("$.value[1].address_businessPartner").isEqualTo("10401010")
 				.jsonPath("$.value[1].address_ID").isEqualTo("100")
 				.jsonPath("$.value[2]").doesNotExist();
+	}
+
+	@Test
+	public void testGetSupplierToSpecificNote() throws Exception {
+		client.get().uri(addressesURI + "(businessPartner='10401010',ID='100')/notes(ID=83e2643b-aecc-47d3-9f85-a8ba14eff07d,IsActiveEntity=true)").exchange()
+				.expectStatus().isOk()
+				.expectBody()
+				.jsonPath("$.ID").isEqualTo("83e2643b-aecc-47d3-9f85-a8ba14eff07d")
+				.jsonPath("$.note").isEqualTo("Packages can be dropped off at the reception")
+				.jsonPath("$.address_businessPartner").isEqualTo("10401010")
+				.jsonPath("$.address_ID").isEqualTo("100");
 	}
 
 	@Test

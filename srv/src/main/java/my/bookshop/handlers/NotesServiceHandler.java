@@ -16,7 +16,9 @@ import com.sap.cds.Result;
 import com.sap.cds.ql.CQL;
 import com.sap.cds.ql.Predicate;
 import com.sap.cds.ql.Select;
+import com.sap.cds.ql.StructuredType;
 import com.sap.cds.ql.StructuredTypeRef;
+import com.sap.cds.ql.cqn.AnalysisResult;
 import com.sap.cds.ql.cqn.CqnAnalyzer;
 import com.sap.cds.ql.cqn.CqnExpand;
 import com.sap.cds.ql.cqn.CqnReference.Segment;
@@ -114,12 +116,18 @@ public class NotesServiceHandler implements EventHandler {
 		List<? extends Segment> segments = context.getCqn().ref().segments();
 		// via addresses
 		if(segments.size() == 2 && segments.get(0).id().equals(Addresses_.CDS_NAME)) {
-			Map<String, Object> addressKeys = analyzer.analyze(context.getCqn()).rootKeys();
+			AnalysisResult analysis = analyzer.analyze(context.getCqn());
+			Map<String, Object> addressKeys = analysis.rootKeys();
+			Map<String, Object> notesKeys = analysis.targetKeyValues();
 			CqnSelect notesOfAddress = CQL.copy(context.getCqn(), new Modifier() {
 
 				@Override
 				public CqnStructuredTypeRef ref(StructuredTypeRef ref) {
-					return CQL.entity(Notes_.CDS_NAME).asRef();
+					StructuredType<?> notes = CQL.entity(Notes_.CDS_NAME);
+					if(!notesKeys.isEmpty()) {
+						notes = notes.matching(notesKeys);
+					}
+					return notes.asRef();
 				}
 
 				@Override
