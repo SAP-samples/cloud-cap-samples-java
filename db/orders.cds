@@ -1,12 +1,13 @@
 namespace my.bookshop;
 
 using {
-    my.bookshop as my,
     Currency,
     User,
     managed,
     cuid
 } from '@sap/cds/common';
+
+using from './books';
 
 entity Orders : cuid, managed {
     OrderNo  : String @title : '{i18n>OrderNumber}'  @mandatory; //> readable key
