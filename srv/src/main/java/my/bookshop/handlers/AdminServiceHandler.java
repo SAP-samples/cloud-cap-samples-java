@@ -346,12 +346,23 @@ class AdminServiceHandler implements EventHandler {
 	}
 
 	// audit logging
+
+	/**
+	 * Writes a data access message to the audit log for the given order.
+	 *
+	 * @param orders the accessed order
+	 */
 	private void auditAccess(Orders orders) {
 		if (orders.getOrderNo() != null) {
 			auditLogService.logDataAccess(createAccess(orders));
 		}
 	}
 
+	/**
+	 * Writes a data modification message to the auditlog if the order number has changed.
+	 *
+	 * @param orders the modified order
+	 */
 	private void auditChanges(Orders orders) {
 		if (orders.getCurrencyCode() != null || orders.getOrderNo() != null) {
 			Select<Orders_> select = Select.from(ORDERS).columns(Orders_::currency_code, Orders_::OrderNo)
@@ -360,12 +371,6 @@ class AdminServiceHandler implements EventHandler {
 
 			if (oldOrdersOpt.isPresent()) {
 				Orders oldOrders = oldOrdersOpt.get();
-
-				// check if there was a config change
-				if (!orders.getCurrencyCode().equals(oldOrders.getCurrencyCode())) {
-					ConfigChange cfgChange = createConfigChange(orders, oldOrders);
-					auditLogService.logConfigChange(Action.UPDATE, Arrays.asList(cfgChange));
-				}
 
 				// check if there was a data modification
 				if (!StringUtils.equals(orders.getOrderNo(), oldOrders.getOrderNo())) {
@@ -392,16 +397,6 @@ class AdminServiceHandler implements EventHandler {
 		dataModification.setAction(Action.UPDATE);
 		dataModification.setAttributes(Arrays.asList(attribute));
 		return dataModification;
-	}
-
-	private static ConfigChange createConfigChange(Orders orders, Orders oldOrders) {
-		ChangedAttribute attribute = createChangedAttribute(Orders.CURRENCY_CODE, orders.getCurrencyCode(),
-				oldOrders.getCurrencyCode());
-
-		ConfigChange cfgChange = ConfigChange.create();
-		cfgChange.setDataObject(createDataObject(orders));
-		cfgChange.setAttributes(Arrays.asList(attribute));
-		return cfgChange;
 	}
 
 	private static DataObject createDataObject(Orders order) {
