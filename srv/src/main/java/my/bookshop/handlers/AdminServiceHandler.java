@@ -113,7 +113,6 @@ class AdminServiceHandler implements EventHandler {
 		orders.forEach(order -> {
 			// reset total
 			order.setTotal(BigDecimal.valueOf(0));
-
 			if(order.getItems() != null) {
 				order.getItems().forEach(orderItem -> {
 					// validation of the Order creation request
@@ -164,6 +163,7 @@ class AdminServiceHandler implements EventHandler {
 					order.setTotal(order.getTotal().add(updatedNetAmount));
 				});
 			}
+
 			auditChanges(order);
 		});
 	}
