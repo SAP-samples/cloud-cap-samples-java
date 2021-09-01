@@ -1,6 +1,7 @@
 gen/
 edmx/
 schema.sql
+schema-nomocks.sql
 default-env.json
 openapi.json
 

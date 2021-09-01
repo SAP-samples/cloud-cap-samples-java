@@ -113,60 +113,59 @@ class AdminServiceHandler implements EventHandler {
 		orders.forEach(order -> {
 			// reset total
 			order.setTotal(BigDecimal.valueOf(0));
-			order.getItems().forEach(orderItem -> {
-				// validation of the Order creation request
-				Integer amount = orderItem.getAmount();
-				if (amount == null || amount <= 0) {
-					// errors with localized messages from property files
-					// exceptions abort the request and set an error http status code
-					// messages in contrast allow to collect multiple errors
-					messages.error(MessageKeys.AMOUNT_REQUIRE_MINIMUM)
-							.target("in", ORDERS, o -> o.Items(i -> i.ID().eq(orderItem.getId()).and(i.IsActiveEntity().eq(false))).amount());
-				}
 
-				String bookId = orderItem.getBookId();
-				if (bookId == null) {
-					// Tip: using static text without localization is still possible in exceptions and messages
-					messages.error("You have to specify the book to order")
-							.target("in", ORDERS, o -> o.Items(i -> i.ID().eq(orderItem.getId()).and(i.IsActiveEntity().eq(false))).book_ID());
-				}
+			if(order.getItems() != null) {
+				order.getItems().forEach(orderItem -> {
+					// validation of the Order creation request
+					Integer amount = orderItem.getAmount();
+					if (amount == null || amount <= 0) {
+						// errors with localized messages from property files
+						// exceptions abort the request and set an error http status code
+						// messages in contrast allow to collect multiple errors
+						messages.error(MessageKeys.AMOUNT_REQUIRE_MINIMUM)
+								.target("in", ORDERS, o -> o.Items(i -> i.ID().eq(orderItem.getId()).and(i.IsActiveEntity().eq(false))).amount());
+					}
 
-				if(amount == null || amount <= 0 || bookId == null) {
-					return; // follow up validations rely on these
-				}
+					String bookId = orderItem.getBookId();
+					if (bookId == null) {
+						// Tip: using static text without localization is still possible in exceptions and messages
+						messages.error("You have to specify the book to order")
+								.target("in", ORDERS, o -> o.Items(i -> i.ID().eq(orderItem.getId()).and(i.IsActiveEntity().eq(false))).book_ID());
+					}
 
-				// calculate the actual amount difference
-				// FIXME this should handle book changes, currently only amount changes are handled
-				int diffAmount = amount - db.run(Select.from(Bookshop_.ORDER_ITEMS).columns(i -> i.amount()).byId(orderItem.getId()))
-											.first(OrderItems.class).map(i -> i.getAmount()).orElse(0);
+					if(amount == null || amount <= 0 || bookId == null) {
+						return; // follow up validations rely on these
+					}
 
-				// check if enough books are available
-				Result result = db.run(Select.from(BOOKS).columns(b -> b.ID(), b -> b.stock(), b -> b.price()).byId(bookId));
-				Books book = result.first(Books.class).orElseThrow(notFound(MessageKeys.BOOK_MISSING));
-				if (book.getStock() < diffAmount) {
-					// Tip: you can have localized messages and use parameters in your messages
-					messages.error(MessageKeys.BOOK_REQUIRE_STOCK, book.getStock())
-							.target("in", ORDERS, o -> o.Items(i -> i.ID().eq(orderItem.getId()).and(i.IsActiveEntity().eq(false))).amount());
-					return; // no need to update follow-up values with invalid amount / stock
-				}
+					// calculate the actual amount difference
+					// FIXME this should handle book changes, currently only amount changes are handled
+					int diffAmount = amount - db.run(Select.from(Bookshop_.ORDER_ITEMS).columns(i -> i.amount()).byId(orderItem.getId()))
+												.first(OrderItems.class).map(i -> i.getAmount()).orElse(0);
 
-				// update the book with the new stock
-				book.setStock(book.getStock() - diffAmount);
-				db.run(Update.entity(BOOKS).data(book));
+					// check if enough books are available
+					Result result = db.run(Select.from(BOOKS).columns(b -> b.ID(), b -> b.stock(), b -> b.price()).byId(bookId));
+					Books book = result.first(Books.class).orElseThrow(notFound(MessageKeys.BOOK_MISSING));
+					if (book.getStock() < diffAmount) {
+						// Tip: you can have localized messages and use parameters in your messages
+						messages.error(MessageKeys.BOOK_REQUIRE_STOCK, book.getStock())
+								.target("in", ORDERS, o -> o.Items(i -> i.ID().eq(orderItem.getId()).and(i.IsActiveEntity().eq(false))).amount());
+						return; // no need to update follow-up values with invalid amount / stock
+					}
 
-				// update the net amount
-				BigDecimal updatedNetAmount = book.getPrice().multiply(BigDecimal.valueOf(amount));
-				orderItem.setNetAmount(updatedNetAmount);
+					// update the book with the new stock
+					book.setStock(book.getStock() - diffAmount);
+					db.run(Update.entity(BOOKS).data(book));
 
-				// update the total
-				order.setTotal(order.getTotal().add(updatedNetAmount));
-			});
+					// update the net amount
+					BigDecimal updatedNetAmount = book.getPrice().multiply(BigDecimal.valueOf(amount));
+					orderItem.setNetAmount(updatedNetAmount);
 
+					// update the total
+					order.setTotal(order.getTotal().add(updatedNetAmount));
+				});
+			}
 			auditChanges(order);
 		});
-
-		// aborts the request with an exception, in case errors have been collected before
-		messages.throwIfError();
 	}
 
 	/**
