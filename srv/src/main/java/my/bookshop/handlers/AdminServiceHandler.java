@@ -34,7 +34,6 @@ import com.sap.cds.services.auditlog.Action;
 import com.sap.cds.services.auditlog.Attribute;
 import com.sap.cds.services.auditlog.AuditLogService;
 import com.sap.cds.services.auditlog.ChangedAttribute;
-import com.sap.cds.services.auditlog.ConfigChange;
 import com.sap.cds.services.auditlog.DataModification;
 import com.sap.cds.services.auditlog.DataObject;
 import com.sap.cds.services.auditlog.KeyValuePair;
