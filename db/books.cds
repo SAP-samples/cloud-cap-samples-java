@@ -6,8 +6,8 @@ using {
     managed,
     cuid
 } from '@sap/cds/common';
-using my.bookshop.Reviews as Reviews from './reviews';
-using my.bookshop.TechnicalBooleanFlag as TechnicalBooleanFlag from './common';
+using my.bookshop.Reviews from './reviews';
+using my.bookshop.TechnicalBooleanFlag from './common';
 
 @fiori.draft.enabled
 entity Books : cuid, managed {

@@ -5,8 +5,7 @@ using {
     managed,
     cuid
 } from '@sap/cds/common';
-
-using my.bookshop.Books as Books from './books';
+using my.bookshop.Books from './books';
 
 entity Reviews : cuid, managed {
     @cds.odata.ValueList
