@@ -83,14 +83,14 @@ class AdminServiceHandler implements EventHandler {
 
 	private final CqnAnalyzer analyzer;
 
-	private final AuditLogService auditLogService;
+	private final AuditLogService auditLog;
 
 	AdminServiceHandler(@Qualifier(AdminService_.CDS_NAME) DraftService adminService, PersistenceService db,
-			Messages messages, CdsModel model, AuditLogService auditLogService) {
+			Messages messages, CdsModel model, AuditLogService auditLog) {
 		this.adminService = adminService;
 		this.db = db;
 		this.messages = messages;
-		this.auditLogService = auditLogService;
+		this.auditLog = auditLog;
 
 		// model is a tenant-dependant model proxy
 		this.analyzer = CqnAnalyzer.create(model);
@@ -348,13 +348,13 @@ class AdminServiceHandler implements EventHandler {
 	// audit logging
 
 	/**
-	 * Writes a data access message to the audit log for the given order.
+	 * Writes a data access message to the audit log for the given order if the order number is read.
 	 *
 	 * @param orders the accessed order
 	 */
 	private void auditAccess(Orders orders) {
 		if (orders.getOrderNo() != null) {
-			auditLogService.logDataAccess(createAccess(orders));
+			this.auditLog.logDataAccess(createAccess(orders));
 		}
 	}
 
@@ -375,7 +375,7 @@ class AdminServiceHandler implements EventHandler {
 				// check if there was a data modification
 				if (!StringUtils.equals(orders.getOrderNo(), oldOrders.getOrderNo())) {
 					DataModification dataModification = createDataModification(orders, oldOrders);
-					auditLogService.logDataModification(Arrays.asList(dataModification));
+					this.auditLog.logDataModification(Arrays.asList(dataModification));
 				}
 			}
 		}
@@ -384,7 +384,7 @@ class AdminServiceHandler implements EventHandler {
 	private Access createAccess(Orders orders) {
 		Access access = Access.create();
 		access.setDataObject(createDataObject(orders));
-		access.setAttributes(createAttributes());
+		access.setAttributes(createAttributes(Orders.ORDER_NO));
 		return access;
 	}
 
@@ -401,9 +401,7 @@ class AdminServiceHandler implements EventHandler {
 	}
 
 	private static DataObject createDataObject(Orders order) {
-		KeyValuePair id = KeyValuePair.create();
-		id.setKeyName(Orders.ID);
-		id.setValue(order.getId());
+		KeyValuePair id = createId(order);
 
 		DataObject dataObject = DataObject.create();
 		dataObject.setType(Orders_.CDS_NAME);
@@ -412,9 +410,7 @@ class AdminServiceHandler implements EventHandler {
 	}
 
 	private static DataSubject createDataSubject(Orders order) {
-		KeyValuePair id = KeyValuePair.create();
-		id.setKeyName(Orders.ID);
-		id.setValue(order.getId());
+		KeyValuePair id = createId(order);
 
 		DataSubject dataSubject = DataSubject.create();
 		dataSubject.setType(Orders_.CDS_NAME);
@@ -422,10 +418,10 @@ class AdminServiceHandler implements EventHandler {
 		return dataSubject;
 	}
 
-	private List<Attribute> createAttributes() {
+	private List<Attribute> createAttributes(String name) {
 		List<Attribute> attributes = new ArrayList<>();
 		Attribute attr = Attribute.create();
-		attr.setName(Orders.ORDER_NO);
+		attr.setName(name);
 		attributes.add(attr);
 		return attributes;
 	}
@@ -436,6 +432,13 @@ class AdminServiceHandler implements EventHandler {
 		attribute.setOldValue(oldValue);
 		attribute.setNewValue(newValue);
 		return attribute;
+	}
+
+	private static KeyValuePair createId(Orders order) {
+		KeyValuePair id = KeyValuePair.create();
+		id.setKeyName(Orders.ID);
+		id.setValue(order.getId());
+		return id;
 	}
 
 }
