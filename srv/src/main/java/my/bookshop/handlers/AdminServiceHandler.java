@@ -350,31 +350,32 @@ class AdminServiceHandler implements EventHandler {
 	/**
 	 * Writes a data access message to the audit log for the given order if the order number is read.
 	 *
-	 * @param orders the accessed order
+	 * @param order the accessed order
 	 */
-	private void auditAccess(Orders orders) {
-		if (orders.getOrderNo() != null) {
-			this.auditLog.logDataAccess(createAccess(orders));
+	private void auditAccess(Orders order) {
+		if (order.getOrderNo() != null) {
+			this.auditLog.logDataAccess(createAccess(order));
 		}
 	}
 
 	/**
 	 * Writes a data modification message to the auditlog if the order number has changed.
 	 *
-	 * @param orders the modified order
+	 * @param order the modified order
 	 */
-	private void auditChanges(Orders orders) {
-		if (orders.getCurrencyCode() != null || orders.getOrderNo() != null) {
-			Select<Orders_> select = Select.from(ORDERS).columns(Orders_::currency_code, Orders_::OrderNo)
-					.where(o -> o.ID().eq(orders.getId()).and(o.IsActiveEntity().eq(true)));
-			Optional<Orders> oldOrdersOpt = db.run(select).first(Orders.class);
+	private void auditChanges(Orders order) {
+		if (order.getOrderNo() != null) {
+			// read old order number from DB
+			Select<Orders_> select = Select.from(ORDERS).columns(Orders_::OrderNo)
+					.where(o -> o.ID().eq(order.getId()).and(o.IsActiveEntity().eq(true)));
+			Optional<Orders> oldOrdersOpt = this.db.run(select).first(Orders.class);
 
 			if (oldOrdersOpt.isPresent()) {
 				Orders oldOrders = oldOrdersOpt.get();
 
 				// check if there was a data modification
-				if (!StringUtils.equals(orders.getOrderNo(), oldOrders.getOrderNo())) {
-					DataModification dataModification = createDataModification(orders, oldOrders);
+				if (!StringUtils.equals(order.getOrderNo(), oldOrders.getOrderNo())) {
+					DataModification dataModification = createDataModification(order, oldOrders);
 					this.auditLog.logDataModification(Arrays.asList(dataModification));
 				}
 			}
