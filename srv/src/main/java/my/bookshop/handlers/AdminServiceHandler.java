@@ -364,14 +364,17 @@ class AdminServiceHandler implements EventHandler {
 	 * @param order the modified order
 	 */
 	private void auditChanges(Orders order) {
+		// check if order number is changed
 		if (order.getOrderNo() != null) {
-			// read old order number from DB
-			Select<Orders_> select = Select.from(ORDERS).columns(Orders_::OrderNo)
+			// prepare a select statement to read old order number
+			Select<Orders_> ordersSelect = Select.from(ORDERS).columns(Orders_::OrderNo)
 					.where(o -> o.ID().eq(order.getId()).and(o.IsActiveEntity().eq(true)));
-			Optional<Orders> oldOrdersOpt = this.db.run(select).first(Orders.class);
 
-			if (oldOrdersOpt.isPresent()) {
-				Orders oldOrders = oldOrdersOpt.get();
+			// read old order number from DB
+			Optional<Orders> oldOrderOpt = this.db.run(ordersSelect).first(Orders.class);
+
+			if (oldOrderOpt.isPresent()) {
+				Orders oldOrders = oldOrderOpt.get();
 
 				// check if there was a data modification
 				if (!StringUtils.equals(order.getOrderNo(), oldOrders.getOrderNo())) {
