@@ -36,6 +36,7 @@ import com.sap.cds.services.auditlog.AuditLogService;
 import com.sap.cds.services.auditlog.ChangedAttribute;
 import com.sap.cds.services.auditlog.DataModification;
 import com.sap.cds.services.auditlog.DataObject;
+import com.sap.cds.services.auditlog.DataSubject;
 import com.sap.cds.services.auditlog.KeyValuePair;
 import com.sap.cds.services.cds.CdsReadEventContext;
 import com.sap.cds.services.cds.CdsService;
@@ -393,6 +394,7 @@ class AdminServiceHandler implements EventHandler {
 
 		DataModification dataModification = DataModification.create();
 		dataModification.setDataObject(createDataObject(orders));
+		dataModification.setDataSubject(createDataSubject(oldOrders));
 		dataModification.setAction(Action.UPDATE);
 		dataModification.setAttributes(Arrays.asList(attribute));
 		return dataModification;
@@ -407,6 +409,17 @@ class AdminServiceHandler implements EventHandler {
 		dataObject.setType(Orders_.CDS_NAME);
 		dataObject.setId(Arrays.asList(id));
 		return dataObject;
+	}
+
+	private static DataSubject createDataSubject(Orders order) {
+		KeyValuePair id = KeyValuePair.create();
+		id.setKeyName(Orders.ID);
+		id.setValue(order.getId());
+
+		DataSubject dataSubject = DataSubject.create();
+		dataSubject.setType(Orders_.CDS_NAME);
+		dataSubject.setId(Arrays.asList(id));
+		return dataSubject;
 	}
 
 	private List<Attribute> createAttributes() {
