@@ -2,6 +2,9 @@ const app = require('express')();
 const cds = require('@sap/cds');
 
 const main = async () => {
+
+	app.use(defaults.correlate)
+
 	await cds.connect.to('db');
 	const PORT = process.env.PORT || 4004;
 	await cds.mtx.in(app);
@@ -18,8 +21,6 @@ const main = async () => {
 		}
 	});
 
-	app.use(defaults.correlate)
-			
 	app.listen(PORT);
 }
 
