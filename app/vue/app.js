@@ -29,7 +29,7 @@ const bookshop = new Vue({
     reviews: [],
     book: undefined,
     review: undefined,
-    order: { amount: 1, succeeded: "", failed: "" },
+    order: { quantity: 1, succeeded: "", failed: "" },
     message: {},
     Ratings: Object.entries({
       5: "★★★★★",
@@ -66,23 +66,23 @@ const bookshop = new Vue({
         `/Books(ID=${book.ID})?$expand=reviews&$select=descr,stock`
       );
       Object.assign(book, res.data);
-      bookshop.order = { amount: 1 };
+      bookshop.order = { quantity: 1 };
       bookshop.reviews = book.reviews;
       setTimeout(() => $("form > input").focus(), 111);
     },
 
     async submitOrder() {
       const { book, order } = bookshop,
-        amount = parseInt(bookshop.order.amount) || 1; // REVISIT: Okra should be less strict
+        quantity = parseInt(bookshop.order.quantity) || 1; // REVISIT: Okra should be less strict
       try {
-        const res = await POST(`/submitOrder`, { amount, book: book.ID });
+        const res = await POST(`/submitOrder`, { quantity, book: book.ID });
         book.stock = res.data.stock;
         bookshop.order = {
-          amount,
-          succeeded: `Successfully orderd ${amount} item(s).`,
+          quantity,
+          succeeded: `Successfully orderd ${quantity} item(s).`,
         };
       } catch (e) {
-        bookshop.order = { amount, failed: e.response.data.error.message };
+        bookshop.order = { quantity, failed: e.response.data.error.message };
       }
     },
 

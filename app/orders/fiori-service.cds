@@ -17,7 +17,7 @@ annotate AdminService.OrderItems with {
         },
         ValueList.entity : 'Books',
     );
-    amount @(Common.FieldControl : #Mandatory);
+    quantity @(Common.FieldControl : #Mandatory);
 }
 
 annotate AdminService.Orders with {
@@ -208,7 +208,7 @@ annotate AdminService.Orders with @(
     createdBy @UI.HiddenFilter      : false;
     total
               @Common.FieldControl  : #ReadOnly
-              @Measures.ISOCurrency : currency.code; //Bind the currency field to the amount field
+              @Measures.ISOCurrency : currency.code; //Bind the currency field to the quantity field
 //In all services we always find currency as the code and not as an object that contains a property code
 //it seems to work but at least to me this is unconventional modeling.
 };
@@ -240,12 +240,12 @@ annotate AdminService.OrderItems with @(
                 Label : '{i18n>BookPrice}'
             },
             {
-                Value : amount,
-                Label : '{i18n>Amount}'
+                Value : quantity,
+                Label : '{i18n>Quantity}'
             },
             {
-                Value : netAmount,
-                Label : '{i18n>NetAmount}'
+                Value : Amount,
+                Label : '{i18n>Amount}'
             }
         ],
         Identification  : [ //Is the main field group
@@ -255,12 +255,12 @@ annotate AdminService.OrderItems with @(
                 Label : '{i18n>Book}'
             },
             {
-                Value : amount,
-                Label : '{i18n>Amount}'
+                Value : quantity,
+                Label : '{i18n>Quantity}'
             },
             {
-                Value : netAmount,
-                Label : '{i18n>NetAmount}'
+                Value : Amount,
+                Label : '{i18n>Amount}'
             }
         ],
         Facets          : [{
@@ -271,18 +271,18 @@ annotate AdminService.OrderItems with @(
     },
     Common : {
         SideEffects #AmountChanges : {
-            SourceProperties : [amount],
-            TargetProperties : ['netAmount']
+            SourceProperties : [quantity],
+            TargetProperties : ['Amount']
         },
         SideEffects #BookChanges   : {
             SourceProperties : [book_ID],
             TargetEntities   : [book],
-            TargetProperties : ['netAmount']
+            TargetProperties : ['Amount']
         }
     }
 ) {
-    netAmount
+    Amount
     @Common.FieldControl : #ReadOnly;
 //ERROR ALERT: The following line refering to the parents currency code will lead to a server error
-//@Measures.ISOCurrency:parent.currency.code; //Bind the currency field to the amount field of the parent
+//@Measures.ISOCurrency:parent.currency.code; //Bind the currency field to the quantity field of the parent
 };

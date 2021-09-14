@@ -4,7 +4,7 @@ using {my.bookshop as my} from '../db/index';
 @path : 'admin'
 service AdminService @(requires : 'admin') {
   entity Books   as projection on my.Books actions {
-    action addToOrder(order_ID : UUID, amount : Integer) returns Orders;
+    action addToOrder(order_ID : UUID, quantity : Integer) returns Orders;
   }
 
   entity Authors as projection on my.Authors;

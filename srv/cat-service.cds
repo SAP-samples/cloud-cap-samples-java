@@ -16,7 +16,7 @@ service CatalogService {
     @readonly
     entity Reviews     as projection on my.Reviews;
 
-    action submitOrder(book : Books : ID, amount : Integer) returns {
+    action submitOrder(book : Books : ID, quantity : Integer) returns {
         stock : Integer
     };
 

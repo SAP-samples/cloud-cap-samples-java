@@ -20,6 +20,6 @@ entity Orders : cuid, managed {
 entity OrderItems : cuid {
     parent    : Association to Orders;
     book      : Association to Books;
-    amount    : Integer;
-    netAmount : Decimal(9, 2);
+    quantity    : Integer;
+    Amount : Decimal(9, 2);
 }
