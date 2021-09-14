@@ -1,12 +1,12 @@
 namespace my.bookshop;
 
 using {
-    my.bookshop as my,
     Currency,
     User,
     managed,
     cuid
 } from '@sap/cds/common';
+using my.bookshop.Books from './books';
 
 entity Orders : cuid, managed {
     OrderNo  : String @title : '{i18n>OrderNumber}'  @mandatory; //> readable key
@@ -19,7 +19,7 @@ entity Orders : cuid, managed {
 
 entity OrderItems : cuid {
     parent    : Association to Orders;
-    book      : Association to my.Books;
+    book      : Association to Books;
     amount    : Integer;
     netAmount : Decimal(9, 2);
 }
