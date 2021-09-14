@@ -21,5 +21,5 @@ entity OrderItems : cuid {
     parent    : Association to Orders;
     book      : Association to Books;
     quantity    : Integer;
-    Amount : Decimal(9, 2);
+    amount : Decimal(9, 2);
 }

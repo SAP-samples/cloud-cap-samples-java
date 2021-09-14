@@ -2,7 +2,7 @@ package my.bookshop;
 
 public class MessageKeys {
 
-	public static final String AMOUNT_REQUIRE_MINIMUM = "quantity.require.minimum";
+	public static final String QUANTITY_REQUIRE_MINIMUM = "quantity.require.minimum";
 	public static final String BOOK_REQUIRE_STOCK = "book.require.stock";
 	public static final String BOOK_ADDED_ORDER = "book.added.order";
 	public static final String BOOK_MISSING = "book.missing";

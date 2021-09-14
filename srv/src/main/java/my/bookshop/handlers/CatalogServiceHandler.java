@@ -164,7 +164,7 @@ class CatalogServiceHandler implements EventHandler {
 
 	@On
 	public void onSubmitOrder(SubmitOrderContext context) {
-		Integer quantity = context.getAmount();
+		Integer quantity = context.getQuantity();
 		String bookId = context.getBook();
 
 		Optional<Books> book = db.run(Select.from(BOOKS).columns(Books_::stock).byId(bookId)).first(Books.class);

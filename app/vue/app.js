@@ -79,7 +79,7 @@ const bookshop = new Vue({
         book.stock = res.data.stock;
         bookshop.order = {
           quantity,
-          succeeded: `Successfully orderd ${quantity} item(s).`,
+          succeeded: `Successfully ordered ${quantity} item(s).`,
         };
       } catch (e) {
         bookshop.order = { quantity, failed: e.response.data.error.message };

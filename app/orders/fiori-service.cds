@@ -208,7 +208,7 @@ annotate AdminService.Orders with @(
     createdBy @UI.HiddenFilter      : false;
     total
               @Common.FieldControl  : #ReadOnly
-              @Measures.ISOCurrency : currency.code; //Bind the currency field to the quantity field
+              @Measures.ISOCurrency : currency.code; //Bind the currency field to the amount field
 //In all services we always find currency as the code and not as an object that contains a property code
 //it seems to work but at least to me this is unconventional modeling.
 };
@@ -244,7 +244,7 @@ annotate AdminService.OrderItems with @(
                 Label : '{i18n>Quantity}'
             },
             {
-                Value : Amount,
+                Value : amount,
                 Label : '{i18n>Amount}'
             }
         ],
@@ -259,7 +259,7 @@ annotate AdminService.OrderItems with @(
                 Label : '{i18n>Quantity}'
             },
             {
-                Value : Amount,
+                Value : amount,
                 Label : '{i18n>Amount}'
             }
         ],
