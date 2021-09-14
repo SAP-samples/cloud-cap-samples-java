@@ -3,12 +3,11 @@ const cds = require('@sap/cds');
 
 const main = async () => {
 
-	app.use(defaults.correlate)
+	app.use(defaults.correlate);
 
 	await cds.connect.to('db');
 	const PORT = process.env.PORT || 4004;
 	await cds.mtx.in(app);
-
 	
 	const provisioning = await cds.connect.to('ProvisioningService');
 	provisioning.before(['UPDATE', 'DELETE', 'READ'], 'tenant', async (req) => {
@@ -37,7 +36,7 @@ const defaults = {
 			cds.context.id = req.headers['x-correlation-id'] = id
 			if (!cds.context._) cds.context._ = {}
 			if (!cds.context._.req) cds.context._.req = req
-			next()
+			next();
 		}
 	}
 }

@@ -30,6 +30,7 @@ modules:
     requires:
       - name: bookshop-hdi-container
       - name: bookshop-uaa
+      - name: cf-logging
     provides:
       - name: srv
         properties:
@@ -87,3 +88,8 @@ resources:
     parameters:
       service: hanatrial
       service-plan: hdi-shared
+  - name: cf-logging
+    type: org.cloudfoundry.managed-service
+    parameters:
+      service: application-logs
+      service-plan: lite
