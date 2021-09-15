@@ -38,9 +38,6 @@ cds:
 api-hub:
   api-key: "" # Place API Key from SAP API Business Hub here or use environment variable API_HUB_API_KEY
 
-logging.group.bookshop: my.bookshop.handlers.CatalogServiceHandler
-logging.level.bookshop: DEBUG
-
 ---
 spring:
   config.activate.on-profile: mocked
