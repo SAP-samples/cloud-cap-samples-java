@@ -55,6 +55,13 @@ cds:
 ---
 spring:
   config.activate.on-profile: default
+  jmx:
+    enabled: true
 cds:
   datasource:
     auto-config.enabled: false
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "env,loggers,beans"
