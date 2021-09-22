@@ -1,8 +1,8 @@
 /* global Vue axios */ //> from vue.html
 const $ = (sel) => document.querySelector(sel);
-const GET = (url) => axios.get("/api/ReviewService" + url);
-const PUT = (cmd, data) => axios.patch("/api/ReviewService" + cmd, data);
-const POST = (cmd, data) => axios.post("/api/ReviewService" + cmd, data);
+const GET = (url) => axios.get("/api/ReviewsService" + url);
+const PUT = (cmd, data) => axios.patch("/api/ReviewsService" + cmd, data);
+const POST = (cmd, data) => axios.post("/api/ReviewSservice" + cmd, data);
 
 const reviews = new Vue({
   el: "#app",

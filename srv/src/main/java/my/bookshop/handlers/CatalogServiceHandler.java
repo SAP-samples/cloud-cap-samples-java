@@ -29,9 +29,9 @@ import cds.gen.catalogservice.Books;
 import cds.gen.catalogservice.Books_;
 import cds.gen.catalogservice.CatalogService_;
 import cds.gen.catalogservice.SubmitOrderContext;
-import cds.gen.reviewservice.ReviewService_;
-import cds.gen.reviewservice.Reviewed;
-import cds.gen.reviewservice.ReviewedContext;
+import cds.gen.reviewsservice.Reviewed;
+import cds.gen.reviewsservice.ReviewedContext;
+import cds.gen.reviewsservice.ReviewsService_;
 import my.bookshop.MessageKeys;
 
 /**
@@ -58,7 +58,7 @@ class CatalogServiceHandler implements EventHandler {
 		this.db = db;
 	}
 
-	@On(service = ReviewService_.CDS_NAME)
+	@On(service = ReviewsService_.CDS_NAME)
 	private void reviewAdded(ReviewedContext context) {
 		Reviewed event = context.getData();
 		Row row = catalogService.run(Select.from(CatalogService_.BOOKS).byId(event.getSubject())).first().orElse(null);

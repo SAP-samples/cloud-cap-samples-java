@@ -1,6 +1,6 @@
 using {my.reviews } from '../db/reviews';
 
-service ReviewService {
+service ReviewsService {
     
     // Sync API
     entity Reviews as projection on reviews.Reviews;
@@ -10,6 +10,8 @@ service ReviewService {
      subject: type of Reviews:subject;
      rating: Decimal(2,1)
     }
+
+	action someTests ( message: String );
 
     // access control restrictions
     annotate Reviews with @restrict : [

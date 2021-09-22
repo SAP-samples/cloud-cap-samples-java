@@ -9,7 +9,7 @@ server.servlet.encoding:
 cds:
   odata-v4.endpoint.path: "/api"
   messaging.services:
-    messaging-em:
+    messaging:
       kind: enterprise-messaging
       enabled: false
   security.mock.users:
@@ -33,7 +33,7 @@ cds:
       kind: file-based-messaging
       binding: '/Users/d040506/git/cap/samples/messaging.txt'
   remote.services:
-    - name: ReviewService
+    - name: ReviewsService
 
 ---
 spring:
@@ -45,7 +45,7 @@ cds:
       subscribePrefix: $namespace/
       enabled: true
   remote.services:
-  - name: ReviewService
+  - name: ReviewsService
 
 ---
 spring:

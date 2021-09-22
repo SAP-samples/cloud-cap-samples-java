@@ -17,22 +17,32 @@ import com.sap.cds.services.cds.CqnService;
 import com.sap.cds.services.handler.EventHandler;
 import com.sap.cds.services.handler.annotations.After;
 import com.sap.cds.services.handler.annotations.ServiceName;
+import com.sap.cds.services.persistence.PersistenceService;
 
-import cds.gen.reviewservice.ReviewService_;
-import cds.gen.reviewservice.Reviewed;
-import cds.gen.reviewservice.ReviewedContext;
-import cds.gen.reviewservice.Reviews;
-import cds.gen.reviewservice.Reviews_;
+import cds.gen.adminservice.AdminService_;
+import cds.gen.my.reviews.Reviews;
+import cds.gen.my.reviews.Reviews_;
+import cds.gen.reviewsservice.Reviewed;
+import cds.gen.reviewsservice.ReviewedContext;
+import cds.gen.reviewsservice.ReviewsService_;
+
 
 @Component
-@ServiceName(ReviewService_.CDS_NAME)
-public class ReviewServiceHandler implements EventHandler {
+@ServiceName(ReviewsService_.CDS_NAME)
+public class ReviewsServiceHandler implements EventHandler {
 
-	private static final Logger logger = LoggerFactory.getLogger(ReviewServiceHandler.class);
+	private static final Logger logger = LoggerFactory.getLogger(ReviewsServiceHandler.class);
 
 	@Autowired
-	@Qualifier(ReviewService_.CDS_NAME)
+	@Qualifier(ReviewsService_.CDS_NAME)
 	CqnService reviewService;
+
+	@Autowired
+	PersistenceService db;
+
+	@Autowired
+	@Qualifier(AdminService_.CDS_NAME)
+	CqnService adminService;
 
 	@After(event = { CqnService.EVENT_CREATE, CqnService.EVENT_UPSERT, CqnService.EVENT_UPDATE })
 	public void afterAddReview(Stream<Reviews> reviews) {
