@@ -29,7 +29,7 @@ spring:
 
 cds:
   messaging.services:
-    messaging-file:
+    messaging:
       kind: file-based-messaging
       binding: '/Users/d040506/git/cap/samples/messaging.txt'
   remote.services:
@@ -40,7 +40,7 @@ spring:
   config.activate.on-profile: cloud
 cds:
   messaging.services:
-    messaging-em:
+    messaging:
       kind: enterprise-messaging
       subscribePrefix: $namespace/
       enabled: true
