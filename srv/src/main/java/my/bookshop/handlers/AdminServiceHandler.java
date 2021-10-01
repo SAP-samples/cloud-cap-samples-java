@@ -12,7 +12,6 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 import java.util.function.Supplier;
 import java.util.stream.Stream;
@@ -38,7 +37,6 @@ import com.sap.cds.services.auditlog.DataModification;
 import com.sap.cds.services.auditlog.DataObject;
 import com.sap.cds.services.auditlog.DataSubject;
 import com.sap.cds.services.auditlog.KeyValuePair;
-import com.sap.cds.services.cds.CdsReadEventContext;
 import com.sap.cds.services.cds.CdsService;
 import com.sap.cds.services.cds.CdsUpdateEventContext;
 import com.sap.cds.services.cds.CqnService;
@@ -365,23 +363,19 @@ class AdminServiceHandler implements EventHandler {
 	 */
 	private void auditChanges(Orders order) {
 		// check if order number is changed
-		if (order.getOrderNo() != null) {
+		if (order.getId() != null && order.getOrderNo() != null) {
 			// prepare a select statement to read old order number
 			Select<Orders_> ordersSelect = Select.from(ORDERS).columns(Orders_::OrderNo)
 					.where(o -> o.ID().eq(order.getId()).and(o.IsActiveEntity().eq(true)));
 
 			// read old order number from DB
-			Optional<Orders> oldOrderOpt = this.db.run(ordersSelect).first(Orders.class);
-
-			if (oldOrderOpt.isPresent()) {
-				Orders oldOrders = oldOrderOpt.get();
-
+			this.db.run(ordersSelect).first(Orders.class).ifPresent(oldOrders -> {
 				// check if there was a data modification
 				if (!StringUtils.equals(order.getOrderNo(), oldOrders.getOrderNo())) {
 					DataModification dataModification = createDataModification(order, oldOrders);
 					this.auditLog.logDataModification(Arrays.asList(dataModification));
 				}
-			}
+			});
 		}
 	}
 
