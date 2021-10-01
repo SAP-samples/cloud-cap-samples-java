@@ -97,7 +97,7 @@ class AdminServiceHandler implements EventHandler {
 	}
 
 	@After(event = { CqnService.EVENT_READ })
-	public void afterReadOrder(Stream<Orders> orders, CdsReadEventContext ctx) {
+	public void afterReadOrder(Stream<Orders> orders) {
 		orders.forEach(this::auditAccess);
 	}
 
@@ -388,6 +388,7 @@ class AdminServiceHandler implements EventHandler {
 	private Access createAccess(Orders orders) {
 		Access access = Access.create();
 		access.setDataObject(createDataObject(orders));
+		access.setDataSubject(createDataSubject(orders));
 		access.setAttributes(createAttributes(Orders.ORDER_NO));
 		return access;
 	}
@@ -398,7 +399,7 @@ class AdminServiceHandler implements EventHandler {
 
 		DataModification dataModification = DataModification.create();
 		dataModification.setDataObject(createDataObject(orders));
-		dataModification.setDataSubject(createDataSubject(oldOrders));
+		dataModification.setDataSubject(createDataSubject(orders));
 		dataModification.setAction(Action.UPDATE);
 		dataModification.setAttributes(Arrays.asList(attribute));
 		return dataModification;
