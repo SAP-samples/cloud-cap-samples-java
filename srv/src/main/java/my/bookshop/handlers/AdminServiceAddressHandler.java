@@ -3,8 +3,6 @@ package my.bookshop.handlers;
 import static cds.gen.adminservice.AdminService_.ADDRESSES;
 
 import java.time.Duration;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Stream;
 
@@ -13,11 +11,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sap.cds.Result;
-import com.sap.cds.Struct;
 import com.sap.cds.ql.CQL;
 import com.sap.cds.ql.Insert;
 import com.sap.cds.ql.Predicate;
@@ -35,7 +29,6 @@ import com.sap.cds.services.handler.EventHandler;
 import com.sap.cds.services.handler.annotations.Before;
 import com.sap.cds.services.handler.annotations.On;
 import com.sap.cds.services.handler.annotations.ServiceName;
-import com.sap.cds.services.messaging.TopicMessageEventContext;
 import com.sap.cds.services.persistence.PersistenceService;
 import com.sap.cloud.sdk.cloudplatform.resilience.ResilienceConfiguration;
 import com.sap.cloud.sdk.cloudplatform.resilience.ResilienceConfiguration.TimeLimiterConfiguration;
@@ -46,7 +39,7 @@ import cds.gen.adminservice.Addresses_;
 import cds.gen.adminservice.AdminService_;
 import cds.gen.adminservice.Orders;
 import cds.gen.api_business_partner.ApiBusinessPartner_;
-import cds.gen.api_business_partner.BOBusinessPartnerChanged;
+import cds.gen.api_business_partner.BusinessPartnerChangedContext;
 import my.bookshop.MessageKeys;
 
 /**
@@ -128,49 +121,32 @@ public class AdminServiceAddressHandler implements EventHandler {
 		});
 	}
 
-	@On(service = "bupa-messaging", event = "BO/BusinessPartner/Changed")
-	public void updateBusinessPartnerAddresses(TopicMessageEventContext context) {
+	@On(service = ApiBusinessPartner_.CDS_NAME)
+	public void updateBusinessPartnerAddresses(BusinessPartnerChangedContext context) {
 		logger.info(">> received: " + context.getData());
-		BOBusinessPartnerChanged payload = Struct.access(payloadMap(context.getData())).as(BOBusinessPartnerChanged.class);
-		for(BOBusinessPartnerChanged.Key key : payload.getKey()) {
-			String businessPartner = key.getBusinesspartner(); // S/4 HANA's payload format
-			if(businessPartner != null) {
-				// fetch affected entries from local replicas
-				Result replicas = db.run(Select.from(ADDRESSES).where(a -> a.businessPartner().eq(businessPartner)));
-				if(replicas.rowCount() > 0) {
-					logger.info("Updating Addresses for BusinessPartner '{}'", businessPartner);
-					// fetch changed data from S/4 -> might be less than local due to deletes
-					Result remoteAddresses = bupa.run(Select.from(ADDRESSES).where(a -> a.businessPartner().eq(businessPartner)));
-					// update replicas or add tombstone if external address was deleted
-					replicas.streamOf(Addresses.class).forEach(rep -> {
-						Optional<Addresses> matching = remoteAddresses
-							.streamOf(Addresses.class)
-							.filter(ext -> ext.getId().equals(rep.getId()))
-							.findFirst();
+		String businessPartner = context.getData().getBusinessPartner();
 
-						if(!matching.isPresent()) {
-							rep.setTombstone(true);
-						} else {
-							matching.get().forEach(rep::put);
-						}
-					});
-					// update local replicas with changes from S/4
-					db.run(Upsert.into(ADDRESSES).entries(replicas));
+		// fetch affected entries from local replicas
+		Result replicas = db.run(Select.from(ADDRESSES).where(a -> a.businessPartner().eq(businessPartner)));
+		if(replicas.rowCount() > 0) {
+			logger.info("Updating Addresses for BusinessPartner '{}'", businessPartner);
+			// fetch changed data from S/4 -> might be less than local due to deletes
+			Result remoteAddresses = bupa.run(Select.from(ADDRESSES).where(a -> a.businessPartner().eq(businessPartner)));
+			// update replicas or add tombstone if external address was deleted
+			replicas.streamOf(Addresses.class).forEach(rep -> {
+				Optional<Addresses> matching = remoteAddresses
+					.streamOf(Addresses.class)
+					.filter(ext -> ext.getId().equals(rep.getId()))
+					.findFirst();
+
+				if(!matching.isPresent()) {
+					rep.setTombstone(true);
+				} else {
+					matching.get().forEach(rep::put);
 				}
-			}
-		}
-	}
-
-	@SuppressWarnings("unchecked")
-	private Map<String, Object> payloadMap(String json) {
-		try {
-			Map<String, Object> event = new ObjectMapper().readValue(json, new TypeReference<Map<String, Object>>() {});
-			if(event.get("data") instanceof Map) {
-				return (Map<String, Object>) event.get("data");
-			}
-			return new HashMap<>();
-		} catch (JsonProcessingException e) {
-			return new HashMap<>();
+			});
+			// update local replicas with changes from S/4
+			db.run(Upsert.into(ADDRESSES).entries(replicas));
 		}
 	}
 
