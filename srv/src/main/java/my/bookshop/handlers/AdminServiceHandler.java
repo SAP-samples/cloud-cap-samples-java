@@ -12,6 +12,7 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.function.Supplier;
 import java.util.stream.Stream;
@@ -24,9 +25,11 @@ import com.sap.cds.Result;
 import com.sap.cds.ql.Select;
 import com.sap.cds.ql.Update;
 import com.sap.cds.ql.Upsert;
+import com.sap.cds.ql.cqn.AnalysisResult;
 import com.sap.cds.ql.cqn.CqnAnalyzer;
 import com.sap.cds.reflect.CdsModel;
 import com.sap.cds.services.ErrorStatuses;
+import com.sap.cds.services.EventContext;
 import com.sap.cds.services.ServiceException;
 import com.sap.cds.services.auditlog.Access;
 import com.sap.cds.services.auditlog.Action;
@@ -37,6 +40,7 @@ import com.sap.cds.services.auditlog.DataModification;
 import com.sap.cds.services.auditlog.DataObject;
 import com.sap.cds.services.auditlog.DataSubject;
 import com.sap.cds.services.auditlog.KeyValuePair;
+import com.sap.cds.services.cds.CdsDeleteEventContext;
 import com.sap.cds.services.cds.CdsService;
 import com.sap.cds.services.cds.CdsUpdateEventContext;
 import com.sap.cds.services.cds.CqnService;
@@ -107,7 +111,7 @@ class AdminServiceHandler implements EventHandler {
 	 * @param orders
 	 */
 	@Before(event = { CqnService.EVENT_CREATE, CqnService.EVENT_UPSERT, CqnService.EVENT_UPDATE })
-	public void beforeCreateOrder(Stream<Orders> orders) {
+	public void beforeCreateOrder(Stream<Orders> orders, EventContext context) {
 		orders.forEach(order -> {
 			// reset total
 			order.setTotal(BigDecimal.valueOf(0));
@@ -162,8 +166,13 @@ class AdminServiceHandler implements EventHandler {
 				});
 			}
 
-			auditChanges(order);
+			auditChanges(order, context);
 		});
+	}
+
+	@Before(event = { CqnService.EVENT_DELETE })
+	public void beforeDelete(CdsDeleteEventContext context) {
+		auditDelete(context);
 	}
 
 	/**
@@ -361,22 +370,56 @@ class AdminServiceHandler implements EventHandler {
 	 *
 	 * @param order the modified order
 	 */
-	private void auditChanges(Orders order) {
-		// check if order number is changed
-		if (order.getId() != null && order.getOrderNo() != null) {
-			// prepare a select statement to read old order number
-			Select<Orders_> ordersSelect = Select.from(ORDERS).columns(Orders_::OrderNo)
-					.where(o -> o.ID().eq(order.getId()).and(o.IsActiveEntity().eq(true)));
-
-			// read old order number from DB
-			this.db.run(ordersSelect).first(Orders.class).ifPresent(oldOrders -> {
-				// check if there was a data modification
-				if (!StringUtils.equals(order.getOrderNo(), oldOrders.getOrderNo())) {
-					DataModification dataModification = createDataModification(order, oldOrders);
-					this.auditLog.logDataModification(Arrays.asList(dataModification));
-				}
-			});
+	private void auditChanges(Orders orders, EventContext context) {
+		if (orders.getId() != null) {
+			switch (context.getEvent()) {
+			case CqnService.EVENT_CREATE:
+				DataModification dataModCreate = createDataModification(orders, null, Action.CREATE);
+				this.auditLog.logDataModification(Arrays.asList(dataModCreate));
+				break;
+			case CqnService.EVENT_UPDATE:
+			case CqnService.EVENT_UPSERT:
+				readOldOrders(orders.getId()).ifPresent(oldOrders -> {
+					if (!StringUtils.equals(orders.getOrderNo(), oldOrders.getOrderNo())) {
+						DataModification dataModeUpdate = createDataModification(orders, oldOrders, Action.UPDATE);
+						this.auditLog.logDataModification(Arrays.asList(dataModeUpdate));
+					}
+				});
+				break;
+			default:
+				return;
+			}
 		}
+	}
+
+	private Optional<Orders> readOldOrders(String ordersId) {
+		// prepare a select statement to read old order number
+		Select<Orders_> ordersSelect = Select.from(ORDERS).columns(Orders_::OrderNo)
+				.where(o -> o.ID().eq(ordersId).and(o.IsActiveEntity().eq(true)));
+
+		// read old orders from DB
+		return this.db.run(ordersSelect).first(Orders.class);
+	}
+
+	/**
+	 * Writes a data modification message to the auditlog if the order number has changed.
+	 *
+	 * @param order the modified order
+	 */
+	private void auditDelete(CdsDeleteEventContext context) {
+		AnalysisResult result = CqnAnalyzer.create(context.getModel()).analyze(context.getCqn());
+		String idValue = (String) result.targetKeyValues().get(Orders.ID);
+
+		// prepare a select statement to read old order number
+		Select<Orders_> ordersSelect = Select.from(ORDERS).columns(Orders_::OrderNo)
+				.where(o -> o.ID().eq(idValue).and(o.IsActiveEntity().eq(true)));
+
+		// read old order number from DB
+		this.db.run(ordersSelect).first(Orders.class).ifPresent(oldOrders -> {
+			// check if there was a data modification
+			DataModification dataModification = createDataModification(null, oldOrders, Action.DELETE);
+			this.auditLog.logDataModification(Arrays.asList(dataModification));
+		});
 	}
 
 	private Access createAccess(Orders orders) {
@@ -387,14 +430,14 @@ class AdminServiceHandler implements EventHandler {
 		return access;
 	}
 
-	private static DataModification createDataModification(Orders orders, Orders oldOrders) {
-		ChangedAttribute attribute = createChangedAttribute(Orders.ORDER_NO, orders.getOrderNo(),
-				oldOrders.getOrderNo());
+	private static DataModification createDataModification(Orders orders, Orders oldOrders, Action action) {
+		ChangedAttribute attribute = createChangedAttribute(Orders.ORDER_NO,
+				orders != null ? orders.getOrderNo() : null, oldOrders != null ? oldOrders.getOrderNo() : null);
 
 		DataModification dataModification = DataModification.create();
-		dataModification.setDataObject(createDataObject(orders));
-		dataModification.setDataSubject(createDataSubject(orders));
-		dataModification.setAction(Action.UPDATE);
+		dataModification.setDataObject(createDataObject(orders != null ? orders : oldOrders));
+		dataModification.setDataSubject(createDataSubject(orders != null ? orders : oldOrders));
+		dataModification.setAction(action);
 		dataModification.setAttributes(Arrays.asList(attribute));
 		return dataModification;
 	}
