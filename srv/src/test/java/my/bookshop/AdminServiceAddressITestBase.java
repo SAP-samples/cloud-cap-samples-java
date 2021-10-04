@@ -5,14 +5,17 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpHeaders;
 import org.springframework.test.web.reactive.server.WebTestClient;
 
+import com.sap.cds.services.cds.CqnService;
 import com.sap.cds.services.changeset.ChangeSetListener;
-import com.sap.cds.services.messaging.MessagingService;
 
 import cds.gen.adminservice.Orders;
 import cds.gen.api_business_partner.ABusinessPartnerAddress;
+import cds.gen.api_business_partner.ApiBusinessPartner_;
+import cds.gen.api_business_partner.BusinessPartnerChangedContext;
 
 public class AdminServiceAddressITestBase {
 
@@ -25,7 +28,8 @@ public class AdminServiceAddressITestBase {
 	private WebTestClient client;
 
 	@Autowired
-	private MessagingService messaging;
+	@Qualifier(ApiBusinessPartner_.CDS_NAME)
+	private CqnService bupa;
 
 	public void testAddressesValueHelp() {
 		client.get().uri(addressesURI).headers(this::adminCredentials).exchange()
@@ -71,7 +75,7 @@ public class AdminServiceAddressITestBase {
 
 		// react on remote address update
 		CountDownLatch latch = new CountDownLatch(1);
-		messaging.on("BO/BusinessPartner/Changed", null, (context) -> context.getChangeSetContext().register(new ChangeSetListener(){
+		bupa.on(BusinessPartnerChangedContext.CDS_NAME, null, (context) -> context.getChangeSetContext().register(new ChangeSetListener(){
 
 			@Override
 			public void afterClose(boolean completed) {
