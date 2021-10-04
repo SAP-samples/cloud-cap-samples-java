@@ -8,10 +8,9 @@ extend service external with {
   /**
    * Add asynchronous eventing API
    */
-  event BO_BusinessPartner_Changed {
-    ![KEY]: Array of {
-      BUSINESSPARTNER: String;
-    };
+  @topic: 'sap.s4.beh.businesspartner.v1.BusinessPartner.Changed.v1'
+  event BusinessPartner.Changed {
+    BusinessPartner: String;
   }
 
 }
