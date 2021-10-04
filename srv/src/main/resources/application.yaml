@@ -58,10 +58,19 @@ spring:
   jmx:
     enabled: true
 cds:
-  datasource:
+  dataSource:
     auto-config.enabled: false
 management:
+  endpoint:
+    health:
+      show-components: always
+      show-details: always
   endpoints:
     web:
       exposure:
-        include: "env,loggers,beans"
+        include: "env,loggers,beans,health,metrics"
+  health:
+    defaults.enabled: false
+    ping.enabled: true
+    db.enabled: true
+    myhealth.enabled: true
