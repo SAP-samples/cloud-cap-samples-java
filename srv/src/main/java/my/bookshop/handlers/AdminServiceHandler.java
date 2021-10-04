@@ -402,9 +402,9 @@ class AdminServiceHandler implements EventHandler {
 	}
 
 	/**
-	 * Writes a data modification message to the auditlog if the order number has changed.
+	 * Writes a data modification message to the auditlog if the order number was deleted.
 	 *
-	 * @param order the modified order
+	 * @param context the {@link CdsDeleteEventContext delete event context}
 	 */
 	private void auditDelete(CdsDeleteEventContext context) {
 		AnalysisResult result = CqnAnalyzer.create(context.getModel()).analyze(context.getCqn());
