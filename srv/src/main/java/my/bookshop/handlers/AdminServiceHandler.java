@@ -408,15 +408,14 @@ class AdminServiceHandler implements EventHandler {
 	 */
 	private void auditDelete(CdsDeleteEventContext context) {
 		AnalysisResult result = CqnAnalyzer.create(context.getModel()).analyze(context.getCqn());
-		String idValue = (String) result.targetKeyValues().get(Orders.ID);
+		String ordersId = (String) result.targetKeyValues().get(Orders.ID);
 
 		// prepare a select statement to read old order number
 		Select<Orders_> ordersSelect = Select.from(ORDERS).columns(Orders_::OrderNo)
-				.where(o -> o.ID().eq(idValue).and(o.IsActiveEntity().eq(true)));
+				.where(o -> o.ID().eq(ordersId).and(o.IsActiveEntity().eq(true)));
 
 		// read old order number from DB
 		this.db.run(ordersSelect).first(Orders.class).ifPresent(oldOrders -> {
-			// check if there was a data modification
 			DataModification dataModification = createDataModification(null, oldOrders, Action.DELETE);
 			this.auditLog.logDataModification(Arrays.asList(dataModification));
 		});
