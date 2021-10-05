@@ -1,8 +1,8 @@
 package my.bookshop.handlers;
 
+import static cds.gen.adminservice.AdminService_.ADDRESSES;
+
 import java.time.Duration;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Stream;
 
@@ -11,25 +11,24 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sap.cds.Result;
-import com.sap.cds.Struct;
 import com.sap.cds.ql.CQL;
+import com.sap.cds.ql.Insert;
+import com.sap.cds.ql.Predicate;
 import com.sap.cds.ql.Select;
 import com.sap.cds.ql.Upsert;
-import com.sap.cds.ql.cqn.CqnPredicate;
+import com.sap.cds.ql.cqn.CqnModifier;
+import com.sap.cds.ql.cqn.CqnSelect;
 import com.sap.cds.services.ErrorStatuses;
+import com.sap.cds.services.EventContext;
 import com.sap.cds.services.ServiceException;
 import com.sap.cds.services.cds.CdsReadEventContext;
 import com.sap.cds.services.cds.CqnService;
-import com.sap.cds.services.draft.DraftPatchEventContext;
+import com.sap.cds.services.draft.DraftService;
 import com.sap.cds.services.handler.EventHandler;
 import com.sap.cds.services.handler.annotations.Before;
 import com.sap.cds.services.handler.annotations.On;
 import com.sap.cds.services.handler.annotations.ServiceName;
-import com.sap.cds.services.messaging.TopicMessageEventContext;
 import com.sap.cds.services.persistence.PersistenceService;
 import com.sap.cloud.sdk.cloudplatform.resilience.ResilienceConfiguration;
 import com.sap.cloud.sdk.cloudplatform.resilience.ResilienceConfiguration.TimeLimiterConfiguration;
@@ -40,7 +39,7 @@ import cds.gen.adminservice.Addresses_;
 import cds.gen.adminservice.AdminService_;
 import cds.gen.adminservice.Orders;
 import cds.gen.api_business_partner.ApiBusinessPartner_;
-import cds.gen.api_business_partner.BOBusinessPartnerChanged;
+import cds.gen.api_business_partner.BusinessPartnerChangedContext;
 import my.bookshop.MessageKeys;
 
 /**
@@ -63,105 +62,91 @@ public class AdminServiceAddressHandler implements EventHandler {
 
 	// Delegate ValueHelp requests to S/4 backend, fetching current user's addresses from there
 	@On(entity = Addresses_.CDS_NAME)
-	public Result readAddresses(CdsReadEventContext context) {
+	public void readAddresses(CdsReadEventContext context) {
+		if(context.getCqn().ref().segments().size() != 1) {
+			return; // no value help request
+		}
+
+		// add BusinessPartner where condition
 		String businessPartner = context.getUserInfo().getAttributeValues("businessPartner").stream().findFirst()
 			.orElseThrow(() -> new ServiceException(ErrorStatuses.FORBIDDEN, MessageKeys.BUPA_MISSING));
 
-		// forward the existing selected columns + where condition
-		Select<?> select = Select.from(ApiBusinessPartner_.ADDRESSES)
-			.columns(context.getCqn().items())
-			.where(a -> a.businessPartner().eq(businessPartner));
+		CqnSelect select = CQL.copy(context.getCqn(), new CqnModifier() {
 
-		Optional<CqnPredicate> where = context.getCqn().where();
-		if(where.isPresent()) {
-			select.where(CQL.and(select.where().get(), where.get()));
-		}
+			public Predicate where(Predicate original) {
+				Predicate where = CQL.get(Addresses.BUSINESS_PARTNER).eq(businessPartner);
+				if(original != null) {
+					where = original.and(where);
+				}
+				return where;
+			}
 
-		// use Cloud SDK resilience capabilities..
+		});
+
+		// using Cloud SDK resilience capabilities..
 		ResilienceConfiguration config = ResilienceConfiguration.of(AdminServiceAddressHandler.class)
 			.timeLimiterConfiguration(TimeLimiterConfiguration.of(Duration.ofSeconds(10)));
 
-		return ResilienceDecorator.executeSupplier(() ->  {
+		context.setResult(ResilienceDecorator.executeSupplier(() ->  {
 			// ..to access the S/4 system in a resilient way..
+			logger.info("Delegating GET Addresses to S/4 service");
 			return bupa.run(select);
 		}, config, (t) -> {
 			// ..falling back to the already replicated addresses in our own database
-			Select<?> selectDb = Select.copy(context.getCqn()).where(select.where().get());
-			return db.run(selectDb);
-		});
+			logger.warn("Falling back to already replicated Addresses");
+			return db.run(select);
+		}));
 	}
 
-	// Replicate chosen addresses from S/4 when filling orders.
-	@Before
-	public void patchAddressId(DraftPatchEventContext context, Stream<Orders> orders) {
+	// Replicate chosen addresses from S/4 when filling orders
+	@Before(event = { CqnService.EVENT_CREATE, CqnService.EVENT_UPDATE, DraftService.EVENT_DRAFT_PATCH })
+	public void patchAddressId(EventContext context, Stream<Orders> orders) {
 		String businessPartner = context.getUserInfo().getAttributeValues("businessPartner").stream().findFirst()
 			.orElseThrow(() -> new ServiceException(ErrorStatuses.FORBIDDEN, MessageKeys.BUPA_MISSING));
 
-		orders.forEach(order -> {
-			// check if the address was updated
+		orders.filter(o -> o.getShippingAddressId() != null).forEach(order -> {
 			String addressId = order.getShippingAddressId();
-			if(addressId != null) {
-				Result replica = db.run(Select.from(AdminService_.ADDRESSES).where(a -> a.businessPartner().eq(businessPartner).and(a.ID().eq(addressId))));
-				// check if the address was not yet replicated
-				if(replica.rowCount() < 1) {
-					Result remoteAddresses = bupa.run(Select.from(ApiBusinessPartner_.ADDRESSES)
-							.where(a -> a.businessPartner().eq(businessPartner).and(a.ID().eq(addressId))));
+			Result replica = db.run(Select.from(ADDRESSES).where(a -> a.businessPartner().eq(businessPartner).and(a.ID().eq(addressId))));
+			// check if the address was not yet replicated
+			if(replica.rowCount() < 1) {
+				logger.info("Replicating Address '{}' from S/4 service", addressId);
+				Addresses remoteAddress = bupa.run(Select.from(ADDRESSES)
+						.where(a -> a.businessPartner().eq(businessPartner).and(a.ID().eq(addressId))))
+						.single(Addresses.class);
 
-					if(remoteAddresses.rowCount() == 1) {
-						// TODO in case another parallel transaction also replicates this address this might cause a conflict
-						db.run(Upsert.into(AdminService_.ADDRESSES).entries(remoteAddresses));
-					} else {
-						logger.warn("Unexpected number of shipping addresses for ID '{}': {}", addressId, remoteAddresses.rowCount());
-					}
-				}
+				remoteAddress.setTombstone(false);
+				db.run(Insert.into(ADDRESSES).entry(remoteAddress));
 			}
+			order.setShippingAddressBusinessPartner(businessPartner);
 		});
 	}
 
-	@On(service = "bupa-messaging", event = "BO/BusinessPartner/Changed")
-	public void updateBusinessPartnerAddresses(TopicMessageEventContext context) {
+	@On(service = ApiBusinessPartner_.CDS_NAME)
+	public void updateBusinessPartnerAddresses(BusinessPartnerChangedContext context) {
 		logger.info(">> received: " + context.getData());
-		BOBusinessPartnerChanged payload = Struct.access(payloadMap(context.getData())).as(BOBusinessPartnerChanged.class);
-		for(BOBusinessPartnerChanged.Key key : payload.getKey()) {
-			String businessPartner = key.getBusinesspartner(); // S/4 HANA's payload format
-			if(businessPartner != null) {
-				// fetch affected entries from local replicas
-				Result replicas = db.run(Select.from(AdminService_.ADDRESSES).where(a -> a.businessPartner().eq(businessPartner)));
-				if(replicas.rowCount() > 0) {
-					logger.info("Updating Addresses for BusinessPartner '{}'", businessPartner);
-					// fetch changed data from S/4 -> might be less than local due to deletes
-					Result remoteAddresses = bupa.run(Select.from(ApiBusinessPartner_.ADDRESSES).where(a -> a.businessPartner().eq(businessPartner)));
-					// update replicas or add tombstone if external address was deleted
-					replicas.streamOf(Addresses.class).forEach(rep -> {
-						Optional<Addresses> matching = remoteAddresses
-							.streamOf(Addresses.class)
-							.filter(ext -> ext.getId().equals(rep.getId()))
-							.findFirst();
+		String businessPartner = context.getData().getBusinessPartner();
 
-						if(!matching.isPresent()) {
-							rep.setTombstone(true);
-						} else {
-							rep.replaceAll((k, v) -> matching.get().get(k));
-						}
-					});
-					// update local replicas with changes from S/4
-					db.run(Upsert.into(AdminService_.ADDRESSES).entries(replicas));
+		// fetch affected entries from local replicas
+		Result replicas = db.run(Select.from(ADDRESSES).where(a -> a.businessPartner().eq(businessPartner)));
+		if(replicas.rowCount() > 0) {
+			logger.info("Updating Addresses for BusinessPartner '{}'", businessPartner);
+			// fetch changed data from S/4 -> might be less than local due to deletes
+			Result remoteAddresses = bupa.run(Select.from(ADDRESSES).where(a -> a.businessPartner().eq(businessPartner)));
+			// update replicas or add tombstone if external address was deleted
+			replicas.streamOf(Addresses.class).forEach(rep -> {
+				Optional<Addresses> matching = remoteAddresses
+					.streamOf(Addresses.class)
+					.filter(ext -> ext.getId().equals(rep.getId()))
+					.findFirst();
+
+				if(!matching.isPresent()) {
+					rep.setTombstone(true);
+				} else {
+					matching.get().forEach(rep::put);
 				}
-			}
-		}
-		context.setCompleted();
-	}
-
-	@SuppressWarnings("unchecked")
-	private Map<String, Object> payloadMap(String json) {
-		try {
-			Map<String, Object> event = new ObjectMapper().readValue(json, new TypeReference<Map<String, Object>>() {});
-			if(event.get("data") instanceof Map) {
-				return (Map<String, Object>) event.get("data");
-			}
-			return new HashMap<>();
-		} catch (JsonProcessingException e) {
-			return new HashMap<>();
+			});
+			// update local replicas with changes from S/4
+			db.run(Upsert.into(ADDRESSES).entries(replicas));
 		}
 	}
 

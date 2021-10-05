@@ -189,16 +189,16 @@ Deploy as Single Tenant Application:
 - Rename `mta-single-tenant.yaml` to `mta.yaml`
 - Run `mbt build`
 - Run `cf login`
-- Run `cf deploy mta_archives/bookshop-java-public_1.0.0.mtar`
+- Run `cf deploy mta_archives/bookshop_1.0.0.mtar`
 
 Deploy as Multitenant Application:
-- Create an SAP HANA Cloud Instance in your SAP Business Technology Platform space.
+- [Create a SAP HANA Cloud Instance](https://developers.sap.com/tutorials/hana-cloud-deploying.html) in your SAP Business Technology Platform space.
 - Rename `mta-multi-tenant.yaml` to `mta.yaml`
 - Run `mbt build`
 - Run `cf login`
-- Run `cf deploy mta_archives/bookshop-java-public_1.0.0.mtar`
+- Run `cf deploy mta_archives/bookshop-mt_1.0.0.mtar`
 - Go to another subaccount in your global account, under subscriptions and subscribe to the application you deployed.
-- Run `cf map-route bookshop-java-public-approuter <YOUR DOMAIN> --hostname <SUBSCRIBER TENANT>-<ORG>-<SPACE>-bookshop-java-public-approuter` or create and bind the route manually.
+- Run `cf map-route bookshop-mt-app <YOUR DOMAIN> --hostname <SUBSCRIBER TENANT>-<ORG>-<SPACE>-bookshop-mt-app` or create and bind the route manually.
 
 # Code Tour
 

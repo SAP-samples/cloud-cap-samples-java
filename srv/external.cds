@@ -6,36 +6,30 @@ using { API_BUSINESS_PARTNER as external } from './external/API_BUSINESS_PARTNER
 extend service external with {
 
   /**
-   * Simplified view on external addresses
-   */
-  entity Addresses as projection on external.A_BusinessPartnerAddress {
-    key AddressID as ID,
-    key BusinessPartner as businessPartner,
-    @readonly Country as country,
-    @readonly CityName as city,
-    @readonly PostalCode as postalCode,
-    @readonly StreetName as street,
-    @readonly HouseNumber as houseNumber
-  }
-
-  /**
    * Add asynchronous eventing API
    */
-  event BO_BusinessPartner_Changed {
-    ![KEY]: Array of {
-      BUSINESSPARTNER: String;
-    };
+  @topic: 'sap.s4.beh.businesspartner.v1.BusinessPartner.Changed.v1'
+  event BusinessPartner.Changed {
+    BusinessPartner: String;
   }
 
 }
 
 /**
- * Add an entity to replicate external address data for quick access,
- * e.g. when displaying lists of orders.
+ * Simplified view on external addresses, which in addition acts as a table to store replicated external address data.
  */
 @cds.persistence:{table,skip:false} //> create a table with the view's inferred signature
 @cds.autoexpose //> auto-expose in services as targets for ValueHelps and joins
-entity my.bookshop.Addresses as SELECT from external.Addresses { *, false as tombstone: Boolean };
+entity my.bookshop.Addresses as projection on external.A_BusinessPartnerAddress {
+  key AddressID as ID,
+  key BusinessPartner as businessPartner,
+  @readonly Country as country,
+  @readonly CityName as city,
+  @readonly PostalCode as postalCode,
+  @readonly StreetName as street,
+  @readonly HouseNumber as houseNumber,
+  false as tombstone: Boolean
+}
 
 /**
  * Extend Orders with references to replicated external Addresses

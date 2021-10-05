@@ -42,6 +42,7 @@ public class UiIndexContentProviderFactory implements IndexContentProviderFactor
 		public void writeContent(PrintWriter writer, String contextPath) {
 			writer.print(ENDPOINT_START);
 			writer.printf(ENDPOINT, contextPath + "/fiori.html", "Fiori UI");
+			writer.printf(ENDPOINT, contextPath + "/vue/index.html", "Vue.js UI");
 			writer.printf(ENDPOINT, contextPath + "/swagger/index.html", "Swagger UI");
 			writer.print(ENDPOINT_END);
 		}
