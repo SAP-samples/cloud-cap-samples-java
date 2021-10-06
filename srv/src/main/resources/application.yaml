@@ -70,7 +70,7 @@ management:
   endpoints:
     web:
       exposure:
-        include: "env,loggers,beans,health,metrics"
+        include: "health"
   health:
     defaults.enabled: false
     ping.enabled: true
