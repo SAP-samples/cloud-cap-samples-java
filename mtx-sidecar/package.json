@@ -14,7 +14,7 @@
         "start": "node server.js"
     },
     "engines": {
-        "node": ">=16.2.0"
+        "node": ">=12.18"
     },
     "cds": {
         "features": {
