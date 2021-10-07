@@ -38,6 +38,7 @@ modules:
       - name: app
         properties:
           CDS_MULTITENANCY_APPUI_URL: ~{url}
+      - name: cf-logging
     provides:
       - name: srv
         properties:
@@ -53,6 +54,7 @@ modules:
     requires:
       - name: bookshop-mt-service-manager
       - name: bookshop-mt-uaa
+      - name: cf-logging
     provides:
       - name: sidecar
         properties:
@@ -109,3 +111,8 @@ resources:
            onSubscription: ~{srv/url}/mt/v1.0/subscriptions/tenants/{tenantId}
     requires:
       - name: srv
+  - name: cf-logging
+    type: org.cloudfoundry.managed-service
+    parameters:
+      service: application-logs
+      service-plan: lite
