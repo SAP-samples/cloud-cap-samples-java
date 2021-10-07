@@ -14,7 +14,7 @@ import org.springframework.stereotype.Component;
  */
 @Component
 @ConditionalOnClass(Endpoint.class)
-@Endpoint(id = "myapp", enableByDefault = true)
+@Endpoint(id = "bookshop", enableByDefault = true)
 public class AppActuator {
 
 	@ReadOperation
