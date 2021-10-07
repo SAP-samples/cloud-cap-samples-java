@@ -1,6 +1,8 @@
 ---
 spring:
   web.resources.static-locations: "file:./app"
+  jmx:
+    enabled: true
 cds:
   odata-v4.endpoint.path: "/api"
   security.mock.users:
@@ -16,6 +18,20 @@ cds:
 server.servlet.encoding:
   charset: UTF-8
   force: true
+management:
+  endpoint:
+    health:
+      show-components: always
+      show-details: always
+  endpoints:
+    web:
+      exposure:
+        include: "health"
+  health:
+    defaults.enabled: false
+    ping.enabled: true
+    db.enabled: true
+    myhealth.enabled: true
 
 ---
 spring:
@@ -57,22 +73,6 @@ cds:
 ---
 spring:
   config.activate.on-profile: default
-  jmx:
-    enabled: true
 cds:
   data-source:
     auto-config.enabled: false
-management:
-  endpoint:
-    health:
-      show-components: always
-      show-details: always
-  endpoints:
-    web:
-      exposure:
-        include: "health"
-  health:
-    defaults.enabled: false
-    ping.enabled: true
-    db.enabled: true
-    myhealth.enabled: true
