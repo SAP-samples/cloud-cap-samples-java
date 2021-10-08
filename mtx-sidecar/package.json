@@ -1,8 +1,8 @@
 {
     "name": "deploy",
     "dependencies": {
-        "@sap/cds": "^5.0.4",
-        "@sap/cds-mtx": "^1.2.0",
+        "@sap/cds": "^5.4.3",
+        "@sap/cds-mtx": "^2.2.0",
         "@sap/hdi-deploy": "^4.0.4",
         "@sap/instance-manager": "^3.0.0",
         "@sap/xssec": "^3",
@@ -15,5 +15,10 @@
     },
     "engines": {
         "node": ">=12.18"
+    },
+    "cds": {
+        "features": {
+            "kibana_formatter": true
+        }
     }
 }
