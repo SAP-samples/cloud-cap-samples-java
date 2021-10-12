@@ -1,4 +1,4 @@
-package my.bookshop.swagger;
+package my.bookshop.config;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
@@ -9,11 +9,13 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 @Configuration
 @EnableWebSecurity
 @Order(1)
-public class SwaggerSecurityConfig extends WebSecurityConfigurerAdapter {
+public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
-		http.requestMatchers().antMatchers("/swagger/**").and().authorizeRequests().anyRequest().permitAll();
+		http.requestMatchers() //
+				.antMatchers("/actuator/health") //
+				.antMatchers("/swagger/**") //
+				.and().csrf().disable().authorizeRequests().anyRequest().permitAll();
 	}
-
 }
