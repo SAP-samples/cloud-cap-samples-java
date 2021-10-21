@@ -16,11 +16,10 @@ import com.sap.cds.Result;
 import com.sap.cds.ql.CQL;
 import com.sap.cds.ql.Predicate;
 import com.sap.cds.ql.Select;
-import com.sap.cds.ql.StructuredType;
 import com.sap.cds.ql.StructuredTypeRef;
-import com.sap.cds.ql.cqn.AnalysisResult;
 import com.sap.cds.ql.cqn.CqnAnalyzer;
 import com.sap.cds.ql.cqn.CqnExpand;
+import com.sap.cds.ql.cqn.CqnPredicate;
 import com.sap.cds.ql.cqn.CqnReference.Segment;
 import com.sap.cds.ql.cqn.CqnSelect;
 import com.sap.cds.ql.cqn.CqnSelectListItem;
@@ -96,7 +95,8 @@ public class NotesServiceHandler implements EventHandler {
 					.orderBy(notesExpand.orderBy())
 					.where(n -> CQL.or(addresses.streamOf(Addresses.class)
 							.map(address -> n.address_businessPartner().eq(address.getBusinessPartner()).and(n.address_ID().eq(address.getId())))
-							.collect(Collectors.toList())));
+							.collect(Collectors.toList()))
+							.and(predicate(notesExpand.ref().rootSegment())));
 
 			Result notes = context.getService().run(notesSelect);
 			for(Addresses address : addresses.listOf(Addresses.class)) {
@@ -116,18 +116,12 @@ public class NotesServiceHandler implements EventHandler {
 		List<? extends Segment> segments = context.getCqn().ref().segments();
 		// via addresses
 		if(segments.size() == 2 && segments.get(0).id().equals(Addresses_.CDS_NAME)) {
-			AnalysisResult analysis = analyzer.analyze(context.getCqn());
-			Map<String, Object> addressKeys = analysis.rootKeys();
-			Map<String, Object> notesKeys = analysis.targetKeyValues();
+			Map<String, Object> addressKeys = analyzer.analyze(context.getCqn()).rootKeys();
 			CqnSelect notesOfAddress = CQL.copy(context.getCqn(), new Modifier() {
 
 				@Override
 				public CqnStructuredTypeRef ref(StructuredTypeRef ref) {
-					StructuredType<?> notes = CQL.entity(Notes_.CDS_NAME);
-					if(!notesKeys.isEmpty()) {
-						notes = notes.matching(notesKeys);
-					}
-					return notes.asRef();
+					return CQL.entity(Notes_.CDS_NAME).filter(predicate(segments.get(1))).asRef();
 				}
 
 				@Override
@@ -167,7 +161,8 @@ public class NotesServiceHandler implements EventHandler {
 						.orderBy(addressExpand.orderBy())
 						.where(a -> CQL.or(notesWithAddresses.stream()
 								.map(n -> a.businessPartner().eq(n.getAddressBusinessPartner()).and(a.ID().eq(n.getAddressId())))
-								.collect(Collectors.toList())));
+								.collect(Collectors.toList()))
+								.and(predicate(addressExpand.ref().rootSegment())));
 
 				Result addresses = context.getService().run(addressSelect);
 				for(Notes note : notes.listOf(Notes.class)) {
@@ -204,6 +199,10 @@ public class NotesServiceHandler implements EventHandler {
 		List<CqnSelectListItem> newItems = new ArrayList<>(items);
 		newElements.forEach(element -> newItems.add(CQL.get(element)));
 		return newItems;
+	}
+
+	private CqnPredicate predicate(Segment segment) {
+		return segment.filter().orElse(CQL.constant(true).eq(true));
 	}
 
 }
