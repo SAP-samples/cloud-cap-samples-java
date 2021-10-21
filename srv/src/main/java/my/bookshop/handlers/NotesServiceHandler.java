@@ -94,9 +94,9 @@ public class NotesServiceHandler implements EventHandler {
 			Select<?> notesSelect = Select.from(Notes_.class)
 					.columns(ensureSelected(notesExpand.items(), Notes.ADDRESS_BUSINESS_PARTNER, Notes.ADDRESS_ID))
 					.orderBy(notesExpand.orderBy())
-					.where(n -> addresses.streamOf(Addresses.class)
+					.where(n -> CQL.or(addresses.streamOf(Addresses.class)
 							.map(address -> n.address_businessPartner().eq(address.getBusinessPartner()).and(n.address_ID().eq(address.getId())))
-							.reduce(CQL.constant(true).eq(true), CQL::or));
+							.collect(Collectors.toList())));
 
 			Result notes = context.getService().run(notesSelect);
 			for(Addresses address : addresses.listOf(Addresses.class)) {
@@ -165,9 +165,9 @@ public class NotesServiceHandler implements EventHandler {
 				Select<?> addressSelect = Select.from(Addresses_.class)
 						.columns(ensureSelected(addressExpand.items(), Addresses.BUSINESS_PARTNER, Addresses.ID))
 						.orderBy(addressExpand.orderBy())
-						.where(a -> notesWithAddresses.stream()
+						.where(a -> CQL.or(notesWithAddresses.stream()
 								.map(n -> a.businessPartner().eq(n.getAddressBusinessPartner()).and(a.ID().eq(n.getAddressId())))
-								.reduce(CQL.constant(true).eq(true), CQL::or));
+								.collect(Collectors.toList())));
 
 				Result addresses = context.getService().run(addressSelect);
 				for(Notes note : notes.listOf(Notes.class)) {
