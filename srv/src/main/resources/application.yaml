@@ -1,11 +1,10 @@
 ---
 spring:
   web.resources.static-locations: "file:./app"
+  jmx:
+    enabled: true
 cds:
   odata-v4.endpoint.path: "/api"
-  messaging.services:
-    bupa-messaging:
-      kind: file-based-messaging
   security.mock.users:
     - name: admin
       password: admin
@@ -19,27 +18,61 @@ cds:
 server.servlet.encoding:
   charset: UTF-8
   force: true
+management:
+  endpoint:
+    health:
+      show-components: always
+      show-details: always
+  endpoints:
+    web:
+      exposure:
+        include: "health"
+  health:
+    defaults.enabled: false
+    ping.enabled: true
+    db.enabled: true
+    myhealth.enabled: true
 
 ---
 spring:
   config.activate.on-profile: cloud
+  sql.init.schema-locations: "classpath:schema-nomocks.sql"
 cds:
   messaging.services:
     bupa-messaging:
       kind: enterprise-messaging
-      topic-namespace: sap/S4HANAOD/dkom
+      format: cloudevents
+      subscribe-prefix: sap/S4HANAOD/java/ce/
   remote.services:
-  - name: API_BUSINESS_PARTNER
-    destination:
-      name: "s4-business-partner-api"
-      suffix: "/sap/opu/odata/sap"
-      type: "odata-v2"
+    '[API_BUSINESS_PARTNER]':
+      destination:
+        name: "s4-business-partner-api"
+        suffix: "/sap/opu/odata/sap"
+        type: "odata-v2"
 api-hub:
-  api-key: "" # Place API Key from SAP API Business Hub here
+  api-key: "" # Place API Key from SAP API Business Hub here or use environment variable API_HUB_API_KEY
+
+---
+spring:
+  config.activate.on-profile: mocked
+cds:
+  messaging.services:
+    bupa-messaging:
+      kind: file-based-messaging
+  application.services:
+    api-business-partner-mocked:
+      model: API_BUSINESS_PARTNER
+      serve:
+        path: API_BUSINESS_PARTNER
+  remote.services:
+    '[API_BUSINESS_PARTNER]':
+      destination:
+        name: "myself"
+        suffix: "/api"
 
 ---
 spring:
   config.activate.on-profile: default
 cds:
-  datasource:
+  data-source:
     auto-config.enabled: false

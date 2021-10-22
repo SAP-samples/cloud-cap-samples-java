@@ -1,11 +1,13 @@
 gen/
 edmx/
 schema.sql
+schema-nomocks.sql
 default-env.json
 openapi.json
 
 bin/
 target/
+.java-version
 .flattened-pom.xml
 .classpath
 .project

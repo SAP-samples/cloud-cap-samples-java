@@ -5,7 +5,7 @@
 	  {
 		"source": "^/app/(.*)$",
 		"cacheControl": "no-cache, no-store, must-revalidate",
-		"target": "$1", 
+		"target": "$1",
 		"localDir": "./",
 		"authenticationType": "xsuaa"
 	  },
@@ -30,6 +30,16 @@
 		"authenticationType": "xsuaa"
 	  },
 	  {
+		"source": "^/notes/webapp/(.*)$",
+		"localDir": "./",
+		"authenticationType": "xsuaa"
+	  },
+	  {
+		"source": "^/addresses/webapp/(.*)$",
+		"localDir": "./",
+		"authenticationType": "xsuaa"
+	  },
+	  {
 		"source": "^/vue/(.*)$",
 		"localDir": "./",
 		"authenticationType": "xsuaa"
@@ -46,6 +56,11 @@
 	  },
 	  {
 		"source": "^/api/review/(.*)",
+		"authenticationType": "xsuaa",
+		"destination": "backend"
+	  },
+	  {
+		"source": "^/api/notes/(.*)",
 		"authenticationType": "xsuaa",
 		"destination": "backend"
 	  },

@@ -1,15 +1,15 @@
 namespace my.bookshop;
 
 using {
-    my.bookshop as my,
     User,
     managed,
     cuid
 } from '@sap/cds/common';
+using my.bookshop.Books from './books';
 
 entity Reviews : cuid, managed {
     @cds.odata.ValueList
-    book     : Association to my.Books;
+    book     : Association to Books;
     rating   : Rating;
     title    : String(111);
     text     : String(1111);

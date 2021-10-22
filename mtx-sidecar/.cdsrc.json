@@ -5,26 +5,10 @@
     "build": {
         "tasks": [
             {
-                "for": "hana",
-                "src": "db",
-                "options": {
-                    "model": [
-                        "db",
-                        "srv",
-                        "app"
-                    ]
-                }
+                "for": "hana"
             },
             {
-                "for": "java-cf",
-                "src": "srv",
-                "options": {
-                    "model": [
-                        "db",
-                        "srv",
-                        "app"
-                    ]
-                }
+                "for": "java-cf"
             }
         ]
     },

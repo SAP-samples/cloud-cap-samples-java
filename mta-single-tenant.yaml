@@ -1,5 +1,5 @@
 _schema-version: '2.1'
-ID: bookshop-java-public
+ID: bookshop
 version: 1.0.0
 description: "Bookshop CAP Java Project with UI"
 parameters:
@@ -12,7 +12,7 @@ build-parameters:
       - npx -p @sap/cds-dk cds build --production
 modules:
 # --------------------- SERVER MODULE ------------------------
-  - name: bookshop-java-public-srv
+  - name: bookshop-srv
 # ------------------------------------------------------------
     type: java
     path: srv
@@ -28,14 +28,15 @@ modules:
         - mvn clean package -DskipTests=true
       build-result: target/*-exec.jar
     requires:
-      - name: bookshop-java-public-hdi-container
-      - name: bookshop-java-public-uaa
+      - name: bookshop-hdi-container
+      - name: bookshop-uaa
+      - name: cf-logging
     provides:
       - name: srv
         properties:
           url: '${default-url}'
 # --------------------- DB MODULE ---------------------------
-  - name: bookshop-java-public-db
+  - name: bookshop-db
 # -----------------------------------------------------------
     type: nodejs
     path: db
@@ -49,9 +50,9 @@ modules:
         command: npm run start
     requires:
       # Set user and password to secure rest API via basic authentication
-      - name: bookshop-java-public-hdi-container
+      - name: bookshop-hdi-container
 # --------------------- APPROUTER MODULE ---------------------
-  - name: bookshop-java-public-approuter
+  - name: bookshop-app
 # ------------------------------------------------------------
     type: nodejs
     path: app
@@ -66,7 +67,7 @@ modules:
         url: ~{url}
         forwardAuthToken: true
         strictSSL: true
-    - name: bookshop-java-public-uaa
+    - name: bookshop-uaa
     provides:
       - name: app
         properties:
@@ -74,16 +75,21 @@ modules:
 # --------------------- RESOURCES ---------------------
 resources:
 # -----------------------------------------------------
-  - name: bookshop-java-public-uaa
+  - name: bookshop-uaa
     type: com.sap.xs.uaa
     parameters:
       service: xsuaa
       service-plan: broker
       path: ./cds-security.json
       config: # override xsappname in cds-security.json, xsappname needs to be unique
-        xsappname: bookshop-java-public-${org}-${space}
-  - name: bookshop-java-public-hdi-container
+        xsappname: bookshop-${org}-${space}
+  - name: bookshop-hdi-container
     type: org.cloudfoundry.managed-service
     parameters:
       service: hanatrial
       service-plan: hdi-shared
+  - name: cf-logging
+    type: org.cloudfoundry.managed-service
+    parameters:
+      service: application-logs
+      service-plan: lite

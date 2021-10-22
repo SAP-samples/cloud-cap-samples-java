@@ -1,12 +1,13 @@
 namespace my.bookshop;
 
 using {
-    my.bookshop as my,
     Currency,
     sap,
     managed,
     cuid
 } from '@sap/cds/common';
+using my.bookshop.Reviews from './reviews';
+using my.bookshop.TechnicalBooleanFlag from './common';
 
 @fiori.draft.enabled
 entity Books : cuid, managed {
@@ -18,9 +19,9 @@ entity Books : cuid, managed {
     price        : Decimal(9, 2);
     currency     : Currency;
     rating       : Decimal(2, 1);
-    reviews      : Association to many my.Reviews
+    reviews      : Association to many Reviews
                        on reviews.book = $self;
-    isReviewable : my.TechnicalBooleanFlag not null default true;
+    isReviewable : TechnicalBooleanFlag not null default true;
 }
 
 entity Authors : cuid, managed {
