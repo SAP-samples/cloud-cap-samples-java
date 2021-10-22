@@ -1,0 +1,127 @@
+{
+    "_version": "1.8.0",
+    "sap.app": {
+        "id": "addresses",
+        "type": "application",
+        "title": "{{appTitle}}",
+        "description": "{{appDescription}}",
+        "dataSources": {
+            "NotesService": {
+                "uri": "/api/notes/",
+                "type": "OData",
+                "settings": {
+                    "odataVersion": "4.0"
+                }
+            }
+        },
+        "-sourceTemplate": {
+            "id": "ui5template.basicSAPUI5ApplicationProject",
+            "-id": "ui5template.smartTemplate",
+            "-version": "1.40.12"
+        }
+    },
+    "sap.ui5": {
+        "dependencies": {
+            "libs": {
+                "sap.fe.templates": {}
+            }
+        },
+        "models": {
+            "i18n": {
+                "type": "sap.ui.model.resource.ResourceModel",
+                "uri": "i18n/i18n.properties"
+            },
+            "": {
+                "dataSource": "NotesService",
+                "settings": {
+                    "synchronizationMode": "None",
+                    "operationMode": "Server",
+                    "autoExpandSelect" : true,
+                    "earlyRequests": true,
+                    "groupProperties": {
+                        "default": {
+                            "submit": "Auto"
+                        }
+                    }
+                }
+            }
+        },
+        "routing": {
+            "routes": [
+                {
+                    "pattern": ":?query:",
+                    "name": "AddressesList",
+                    "target": "AddressesList"
+                },
+                {
+                    "pattern": "Addresses({key}):?query:",
+                    "name": "AddressesDetails",
+                    "target": "AddressesDetails"
+                },
+                {
+                    "pattern": "Addresses({key})/notes({key2}):?query:",
+                    "name": "NotesDetails",
+                    "target": "NotesDetails"
+                }
+            ],
+            "targets": {
+                "AddressesList": {
+                    "type": "Component",
+                    "id": "AddressesList",
+                    "name": "sap.fe.templates.ListReport",
+                    "options": {
+                        "settings" : {
+                            "entitySet" : "Addresses",
+                            "navigation" : {
+                                "Addresses" : {
+                                    "detail" : {
+                                        "route" : "AddressesDetails"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "AddressesDetails": {
+                    "type": "Component",
+                    "id": "AddressesDetails",
+                    "name": "sap.fe.templates.ObjectPage",
+                    "options": {
+                        "settings" : {
+                            "entitySet" : "Addresses",
+                            "navigation" : {
+                                "notes" : {
+                                    "detail" : {
+                                        "route" : "NotesDetails"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "NotesDetails": {
+                    "type": "Component",
+                    "id": "NotesDetails",
+                    "name": "sap.fe.templates.ObjectPage",
+                    "options": {
+                        "settings" : {
+                            "entitySet": "Notes"
+                        }
+                    }
+                }
+            }
+        },
+        "contentDensities": {
+            "compact": true,
+            "cozy": true
+        }
+    },
+    "sap.ui": {
+        "technology": "UI5",
+        "fullWidth": false
+    },
+    "sap.fiori": {
+        "registrationIds": [],
+        "archeType": "transactional"
+    }
+}
