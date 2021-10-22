@@ -7,6 +7,7 @@ openapi.json
 
 bin/
 target/
+.java-version
 .flattened-pom.xml
 .classpath
 .project
