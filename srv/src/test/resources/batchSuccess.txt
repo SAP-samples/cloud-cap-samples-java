@@ -1,0 +1,46 @@
+--batch_1
+Content-Type: multipart/mixed; boundary=changeset_1
+
+--changeset_1
+Content-Type: application/http
+Content-Transfer-Encoding: binary
+Content-ID: 1
+
+POST Chapters HTTP/1.1
+Content-Type: application/json
+
+{
+	"book": "The greatest batched Book of all",
+	"number": 1,
+	"title": "First chapter"
+}
+
+--changeset_1
+Content-Type: application/http
+Content-Transfer-Encoding: binary
+Content-ID: 2
+
+POST $1/pages HTTP/1.1
+Content-Type: application/json
+
+{
+	"number": 2,
+	"content": "The second is even better!"
+}
+
+--changeset_1
+Content-Type: application/http
+Content-Transfer-Encoding: binary
+Content-ID: 3
+
+POST $1/pages HTTP/1.1
+Content-Type: application/json
+
+{
+	"number": 1,
+	"content": "What a great page!"
+}
+
+--changeset_1--
+
+--batch_1--
