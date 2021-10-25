@@ -25,8 +25,8 @@ import com.sap.cds.Result;
 import com.sap.cds.ql.Select;
 import com.sap.cds.ql.Update;
 import com.sap.cds.ql.Upsert;
-import com.sap.cds.ql.cqn.AnalysisResult;
 import com.sap.cds.ql.cqn.CqnAnalyzer;
+import com.sap.cds.ql.cqn.CqnDelete;
 import com.sap.cds.reflect.CdsModel;
 import com.sap.cds.services.ErrorStatuses;
 import com.sap.cds.services.EventContext;
@@ -371,24 +371,31 @@ class AdminServiceHandler implements EventHandler {
 	 * @param order the modified order
 	 */
 	private void auditChanges(Orders orders, EventContext context) {
+		DataModification dataModification = null;
+
 		if (orders.getId() != null) {
 			switch (context.getEvent()) {
 			case CqnService.EVENT_CREATE:
-				DataModification dataModCreate = createDataModification(orders, null, Action.CREATE);
-				this.auditLog.logDataModification(Arrays.asList(dataModCreate));
+				dataModification = createDataModification(orders, null, Action.CREATE);
 				break;
 			case CqnService.EVENT_UPDATE:
 			case CqnService.EVENT_UPSERT:
-				readOldOrders(orders.getId()).ifPresent(oldOrders -> {
-					if (!StringUtils.equals(orders.getOrderNo(), oldOrders.getOrderNo())) {
-						DataModification dataModeUpdate = createDataModification(orders, oldOrders, Action.UPDATE);
-						this.auditLog.logDataModification(Arrays.asList(dataModeUpdate));
+				Optional<Orders> oldOrders = readOldOrders(orders.getId());
+				if (oldOrders.isPresent()) {
+					if (!StringUtils.equals(orders.getOrderNo(), oldOrders.get().getOrderNo())) {
+						dataModification = createDataModification(orders, oldOrders.get(), Action.UPDATE);
 					}
-				});
+				} else {
+					dataModification = createDataModification(orders, null, Action.CREATE);
+				}
 				break;
 			default:
-				return;
+				break;
 			}
+		}
+
+		if (dataModification != null) {
+			this.auditLog.logDataModification(Arrays.asList(dataModification));
 		}
 	}
 
@@ -407,12 +414,8 @@ class AdminServiceHandler implements EventHandler {
 	 * @param context the {@link CdsDeleteEventContext delete event context}
 	 */
 	private void auditDelete(CdsDeleteEventContext context) {
-		AnalysisResult result = CqnAnalyzer.create(context.getModel()).analyze(context.getCqn());
-		String ordersId = (String) result.targetKeyValues().get(Orders.ID);
-
 		// prepare a select statement to read old order number
-		Select<Orders_> ordersSelect = Select.from(ORDERS).columns(Orders_::OrderNo)
-				.where(o -> o.ID().eq(ordersId).and(o.IsActiveEntity().eq(true)));
+		Select<?> ordersSelect = toSelect(context.getCqn());
 
 		// read old order number from DB
 		this.db.run(ordersSelect).first(Orders.class).ifPresent(oldOrders -> {
@@ -480,6 +483,12 @@ class AdminServiceHandler implements EventHandler {
 		id.setKeyName(Orders.ID);
 		id.setValue(order.getId());
 		return id;
+	}
+
+	public static Select<?> toSelect(CqnDelete delete) {
+		Select<?> select = Select.from(delete.ref());
+		delete.where().ifPresent(select::where);
+		return select;
 	}
 
 }
