@@ -12,10 +12,12 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.function.Supplier;
 import java.util.stream.Stream;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
@@ -24,9 +26,21 @@ import com.sap.cds.ql.Select;
 import com.sap.cds.ql.Update;
 import com.sap.cds.ql.Upsert;
 import com.sap.cds.ql.cqn.CqnAnalyzer;
+import com.sap.cds.ql.cqn.CqnDelete;
 import com.sap.cds.reflect.CdsModel;
 import com.sap.cds.services.ErrorStatuses;
+import com.sap.cds.services.EventContext;
 import com.sap.cds.services.ServiceException;
+import com.sap.cds.services.auditlog.Access;
+import com.sap.cds.services.auditlog.Action;
+import com.sap.cds.services.auditlog.Attribute;
+import com.sap.cds.services.auditlog.AuditLogService;
+import com.sap.cds.services.auditlog.ChangedAttribute;
+import com.sap.cds.services.auditlog.DataModification;
+import com.sap.cds.services.auditlog.DataObject;
+import com.sap.cds.services.auditlog.DataSubject;
+import com.sap.cds.services.auditlog.KeyValuePair;
+import com.sap.cds.services.cds.CdsDeleteEventContext;
 import com.sap.cds.services.cds.CdsService;
 import com.sap.cds.services.cds.CdsUpdateEventContext;
 import com.sap.cds.services.cds.CqnService;
@@ -34,6 +48,7 @@ import com.sap.cds.services.draft.DraftCancelEventContext;
 import com.sap.cds.services.draft.DraftPatchEventContext;
 import com.sap.cds.services.draft.DraftService;
 import com.sap.cds.services.handler.EventHandler;
+import com.sap.cds.services.handler.annotations.After;
 import com.sap.cds.services.handler.annotations.Before;
 import com.sap.cds.services.handler.annotations.On;
 import com.sap.cds.services.handler.annotations.ServiceName;
@@ -47,6 +62,7 @@ import cds.gen.adminservice.Books_;
 import cds.gen.adminservice.OrderItems;
 import cds.gen.adminservice.OrderItems_;
 import cds.gen.adminservice.Orders;
+import cds.gen.adminservice.Orders_;
 import cds.gen.adminservice.Upload;
 import cds.gen.adminservice.Upload_;
 import cds.gen.my.bookshop.Bookshop_;
@@ -69,13 +85,22 @@ class AdminServiceHandler implements EventHandler {
 
 	private final CqnAnalyzer analyzer;
 
-	AdminServiceHandler(@Qualifier(AdminService_.CDS_NAME) DraftService adminService, PersistenceService db, Messages messages, CdsModel model) {
+	private final AuditLogService auditLog;
+
+	AdminServiceHandler(@Qualifier(AdminService_.CDS_NAME) DraftService adminService, PersistenceService db,
+			Messages messages, CdsModel model, AuditLogService auditLog) {
 		this.adminService = adminService;
 		this.db = db;
 		this.messages = messages;
+		this.auditLog = auditLog;
 
 		// model is a tenant-dependant model proxy
 		this.analyzer = CqnAnalyzer.create(model);
+	}
+
+	@After(event = { CqnService.EVENT_READ })
+	public void afterReadOrder(Stream<Orders> orders) {
+		orders.forEach(this::auditAccess);
 	}
 
 	/**
@@ -86,7 +111,7 @@ class AdminServiceHandler implements EventHandler {
 	 * @param orders
 	 */
 	@Before(event = { CqnService.EVENT_CREATE, CqnService.EVENT_UPSERT, CqnService.EVENT_UPDATE })
-	public void beforeCreateOrder(Stream<Orders> orders) {
+	public void beforeCreateOrder(Stream<Orders> orders, EventContext context) {
 		orders.forEach(order -> {
 			// reset total
 			order.setTotal(BigDecimal.valueOf(0));
@@ -140,7 +165,14 @@ class AdminServiceHandler implements EventHandler {
 					order.setTotal(order.getTotal().add(updatedNetAmount));
 				});
 			}
+
+			auditChanges(order, context);
 		});
+	}
+
+	@Before(event = { CqnService.EVENT_DELETE })
+	public void beforeDelete(CdsDeleteEventContext context) {
+		auditDelete(context);
 	}
 
 	/**
@@ -318,6 +350,145 @@ class AdminServiceHandler implements EventHandler {
 
 	private BigDecimal defaultZero(BigDecimal decimal) {
 		return decimal == null ? BigDecimal.valueOf(0) : decimal;
+	}
+
+	// audit logging
+
+	/**
+	 * Writes a data access message to the audit log for the given order if the order number is read.
+	 *
+	 * @param order the accessed order
+	 */
+	private void auditAccess(Orders order) {
+		if (order.getOrderNo() != null) {
+			this.auditLog.logDataAccess(createAccess(order));
+		}
+	}
+
+	/**
+	 * Writes a data modification message to the auditlog if the order number has changed.
+	 *
+	 * @param order the modified order
+	 */
+	private void auditChanges(Orders orders, EventContext context) {
+		DataModification dataModification = null;
+
+		if (orders.getId() != null) {
+			switch (context.getEvent()) {
+			case CqnService.EVENT_CREATE:
+				dataModification = createDataModification(orders, null, Action.CREATE);
+				break;
+			case CqnService.EVENT_UPDATE:
+			case CqnService.EVENT_UPSERT:
+				Optional<Orders> oldOrders = readOldOrders(orders.getId());
+				if (oldOrders.isPresent()) {
+					if (!StringUtils.equals(orders.getOrderNo(), oldOrders.get().getOrderNo())) {
+						dataModification = createDataModification(orders, oldOrders.get(), Action.UPDATE);
+					}
+				} else {
+					dataModification = createDataModification(orders, null, Action.CREATE);
+				}
+				break;
+			default:
+				break;
+			}
+		}
+
+		if (dataModification != null) {
+			this.auditLog.logDataModification(Arrays.asList(dataModification));
+		}
+	}
+
+	private Optional<Orders> readOldOrders(String ordersId) {
+		// prepare a select statement to read old order number
+		Select<Orders_> ordersSelect = Select.from(ORDERS).columns(Orders_::OrderNo)
+				.where(o -> o.ID().eq(ordersId).and(o.IsActiveEntity().eq(true)));
+
+		// read old orders from DB
+		return this.db.run(ordersSelect).first(Orders.class);
+	}
+
+	/**
+	 * Writes a data modification message to the auditlog if the order number was deleted.
+	 *
+	 * @param context the {@link CdsDeleteEventContext delete event context}
+	 */
+	private void auditDelete(CdsDeleteEventContext context) {
+		// prepare a select statement to read old order number
+		Select<?> ordersSelect = toSelect(context.getCqn());
+
+		// read old order number from DB
+		this.db.run(ordersSelect).first(Orders.class).ifPresent(oldOrders -> {
+			DataModification dataModification = createDataModification(null, oldOrders, Action.DELETE);
+			this.auditLog.logDataModification(Arrays.asList(dataModification));
+		});
+	}
+
+	private Access createAccess(Orders orders) {
+		Access access = Access.create();
+		access.setDataObject(createDataObject(orders));
+		access.setDataSubject(createDataSubject(orders));
+		access.setAttributes(createAttributes(Orders.ORDER_NO));
+		return access;
+	}
+
+	private static DataModification createDataModification(Orders orders, Orders oldOrders, Action action) {
+		ChangedAttribute attribute = createChangedAttribute(Orders.ORDER_NO,
+				orders != null ? orders.getOrderNo() : null, oldOrders != null ? oldOrders.getOrderNo() : null);
+
+		DataModification dataModification = DataModification.create();
+		dataModification.setDataObject(createDataObject(orders != null ? orders : oldOrders));
+		dataModification.setDataSubject(createDataSubject(orders != null ? orders : oldOrders));
+		dataModification.setAction(action);
+		dataModification.setAttributes(Arrays.asList(attribute));
+		return dataModification;
+	}
+
+	private static DataObject createDataObject(Orders order) {
+		KeyValuePair id = createId(order);
+
+		DataObject dataObject = DataObject.create();
+		dataObject.setType(Orders_.CDS_NAME);
+		dataObject.setId(Arrays.asList(id));
+		return dataObject;
+	}
+
+	private static DataSubject createDataSubject(Orders order) {
+		KeyValuePair id = createId(order);
+
+		DataSubject dataSubject = DataSubject.create();
+		dataSubject.setType(Orders_.CDS_NAME);
+		dataSubject.setId(Arrays.asList(id));
+		return dataSubject;
+	}
+
+	private List<Attribute> createAttributes(String name) {
+		List<Attribute> attributes = new ArrayList<>();
+		Attribute attr = Attribute.create();
+		attr.setName(name);
+		attributes.add(attr);
+		return attributes;
+	}
+
+	private static ChangedAttribute createChangedAttribute(String name, String newValue, String oldValue) {
+		ChangedAttribute attribute = ChangedAttribute.create();
+		attribute.setName(name);
+		attribute.setOldValue(oldValue);
+		attribute.setNewValue(newValue);
+		return attribute;
+	}
+
+	private static KeyValuePair createId(Orders order) {
+		KeyValuePair id = KeyValuePair.create();
+		id.setKeyName(Orders.ID);
+		id.setValue(order.getId());
+		return id;
+	}
+
+	public static Select<?> toSelect(CqnDelete delete) {
+		Select<?> select = Select.from(delete.ref());
+		delete.where().ifPresent(select::where);
+		return select;
 	}
 
 }
