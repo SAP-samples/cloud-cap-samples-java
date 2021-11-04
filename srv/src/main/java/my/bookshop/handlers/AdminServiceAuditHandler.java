@@ -13,7 +13,6 @@ import org.springframework.stereotype.Component;
 
 import com.sap.cds.ql.Select;
 import com.sap.cds.ql.cqn.CqnDelete;
-import com.sap.cds.services.EventContext;
 import com.sap.cds.services.auditlog.Access;
 import com.sap.cds.services.auditlog.Action;
 import com.sap.cds.services.auditlog.Attribute;
