@@ -183,7 +183,7 @@ class AdminServiceHandler implements EventHandler {
 
 		// get the order item that was updated (to get access to the book price, quantity and order total)
 		Result result = adminService.run(Select.from(ORDER_ITEMS)
-				.columns(o -> o.quantity(), o -> o.Amount(),
+				.columns(o -> o.quantity(), o -> o.amount(),
 						o -> o.book().expand(b -> b.ID(), b -> b.price()),
 						o -> o.parent().expand(p -> p.ID(), p -> p.total()))
 				.where(o -> o.ID().eq(orderItemId).and(o.IsActiveEntity().eq(false))));
