@@ -82,8 +82,8 @@ class AdminServiceHandler implements EventHandler {
 
 	/**
 	 * Validate correctness of an order before finishing the order proces:
-	 * 1. Check Order amount for each Item and return a message if amount is empty or <= 0
-	 * 2. Check Order amount for each Item is available, return message if the stock is too low
+	 * 1. Check Order quantity for each Item and return a message if quantity is empty or <= 0
+	 * 2. Check Order quantity for each Item is available, return message if the stock is too low
 	 *
 	 * @param orders
 	 */
@@ -95,13 +95,13 @@ class AdminServiceHandler implements EventHandler {
 			if(order.getItems() != null) {
 				order.getItems().forEach(orderItem -> {
 					// validation of the Order creation request
-					Integer amount = orderItem.getAmount();
-					if (amount == null || amount <= 0) {
+					Integer quantity = orderItem.getQuantity();
+					if (quantity == null || quantity <= 0) {
 						// errors with localized messages from property files
 						// exceptions abort the request and set an error http status code
 						// messages in contrast allow to collect multiple errors
-						messages.error(MessageKeys.AMOUNT_REQUIRE_MINIMUM)
-								.target("in", ORDERS, o -> o.Items(i -> i.ID().eq(orderItem.getId()).and(i.IsActiveEntity().eq(false))).amount());
+						messages.error(MessageKeys.QUANTITY_REQUIRE_MINIMUM)
+								.target("in", ORDERS, o -> o.Items(i -> i.ID().eq(orderItem.getId()).and(i.IsActiveEntity().eq(false))).quantity());
 					}
 
 					String bookId = orderItem.getBookId();
@@ -111,14 +111,14 @@ class AdminServiceHandler implements EventHandler {
 								.target("in", ORDERS, o -> o.Items(i -> i.ID().eq(orderItem.getId()).and(i.IsActiveEntity().eq(false))).book_ID());
 					}
 
-					if(amount == null || amount <= 0 || bookId == null) {
+					if(quantity == null || quantity <= 0 || bookId == null) {
 						return; // follow up validations rely on these
 					}
 
-					// calculate the actual amount difference
-					// FIXME this should handle book changes, currently only amount changes are handled
-					int diffAmount = amount - db.run(Select.from(Bookshop_.ORDER_ITEMS).columns(i -> i.amount()).byId(orderItem.getId()))
-												.first(OrderItems.class).map(i -> i.getAmount()).orElse(0);
+					// calculate the actual quantity difference
+					// FIXME this should handle book changes, currently only quantity changes are handled
+					int diffAmount = quantity - db.run(Select.from(Bookshop_.ORDER_ITEMS).columns(i -> i.quantity()).byId(orderItem.getId()))
+												.first(OrderItems.class).map(i -> i.getQuantity()).orElse(0);
 
 					// check if enough books are available
 					Result result = db.run(Select.from(BOOKS).columns(b -> b.ID(), b -> b.stock(), b -> b.price()).byId(bookId));
@@ -126,20 +126,20 @@ class AdminServiceHandler implements EventHandler {
 					if (book.getStock() < diffAmount) {
 						// Tip: you can have localized messages and use parameters in your messages
 						messages.error(MessageKeys.BOOK_REQUIRE_STOCK, book.getStock())
-								.target("in", ORDERS, o -> o.Items(i -> i.ID().eq(orderItem.getId()).and(i.IsActiveEntity().eq(false))).amount());
-						return; // no need to update follow-up values with invalid amount / stock
+								.target("in", ORDERS, o -> o.Items(i -> i.ID().eq(orderItem.getId()).and(i.IsActiveEntity().eq(false))).quantity());
+						return; // no need to update follow-up values with invalid quantity / stock
 					}
 
 					// update the book with the new stock
 					book.setStock(book.getStock() - diffAmount);
 					db.run(Update.entity(BOOKS).data(book));
 
-					// update the net amount
-					BigDecimal updatedNetAmount = book.getPrice().multiply(BigDecimal.valueOf(amount));
-					orderItem.setNetAmount(updatedNetAmount);
+					// update the Amount
+					BigDecimal updatedAmount = book.getPrice().multiply(BigDecimal.valueOf(quantity));
+					orderItem.setAmount(updatedAmount);
 
 					// update the total
-					order.setTotal(order.getTotal().add(updatedNetAmount));
+					order.setTotal(order.getTotal().add(updatedAmount));
 				});
 			}
 		});
@@ -153,13 +153,13 @@ class AdminServiceHandler implements EventHandler {
 	 */
 	@Before(event = DraftService.EVENT_DRAFT_PATCH)
 	public void patchOrderItems(DraftPatchEventContext context, OrderItems orderItem) {
-		// check if amount or book was updated
-		Integer amount = orderItem.getAmount();
+		// check if quantity or book was updated
+		Integer quantity = orderItem.getQuantity();
 		String bookId = orderItem.getBookId();
 		String orderItemId = orderItem.getId();
-		BigDecimal netAmount = calculateNetAmountInDraft(orderItemId, amount, bookId);
-		if (netAmount != null) {
-			orderItem.setNetAmount(netAmount);
+		BigDecimal Amount = calculateAmountInDraft(orderItemId, quantity, bookId);
+		if (Amount != null) {
+			orderItem.setAmount(Amount);
 		}
 	}
 
@@ -172,20 +172,20 @@ class AdminServiceHandler implements EventHandler {
 	public void cancelOrderItems(DraftCancelEventContext context) {
 		String orderItemId = (String) analyzer.analyze(context.getCqn()).targetKeys().get(OrderItems.ID);
 		if(orderItemId != null) {
-			calculateNetAmountInDraft(orderItemId, 0, null);
+			calculateAmountInDraft(orderItemId, 0, null);
 		}
 	}
 
-	private BigDecimal calculateNetAmountInDraft(String orderItemId, Integer newAmount, String newBookId) {
-		Integer amount = newAmount;
+	private BigDecimal calculateAmountInDraft(String orderItemId, Integer newAmount, String newBookId) {
+		Integer quantity = newAmount;
 		String bookId = newBookId;
-		if (amount == null && bookId == null) {
+		if (quantity == null && bookId == null) {
 			return null; // nothing changed
 		}
 
-		// get the order item that was updated (to get access to the book price, amount and order total)
+		// get the order item that was updated (to get access to the book price, quantity and order total)
 		Result result = adminService.run(Select.from(ORDER_ITEMS)
-				.columns(o -> o.amount(), o -> o.netAmount(),
+				.columns(o -> o.quantity(), o -> o.amount(),
 						o -> o.book().expand(b -> b.ID(), b -> b.price()),
 						o -> o.parent().expand(p -> p.ID(), p -> p.total()))
 				.where(o -> o.ID().eq(orderItemId).and(o.IsActiveEntity().eq(false))));
@@ -193,8 +193,8 @@ class AdminServiceHandler implements EventHandler {
 		BigDecimal bookPrice = null;
 
 		// fallback to existing values
-		if(amount == null) {
-			amount = itemToPatch.getAmount();
+		if(quantity == null) {
+			quantity = itemToPatch.getQuantity();
 		}
 
 		if(bookId == null && itemToPatch.getBook() != null) {
@@ -202,15 +202,15 @@ class AdminServiceHandler implements EventHandler {
 			bookPrice = itemToPatch.getBook().getPrice();
 		}
 
-		if(amount == null || bookId == null) {
+		if(quantity == null || bookId == null) {
 			return null; // not enough data available
 		}
 
 		// only warn about invalid values as we are in draft mode
-		if(amount <= 0) {
+		if(quantity <= 0) {
 			// Tip: add additional messages with localized messages from property files
 			// these messages are transported in sap-messages and do not abort the request
-			messages.warn(MessageKeys.AMOUNT_REQUIRE_MINIMUM);
+			messages.warn(MessageKeys.QUANTITY_REQUIRE_MINIMUM);
 		}
 
 		// get the price of the updated book ID
@@ -220,18 +220,18 @@ class AdminServiceHandler implements EventHandler {
 			bookPrice = book.getPrice();
 		}
 
-		// update the net amount of the order item
-		BigDecimal updatedNetAmount = bookPrice.multiply(BigDecimal.valueOf(amount));
+		// update the Amount of the order item
+		BigDecimal updatedAmount = bookPrice.multiply(BigDecimal.valueOf(quantity));
 
 		// update the order's total
-		BigDecimal previousNetAmount = defaultZero(itemToPatch.getNetAmount());
+		BigDecimal previousAmount = defaultZero(itemToPatch.getAmount());
 		BigDecimal currentTotal = defaultZero(itemToPatch.getParent().getTotal());
-		BigDecimal newTotal = currentTotal.subtract(previousNetAmount).add(updatedNetAmount);
+		BigDecimal newTotal = currentTotal.subtract(previousAmount).add(updatedAmount);
 		adminService.patchDraft(Update.entity(ORDERS)
 				.where(o -> o.ID().eq(itemToPatch.getParent().getId()).and(o.IsActiveEntity().eq(false)))
 				.data(Orders.TOTAL, newTotal));
 
-		return updatedNetAmount;
+		return updatedAmount;
 	}
 
 	/**
@@ -262,7 +262,7 @@ class AdminServiceHandler implements EventHandler {
 		OrderItems newItem = OrderItems.create();
 		newItem.setId(UUID.randomUUID().toString());
 		newItem.setBookId(bookId);
-		newItem.setAmount(context.getAmount());
+		newItem.setQuantity(context.getQuantity());
 		order.getItems().add(newItem);
 
 		Orders updatedOrder = adminService.run(Update.entity(ORDERS).data(order)).single(Orders.class);

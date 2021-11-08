@@ -128,6 +128,6 @@ annotate AdminService.Books actions {
             ],
         }}
     ),
-    amount @title : '{i18n>Amount}'
+    quantity @title : '{i18n>Quantity}'
     )
 }
