@@ -133,11 +133,11 @@ class AdminServiceHandler implements EventHandler {
 					db.run(Update.entity(BOOKS).data(book));
 
 					// update the Amount
-					BigDecimal updatedNetAmount = book.getPrice().multiply(BigDecimal.valueOf(quantity));
-					orderItem.setNetAmount(updatedNetAmount);
+					BigDecimal updatedAmount = book.getPrice().multiply(BigDecimal.valueOf(quantity));
+					orderItem.setAmount(updatedAmount);
 
 					// update the total
-					order.setTotal(order.getTotal().add(updatedNetAmount));
+					order.setTotal(order.getTotal().add(updatedAmount));
 				});
 			}
 		});
@@ -155,9 +155,9 @@ class AdminServiceHandler implements EventHandler {
 		Integer quantity = orderItem.getQuantity();
 		String bookId = orderItem.getBookId();
 		String orderItemId = orderItem.getId();
-		BigDecimal Amount = calculateNetAmountInDraft(orderItemId, quantity, bookId);
+		BigDecimal Amount = calculateAmountInDraft(orderItemId, quantity, bookId);
 		if (Amount != null) {
-			orderItem.setNetAmount(Amount);
+			orderItem.setAmount(Amount);
 		}
 	}
 
@@ -170,11 +170,11 @@ class AdminServiceHandler implements EventHandler {
 	public void cancelOrderItems(DraftCancelEventContext context) {
 		String orderItemId = (String) analyzer.analyze(context.getCqn()).targetKeys().get(OrderItems.ID);
 		if(orderItemId != null) {
-			calculateNetAmountInDraft(orderItemId, 0, null);
+			calculateAmountInDraft(orderItemId, 0, null);
 		}
 	}
 
-	private BigDecimal calculateNetAmountInDraft(String orderItemId, Integer newAmount, String newBookId) {
+	private BigDecimal calculateAmountInDraft(String orderItemId, Integer newAmount, String newBookId) {
 		Integer quantity = newAmount;
 		String bookId = newBookId;
 		if (quantity == null && bookId == null) {
@@ -219,17 +219,17 @@ class AdminServiceHandler implements EventHandler {
 		}
 
 		// update the Amount of the order item
-		BigDecimal updatedNetAmount = bookPrice.multiply(BigDecimal.valueOf(quantity));
+		BigDecimal updatedAmount = bookPrice.multiply(BigDecimal.valueOf(quantity));
 
 		// update the order's total
-		BigDecimal previousNetAmount = defaultZero(itemToPatch.getNetAmount());
+		BigDecimal previousAmount = defaultZero(itemToPatch.getAmount());
 		BigDecimal currentTotal = defaultZero(itemToPatch.getParent().getTotal());
-		BigDecimal newTotal = currentTotal.subtract(previousNetAmount).add(updatedNetAmount);
+		BigDecimal newTotal = currentTotal.subtract(previousAmount).add(updatedAmount);
 		adminService.patchDraft(Update.entity(ORDERS)
 				.where(o -> o.ID().eq(itemToPatch.getParent().getId()).and(o.IsActiveEntity().eq(false)))
 				.data(Orders.TOTAL, newTotal));
 
-		return updatedNetAmount;
+		return updatedAmount;
 	}
 
 	/**
