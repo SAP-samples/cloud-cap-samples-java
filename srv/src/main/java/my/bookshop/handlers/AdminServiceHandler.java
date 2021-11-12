@@ -101,14 +101,14 @@ class AdminServiceHandler implements EventHandler {
 						// exceptions abort the request and set an error http status code
 						// messages in contrast allow to collect multiple errors
 						messages.error(MessageKeys.QUANTITY_REQUIRE_MINIMUM)
-								.target("in", ORDERS, o -> o.Items(i -> i.ID().eq(orderItem.getId()).and(i.IsActiveEntity().eq(false))).quantity());
+								.target("in", ORDERS, o -> o.Items(i -> i.ID().eq(orderItem.getId()).and(i.IsActiveEntity().eq(orderItem.getIsActiveEntity()))).quantity());
 					}
 
 					String bookId = orderItem.getBookId();
 					if (bookId == null) {
 						// Tip: using static text without localization is still possible in exceptions and messages
 						messages.error("You have to specify the book to order")
-								.target("in", ORDERS, o -> o.Items(i -> i.ID().eq(orderItem.getId()).and(i.IsActiveEntity().eq(false))).book_ID());
+								.target("in", ORDERS, o -> o.Items(i -> i.ID().eq(orderItem.getId()).and(i.IsActiveEntity().eq(orderItem.getIsActiveEntity()))).book_ID());
 					}
 
 					if(quantity == null || quantity <= 0 || bookId == null) {
@@ -126,7 +126,7 @@ class AdminServiceHandler implements EventHandler {
 					if (book.getStock() < diffAmount) {
 						// Tip: you can have localized messages and use parameters in your messages
 						messages.error(MessageKeys.BOOK_REQUIRE_STOCK, book.getStock())
-								.target("in", ORDERS, o -> o.Items(i -> i.ID().eq(orderItem.getId()).and(i.IsActiveEntity().eq(false))).quantity());
+								.target("in", ORDERS, o -> o.Items(i -> i.ID().eq(orderItem.getId()).and(i.IsActiveEntity().eq(orderItem.getIsActiveEntity()))).quantity());
 						return; // no need to update follow-up values with invalid quantity / stock
 					}
 
