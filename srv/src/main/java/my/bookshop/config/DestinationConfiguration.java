@@ -19,10 +19,11 @@ public class DestinationConfiguration {
 	@EventListener
 	void applicationReady(ApplicationReadyEvent ready) {
 		Integer port = environment.getProperty("local.server.port", Integer.class);
-		if(port != null) {
+		String destinationName = environment.getProperty("cds.remote.services.'[API_BUSINESS_PARTNER]'.destination.name");
+		if(port != null && destinationName != null) {
 			DefaultHttpDestination httpDestination = DefaultHttpDestination
 			.builder("http://localhost:" + port)
-			.name("myself").build();
+			.name(destinationName).build();
 
 			DestinationAccessor.prependDestinationLoader(
 				new DefaultDestinationLoader().registerDestination(httpDestination));
