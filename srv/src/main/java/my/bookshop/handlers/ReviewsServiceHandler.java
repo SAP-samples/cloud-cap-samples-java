@@ -20,8 +20,8 @@ import com.sap.cds.services.handler.annotations.ServiceName;
 import com.sap.cds.services.persistence.PersistenceService;
 
 import cds.gen.adminservice.AdminService_;
-import cds.gen.my.reviews.Reviews;
-import cds.gen.my.reviews.Reviews_;
+import cds.gen.reviewsservice.Reviews;
+import cds.gen.reviewsservice.Reviews_;
 import cds.gen.reviewsservice.Reviewed;
 import cds.gen.reviewsservice.ReviewedContext;
 import cds.gen.reviewsservice.ReviewsService_;
