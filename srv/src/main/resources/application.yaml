@@ -1,4 +1,7 @@
 ---
+logging:
+  level:
+    '[com.sap.cds.auditlog]': DEBUG
 spring:
   web.resources.static-locations: "file:./app"
   jmx:
@@ -46,11 +49,11 @@ cds:
   remote.services:
     '[API_BUSINESS_PARTNER]':
       destination:
-        name: "s4-business-partner-api"
-        suffix: "/sap/opu/odata/sap"
+        properties:
+          url: "https://sandbox.api.sap.com/s4hanacloud/sap/opu/odata/sap"
+        headers:
+          APIKey: "" # Place API Key from SAP API Business Hub here or use environment variable CDS_REMOTE_SERVICES_API_BUSINESS_PARTNER_DESTINATION_HEADERS_APIKEY
         type: "odata-v2"
-api-hub:
-  api-key: "" # Place API Key from SAP API Business Hub here or use environment variable API_HUB_API_KEY
 
 ---
 spring:

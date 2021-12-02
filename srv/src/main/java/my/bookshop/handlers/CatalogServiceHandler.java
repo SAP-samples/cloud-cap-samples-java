@@ -164,7 +164,7 @@ class CatalogServiceHandler implements EventHandler {
 
 	@On
 	public void onSubmitOrder(SubmitOrderContext context) {
-		Integer amount = context.getAmount();
+		Integer quantity = context.getQuantity();
 		String bookId = context.getBook();
 
 		Optional<Books> book = db.run(Select.from(BOOKS).columns(Books_::stock).byId(bookId)).first(Books.class);
@@ -174,15 +174,15 @@ class CatalogServiceHandler implements EventHandler {
 
 		int stock = book.map(Books::getStock).get();
 
-		if (stock >= amount) {
-			db.run(Update.entity(BOOKS).byId(bookId).data(Books.STOCK, stock -= amount));
+		if (stock >= quantity) {
+			db.run(Update.entity(BOOKS).byId(bookId).data(Books.STOCK, stock -= quantity));
 
 			SubmitOrderContext.ReturnType result = SubmitOrderContext.ReturnType.create();
 			result.setStock(stock);
 
 			context.setResult(result);
 		} else {
-			throw new ServiceException(ErrorStatuses.CONFLICT, MessageKeys.ORDER_EXCEEDS_STOCK, amount);
+			throw new ServiceException(ErrorStatuses.CONFLICT, MessageKeys.ORDER_EXCEEDS_STOCK, quantity);
 		}
 	}
 

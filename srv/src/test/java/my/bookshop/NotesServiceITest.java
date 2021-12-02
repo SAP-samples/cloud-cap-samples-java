@@ -10,7 +10,8 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.reactive.server.WebTestClient;
 
 @ExtendWith(SpringExtension.class)
-@SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
+@SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT,
+		properties = "cds.remote.services.'[API_BUSINESS_PARTNER]'.destination.name=myself-NotesServiceITest")
 @ActiveProfiles({"default", "mocked"})
 public class NotesServiceITest {
 
