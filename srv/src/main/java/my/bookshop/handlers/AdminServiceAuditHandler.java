@@ -87,7 +87,7 @@ class AdminServiceAuditHandler implements EventHandler {
 		});
 	}
 
-	@Before(event = { CqnService.EVENT_DELETE })
+	@Before(event = { CqnService.EVENT_DELETE }, entity = { Orders_.CDS_NAME })
 	public void beforeDelete(CdsDeleteEventContext context) {
 		// prepare a select statement to read old order number
 		Select<?> ordersSelect = toSelect(context.getCqn());
