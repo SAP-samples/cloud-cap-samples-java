@@ -99,7 +99,7 @@ public class GraphQLITest {
 	@Test
 	@WithMockUser("user")
 	public void testAuthorizationChecks() throws Exception {
-		String query = "{ \"query\": \"{ getAdminServiceOrdersById(IsActiveEntity: true, ID: \\\"7e2f2640-6866-4dcf-8f4d-3027aa831cad\\\") { ID Items { amount book { title } } } }\" }";
+		String query = "{ \"query\": \"{ getAdminServiceOrdersById(IsActiveEntity: true, ID: \\\"7e2f2640-6866-4dcf-8f4d-3027aa831cad\\\") { ID Items { quantity book { title } } } }\" }";
 		MvcResult result = mockMvc.perform(post(graphqlURI).contentType(MediaType.APPLICATION_JSON).content(query)).andReturn();
 		mockMvc.perform(asyncDispatch(result))
 				.andExpect(status().isOk())
@@ -109,15 +109,15 @@ public class GraphQLITest {
 	@Test
 	@WithMockUser("admin")
 	public void testDeepQuery() throws Exception {
-		String query = "{ \"query\": \"{ getAdminServiceOrdersById(IsActiveEntity: true, ID: \\\"7e2f2640-6866-4dcf-8f4d-3027aa831cad\\\") { ID Items { amount book { title } } } }\" }";
+		String query = "{ \"query\": \"{ getAdminServiceOrdersById(IsActiveEntity: true, ID: \\\"7e2f2640-6866-4dcf-8f4d-3027aa831cad\\\") { ID Items { quantity book { title } } } }\" }";
 		MvcResult result = mockMvc.perform(post(graphqlURI).contentType(MediaType.APPLICATION_JSON).content(query)).andReturn();
 		mockMvc.perform(asyncDispatch(result))
 				.andExpect(status().isOk())
 				.andExpect(jsonPath("$.data.getAdminServiceOrdersById.ID").value("7e2f2640-6866-4dcf-8f4d-3027aa831cad"))
 				.andExpect(jsonPath("$.data.getAdminServiceOrdersById.Items").isArray())
-				.andExpect(jsonPath("$.data.getAdminServiceOrdersById.Items[0].amount").value(1))
+				.andExpect(jsonPath("$.data.getAdminServiceOrdersById.Items[0].quantity").value(1))
 				.andExpect(jsonPath("$.data.getAdminServiceOrdersById.Items[0].book.title").value("Wuthering Heights"))
-				.andExpect(jsonPath("$.data.getAdminServiceOrdersById.Items[1].amount").value(1))
+				.andExpect(jsonPath("$.data.getAdminServiceOrdersById.Items[1].quantity").value(1))
 				.andExpect(jsonPath("$.data.getAdminServiceOrdersById.Items[1].book.title").value("Catweazle"))
 				.andExpect(jsonPath("$.data.getAdminServiceOrdersById.Items[2]").doesNotExist());
 	}

@@ -56,7 +56,7 @@ Authorization: Basic user:user
 Content-Type: application/json
 
 {
-	"query": "{ getAdminServiceOrdersById(IsActiveEntity: true, ID: \"7e2f2640-6866-4dcf-8f4d-3027aa831cad\") { ID Items { amount book { title } } } }"
+	"query": "{ getAdminServiceOrdersById(IsActiveEntity: true, ID: \"7e2f2640-6866-4dcf-8f4d-3027aa831cad\") { ID Items { quantity book { title } } } }"
 }
 
 ### Select one order with all items and their book
@@ -66,5 +66,5 @@ Authorization: Basic admin:admin
 Content-Type: application/json
 
 {
-	"query": "{ getAdminServiceOrdersById(IsActiveEntity: true, ID: \"7e2f2640-6866-4dcf-8f4d-3027aa831cad\") { ID Items { amount book { title } } } }"
+	"query": "{ getAdminServiceOrdersById(IsActiveEntity: true, ID: \"7e2f2640-6866-4dcf-8f4d-3027aa831cad\") { ID Items { quantity book { title } } } }"
 }
