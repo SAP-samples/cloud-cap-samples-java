@@ -20,6 +20,7 @@
 		<spring.boot.version>2.6.1</spring.boot.version>
 		<cloud.sdk.version>3.58.0</cloud.sdk.version>
 		<cf-java-logging-support.version>3.5.2</cf-java-logging-support.version>
+		<xsuaa.version>2.11.4</xsuaa.version>
 	</properties>
 
 	<modules>
@@ -65,6 +66,33 @@
 				<groupId>com.sap.hcp.cf.logging</groupId>
 				<artifactId>cf-java-logging-support-logback</artifactId>
 				<version>${cf-java-logging-support.version}</version>
+			</dependency>
+
+			<!-- XSUAA -->
+			<dependency>
+				<groupId>com.sap.cloud.security</groupId>
+				<artifactId>java-api</artifactId>
+				<version>${xsuaa.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.sap.cloud.security</groupId>
+				<artifactId>java-security</artifactId>
+				<version>${xsuaa.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.sap.cloud.security</groupId>
+				<artifactId>env</artifactId>
+				<version>${xsuaa.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.sap.cloud.security.xsuaa</groupId>
+				<artifactId>api</artifactId>
+				<version>${xsuaa.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.sap.cloud.security.xsuaa</groupId>
+				<artifactId>token-client</artifactId>
+				<version>${xsuaa.version}</version>
 			</dependency>
 		</dependencies>
 	</dependencyManagement>
