@@ -16,9 +16,9 @@
 
 		<!-- DEPENDENCIES VERSION -->
 		<jdk.version>1.8</jdk.version>
-		<cds.services.version>1.20.3</cds.services.version>
-		<spring.boot.version>2.5.5</spring.boot.version>
-		<cloud.sdk.version>3.55.1</cloud.sdk.version>
+		<cds.services.version>1.21.0</cds.services.version>
+		<spring.boot.version>2.6.1</spring.boot.version>
+		<cloud.sdk.version>3.58.0</cloud.sdk.version>
 		<cf-java-logging-support.version>3.5.2</cf-java-logging-support.version>
 	</properties>
 
