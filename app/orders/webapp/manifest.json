@@ -5,6 +5,9 @@
 		"type": "application",
 		"title": "{{appTitle}}",
 		"description": "{{appDescription}}",
+        "applicationVersion": {
+            "version": "1.0.0"
+        },
 		"dataSources": {
 			"AdminService": {
 				"uri": "/api/admin/",
@@ -18,7 +21,19 @@
             "id": "ui5template.basicSAPUI5ApplicationProject",
 			"-id": "ui5template.smartTemplate",
 			"-version": "1.40.12"
-		}
+		},
+        "crossNavigation": {
+            "inbounds": {
+                "Orders-manage": {
+                    "signature": {
+                        "parameters": {},
+                        "additionalParameters": "allowed"
+                    },
+                    "semanticObject": "Orders",
+                    "action": "manage"
+                }
+            }
+        }
 	},
 	"sap.ui5": {
         "dependencies": {

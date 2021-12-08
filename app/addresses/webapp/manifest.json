@@ -5,6 +5,9 @@
         "type": "application",
         "title": "{{appTitle}}",
         "description": "{{appDescription}}",
+        "applicationVersion": {
+            "version": "1.0.0"
+        },
         "dataSources": {
             "NotesService": {
                 "uri": "/api/notes/",
