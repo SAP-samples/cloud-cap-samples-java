@@ -21,6 +21,18 @@
             "id": "ui5template.basicSAPUI5ApplicationProject",
             "-id": "ui5template.smartTemplate",
             "-version": "1.40.12"
+        },
+        "crossNavigation": {
+            "inbounds": {
+                "Admin-manage": {
+                    "signature": {
+                        "parameters": {},
+                        "additionalParameters": "allowed"
+                    },
+                    "semanticObject": "Admin",
+                    "action": "manage"
+                }
+            }
         }
     },
     "sap.ui5": {
