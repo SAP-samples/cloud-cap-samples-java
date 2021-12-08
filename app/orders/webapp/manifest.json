@@ -5,9 +5,9 @@
 		"type": "application",
 		"title": "{{appTitle}}",
 		"description": "{{appDescription}}",
-        "applicationVersion": {
-            "version": "1.0.0"
-        },
+		"applicationVersion": {
+			"version": "1.0.0"
+		},
 		"dataSources": {
 			"AdminService": {
 				"uri": "/api/admin/",
@@ -17,30 +17,30 @@
 				}
 			}
 		},
-        "-sourceTemplate": {
-            "id": "ui5template.basicSAPUI5ApplicationProject",
+		"-sourceTemplate": {
+			"id": "ui5template.basicSAPUI5ApplicationProject",
 			"-id": "ui5template.smartTemplate",
 			"-version": "1.40.12"
 		},
-        "crossNavigation": {
-            "inbounds": {
-                "Orders-manage": {
-                    "signature": {
-                        "parameters": {},
-                        "additionalParameters": "allowed"
-                    },
-                    "semanticObject": "Orders",
-                    "action": "manage"
-                }
-            }
-        }
+		"crossNavigation": {
+			"inbounds": {
+				"Orders-manage": {
+					"signature": {
+						"parameters": {},
+						"additionalParameters": "allowed"
+					},
+					"semanticObject": "Orders",
+					"action": "manage"
+				}
+			}
+		}
 	},
 	"sap.ui5": {
-        "dependencies": {
-            "libs": {
-                "sap.fe.templates": {}
-            }
-        },
+		"dependencies": {
+			"libs": {
+				"sap.fe.templates": {}
+			}
+		},
 		"models": {
 			"i18n": {
 				"type": "sap.ui.model.resource.ResourceModel",
@@ -49,47 +49,47 @@
 			"": {
 				"dataSource": "AdminService",
 				"settings": {
-                    "synchronizationMode": "None",
-                    "operationMode": "Server",
-                    "autoExpandSelect" : true,
-                    "earlyRequests": true,
-                    "groupProperties": {
-                        "default": {
-                          "submit": "Auto"
-                        }
-                    }
+					"synchronizationMode": "None",
+					"operationMode": "Server",
+					"autoExpandSelect" : true,
+					"earlyRequests": true,
+					"groupProperties": {
+						"default": {
+						  "submit": "Auto"
+						}
+					}
 				}
 			}
 		},
-        "routing": {
-            "routes": [
-                {
-                    "pattern": ":?query:",
-                    "name": "OrdersList",
-                    "target": "OrdersList"
-                },
-                {
-                    "pattern": "Orders({key}):?query:",
-                    "name": "OrdersDetails",
-                    "target": "OrdersDetails"
-                },
-                {
-                    "pattern": "Orders({boo})/Items({boo2}):?query:",
-                    "name": "OrderItemsDetails",
-                    "target": "OrderItemsDetails"
-                },
-                {
-                    "pattern": "Books({key}):?query:",
-                    "name": "BooksDetails",
-                    "target": "BooksDetails"
-                }
-            ],
-            "targets": {
-                "OrdersList": {
-                    "type": "Component",
-                    "id": "OrdersList",
-                    "name": "sap.fe.templates.ListReport",
-                    "options": {
+		"routing": {
+			"routes": [
+				{
+					"pattern": ":?query:",
+					"name": "OrdersList",
+					"target": "OrdersList"
+				},
+				{
+					"pattern": "Orders({key}):?query:",
+					"name": "OrdersDetails",
+					"target": "OrdersDetails"
+				},
+				{
+					"pattern": "Orders({boo})/Items({boo2}):?query:",
+					"name": "OrderItemsDetails",
+					"target": "OrderItemsDetails"
+				},
+				{
+					"pattern": "Books({key}):?query:",
+					"name": "BooksDetails",
+					"target": "BooksDetails"
+				}
+			],
+			"targets": {
+				"OrdersList": {
+					"type": "Component",
+					"id": "OrdersList",
+					"name": "sap.fe.templates.ListReport",
+					"options": {
 						"settings" : {
 							"entitySet" : "Orders",
 							"navigation" : {
@@ -101,73 +101,73 @@
 							}
 						}
 					}
-                },
-                "OrdersDetails": {
-                    "type": "Component",
-                    "id": "OrdersDetails",
-                    "name": "sap.fe.templates.ObjectPage",
-                    "options": {
-                        "settings" : {
-                            "entitySet": "Orders",
+				},
+				"OrdersDetails": {
+					"type": "Component",
+					"id": "OrdersDetails",
+					"name": "sap.fe.templates.ObjectPage",
+					"options": {
+						"settings" : {
+							"entitySet": "Orders",
 							"navigation" : {
 								"Items": {
-                                    "detail": {
-                                        "route": "OrderItemsDetails"
-                                    }
-                                },
-                                "book": {
-                                    "detail": {
-                                        "route": "BooksDetails"
-                                    }
-                                },
-                                "dummy": {
-                                    "detail": {
-                                        "route": "BooksDetails"
-                                    }
-                                }
+									"detail": {
+										"route": "OrderItemsDetails"
+									}
+								},
+								"book": {
+									"detail": {
+										"route": "BooksDetails"
+									}
+								},
+								"dummy": {
+									"detail": {
+										"route": "BooksDetails"
+									}
+								}
 							}
 						}
 					}
-                },
-                "OrderItemsDetails": {
-                    "type": "Component",
-                    "id": "OrderItemsDetails",
-                    "name": "sap.fe.templates.ObjectPage",
-                    "options": {
-                        "settings" : {
-                            "entitySet": "OrderItems"
-                        }
-                    }
-                },
-                "BooksDetails": {
-                    "type": "Component",
-                    "id": "BooksDetails",
-                    "name": "sap.fe.templates.ObjectPage",
-                    "options": {
-                        "settings" : {
-                            "entitySet": "Books",
-                            "navigation": {
-                                "author": {
-                                    "detail": {
-                                        "route": "AuthorsDetails"
-                                    }
-                                }
-                            }
-                        }
-                    }
-                },
-                "AuthorsDetails": {
-                    "type": "Component",
-                    "id": "AuthorsDetails",
-                    "name": "sap.fe.templates.ObjectPage",
-                    "options": {
-                        "settings" : {
-                            "entitySet": "Authors"
-                        }
-                    }
-                }
-            }
-        },
+				},
+				"OrderItemsDetails": {
+					"type": "Component",
+					"id": "OrderItemsDetails",
+					"name": "sap.fe.templates.ObjectPage",
+					"options": {
+						"settings" : {
+							"entitySet": "OrderItems"
+						}
+					}
+				},
+				"BooksDetails": {
+					"type": "Component",
+					"id": "BooksDetails",
+					"name": "sap.fe.templates.ObjectPage",
+					"options": {
+						"settings" : {
+							"entitySet": "Books",
+							"navigation": {
+								"author": {
+									"detail": {
+										"route": "AuthorsDetails"
+									}
+								}
+							}
+						}
+					}
+				},
+				"AuthorsDetails": {
+					"type": "Component",
+					"id": "AuthorsDetails",
+					"name": "sap.fe.templates.ObjectPage",
+					"options": {
+						"settings" : {
+							"entitySet": "Authors"
+						}
+					}
+				}
+			}
+		},
 		"contentDensities": {
 			"compact": true,
 			"cozy": true
