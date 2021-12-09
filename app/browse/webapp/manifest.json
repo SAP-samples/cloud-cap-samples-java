@@ -24,13 +24,13 @@
         },
         "crossNavigation": {
             "inbounds": {
-                "Books-manage": {
+                "Books-show": {
                     "signature": {
                         "parameters": {},
                         "additionalParameters": "allowed"
                     },
                     "semanticObject": "Books",
-                    "action": "manage"
+                    "action": "show"
                 }
             }
         }

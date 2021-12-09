@@ -24,13 +24,13 @@
         },
         "crossNavigation": {
             "inbounds": {
-                "Addresses-manage": {
+                "Addresses-show": {
                     "signature": {
                         "parameters": {},
                         "additionalParameters": "allowed"
                     },
                     "semanticObject": "Addresses",
-                    "action": "manage"
+                    "action": "show"
                 }
             }
         }

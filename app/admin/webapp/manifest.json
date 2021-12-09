@@ -24,12 +24,12 @@
         },
         "crossNavigation": {
             "inbounds": {
-                "Admin-manage": {
+                "Books-manage": {
                     "signature": {
                         "parameters": {},
                         "additionalParameters": "allowed"
                     },
-                    "semanticObject": "Admin",
+                    "semanticObject": "Books",
                     "action": "manage"
                 }
             }
