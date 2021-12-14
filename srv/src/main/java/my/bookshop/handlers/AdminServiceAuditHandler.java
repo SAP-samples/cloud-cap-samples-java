@@ -48,9 +48,7 @@ class AdminServiceAuditHandler implements EventHandler {
 	public void beforeCreateOrder(Stream<Orders> orders) {
 		orders.forEach(order -> {
 			ConfigChange cfgChange = createConfigChange(order, null);
-			if (cfgChange != null) {
-				this.auditLog.logConfigChange(Action.CREATE, cfgChange);
-			}
+			this.auditLog.logConfigChange(Action.CREATE, cfgChange);
 		});
 	}
 
