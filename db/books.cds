@@ -35,6 +35,15 @@ entity Authors : cuid, managed {
                        on books.author = $self;
 }
 
+// annotations for Data Privacy
+annotate Authors with
+@PersonalData : { DataSubjectRole : 'Author', EntitySemantics : 'DataSubject' }
+@AuditLog.Operation : { Read : true, Create : true, Update : true, Delete : true }
+{
+  ID    @PersonalData.FieldSemantics : 'DataSubjectID';
+  name  @PersonalData.IsPotentiallySensitive;
+}
+
 /**
  * Hierarchically organized Code List for Genres
  */
