@@ -47,7 +47,7 @@ Framework and Infrastructure related Features:
 - [Mocking users](/srv/src/main/resources/application.yaml) for local development
 - [Authentication & Authorization](https://cap.cloud.sap/docs/java/security) (including user-specific restrictions with `@restrict` in the [Admin Service](/srv/admin-service.cds))
 - [Cloud Foundry Deployment using MTA](https://cap.cloud.sap/docs/advanced/deploy-to-cloud#deploy-using-mta) with XSUAA [Service Bindings](mta-single-tenant.yaml)
-- Application Router configuration including authentication via the XSUAA Service. See [package.json](app/package.json), [xs-app.json](app/xs-app.json) and [cds-security.json](cds-security.json)
+- Application Router configuration including authentication via the XSUAA Service. See [package.json](app/package.json), [xs-app.json](app/xs-app.json) and [xs-security.json](xs-security.json)
 - [Multitenancy configuration](https://cap.cloud.sap/docs/java/multitenancy) via [mta-multi-tenant.yaml](mta-multi-tenant.yaml), [.cdsrc.json](.cdsrc.json), [sidecar module](mtx-sidecar)
 
 Domain Model related Features:
