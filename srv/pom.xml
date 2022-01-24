@@ -40,6 +40,12 @@
 
 		<dependency>
 			<groupId>com.sap.cds</groupId>
+			<artifactId>cds-feature-k8s</artifactId>
+			<scope>runtime</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>com.sap.cds</groupId>
 			<artifactId>cds-feature-enterprise-messaging</artifactId>
 			<scope>runtime</scope>
 		</dependency>
@@ -59,6 +65,16 @@
 		<dependency>
 			<groupId>com.sap.cloud.sdk.cloudplatform</groupId>
 			<artifactId>scp-cf</artifactId>
+		</dependency>
+
+		<!-- CLOUD SDK for on-premise connectivity -->
+		<dependency>
+			<groupId>com.sap.cloud.sdk.s4hana</groupId>
+			<artifactId>s4hana-connectivity</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.sap.cloud.sdk.s4hana</groupId>
+			<artifactId>s4hana-core</artifactId>
 		</dependency>
 
 		<!-- OTHER DEPENDENCIES -->
