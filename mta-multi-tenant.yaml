@@ -90,8 +90,8 @@ resources:
     parameters:
       service: xsuaa
       service-plan: broker
-      path: ./cds-security-mt.json
-      config: # override xsappname in cds-security.json, xsappname needs to be unique
+      path: ./xs-security-mt.json
+      config: # override xsappname as it needs to be unique
         xsappname: bookshop-mt-${org}-${space}
   - name: bookshop-mt-service-manager
     type: org.cloudfoundry.managed-service

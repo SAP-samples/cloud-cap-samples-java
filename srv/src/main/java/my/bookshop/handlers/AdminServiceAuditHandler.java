@@ -2,9 +2,7 @@ package my.bookshop.handlers;
 
 import static cds.gen.adminservice.AdminService_.ORDERS;
 
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
 
@@ -13,19 +11,15 @@ import org.springframework.stereotype.Component;
 
 import com.sap.cds.ql.Select;
 import com.sap.cds.ql.cqn.CqnDelete;
-import com.sap.cds.services.auditlog.Access;
 import com.sap.cds.services.auditlog.Action;
-import com.sap.cds.services.auditlog.Attribute;
 import com.sap.cds.services.auditlog.AuditLogService;
 import com.sap.cds.services.auditlog.ChangedAttribute;
-import com.sap.cds.services.auditlog.DataModification;
+import com.sap.cds.services.auditlog.ConfigChange;
 import com.sap.cds.services.auditlog.DataObject;
-import com.sap.cds.services.auditlog.DataSubject;
 import com.sap.cds.services.auditlog.KeyValuePair;
 import com.sap.cds.services.cds.CdsDeleteEventContext;
 import com.sap.cds.services.cds.CqnService;
 import com.sap.cds.services.handler.EventHandler;
-import com.sap.cds.services.handler.annotations.After;
 import com.sap.cds.services.handler.annotations.Before;
 import com.sap.cds.services.handler.annotations.ServiceName;
 import com.sap.cds.services.persistence.PersistenceService;
@@ -50,52 +44,44 @@ class AdminServiceAuditHandler implements EventHandler {
 		this.auditLog = auditLog;
 	}
 
-	@After(event = { CqnService.EVENT_READ })
-	public void afterReadOrder(Stream<Orders> orders) {
-		orders.forEach(order -> {
-			if (order.getOrderNo() != null) {
-				this.auditLog.logDataAccess(createAccess(order));
-			}
-		});
-	}
-
 	@Before(event = { CqnService.EVENT_CREATE })
 	public void beforeCreateOrder(Stream<Orders> orders) {
 		orders.forEach(order -> {
-			DataModification dataModification = createDataModification(order, null, Action.CREATE);
-			if (dataModification != null) {
-				this.auditLog.logDataModification(Arrays.asList(dataModification));
-			}
+			ConfigChange cfgChange = createConfigChange(order, null);
+			this.auditLog.logConfigChange(Action.CREATE, cfgChange);
 		});
 	}
 
 	@Before(event = { CqnService.EVENT_UPDATE, CqnService.EVENT_UPSERT })
 	public void beforeUpdateOrUpsertOrder(Stream<Orders> orders) {
 		orders.forEach(order -> {
-			DataModification dataModification = null;
+			ConfigChange cfgChange = null;
+			Action action = null;
 			Optional<Orders> oldOrders = readOldOrders(order.getId());
 			if (oldOrders.isPresent()) {
-				if (!StringUtils.equals(order.getOrderNo(), oldOrders.get().getOrderNo())) {
-					dataModification = createDataModification(order, oldOrders.get(), Action.UPDATE);
+				if (!StringUtils.equals(order.getCurrencyCode(), oldOrders.get().getCurrencyCode())) {
+					cfgChange = createConfigChange(order, oldOrders.get());
+					action = Action.UPDATE;
 				}
 			} else {
-				dataModification = createDataModification(order, null, Action.CREATE);
+				cfgChange = createConfigChange(order, null);
+				action = Action.CREATE;
 			}
-			if (dataModification != null) {
-				this.auditLog.logDataModification(Arrays.asList(dataModification));
+			if (cfgChange != null && action != null) {
+				this.auditLog.logConfigChange(action, cfgChange);
 			}
 		});
 	}
 
-	@Before(event = { CqnService.EVENT_DELETE })
+	@Before(event = { CqnService.EVENT_DELETE }, entity = { Orders_.CDS_NAME })
 	public void beforeDelete(CdsDeleteEventContext context) {
-		// prepare a select statement to read old order number
+		// prepare a select statement to read old currency code
 		Select<?> ordersSelect = toSelect(context.getCqn());
 
 		// read old order number from DB
 		this.db.run(ordersSelect).first(Orders.class).ifPresent(oldOrders -> {
-			DataModification dataModification = createDataModification(null, oldOrders, Action.DELETE);
-			this.auditLog.logDataModification(Arrays.asList(dataModification));
+			ConfigChange cfgChange = createConfigChange(null, oldOrders);
+			this.auditLog.logConfigChange(Action.DELETE, cfgChange);
 		});
 	}
 
@@ -108,24 +94,14 @@ class AdminServiceAuditHandler implements EventHandler {
 		return this.db.run(ordersSelect).first(Orders.class);
 	}
 
-	private Access createAccess(Orders orders) {
-		Access access = Access.create();
-		access.setDataObject(createDataObject(orders));
-		access.setDataSubject(createDataSubject(orders));
-		access.setAttributes(createAttributes(Orders.ORDER_NO));
-		return access;
-	}
+	private static ConfigChange createConfigChange(Orders orders, Orders oldOrders) {
+		ChangedAttribute currencyCodeAttr = createChangedAttribute(orders != null ? orders.getCurrencyCode() : null,
+				oldOrders != null ? oldOrders.getCurrencyCode() : null);
 
-	private static DataModification createDataModification(Orders orders, Orders oldOrders, Action action) {
-		ChangedAttribute attribute = createChangedAttribute(Orders.ORDER_NO, orders != null ? orders.getOrderNo() : null,
-				oldOrders != null ? oldOrders.getOrderNo() : null);
-
-		DataModification dataModification = DataModification.create();
-		dataModification.setDataObject(createDataObject(orders != null ? orders : oldOrders));
-		dataModification.setDataSubject(createDataSubject(orders != null ? orders : oldOrders));
-		dataModification.setAction(action);
-		dataModification.setAttributes(Arrays.asList(attribute));
-		return dataModification;
+		ConfigChange cfgChange = ConfigChange.create();
+		cfgChange.setDataObject(createDataObject(orders != null ? orders : oldOrders));
+		cfgChange.setAttributes(Arrays.asList(currencyCodeAttr));
+		return cfgChange;
 	}
 
 	private static DataObject createDataObject(Orders order) {
@@ -137,26 +113,9 @@ class AdminServiceAuditHandler implements EventHandler {
 		return dataObject;
 	}
 
-	private static DataSubject createDataSubject(Orders order) {
-		KeyValuePair id = createId(order);
-
-		DataSubject dataSubject = DataSubject.create();
-		dataSubject.setType(Orders_.CDS_NAME);
-		dataSubject.setId(Arrays.asList(id));
-		return dataSubject;
-	}
-
-	private List<Attribute> createAttributes(String name) {
-		List<Attribute> attributes = new ArrayList<>();
-		Attribute attr = Attribute.create();
-		attr.setName(name);
-		attributes.add(attr);
-		return attributes;
-	}
-
-	private static ChangedAttribute createChangedAttribute(String name, String newValue, String oldValue) {
+	private static ChangedAttribute createChangedAttribute(String newValue, String oldValue) {
 		ChangedAttribute attribute = ChangedAttribute.create();
-		attribute.setName(name);
+		attribute.setName(Orders.CURRENCY_CODE);
 		attribute.setOldValue(oldValue);
 		attribute.setNewValue(newValue);
 		return attribute;
@@ -174,5 +133,4 @@ class AdminServiceAuditHandler implements EventHandler {
 		delete.where().ifPresent(select::where);
 		return select;
 	}
-
 }

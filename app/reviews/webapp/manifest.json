@@ -5,6 +5,9 @@
         "type": "application",
         "title": "{{appTitle}}",
         "description": "{{appDescription}}",
+        "applicationVersion": {
+            "version": "1.0.0"
+        },
         "dataSources": {
             "ReviewService": {
                 "uri": "/api/review/",
@@ -18,6 +21,18 @@
             "id": "ui5template.basicSAPUI5ApplicationProject",
             "-id": "ui5template.smartTemplate",
             "-version": "1.40.12"
+        },
+        "crossNavigation": {
+            "inbounds": {
+                "Reviews-manage": {
+                    "signature": {
+                        "parameters": {},
+                        "additionalParameters": "allowed"
+                    },
+                    "semanticObject": "Reviews",
+                    "action": "manage"
+                }
+            }
         }
     },
     "sap.ui5": {
