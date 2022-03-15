@@ -184,6 +184,8 @@ Prerequisites:
 - Install the [Cloud MTA Build Tool](https://sap.github.io/cloud-mta-build-tool/): `npm install -g mbt`.
 - Install the [Cloud Foundry Command Line Interface](https://docs.cloudfoundry.org/cf-cli/install-go-cli.html).
 - Get an SAP Business Technology Platform account to deploy the services and applications.
+- [Create a SAP HANA Cloud Instance](https://developers.sap.com/tutorials/hana-cloud-deploying.html) in your SAP Business Technology Platform space.
+- Ensure you have an entitlement for `SAP HANA Schemas & HDI Containers` with plan `hdi-shared` in the same space.
 
 Deploy as Single Tenant Application:
 - Rename `mta-single-tenant.yaml` to `mta.yaml`
@@ -192,7 +194,6 @@ Deploy as Single Tenant Application:
 - Run `cf deploy mta_archives/bookshop_1.0.0.mtar`
 
 Deploy as Multitenant Application:
-- [Create a SAP HANA Cloud Instance](https://developers.sap.com/tutorials/hana-cloud-deploying.html) in your SAP Business Technology Platform space.
 - Rename `mta-multi-tenant.yaml` to `mta.yaml`
 - Run `mbt build`
 - Run `cf login`
