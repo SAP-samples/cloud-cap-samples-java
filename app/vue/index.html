@@ -5,7 +5,7 @@
     <title> Capire Bookshop </title>
     <link rel="stylesheet" href="https://unpkg.com/primitive-ui/dist/css/main.css">
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/vue"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14"></script>
     <style>
         .hovering tr:hover td { color:cyan; background: #123; cursor: pointer; }
         .rating-stars { color:teal }
@@ -21,7 +21,7 @@
     <h1> {{ document.title }} </h1>
 
     <input type="text" placeholder="Book Search..." @input="searchBooks">
-    
+
     <table id='books' class="hovering">
         <thead>
             <th> Book </th>
@@ -53,11 +53,11 @@
         </form>
         <h4> {{ book.title }} </h4>
         <p> {{ book.descr }} </p>
-        
+
         <h4>Reviews</h4>
-        
+
         <input type="text" placeholder="Review Search..." @input="searchReviews">
-        
+
         <table id='reviews' class="hovering">
 	        <thead>
 	            <th> Date </th>
@@ -74,9 +74,9 @@
 	            <td>{{ review.title }}</td>
 	        </tr>
     	</table>
-    	
+
     	<button v-on:click="newReview()" class="round-button muted-button">Add Review...</button>
-    	
+
     	<form v-if="review" @submit.prevent="submitReview">
 	        <input type="text" v-model="review.title" style="font-weight:bold; display:inline; width:60%">
 	        <select v-model="review.rating" style="font-weight:bold; display:inline; width:17%; float: right;">
@@ -90,12 +90,12 @@
 	    <div v-else style="margin-top: 2em;">
 	        ( click on a row to see details... )
 	    </div>
-    	
+
     </div>
     <div v-else>
         ( click on a row to see details... )
     </div>
-    
+
 </div>
 
 </body>
