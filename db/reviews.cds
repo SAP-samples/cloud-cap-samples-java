@@ -9,7 +9,7 @@ using my.bookshop.Books from './books';
 
 entity Reviews : cuid, managed {
     @cds.odata.ValueList
-    book     : Association to Books;
+    book     : Association to Books @mandatory @assert.target;
     rating   : Rating;
     title    : String(111);
     text     : String(1111);
