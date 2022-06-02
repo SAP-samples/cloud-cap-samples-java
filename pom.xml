@@ -16,10 +16,10 @@
 
 		<!-- DEPENDENCIES VERSION -->
 		<jdk.version>1.8</jdk.version>
-		<cds.services.version>1.24.0</cds.services.version>
-		<spring.boot.version>2.6.7</spring.boot.version>
-		<cloud.sdk.version>3.67.0</cloud.sdk.version>
-		<xsuaa.version>2.11.16</xsuaa.version>
+		<cds.services.version>1.25.0</cds.services.version>
+		<spring.boot.version>2.6.8</spring.boot.version>
+		<cloud.sdk.version>3.68.0</cloud.sdk.version>
+		<xsuaa.version>2.12.1</xsuaa.version>
 		<cf-java-logging-support.version>3.5.7</cf-java-logging-support.version>
 	</properties>
 
