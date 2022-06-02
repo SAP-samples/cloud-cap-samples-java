@@ -16,7 +16,6 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import com.sap.cds.Result;
 import com.sap.cds.ql.Insert;
 import com.sap.cds.services.ServiceException;
-import com.sap.cds.services.cds.ApplicationService;
 import com.sap.cds.services.draft.DraftService;
 import com.sap.cds.services.utils.CdsErrorStatuses;
 
@@ -33,9 +32,6 @@ public class AdminServiceTest {
 
 	@Resource(name = AdminService_.CDS_NAME)
 	private DraftService adminService;
-
-	@Resource(name = AdminService_.CDS_NAME)
-	private ApplicationService activeService;
 
 	@Test
 	@WithMockUser(username = "user")
@@ -77,7 +73,7 @@ public class AdminServiceTest {
 
 		// Runtime ensures that book is present in the order item, when it is created.
 		ServiceException exception =
-			assertThrows(ServiceException.class, () -> activeService.run(Insert.into(Orders_.class).entry(order)));
+			assertThrows(ServiceException.class, () -> adminService.run(Insert.into(Orders_.class).entry(order)));
 		assertEquals(CdsErrorStatuses.VALUE_REQUIRED.getCodeString(), exception.getErrorStatus().getCodeString());
 	}
 
@@ -95,7 +91,7 @@ public class AdminServiceTest {
 
 		// Runtime ensures that book exists when order item is created.
 		ServiceException exception =
-			assertThrows(ServiceException.class, () -> activeService.run(Insert.into(Orders_.class).entry(order)));
+			assertThrows(ServiceException.class, () -> adminService.run(Insert.into(Orders_.class).entry(order)));
 		assertEquals(CdsErrorStatuses.TARGET_ENTITY_MISSING.getCodeString(), exception.getErrorStatus().getCodeString());
 	}
 
