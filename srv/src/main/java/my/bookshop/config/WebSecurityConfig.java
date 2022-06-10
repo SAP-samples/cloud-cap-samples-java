@@ -16,6 +16,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 		http.requestMatchers() //
 				.antMatchers("/actuator/health") //
 				.antMatchers("/swagger/**") //
+				.antMatchers("/h2/**") //
+				.and().headers().frameOptions().disable()
 				.and().csrf().disable().authorizeRequests().anyRequest().permitAll();
 	}
 }
