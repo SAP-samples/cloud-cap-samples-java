@@ -18,7 +18,11 @@ Welcome to the bookshop-java project. It demonstrates how to build business appl
   - [Clone Build & Run](#clone-build--run)
   - [Using Eclipse](#using-eclipse)
     - [Building and Running](#building-and-running)
+  - [Using IntelliJ Idea (Community and Ultimate)](#using-intellij-idea-community-and-ultimate)
   - [Database Setup and Spring Profiles](#database-setup-and-spring-profiles)
+  - [API_BUSINESS_PARTNER Remote Service and Spring Profiles](#api_business_partner-remote-service-and-spring-profiles)
+  - [Deploy to SAP Business Technology Platform](#deploy-to-sap-business-technology-platform)
+- [Code Tour](#code-tour)
 - [Get Support](#get-support)
 - [License](#license)
 
@@ -168,13 +172,28 @@ application in IntelliJ.
 
 ## Database Setup and Spring Profiles
 
-The application comes with two predefined profiles: `default`, and `cloud` (see `srv/src/main/resources/application.yaml`).
+The application comes with two predefined profiles that determine how to run the application: `default`, and `cloud` (see `srv/src/main/resources/application.yaml`).
+
 
 - The `default` profile specifies to use an in-memory H2 database.
   The in-memory database is set up automatically during startup of the application and initialized with some example data from CSV files.
 
 - When deploying the application to Cloud Foundry, the CF Java Buildpack automatically configures the `cloud` Spring profile.
   This profile doesn’t specify any datasource location. In that case CAP Java can automatically detect SAP HANA service bindings available in the environment.
+
+## API_BUSINESS_PARTNER Remote Service and Spring Profiles
+
+The behavior of the API_BUSINESS_PARTNER remote service is controlled using profiles (see `srv/src/main/resources/application.yaml`):
+
+- **Using mock data via internal service:** When using only the `default` profile (default when omitting any profile setting), the API_BUSINESS_PARTNER API is mocked as a local service using the mock data.
+
+- **Using mock data via internal service through OData:** With the `mocked` profile, all requests to the API_BUSINESS_PARTNER service will be routed through HTTP and OData to itself (`http://localhost:<port>/api/API_BUSINESS_PARTNER/...`). This mode is similar to using a real remote destination, and such helps to prevent issues from differences in local service and remote service behavior.
+
+- **Using the sandbox environment:** You can access data from the [SAP API Business Hub sandbox](https://api.sap.com/api/API_BUSINESS_PARTNER/overview) with the `sandbox` profile. The API key needs to be provided with the environment variable `CDS_REMOTE_SERVICES_API_BUSINESS_PARTNER_DESTINATION_HEADERS_APIKEY`. You can retrieve it by clicking on *Show API Key* on [this page](https://api.sap.com/api/API_BUSINESS_PARTNER/overview) after logging in.
+
+- **Using S/4HANA cloud or on-premise system:** With the `destination` profile, you can access data from a real S/4HANA system. You need to create a destination with name `s4-destination` and make sure that an instance of XSUAA and destination service are bound to your application. For an on-premise destination, you additionally need to bind the connectivity service and add an additional property `URL.headers.sap-client` with the S/4HANA client number to your destination.
+
+The profiles `sandbox` and `destination` can be combined with the `default` profile for [hybrid testing](https://cap.cloud.sap/docs/advanced/hybrid-testing) and with the `cloud` profile when deployed to the cloud.
 
 ## Deploy to SAP Business Technology Platform
 
