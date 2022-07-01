@@ -25,7 +25,7 @@ public class DestinationConfiguration {
 			.builder("http://localhost:" + port)
 			.name(destinationName).build();
 
-			DestinationAccessor.prependDestinationLoader(
+			DestinationAccessor.appendDestinationLoader(
 				new DefaultDestinationLoader().registerDestination(httpDestination));
 		}
 	}
