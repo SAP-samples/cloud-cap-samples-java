@@ -19,7 +19,7 @@
 		<cds.services.version>1.26.0</cds.services.version>
 		<spring.boot.version>2.6.8</spring.boot.version>
 		<cloud.sdk.version>3.68.0</cloud.sdk.version>
-		<xsuaa.version>2.12.1</xsuaa.version>
+		<xsuaa.version>2.12.2</xsuaa.version>
 		<cf-java-logging-support.version>3.5.7</cf-java-logging-support.version>
 	</properties>
 
