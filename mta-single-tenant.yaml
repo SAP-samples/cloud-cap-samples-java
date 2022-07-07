@@ -21,7 +21,7 @@ modules:
       disk-quota: 256M
       buildpack: sap_java_buildpack
     properties:
-      SPRING_PROFILES_ACTIVE: cloud
+      SPRING_PROFILES_ACTIVE: cloud,sandbox
     build-parameters:
       builder: custom
       commands:
