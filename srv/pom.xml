@@ -67,16 +67,6 @@
 			<artifactId>scp-cf</artifactId>
 		</dependency>
 
-		<!-- CLOUD SDK for on-premise connectivity -->
-		<dependency>
-			<groupId>com.sap.cloud.sdk.s4hana</groupId>
-			<artifactId>s4hana-connectivity</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>com.sap.cloud.sdk.s4hana</groupId>
-			<artifactId>s4hana-core</artifactId>
-		</dependency>
-
 		<!-- OTHER DEPENDENCIES -->
 		<dependency>
 			<groupId>com.h2database</groupId>

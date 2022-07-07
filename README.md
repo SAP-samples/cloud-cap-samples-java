@@ -235,8 +235,6 @@ Deploy as Multitenant Application:
 - Logged into Kyma Runtime (with `kubectl` CLI), Cloud Foundry space (with `cf` CLI) and Container Registry (with `docker login`)
 - `@sap/cds-dk` >= 6.0.1
 
-### Configuration
-
 ### Add Deployment Files
 
 CAP tooling provides your a Helm chart for deployment to Kyma.
@@ -270,7 +268,7 @@ You can try the `API_BUSINESS_PARTNER` service with a real S/4HANA system with t
       bindings:
         ...
         destinations:
-          serviceInstanceName: destination
+          serviceInstanceName: destinations
     ```
 
     (The destination service instance is already configured)
@@ -282,6 +280,9 @@ You can try the `API_BUSINESS_PARTNER` service with a real S/4HANA system with t
       ...
       env:
         SPRING_PROFILES_ACTIVE: cloud,destination
+        # TODO: To be removed after @sap/cds-dk patch
+        CDS_ENVIRONMENT_K8S_SERVICEBINDINGS_CONNECTIVITY_SECRETSPATH: '/bindings/connectivity'
+        CDS_ENVIRONMENT_K8S_SERVICEBINDINGS_CONNECTIVITY_SERVICE: 'connectivity'
     ```
 
 4. For on-premise only: Add the connectivity service to your Helm chart:
