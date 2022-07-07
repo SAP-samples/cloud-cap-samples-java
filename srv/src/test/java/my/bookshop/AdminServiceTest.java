@@ -74,7 +74,7 @@ public class AdminServiceTest {
 		// Runtime ensures that book is present in the order item, when it is created.
 		ServiceException exception =
 			assertThrows(ServiceException.class, () -> adminService.run(Insert.into(Orders_.class).entry(order)));
-		assertEquals(CdsErrorStatuses.VALUE_REQUIRED.getCodeString(), exception.getErrorStatus().getCodeString());
+		assertEquals(CdsErrorStatuses.VALUE_REQUIRED, exception.getErrorStatus());
 	}
 
 	@Test
