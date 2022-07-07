@@ -308,7 +308,7 @@ The *Docker Server* is the full qualified hostname of your container registry.
 #### Create a HDI container and a secret
 
 ```
-bash ./scripts/create-db-secret.sh
+bash ./scripts/create-db-secret.sh bookshop-db
 ```
 
 It will create a HDI container `bookshop-db` on your currently targeted Cloud Foundry space and creates a secret `bookshop-db` with the HDI container's credentials in your current Kubernetes namespace.
