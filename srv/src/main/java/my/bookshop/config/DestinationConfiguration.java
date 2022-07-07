@@ -10,6 +10,7 @@ import org.springframework.stereotype.Component;
 import com.sap.cloud.sdk.cloudplatform.connectivity.DefaultDestinationLoader;
 import com.sap.cloud.sdk.cloudplatform.connectivity.DefaultHttpDestination;
 import com.sap.cloud.sdk.cloudplatform.connectivity.DestinationAccessor;
+import com.sap.cloud.sdk.cloudplatform.security.BasicCredentials;
 
 @Component
 @Profile("mocked")
@@ -25,6 +26,7 @@ public class DestinationConfiguration {
 		if(port != null && destinationName != null) {
 			DefaultHttpDestination httpDestination = DefaultHttpDestination
 			.builder("http://localhost:" + port)
+			.basicCredentials(new BasicCredentials("authenticated", ""))
 			.name(destinationName).build();
 
 			DestinationAccessor.prependDestinationLoader(
