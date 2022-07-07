@@ -2,19 +2,16 @@
 
 set -e
 cd "$(dirname "$(dirname "$0")")"
-. ./scripts/values.sh
 
-if true-value 2>/dev/null .saas_registry.enabled; then
-  echo >&2 "[ERROR] DB secret only required for single tenancy apps"
-fi
+npm install --no-save yaml
+
+function value() {
+    node ./scripts/value.js "$1"
+}
 
 NAME="$1"
 if [ "$NAME" == "" ]; then
-  if [ ! -f "chart/values.yaml" ]; then
-    echo >&2 "[ERROR] Please either specify the name for the DB secret or maintain it in the Helm chart"
-    exit 1
-  fi
-  NAME="$(value .srv.bindings.db.fromSecret)"
+  NAME="$(value srv.bindings.db.fromSecret)"
   if [ "$NAME" == "" -o "$NAME" == "<nil>" ]; then
     echo >&2 "[ERROR] Please either specify the name for the DB secret or maintain it in the Helm chart"
     exit 1

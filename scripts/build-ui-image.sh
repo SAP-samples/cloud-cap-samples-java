@@ -2,15 +2,30 @@
 
 set -e
 cd "$(dirname "$(dirname "$0")")"
-. ./scripts/values.sh
+
+npm install --no-save yaml
+
+function value() {
+    node ./scripts/value.js "$1"
+}
+
+function image() {
+    local REPOSITORY="$(value "$1.image.repository")"
+    local TAG="$(value "$1.image.tag")"
+    if [ "$TAG" != "" ]; then
+        echo "$REPOSITORY:$TAG"
+    else
+        echo "$REPOSITORY"
+    fi
+}
 
 rm -rf gen/ui
 mkdir -p gen/ui/resources
 
-CLOUD_SERVICE="$(value .html5_apps_deployer.cloudService)"
-DESTINATIONS=`helm inspect values "chart/" --jsonpath="{.html5_apps_deployer.backendDestinations}"`
+CLOUD_SERVICE="$(value html5_apps_deployer.cloudService)"
+DESTINATIONS="$(value html5_apps_deployer.backendDestinations)"
 
-IMAGE="$(image .html5_apps_deployer)"
+IMAGE="$(image html5_apps_deployer)"
 
 for APP in app/*; do
     if [ -f "$APP/webapp/manifest.json" ]; then
