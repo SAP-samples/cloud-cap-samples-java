@@ -34,6 +34,7 @@ public class CatalogServiceITest {
 
 	private static final String USER_USER_STRING = "user";
 	private static final String ADMIN_USER_STRING = "admin";
+	private static final String AUTHENTICATED_USER_STRING = "authenticated"; // given by default
 
 	@Autowired
 	private MockMvc mockMvc;
@@ -47,6 +48,7 @@ public class CatalogServiceITest {
 	}
 
 	@Test
+	@WithMockUser(AUTHENTICATED_USER_STRING)
 	public void testDiscountApplied() throws Exception {
 		mockMvc.perform(get(booksURI + "?$filter=stock gt 200&top=1"))
 			.andExpect(status().isOk())
@@ -54,6 +56,7 @@ public class CatalogServiceITest {
 	}
 
 	@Test
+	@WithMockUser(AUTHENTICATED_USER_STRING)
 	public void testDiscountNotApplied() throws Exception {
 		mockMvc.perform(get(booksURI + "?$filter=stock lt 100&top=1"))
 			.andExpect(status().isOk())
@@ -64,11 +67,11 @@ public class CatalogServiceITest {
 	public void testCreateReviewNotAuthenticated() throws Exception {
 		String payload = createTestReview().toJson();
 		mockMvc.perform(post(addReviewURI).contentType(MediaType.APPLICATION_JSON).content(payload))
-			.andExpect(status().isForbidden());
+			.andExpect(status().isUnauthorized());
 	}
 
 	@Test
-	@WithMockUser(username = USER_USER_STRING)
+	@WithMockUser(USER_USER_STRING)
 	public void testCreateReviewByUser() throws Exception {
 		String payload = createTestReview().toJson();
 		mockMvc.perform(post(addReviewURI).contentType(MediaType.APPLICATION_JSON).content(payload))
@@ -77,7 +80,7 @@ public class CatalogServiceITest {
 	}
 
 	@Test
-	@WithMockUser(username = ADMIN_USER_STRING)
+	@WithMockUser(ADMIN_USER_STRING)
 	public void testCreateReviewByAdmin() throws Exception {
 		String payload = createTestReview().toJson();
 		mockMvc.perform(post(addReviewURI).contentType(MediaType.APPLICATION_JSON).content(payload))
