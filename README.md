@@ -387,11 +387,11 @@ Additionally, you can add the UIs to a Launchpad Service site like it is describ
 To access services and UIs that require specific authorizations (e.g. `admin`) you need to assign a corresponding role and role collections to your user in SAP BTP Cockpit.
 
 1. For single-tenant applications open the subaccount where you deployed the `bookshop` application to. For multitenant applications open the subaccount where you subscribed to the `bookshop` application.
-1. Navigate to *Security* -> *Roles*
-2. Create a role with name `bookshop-admin` based on the `admin` role template of the `bookshop` application:
+2. Navigate to *Security* -> *Roles*
+3. Create a role with name `bookshop-admin` based on the `admin` role template of the `bookshop` application:
     1. Enter a Business Partner ID of your S/4 system as value for the `businessPartner` attribute. When using the sandbox environment use `10401010`.
-3. Navigate to *Security* -> *Role Collections*
-4. Create a new role collection `bookshop-admin`
+4. Navigate to *Security* -> *Role Collections*
+5. Create a new role collection `bookshop-admin`:
     1. Assign the `bookshop-admin` role to this role collection
     2. Assign the role collection to your user
 
