@@ -375,10 +375,10 @@ helm upgrade bookshop ./chart --install -f values.yaml
 2. Create a role collection `bookshop-admin`
 3. Add your user to the role collection
 4. Create a role `bookshop-admin` based on the `admin` role of the `bookshop` application:
-    1. Enter value `*` for the `businessPartner`
+    1. Enter a Business Partner Id as value for `businessPartner` (`10401010` works for the sandbox environment; use that value if in doubt)
     2. Assign it to your role collection `bookshop-admin`
-6. Goto **HTML5 Applications**
-7. Start any of the HTML5 applications
+5. Goto **HTML5 Applications**
+6. Start any of the HTML5 applications
 
 Additionally, you can add the UIs to a Launchpad Service site like it is described in in the last two steps of [this tutorial](https://developers.sap.com/tutorials/btp-app-kyma-launchpad-service.html#9aab2dd0-18ea-4ccd-bc44-24e87c845740).
 
