@@ -223,10 +223,11 @@ Deploy as Multitenant Application:
 
 ## Deploy to SAP Business Technology Platform, Kyma Runtime
 
+**TIP:** You can find more information in the [Deploy Your CAP Application on SAP BTP Kyma Runtime](https://developers.sap.com/mission.btp-deploy-cap-kyma.html) tutorial and in the [Deploy to Kyma/K8s](https://cap.cloud.sap/docs/guides/deployment/deploy-to-kyma) guide of the CAP documentation.
+
 ### Preconditions
 
 - BTP Subaccount with Kyma Runtime
-- BTP Service Operator installed in the Kyma Runtime
 - BTP Subaccount with Cloud Foundry Space
 - HANA Cloud instance available for your Cloud Foundry space
 - BTP Entitlements for: *HANA HDI Services & Container* plan *hdi-shared*, *Launchpad Service* plan *standard*
@@ -350,9 +351,9 @@ pack build $YOUR_CONTAINER_REGISTRY/bookshop-srv \
 bash ./scripts/build-ui-image.sh
 ```
 
-### Push docker images
+### Push container images
 
-You can push all the docker images to your docker registry, using:
+You can push all the container images to your container registry, using:
 
 ```
 docker push $YOUR_CONTAINER_REGISTRY/bookshop-hana-deployer
@@ -368,9 +369,20 @@ docker push $YOUR_CONTAINER_REGISTRY/bookshop-html5-deployer
 helm upgrade bookshop ./chart --install -f values.yaml
 ```
 
-### Test the UI
+### Access the UI
 
-You can use [this](https://github.tools.sap/CPES/CPAppDevelopment-dev/blob/master/docs/Launchpad-Config.md) guide to test the UI.
+1. Create Launchpad Service subscription in the BTP Cockpit
+2. Create a role collection `bookshop-admin`
+3. Add your user to the role collection
+4. Create a role `bookshop-admin` based on the `admin` role of the `bookshop` application:
+    1. Enter value `*` for the `businessPartner`
+    2. Assign it to your role collection `bookshop-admin`
+6. Goto **HTML5 Applications**
+7. Start any of the HTML5 applications
+
+Additionally, you can add the UIs to a Launchpad Service site like it is described in in the last two steps of [this tutorial](https://developers.sap.com/tutorials/btp-app-kyma-launchpad-service.html#9aab2dd0-18ea-4ccd-bc44-24e87c845740).
+
+
 # Code Tour
 
 Take the [guided tour](.tours) in VS Code through our CAP Samples for Java and learn which CAP features are showcased by the different parts of the repository. Just install the [CodeTour extension](https://marketplace.visualstudio.com/items?itemName=vsls-contrib.codetour) for VS Code.
