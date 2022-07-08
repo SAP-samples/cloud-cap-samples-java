@@ -221,6 +221,8 @@ Deploy as Multitenant Application:
 - Go to another subaccount in your global account, under subscriptions and subscribe to the application you deployed.
 - Run `cf map-route bookshop-mt-app <YOUR DOMAIN> --hostname <SUBSCRIBER TENANT>-<ORG>-<SPACE>-bookshop-mt-app` or create and bind the route manually.
 
+Before you can access the UI using the (tenant-specific) URL to the bookshop(-mt)-app application, make sure to [Setup Authorizations in SAP Business Technology Platform](#setup-authorizations-in-sap-business-technology-platform).
+
 ## Deploy to SAP Business Technology Platform, Kyma Runtime
 
 **TIP:** You can find more information in the [Deploy Your CAP Application on SAP BTP Kyma Runtime](https://developers.sap.com/mission.btp-deploy-cap-kyma.html) tutorial and in the [Deploy to Kyma/K8s](https://cap.cloud.sap/docs/guides/deployment/deploy-to-kyma) guide of the CAP documentation.
@@ -371,17 +373,26 @@ helm upgrade bookshop ./chart --install -f values.yaml
 
 ### Access the UI
 
+Before you can access the UI you should make sure to [Setup Authorizations in SAP Business Technology Platform](#setup-authorizations-in-sap-business-technology-platform).
+
 1. Create Launchpad Service subscription in the BTP Cockpit
-2. Create a role collection `bookshop-admin`
-3. Add your user to the role collection
-4. Create a role `bookshop-admin` based on the `admin` role of the `bookshop` application:
-    1. Enter a Business Partner Id as value for `businessPartner` (`10401010` works for the sandbox environment; use that value if in doubt)
-    2. Assign it to your role collection `bookshop-admin`
-5. Goto **HTML5 Applications**
-6. Start any of the HTML5 applications
+2. Goto **HTML5 Applications**
+3. Start any of the HTML5 applications
 
 Additionally, you can add the UIs to a Launchpad Service site like it is described in in the last two steps of [this tutorial](https://developers.sap.com/tutorials/btp-app-kyma-launchpad-service.html#9aab2dd0-18ea-4ccd-bc44-24e87c845740).
 
+## Setup Authorizations in SAP Business Technology Platform
+
+To access services and UIs that require specific authorizations (e.g. `admin`) you need to assign a corresponding role and role collections to your user in SAP BTP Cockpit.
+
+1. For single-tenant applications open the subaccount where you deployed the `bookshop` application to. For multitenant applications open the subaccount where you subscribed to the `bookshop` application.
+1. Navigate to *Security* -> *Roles*
+2. Create a role with name `bookshop-admin` based on the `admin` role template of the `bookshop` application:
+    1. Enter a Business Partner ID of your S/4 system as value for the `businessPartner` attribute. When using the sandbox environment use `10401010`.
+3. Navigate to *Security* -> *Role Collections*
+4. Create a new role collection `bookshop-admin`
+    1. Assign the `bookshop-admin` role to this role collection
+    2. Assign the role collection to your user
 
 # Code Tour
 
