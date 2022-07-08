@@ -23,6 +23,7 @@ Welcome to the bookshop-java project. It demonstrates how to build business appl
   - [API_BUSINESS_PARTNER Remote Service and Spring Profiles](#api_business_partner-remote-service-and-spring-profiles)
   - [Deploy to SAP Business Technology Platform, Cloud Foundry](#deploy-to-sap-business-technology-platform-cloud-foundry)
   - [Deploy to SAP Business Technology Platform, Kyma Runtime](#deploy-to-sap-business-technology-platform-kyma-runtime)
+  - [Setup Authorizations in SAP Business Technology Platform](#setup-authorizations-in-sap-business-technology-platform)
 - [Code Tour](#code-tour)
 - [Get Support](#get-support)
 - [License](#license)
@@ -375,8 +376,8 @@ helm upgrade bookshop ./chart --install -f values.yaml
 
 Before you can access the UI you should make sure to [Setup Authorizations in SAP Business Technology Platform](#setup-authorizations-in-sap-business-technology-platform).
 
-1. Create Launchpad Service subscription in the BTP Cockpit
-2. Goto **HTML5 Applications**
+1. Create a Launchpad Service subscription in the BTP Cockpit
+2. Go to **HTML5 Applications**
 3. Start any of the HTML5 applications
 
 Additionally, you can add the UIs to a Launchpad Service site like it is described in in the last two steps of [this tutorial](https://developers.sap.com/tutorials/btp-app-kyma-launchpad-service.html#9aab2dd0-18ea-4ccd-bc44-24e87c845740).
