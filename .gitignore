@@ -34,3 +34,5 @@ hs_err*
 *.db
 
 .cdsrc-private.json
+
+/chart/
