@@ -105,11 +105,6 @@ class AdminServiceHandler implements EventHandler {
 					}
 
 					String bookId = orderItem.getBookId();
-					if (bookId == null) {
-						// Tip: using static text without localization is still possible in exceptions and messages
-						messages.error("You have to specify the book to order")
-								.target("in", ORDERS, o -> o.Items(i -> i.ID().eq(orderItem.getId()).and(i.IsActiveEntity().eq(orderItem.getIsActiveEntity()))).book_ID());
-					}
 
 					if(quantity == null || quantity <= 0 || bookId == null) {
 						return; // follow up validations rely on these
@@ -122,24 +117,25 @@ class AdminServiceHandler implements EventHandler {
 
 					// check if enough books are available
 					Result result = db.run(Select.from(BOOKS).columns(b -> b.ID(), b -> b.stock(), b -> b.price()).byId(bookId));
-					Books book = result.first(Books.class).orElseThrow(notFound(MessageKeys.BOOK_MISSING));
-					if (book.getStock() < diffQuantity) {
-						// Tip: you can have localized messages and use parameters in your messages
-						messages.error(MessageKeys.BOOK_REQUIRE_STOCK, book.getStock())
+					result.first(Books.class).ifPresent(book -> {
+						if (book.getStock() < diffQuantity) {
+							// Tip: you can have localized messages and use parameters in your messages
+							messages.error(MessageKeys.BOOK_REQUIRE_STOCK, book.getStock())
 								.target("in", ORDERS, o -> o.Items(i -> i.ID().eq(orderItem.getId()).and(i.IsActiveEntity().eq(orderItem.getIsActiveEntity()))).quantity());
-						return; // no need to update follow-up values with invalid quantity / stock
-					}
+							return; // no need to update follow-up values with invalid quantity / stock
+						}
 
-					// update the book with the new stock
-					book.setStock(book.getStock() - diffQuantity);
-					db.run(Update.entity(BOOKS).data(book));
+						// update the book with the new stock
+						book.setStock(book.getStock() - diffQuantity);
+						db.run(Update.entity(BOOKS).data(book));
 
-					// update the amount
-					BigDecimal updatedAmount = book.getPrice().multiply(BigDecimal.valueOf(quantity));
-					orderItem.setAmount(updatedAmount);
+						// update the amount
+						BigDecimal updatedAmount = book.getPrice().multiply(BigDecimal.valueOf(quantity));
+						orderItem.setAmount(updatedAmount);
 
-					// update the total
-					order.setTotal(order.getTotal().add(updatedAmount));
+						// update the total
+						order.setTotal(order.getTotal().add(updatedAmount));
+					});
 				});
 			}
 		});
