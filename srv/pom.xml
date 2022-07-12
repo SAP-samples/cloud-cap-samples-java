@@ -158,15 +158,17 @@
 						</goals>
 						<configuration>
 							<skip>${cdsdk-global}</skip>
+							<nodeVersion>v16.13.2</nodeVersion>
 						</configuration>
 					</execution>
 
 					<execution>
-						<id>install-cdsdk</id>
+						<id>install-cdsdk-with-npm-install</id>
 						<goals>
-							<goal>install-cdsdk</goal>
+							<goal>npm</goal>
 						</goals>
 						<configuration>
+							<arguments>install</arguments>
 							<skip>${cdsdk-global}</skip>
 						</configuration>
 					</execution>

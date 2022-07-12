@@ -8,8 +8,8 @@ build-parameters:
   before-all:
    - builder: custom
      commands:
-      - npm install --production
-      - npx -p @sap/cds-dk cds build --production
+      - npm install --prefix mtx/sidecar --production
+      - cds build --production
 modules:
 # --------------------- SERVER MODULE ------------------------
   - name: bookshop-mt-srv
@@ -34,6 +34,7 @@ modules:
       - name: bookshop-mt-saas-registry
       - name: sidecar
         properties:
+          CDS_MULTITENANCY_MTXS_ENABLED: true
           CDS_MULTITENANCY_SIDECAR_URL: ~{url}
       - name: app
         properties:
@@ -47,7 +48,7 @@ modules:
   - name: bookshop-mt-sidecar
 # ------------------------------------------------------------
     type: nodejs
-    path: mtx-sidecar
+    path: mtx/sidecar/gen
     parameters:
       memory: 256M
       disk-quota: 512M

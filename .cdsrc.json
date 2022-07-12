@@ -6,9 +6,7 @@
                 "for": "java"
             },
             {
-                "for": "mtx",
-                "src": ".",
-                "dest": "mtx-sidecar"
+                "for": "mtx-sidecar"
             },
             {
                 "for": "hana"
