@@ -4,12 +4,6 @@ version: 1.0.0
 description: "Multitenant Bookshop CAP Java Project with UI"
 parameters:
   enable-parallel-deployments: true
-build-parameters:
-  before-all:
-   - builder: custom
-     commands:
-      - npm install --prefix mtx/sidecar --production
-      - cds build --production
 modules:
 # --------------------- SERVER MODULE ------------------------
   - name: bookshop-mt-srv
