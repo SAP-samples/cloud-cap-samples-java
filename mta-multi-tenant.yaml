@@ -48,10 +48,15 @@ modules:
   - name: bookshop-mt-sidecar
 # ------------------------------------------------------------
     type: nodejs
-    path: mtx/sidecar/gen
+    path: mtx/sidecar
     parameters:
       memory: 256M
       disk-quota: 512M
+    build-parameters:
+      builder: custom
+      build-result: gen
+      commands:
+        - npm run build
     requires:
       - name: bookshop-mt-service-manager
       - name: bookshop-mt-uaa

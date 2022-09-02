@@ -1,38 +1,40 @@
 {
-    "dependencies": {
-      "@sap/cds": "^6",
-      "@sap/cds-mtxs": "^1",
-      "express": "^4",
-      "hdb": "^0",
-      "passport": "^0",
-      "@sap/xssec": "^3"
-    },
-    "cds": {
-      "requires": {
-        "db": {
-          "kind": "sqlite",
-          "[production]": {
-            "kind": "hana-mt"
-          }
-        },
-        "auth": {
-          "kind": "dummy-auth",
-          "[production]": {
-            "kind": "xsuaa"
-          }
-        },
-        "cds.xt.ModelProviderService": "in-sidecar",
-        "cds.xt.SaasProvisioningService": true
-      }
-    },
-    "devDependencies": {
-      "sqlite3": "^5.0.2"
-    },
-    "engines": {
-      "node": ">=16.13.2"
-    },
-    "scripts": {
-      "start": "cds run",
-      "st" : "node node_modules/@sap/cds/bin/cds.js"
+  "dependencies": {
+    "@sap/cds": "^6",
+    "@sap/cds-mtxs": "^1",
+    "express": "^4",
+    "hdb": "^0",
+    "passport": "^0",
+    "@sap/xssec": "^3"
+  },
+  "cds": {
+    "requires": {
+      "multitenancy": true,
+      "db": {
+        "kind": "sqlite",
+        "[production]": {
+          "kind": "hana-mt"
+        }
+      },
+      "auth": {
+        "kind": "dummy-auth",
+        "[production]": {
+          "kind": "xsuaa"
+        }
+      },
+      "cds.xt.ModelProviderService": "in-sidecar",
+      "cds.xt.SaasProvisioningService": true
     }
+  },
+  "devDependencies": {
+    "sqlite3": "^5.0.2"
+  },
+  "engines": {
+    "node": ">=16.13.2"
+  },
+  "scripts": {
+    "start": "cds run",
+    "st": "node node_modules/@sap/cds/bin/cds.js",
+    "build": "npm ci && cds build ../.. --for mtx-sidecar && cd gen && npm ci"
   }
+}
