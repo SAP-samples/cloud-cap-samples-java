@@ -65,6 +65,13 @@
 				<type>pom</type>
 				<scope>import</scope>
 			</dependency>
+			
+			<!-- pin H2 v1 -->
+			<dependency>
+				<groupId>com.h2database</groupId>
+				<artifactId>h2</artifactId>
+				<version>1.4.200</version>
+			</dependency>
 		</dependencies>
 	</dependencyManagement>
 
