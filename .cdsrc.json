@@ -1,4 +1,8 @@
 {
+    "requires": {
+        "multitenancy": true,
+        "toggles": true
+    },
     "build": {
         "target": ".",
         "tasks": [
