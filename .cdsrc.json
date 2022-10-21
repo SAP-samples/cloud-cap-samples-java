@@ -1,21 +1,24 @@
 {
-    "build": {
-        "target": ".",
-        "tasks": [
-            {
-                "for": "java-cf"
-            },
-            {
-                "for": "mtx",
-                "src": ".",
-                "dest": "mtx-sidecar"
-            },
-            {
-                "for": "hana"
-            }
-        ]
-    },
-    "hana": {
-        "deploy-format": "hdbtable"
-    }
+	"build": {
+		"target": ".",
+		"tasks": [
+			{
+				"for": "java-cf"
+			},
+			{
+				"for": "mtx",
+				"src": ".",
+				"dest": "mtx-sidecar"
+			},
+			{
+				"for": "hana"
+			}
+		]
+	},
+	"hana": {
+		"deploy-format": "hdbtable"
+	},
+	"sql": {
+		"dialect": "plain"
+	}
 }
