@@ -348,6 +348,28 @@ pack build $YOUR_CONTAINER_REGISTRY/bookshop-srv \
         --env SPRING_PROFILES_ACTIVE=cloud
 ```
 
+**Add Deployment Files**
+**CAP tooling provides your a Helm chart for deployment to Kyma.**
+**Add the CAP Helm chart with the required features to this project:**
+```bash
+cds add helm
+```
+**Use command only if xsuaa section is missing from values.yaml:**
+```bash
+cds add xsuaa
+```
+```bash
+cds add html5-repo
+```
+**Use command only if hana_deployer section is missing from values.yaml:**
+```bash
+cds add hana
+```
+Update the following changes in the `chart/values.yaml` and `values.yaml` files:
+    <your-container-registry> - full-qualified hostname of your container registry
+    domain- full-qualified domain name used to access applications in your Kyma cluster
+    secret- the binding secret
+
 **Build HTML5 application deployer image:**
 
 ```
