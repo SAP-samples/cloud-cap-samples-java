@@ -13,6 +13,16 @@ hana_deployer:
   bindings:
     hana:
       fromSecret: bookshop-db
+  resources:
+    limits:
+      cpu: 2000m
+      memory: 1G
+    requests:
+      cpu: 1000m
+      memory: 1G
+html5_apps_repo_host:
+  serviceOfferingName: html5-apps-repo
+  servicePlanName: app-host
 html5_apps_deployer:
   cloudService: java.bookshop
   backendDestinations:
@@ -22,8 +32,24 @@ html5_apps_deployer:
     # >>> Replace <your-container-registry> with your container registry
     repository: <your-container-registry>/bookshop-html5-deployer
     tag: latest
+  bindings:
+    xsuaa:
+      serviceInstanceName: xsuaa
+    destination:
+      serviceInstanceName: destination
+    html5_apps_repo:
+      serviceInstanceName: html5-apps-repo-host
+  resources:
+    limits:
+      cpu: 2000m
+      memory: 1G
+    requests:
+      cpu: 1000m
+      memory: 1G
 srv:
   bindings:
+    auth:
+      seviceInstanceName: xsuaa
     db:
       fromSecret: bookshop-db
   image:
@@ -36,8 +62,25 @@ srv:
     limits:
       cpu: 2000m
       ephemeral-storage: 1G
-      memory: 2G
+      memory: 1G
     requests:
       cpu: 1000m
       ephemeral-storage: 1G
-      memory: 2G
+      memory: 1G
+  health_check:
+    liveliness:
+      path: /
+    readiness:
+      path: /
+destination:
+  serviceOfferingName: destination
+  servicePlanName: lite
+  parameters:
+    version: 1.0.0
+    HTML5Runtime_enabled: true
+xsuaa:
+  serviceOfferingName: xsuaa
+  servicePlanName: application
+  parameters:
+    xsappname: bookshop
+  config: xs-security.json
