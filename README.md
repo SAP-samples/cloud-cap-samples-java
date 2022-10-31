@@ -239,18 +239,6 @@ Before you can access the UI using the (tenant-specific) URL to the bookshop(-mt
 - Logged into Kyma Runtime (with `kubectl` CLI), Cloud Foundry space (with `cf` CLI) and Container Registry (with `docker login`)
 - `@sap/cds-dk` >= 6.0.1
 
-### Add Deployment Files
-
-CAP tooling provides your a Helm chart for deployment to Kyma.
-
-Add the CAP Helm chart with the required features to this project:
-
-```bash
-cds add helm:hana_deployer
-cds add helm:xsuaa
-cds add helm:html5_apps_deployer
-```
-
 #### Helm chart configuration
 
 This project contains a pre-configured configuration file `values.yaml`, you just need to do the following changes in this file:
@@ -327,7 +315,8 @@ cds build --production
 pack build $YOUR_CONTAINER_REGISTRY/bookshop-hana-deployer \
      --path db \
      --buildpack gcr.io/paketo-buildpacks/nodejs \
-     --builder paketobuildpacks/builder:base
+     --builder paketobuildpacks/builder:base \
+     --env BP_NODE_RUN_SCRIPTS= ""
 ```
 
 (Replace `$YOUR_CONTAINER_REGISTRY` with the full-qualified hostname of your container registry)
@@ -347,28 +336,17 @@ pack build $YOUR_CONTAINER_REGISTRY/bookshop-srv \
         --builder paketobuildpacks/builder:base \
         --env SPRING_PROFILES_ACTIVE=cloud
 ```
+### Add Deployment Files
 
-**Add Deployment Files**
-**CAP tooling provides your a Helm chart for deployment to Kyma.**
-**Add the CAP Helm chart with the required features to this project:**
+CAP tooling provides your a Helm chart for deployment to Kyma.
+
+Add the CAP Helm chart with the required features to this project:
+
 ```bash
-cds add helm
+cds add helm:hana_deployer
+cds add helm:xsuaa
+cds add helm:html5_apps_deployer
 ```
-**Use command only if xsuaa section is missing from values.yaml:**
-```bash
-cds add xsuaa
-```
-```bash
-cds add html5-repo
-```
-**Use command only if hana_deployer section is missing from values.yaml:**
-```bash
-cds add hana
-```
-Update the following changes in the `chart/values.yaml` and `values.yaml` files:
-    <your-container-registry> - full-qualified hostname of your container registry
-    domain- full-qualified domain name used to access applications in your Kyma cluster
-    secret- the binding secret
 
 **Build HTML5 application deployer image:**
 
