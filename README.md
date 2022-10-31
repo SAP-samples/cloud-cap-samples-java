@@ -239,52 +239,6 @@ Before you can access the UI using the (tenant-specific) URL to the bookshop(-mt
 - Logged into Kyma Runtime (with `kubectl` CLI), Cloud Foundry space (with `cf` CLI) and Container Registry (with `docker login`)
 - `@sap/cds-dk` >= 6.0.1
 
-#### Helm chart configuration
-
-This project contains a pre-configured configuration file `values.yaml`, you just need to do the following changes in this file:
-
-- `<your-container-registry>` - full-qualified hostname of your container registry
-- `domain`- full-qualified domain name used to access applications in your Kyma cluster
-
-#### Use API_BUSSINESS_PARTNER Remote Service (optional)
-
-You can try the `API_BUSINESS_PARTNER` service with a real S/4HANA system with the following configuration:
-
-1. Create either an on-premise or cloud destination in your subaccount.
-
-2. Add the binding to the destination service for the service (`srv`) to the `values.yaml` file:
-
-    ```yaml
-    srv:
-      ...
-      bindings:
-        ...
-        destinations:
-          serviceInstanceName: destinations
-    ```
-
-    (The destination service instance is already configured)
-
-3. Set the profiles `cloud` and `destination` active in your `values.yaml` file:
-
-    ```yaml
-    srv:
-      ...
-      env:
-        SPRING_PROFILES_ACTIVE: cloud,destination
-        # TODO: To be removed after @sap/cds-dk patch
-        CDS_ENVIRONMENT_K8S_SERVICEBINDINGS_CONNECTIVITY_SECRETSPATH: '/bindings/connectivity'
-        CDS_ENVIRONMENT_K8S_SERVICEBINDINGS_CONNECTIVITY_SERVICE: 'connectivity'
-    ```
-
-4. For on-premise only: Add the connectivity service to your Helm chart:
-
-    ```bash
-    cds add helm:connectivity
-    ```
-
-*See also: [API_BUSINESS_PARTNER Remote Service and Spring Profiles](#api_business_partner-remote-service-and-spring-profiles)*
-
 ### Prepare Kubernetes Namespace
 
 #### Create container registry secret
@@ -343,10 +297,56 @@ CAP tooling provides your a Helm chart for deployment to Kyma.
 Add the CAP Helm chart with the required features to this project:
 
 ```bash
-cds add helm:hana_deployer
-cds add helm:xsuaa
-cds add helm:html5_apps_deployer
+cds add helm
+cds add xsuaa
+cds add html5-5-repo
+cds add hana
 ```
+#### Helm chart configuration
+
+This project contains a pre-configured configuration file `values.yaml`, you just need to do the following changes in this file:
+
+- `<your-container-registry>` - full-qualified hostname of your container registry
+- `domain`- full-qualified domain name used to access applications in your Kyma cluster
+
+#### Use API_BUSSINESS_PARTNER Remote Service (optional)
+
+You can try the `API_BUSINESS_PARTNER` service with a real S/4HANA system with the following configuration:
+
+1. Create either an on-premise or cloud destination in your subaccount.
+
+2. Add the binding to the destination service for the service (`srv`) to the `values.yaml` file:
+
+    ```yaml
+    srv:
+      ...
+      bindings:
+        ...
+        destinations:
+          serviceInstanceName: destinations
+    ```
+
+    (The destination service instance is already configured)
+
+3. Set the profiles `cloud` and `destination` active in your `values.yaml` file:
+
+    ```yaml
+    srv:
+      ...
+      env:
+        SPRING_PROFILES_ACTIVE: cloud,destination
+        # TODO: To be removed after @sap/cds-dk patch
+        CDS_ENVIRONMENT_K8S_SERVICEBINDINGS_CONNECTIVITY_SECRETSPATH: '/bindings/connectivity'
+        CDS_ENVIRONMENT_K8S_SERVICEBINDINGS_CONNECTIVITY_SERVICE: 'connectivity'
+    ```
+
+4. For on-premise only: Add the connectivity service to your Helm chart:
+
+    ```bash
+    cds add helm:connectivity
+    ```
+
+*See also: [API_BUSINESS_PARTNER Remote Service and Spring Profiles](#api_business_partner-remote-service-and-spring-profiles)*
 
 **Build HTML5 application deployer image:**
 
