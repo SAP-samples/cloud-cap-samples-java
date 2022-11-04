@@ -2135,8 +2135,7 @@
         },
         "CheckPaidDurationInDays": {
           "type": "cds.Decimal",
-          "precision": 3,
-          "scale": 0
+          "precision": 3
         },
         "Currency": {
           "type": "cds.String",
@@ -2378,8 +2377,7 @@
         },
         "MaterialPlannedDeliveryDurn": {
           "type": "cds.Decimal",
-          "precision": 3,
-          "scale": 0
+          "precision": 3
         },
         "MinimumOrderAmount": {
           "type": "cds.Decimal",
