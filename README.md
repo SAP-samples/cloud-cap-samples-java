@@ -299,7 +299,7 @@ Add the CAP Helm chart with the required features to this project:
 ```bash
 cds add helm
 cds add xsuaa
-cds add html5-5-repo
+cds add html5-repo
 cds add hana
 ```
 #### Helm chart configuration
