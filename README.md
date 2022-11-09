@@ -270,7 +270,7 @@ pack build $YOUR_CONTAINER_REGISTRY/bookshop-hana-deployer \
      --path db \
      --buildpack gcr.io/paketo-buildpacks/nodejs \
      --builder paketobuildpacks/builder:base \
-     --env BP_NODE_RUN_SCRIPTS= ""
+     --env BP_NODE_RUN_SCRIPTS=
 ```
 
 (Replace `$YOUR_CONTAINER_REGISTRY` with the full-qualified hostname of your container registry)
