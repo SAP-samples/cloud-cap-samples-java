@@ -26,6 +26,9 @@
 			"description": "Undeploy your own tenant's extensions"
 		}
 	],
+	"authorities": [
+		"$XSAPPNAME.mtdeployment"
+	],
 	"attributes": [
 		{
 			"name": "businessPartner",
