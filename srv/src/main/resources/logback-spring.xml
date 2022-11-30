@@ -11,5 +11,6 @@
     </springProfile>
     <springProfile name="!cloud">
         <include resource="org/springframework/boot/logging/logback/base.xml" />
+        <logger name="com.sap.hcp.cf.logging.servlet.filter.RequestLogger" level="WARN" />
     </springProfile>
 </configuration>

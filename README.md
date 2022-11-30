@@ -21,7 +21,9 @@ Welcome to the bookshop-java project. It demonstrates how to build business appl
   - [Using IntelliJ Idea (Community and Ultimate)](#using-intellij-idea-community-and-ultimate)
   - [Database Setup and Spring Profiles](#database-setup-and-spring-profiles)
   - [API_BUSINESS_PARTNER Remote Service and Spring Profiles](#api_business_partner-remote-service-and-spring-profiles)
-  - [Deploy to SAP Business Technology Platform](#deploy-to-sap-business-technology-platform)
+  - [Deploy to SAP Business Technology Platform, Cloud Foundry](#deploy-to-sap-business-technology-platform-cloud-foundry)
+  - [Deploy to SAP Business Technology Platform, Kyma Runtime](#deploy-to-sap-business-technology-platform-kyma-runtime)
+  - [Setup Authorizations in SAP Business Technology Platform](#setup-authorizations-in-sap-business-technology-platform)
 - [Code Tour](#code-tour)
 - [Get Support](#get-support)
 - [License](#license)
@@ -197,7 +199,7 @@ The behavior of the API_BUSINESS_PARTNER remote service is controlled using prof
 
 The profiles `sandbox` and `destination` can be combined with the `default` profile for [hybrid testing](https://cap.cloud.sap/docs/advanced/hybrid-testing) and with the `cloud` profile when deployed to the cloud.
 
-## Deploy to SAP Business Technology Platform
+## Deploy to SAP Business Technology Platform, Cloud Foundry
 
 CAP Java applications can be deployed to the SAP Business Technology Platform either in single tenant or in multitenancy mode. See [Multitenancy in CAP Java](https://cap.cloud.sap/docs/java/multitenancy) for more information.
 
@@ -222,6 +224,179 @@ Deploy as Multitenant Application:
 - Run `cf deploy mta_archives/bookshop-mt_1.0.0.mtar`
 - Go to another subaccount in your global account, under subscriptions and subscribe to the application you deployed.
 - Run `cf map-route bookshop-mt-app <YOUR DOMAIN> --hostname <SUBSCRIBER TENANT>-<ORG>-<SPACE>-bookshop-mt-app` or create and bind the route manually.
+
+Before you can access the UI using the (tenant-specific) URL to the bookshop(-mt)-app application, make sure to [Setup Authorizations in SAP Business Technology Platform](#setup-authorizations-in-sap-business-technology-platform).
+
+## Deploy to SAP Business Technology Platform, Kyma Runtime
+
+**TIP:** You can find more information in the [Deploy Your CAP Application on SAP BTP Kyma Runtime](https://developers.sap.com/mission.btp-deploy-cap-kyma.html) tutorial and in the [Deploy to Kyma/K8s](https://cap.cloud.sap/docs/guides/deployment/deploy-to-kyma) guide of the CAP documentation.
+
+### Preconditions
+
+- BTP Subaccount with Kyma Runtime
+- BTP Subaccount with Cloud Foundry Space
+- [HANA Cloud instance available](https://developers.sap.com/tutorials/hana-cloud-deploying.html) for your Cloud Foundry space
+- BTP Entitlements for: *HANA HDI Services & Container* plan *hdi-shared*, *Launchpad Service* plan *standard*
+- Container Registry (e.g. [Docker Hub](https://hub.docker.com/))
+- Command Line Tools: [`kubectl`](https://kubernetes.io/de/docs/tasks/tools/install-kubectl/), [`kubectl-oidc_login`](https://github.com/int128/kubelogin#setup), [`pack`](https://buildpacks.io/docs/tools/pack/), [`docker`](https://docs.docker.com/get-docker/), [`helm`](https://helm.sh/docs/intro/install/), [`cf`](https://docs.cloudfoundry.org/cf-cli/install-go-cli.html)
+- Logged into Kyma Runtime (with `kubectl` CLI), Cloud Foundry space (with `cf` CLI) and Container Registry (with `docker login`)
+- `@sap/cds-dk` >= 6.0.1
+
+### Add Deployment Files
+
+CAP tooling provides your a Helm chart for deployment to Kyma.
+
+Add the CAP Helm chart with the required features to this project:
+
+```bash
+cds add helm:hana_deployer
+cds add helm:xsuaa
+cds add helm:html5_apps_deployer
+```
+
+#### Helm chart configuration
+
+This project contains a pre-configured configuration file `values.yaml`, you just need to do the following changes in this file:
+
+- `<your-container-registry>` - full-qualified hostname of your container registry
+- `domain`- full-qualified domain name used to access applications in your Kyma cluster
+
+#### Use API_BUSSINESS_PARTNER Remote Service (optional)
+
+You can try the `API_BUSINESS_PARTNER` service with a real S/4HANA system with the following configuration:
+
+1. Create either an on-premise or cloud destination in your subaccount.
+
+2. Add the binding to the destination service for the service (`srv`) to the `values.yaml` file:
+
+    ```yaml
+    srv:
+      ...
+      bindings:
+        ...
+        destinations:
+          serviceInstanceName: destinations
+    ```
+
+    (The destination service instance is already configured)
+
+3. Set the profiles `cloud` and `destination` active in your `values.yaml` file:
+
+    ```yaml
+    srv:
+      ...
+      env:
+        SPRING_PROFILES_ACTIVE: cloud,destination
+        # TODO: To be removed after @sap/cds-dk patch
+        CDS_ENVIRONMENT_K8S_SERVICEBINDINGS_CONNECTIVITY_SECRETSPATH: '/bindings/connectivity'
+        CDS_ENVIRONMENT_K8S_SERVICEBINDINGS_CONNECTIVITY_SERVICE: 'connectivity'
+    ```
+
+4. For on-premise only: Add the connectivity service to your Helm chart:
+
+    ```bash
+    cds add helm:connectivity
+    ```
+
+*See also: [API_BUSINESS_PARTNER Remote Service and Spring Profiles](#api_business_partner-remote-service-and-spring-profiles)*
+
+### Prepare Kubernetes Namespace
+
+#### Create container registry secret
+
+Create a secret `container-registry` with credentials to access the container registry:
+
+```
+bash ./scripts/create-container-registry-secret.sh
+```
+
+The *Docker Server* is the full qualified hostname of your container registry.
+
+#### Create a HDI container and a secret
+
+```
+bash ./scripts/create-db-secret.sh bookshop-db
+```
+
+It will create a HDI container `bookshop-db` on your currently targeted Cloud Foundry space and creates a secret `bookshop-db` with the HDI container's credentials in your current Kubernetes namespace.
+
+### Build
+
+**Build data base deployer image:**
+
+```
+cds build --production
+
+pack build $YOUR_CONTAINER_REGISTRY/bookshop-hana-deployer \
+     --path db \
+     --buildpack gcr.io/paketo-buildpacks/nodejs \
+     --builder paketobuildpacks/builder:base
+```
+
+(Replace `$YOUR_CONTAINER_REGISTRY` with the full-qualified hostname of your container registry)
+
+
+**Build image for CAP service:**
+
+```
+mvn package
+```
+
+```
+pack build $YOUR_CONTAINER_REGISTRY/bookshop-srv \
+        --path srv/target/*-exec.jar \
+        --buildpack gcr.io/paketo-buildpacks/sap-machine \
+        --buildpack gcr.io/paketo-buildpacks/java \
+        --builder paketobuildpacks/builder:base \
+        --env SPRING_PROFILES_ACTIVE=cloud
+```
+
+**Build HTML5 application deployer image:**
+
+```
+bash ./scripts/build-ui-image.sh
+```
+
+### Push container images
+
+You can push all the container images to your container registry, using:
+
+```
+docker push $YOUR_CONTAINER_REGISTRY/bookshop-hana-deployer
+
+docker push $YOUR_CONTAINER_REGISTRY/bookshop-srv
+
+docker push $YOUR_CONTAINER_REGISTRY/bookshop-html5-deployer
+```
+
+### Deployment
+
+```
+helm upgrade bookshop ./chart --install -f values.yaml
+```
+
+### Access the UI
+
+Before you can access the UI you should make sure to [Setup Authorizations in SAP Business Technology Platform](#setup-authorizations-in-sap-business-technology-platform).
+
+1. Create a Launchpad Service subscription in the BTP Cockpit
+2. Go to **HTML5 Applications**
+3. Start any of the HTML5 applications
+
+Additionally, you can add the UIs to a Launchpad Service site like it is described in in the last two steps of [this tutorial](https://developers.sap.com/tutorials/btp-app-kyma-launchpad-service.html#9aab2dd0-18ea-4ccd-bc44-24e87c845740).
+
+## Setup Authorizations in SAP Business Technology Platform
+
+To access services and UIs that require specific authorizations (e.g. `admin`) you need to assign a corresponding role and role collections to your user in SAP BTP Cockpit.
+
+1. For single-tenant applications open the subaccount where you deployed the `bookshop` application to. For multitenant applications open the subaccount where you subscribed to the `bookshop` application.
+2. Navigate to *Security* -> *Roles*
+3. Create a role with name `bookshop-admin` based on the `admin` role template of the `bookshop` application:
+    1. Enter a Business Partner ID of your S/4 system as value for the `businessPartner` attribute. When using the sandbox environment use `10401010`.
+4. Navigate to *Security* -> *Role Collections*
+5. Create a new role collection `bookshop-admin`:
+    1. Assign the `bookshop-admin` role to this role collection
+    2. Assign the role collection to your user
 
 # Code Tour
 
