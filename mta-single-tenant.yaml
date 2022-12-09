@@ -32,17 +32,10 @@ modules:
 # --------------------- DB MODULE ---------------------------
   - name: bookshop-db
 # -----------------------------------------------------------
-    type: nodejs
+    type: hdb
     path: db
     parameters:
-      memory: 256M
-      disk-quota: 512M
       buildpack: nodejs_buildpack
-      no-route: true
-      no-start: true
-      tasks:    # execute hdi deployer on app creation/update
-      - name: hdi-deploy
-        command: npm run start
     build-parameters:
       builder: custom
       commands:
