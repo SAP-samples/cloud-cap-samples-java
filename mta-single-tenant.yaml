@@ -77,7 +77,7 @@ resources:
   - name: bookshop-hdi-container
     type: org.cloudfoundry.managed-service
     parameters:
-      service: hana
+      service: hanatrial
       service-plan: hdi-shared
   - name: cf-logging
     type: org.cloudfoundry.managed-service
