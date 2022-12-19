@@ -162,7 +162,7 @@
 					</execution>
 
 					<execution>
-						<id>install-cdsdk</id>
+						<id>cds.install-cdsdk</id>
 						<goals>
 							<goal>install-cdsdk</goal>
 						</goals>
