@@ -45,7 +45,7 @@ Although CAP provides generic **event handlers** to serve most CRUD requests out
 
 A SAP Fiori UI is added using predefined SAP Fiori elements templates. **[SAP Fiori annotations](https://cap.cloud.sap/docs/advanced/fiori#fiori-annotations)** add information to the service definitions, on how to render the data.
 
-CAP provides built-in multitenancy support with out-of-the box tenant isolation. The sample application demonstrate usage of MTX sidecar based on [streamlined MTX](https://cap.cloud.sap/docs/guides/deployment/as-saas?impl-variant=java) and can be deployed as multitenant application. The [deprecated classic MTX](https://cap.cloud.sap/docs/java/multitenancy) setup is shown in the [mtx-classic branch](https://github.com/SAP-samples/cloud-cap-samples-java/tree/mtx-classic) for reference.
+CAP provides built-in multitenancy support with out-of-the box tenant isolation. The sample application demonstrates usage of MTX sidecar based on [streamlined MTX](https://cap.cloud.sap/docs/guides/deployment/as-saas?impl-variant=java) and can be deployed as multitenant application. The [deprecated classic MTX](https://cap.cloud.sap/docs/java/multitenancy) setup is shown in the [mtx-classic branch](https://github.com/SAP-samples/cloud-cap-samples-java/tree/mtx-classic) for reference.
 
 ## Demonstrated Features
 
