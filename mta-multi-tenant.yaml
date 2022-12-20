@@ -50,6 +50,8 @@ modules:
       build-result: gen
       commands:
         - npm run build
+      requires:
+        - name: bookshop-mt-srv
     requires:
       - name: bookshop-mt-service-manager
       - name: bookshop-mt-uaa
