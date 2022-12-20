@@ -46,6 +46,12 @@
 
 		<dependency>
 			<groupId>com.sap.cds</groupId>
+			<artifactId>cds-feature-k8s</artifactId>
+			<scope>runtime</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>com.sap.cds</groupId>
 			<artifactId>cds-feature-enterprise-messaging</artifactId>
 			<scope>runtime</scope>
 		</dependency>
@@ -103,6 +109,13 @@
 			<artifactId>spring-boot-starter-webflux</artifactId>
 			<scope>test</scope>
 		</dependency>
+
+		<!-- DEV TOOLS -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-devtools</artifactId>
+			<optional>true</optional>
+		</dependency>
 	</dependencies>
 
 	<build>
@@ -155,7 +168,7 @@
 					</execution>
 
 					<execution>
-						<id>install-cdsdk</id>
+						<id>cds.install-cdsdk</id>
 						<goals>
 							<goal>install-cdsdk</goal>
 						</goals>
@@ -171,12 +184,12 @@
 						</goals>
 						<configuration>
 							<commands>
-								<command>build --for java-cf</command>
-								<command>deploy --to sql --with-mocks --dry >
+								<command>build --for java</command>
+								<command>deploy --to h2 --with-mocks --dry >
 									${project.basedir}/src/main/resources/schema.sql</command>
 								<command>compile ${project.basedir}/chapter-service.cds -s all -2 edmx-v2 -o
 									${project.basedir}/src/main/resources/edmx/v2</command>
-								<command>deploy --to sql --dry >
+								<command>deploy --to h2 --dry >
 									${project.basedir}/src/main/resources/schema-nomocks.sql</command>
 								<command>compile srv/cat-service.cds -2 openapi --openapi:url /api/browse >
 									${project.basedir}/src/main/resources/swagger/openapi.json</command>

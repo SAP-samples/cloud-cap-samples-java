@@ -3,7 +3,11 @@
   "dependencies": {
     "@sap/hdi-deploy": "^4"
   },
+  "engines": {
+    "node": "^16"
+  },
   "scripts": {
-    "start": "node node_modules/@sap/hdi-deploy --exit"
+    "start": "node node_modules/@sap/hdi-deploy/deploy.js",
+    "build": "npm i && npx -p @sap/cds-dk@^6 cds build .. --for hana --production"
   }
 }

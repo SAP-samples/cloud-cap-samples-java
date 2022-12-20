@@ -68,7 +68,7 @@ public class CatalogServiceITest {
 	}
 
 	@Test
-	@WithMockUser(username = USER_USER_STRING)
+	@WithMockUser(USER_USER_STRING)
 	public void testCreateReviewByUser() throws Exception {
 		String payload = createTestReview().toJson();
 		mockMvc.perform(post(addReviewURI).contentType(MediaType.APPLICATION_JSON).content(payload))
@@ -77,7 +77,7 @@ public class CatalogServiceITest {
 	}
 
 	@Test
-	@WithMockUser(username = ADMIN_USER_STRING)
+	@WithMockUser(ADMIN_USER_STRING)
 	public void testCreateReviewByAdmin() throws Exception {
 		String payload = createTestReview().toJson();
 		mockMvc.perform(post(addReviewURI).contentType(MediaType.APPLICATION_JSON).content(payload))

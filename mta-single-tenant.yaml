@@ -4,12 +4,6 @@ version: 1.0.0
 description: "Bookshop CAP Java Project with UI"
 parameters:
   enable-parallel-deployments: true
-build-parameters:
-  before-all:
-   - builder: custom
-     commands:
-      - npm install --production
-      - npx -p @sap/cds-dk cds build --production
 modules:
 # --------------------- SERVER MODULE ------------------------
   - name: bookshop-srv
@@ -21,7 +15,7 @@ modules:
       disk-quota: 256M
       buildpack: sap_java_buildpack
     properties:
-      SPRING_PROFILES_ACTIVE: cloud
+      SPRING_PROFILES_ACTIVE: cloud,sandbox
     build-parameters:
       builder: custom
       commands:
@@ -38,18 +32,15 @@ modules:
 # --------------------- DB MODULE ---------------------------
   - name: bookshop-db
 # -----------------------------------------------------------
-    type: nodejs
+    type: hdb
     path: db
     parameters:
-      memory: 256M
-      disk-quota: 512M
-      no-route: true
-      no-start: true
-      tasks:    # execute hdi deployer on app creation/update
-      - name: hdi-deploy
-        command: npm run start
+      buildpack: nodejs_buildpack
+    build-parameters:
+      builder: custom
+      commands:
+        - npm run build
     requires:
-      # Set user and password to secure rest API via basic authentication
       - name: bookshop-hdi-container
 # --------------------- APPROUTER MODULE ---------------------
   - name: bookshop-app
