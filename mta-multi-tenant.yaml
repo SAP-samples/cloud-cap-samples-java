@@ -28,7 +28,6 @@ modules:
       - name: bookshop-mt-saas-registry
       - name: sidecar
         properties:
-          CDS_MULTITENANCY_MTXS_ENABLED: true
           CDS_MULTITENANCY_SIDECAR_URL: ~{url}
       - name: app
         properties:

@@ -8,6 +8,7 @@ spring:
     enabled: true
 cds:
   odata-v4.endpoint.path: "/api"
+  multi-tenancy.mtxs.enabled: true
   security.mock.users:
     - name: admin
       password: admin
@@ -16,8 +17,10 @@ cds:
       attributes:
         businessPartner:
         - "10401010"
+      tenant: t1
     - name: user
       password: user
+      tenant: t1
 server.servlet.encoding:
   charset: UTF-8
   force: true
@@ -88,6 +91,12 @@ cds:
       destination:
         name: "myself"
         suffix: "/api"
+
+---
+spring:
+  config.activate.on-profile: local-mtxs
+cds:
+  multi-tenancy.sidecar.url: http://localhost:4004
 
 ---
 spring:

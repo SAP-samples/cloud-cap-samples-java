@@ -1,0 +1,16 @@
+### Trigger BusinessPartner.Changed event through S/4 mock
+
+PATCH http://localhost:8080/api/API_BUSINESS_PARTNER/A_BusinessPartnerAddress(BusinessPartner='10401010',AddressID='200')
+Content-Type: application/json
+Authorization: Basic authenticated:
+
+{"HouseNumber": "30"}
+
+### Subscribe t1 tenant, in local-mtxs
+
+POST http://localhost:4004/-/cds/deployment/subscribe HTTP/1.1
+Content-Type: application/json
+
+{
+  "tenant": "t1"
+}

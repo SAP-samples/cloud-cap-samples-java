@@ -24,14 +24,13 @@
     }
   },
   "devDependencies": {
-    "sqlite3": "^5.0.2"
+    "sqlite3": "^5"
   },
   "engines": {
-    "node": ">=16.13.2"
+    "node": "^16"
   },
   "scripts": {
     "start": "cds run",
-    "st": "node node_modules/@sap/cds/bin/cds.js",
     "build": "npm install && cds build ../.. --for mtx-sidecar && cd gen && npm install"
   }
 }
