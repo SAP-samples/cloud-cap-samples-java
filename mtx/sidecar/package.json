@@ -9,21 +9,18 @@
   },
   "cds": {
     "requires": {
-      "multitenancy": true,
-      "db": {
-        "kind": "sqlite",
-        "[production]": {
-          "kind": "hana-mt"
-        }
+      "[production]": {
+        "db": "hana-mt",
+        "auth": "xsuaa"
       },
-      "auth": {
-        "kind": "dummy-auth",
-        "[production]": {
-          "kind": "xsuaa"
-        }
+      "[development]": {
+        "db": "sqlite",
+        "auth": "dummy"
       },
       "cds.xt.ModelProviderService": "in-sidecar",
-      "cds.xt.SaasProvisioningService": true
+      "cds.xt.DeploymentService": true,
+      "cds.xt.SaasProvisioningService": true,
+      "cds.xt.ExtensibilityService": true
     }
   },
   "devDependencies": {

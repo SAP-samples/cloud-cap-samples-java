@@ -1,6 +1,7 @@
 {
     "requires": {
         "multitenancy": true,
+        "extensibility": true,
         "toggles": true
     },
     "build": {
