@@ -20,6 +20,7 @@ annotate Reviews with {
     subject @mandatory;
     title @mandatory;
     rating @assert.range;
+    book @mandatory @assert.target;
 }
 
 type Rating : Integer enum {

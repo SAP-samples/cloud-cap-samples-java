@@ -105,11 +105,6 @@ class AdminServiceHandler implements EventHandler {
 					}
 
 					String bookId = orderItem.getBookId();
-					if (bookId == null) {
-						// Tip: using static text without localization is still possible in exceptions and messages
-						messages.error("You have to specify the book to order")
-								.target("in", ORDERS, o -> o.Items(i -> i.ID().eq(orderItem.getId()).and(i.IsActiveEntity().eq(orderItem.getIsActiveEntity()))).book_ID());
-					}
 
 					if(quantity == null || quantity <= 0 || bookId == null) {
 						return; // follow up validations rely on these
@@ -117,29 +112,30 @@ class AdminServiceHandler implements EventHandler {
 
 					// calculate the actual quantity difference
 					// FIXME this should handle book changes, currently only quantity changes are handled
-					int diffAmount = quantity - db.run(Select.from(Bookshop_.ORDER_ITEMS).columns(i -> i.quantity()).byId(orderItem.getId()))
+					int diffQuantity = quantity - db.run(Select.from(Bookshop_.ORDER_ITEMS).columns(i -> i.quantity()).byId(orderItem.getId()))
 												.first(OrderItems.class).map(i -> i.getQuantity()).orElse(0);
 
 					// check if enough books are available
 					Result result = db.run(Select.from(BOOKS).columns(b -> b.ID(), b -> b.stock(), b -> b.price()).byId(bookId));
-					Books book = result.first(Books.class).orElseThrow(notFound(MessageKeys.BOOK_MISSING));
-					if (book.getStock() < diffAmount) {
-						// Tip: you can have localized messages and use parameters in your messages
-						messages.error(MessageKeys.BOOK_REQUIRE_STOCK, book.getStock())
+					result.first(Books.class).ifPresent(book -> {
+						if (book.getStock() < diffQuantity) {
+							// Tip: you can have localized messages and use parameters in your messages
+							messages.error(MessageKeys.BOOK_REQUIRE_STOCK, book.getStock())
 								.target("in", ORDERS, o -> o.Items(i -> i.ID().eq(orderItem.getId()).and(i.IsActiveEntity().eq(orderItem.getIsActiveEntity()))).quantity());
-						return; // no need to update follow-up values with invalid quantity / stock
-					}
+							return; // no need to update follow-up values with invalid quantity / stock
+						}
 
-					// update the book with the new stock
-					book.setStock(book.getStock() - diffAmount);
-					db.run(Update.entity(BOOKS).data(book));
+						// update the book with the new stock
+						book.setStock(book.getStock() - diffQuantity);
+						db.run(Update.entity(BOOKS).data(book));
 
-					// update the Amount
-					BigDecimal updatedAmount = book.getPrice().multiply(BigDecimal.valueOf(quantity));
-					orderItem.setAmount(updatedAmount);
+						// update the amount
+						BigDecimal updatedAmount = book.getPrice().multiply(BigDecimal.valueOf(quantity));
+						orderItem.setAmount(updatedAmount);
 
-					// update the total
-					order.setTotal(order.getTotal().add(updatedAmount));
+						// update the total
+						order.setTotal(order.getTotal().add(updatedAmount));
+					});
 				});
 			}
 		});
@@ -157,9 +153,9 @@ class AdminServiceHandler implements EventHandler {
 		Integer quantity = orderItem.getQuantity();
 		String bookId = orderItem.getBookId();
 		String orderItemId = orderItem.getId();
-		BigDecimal Amount = calculateAmountInDraft(orderItemId, quantity, bookId);
-		if (Amount != null) {
-			orderItem.setAmount(Amount);
+		BigDecimal amount = calculateAmountInDraft(orderItemId, quantity, bookId, true);
+		if (amount != null) {
+			orderItem.setAmount(amount);
 		}
 	}
 
@@ -172,12 +168,12 @@ class AdminServiceHandler implements EventHandler {
 	public void cancelOrderItems(DraftCancelEventContext context) {
 		String orderItemId = (String) analyzer.analyze(context.getCqn()).targetKeys().get(OrderItems.ID);
 		if(orderItemId != null) {
-			calculateAmountInDraft(orderItemId, 0, null);
+			calculateAmountInDraft(orderItemId, 0, null, false);
 		}
 	}
 
-	private BigDecimal calculateAmountInDraft(String orderItemId, Integer newAmount, String newBookId) {
-		Integer quantity = newAmount;
+	private BigDecimal calculateAmountInDraft(String orderItemId, Integer newQuantity, String newBookId, boolean includeWarnings) {
+		Integer quantity = newQuantity;
 		String bookId = newBookId;
 		if (quantity == null && bookId == null) {
 			return null; // nothing changed
@@ -207,7 +203,7 @@ class AdminServiceHandler implements EventHandler {
 		}
 
 		// only warn about invalid values as we are in draft mode
-		if(quantity <= 0) {
+		if(includeWarnings && quantity <= 0) {
 			// Tip: add additional messages with localized messages from property files
 			// these messages are transported in sap-messages and do not abort the request
 			messages.warn(MessageKeys.QUANTITY_REQUIRE_MINIMUM);
@@ -220,7 +216,7 @@ class AdminServiceHandler implements EventHandler {
 			bookPrice = book.getPrice();
 		}
 
-		// update the Amount of the order item
+		// update the amount of the order item
 		BigDecimal updatedAmount = bookPrice.multiply(BigDecimal.valueOf(quantity));
 
 		// update the order's total

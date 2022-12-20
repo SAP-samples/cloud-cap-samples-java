@@ -19,7 +19,7 @@ entity Orders : cuid, managed {
 
 entity OrderItems : cuid {
     parent    : Association to Orders;
-    book      : Association to Books;
+    book      : Association to Books @mandatory @assert.target;
     quantity    : Integer;
     amount : Decimal(9, 2);
 }

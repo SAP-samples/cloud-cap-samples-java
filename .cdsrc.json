@@ -3,7 +3,7 @@
         "target": ".",
         "tasks": [
             {
-                "for": "java-cf"
+                "for": "java"
             },
             {
                 "for": "mtx",

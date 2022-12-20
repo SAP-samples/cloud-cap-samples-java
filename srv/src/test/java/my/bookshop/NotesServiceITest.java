@@ -5,6 +5,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
+import org.springframework.http.HttpHeaders;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.reactive.server.WebTestClient;
@@ -23,7 +24,7 @@ public class NotesServiceITest {
 
 	@Test
 	public void testGetNotes() throws Exception {
-		client.get().uri(notesURI).exchange()
+		client.get().uri(notesURI).headers(this::authenticatedCredentials).exchange()
 				.expectStatus().isOk()
 				.expectBody()
 				.jsonPath("$.['@context']").isEqualTo("$metadata#Notes")
@@ -43,7 +44,7 @@ public class NotesServiceITest {
 
 	@Test
 	public void testGetAddresses() throws Exception {
-		client.get().uri(addressesURI + "?$filter=businessPartner eq '10401010'").exchange()
+		client.get().uri(addressesURI + "?$filter=businessPartner eq '10401010'").headers(this::authenticatedCredentials).exchange()
 				.expectStatus().isOk()
 				.expectBody()
 				.jsonPath("$.['@context']").isEqualTo("$metadata#Addresses")
@@ -57,7 +58,7 @@ public class NotesServiceITest {
 
 	@Test
 	public void testGetNoteWithAddress() throws Exception {
-		client.get().uri(notesURI + "?$expand=address").exchange()
+		client.get().uri(notesURI + "?$expand=address").headers(this::authenticatedCredentials).exchange()
 				.expectStatus().isOk()
 				.expectBody()
 				.jsonPath("$.['@context']").isEqualTo("$metadata#Notes(address())")
@@ -86,7 +87,7 @@ public class NotesServiceITest {
 
 	@Test
 	public void testGetSuppliersWithNotes() throws Exception {
-		client.get().uri(addressesURI + "?$expand=notes($orderby=ID)&$filter=businessPartner eq '10401010'").exchange()
+		client.get().uri(addressesURI + "?$expand=notes($orderby=ID)&$filter=businessPartner eq '10401010'").headers(this::authenticatedCredentials).exchange()
 				.expectStatus().isOk()
 				.expectBody()
 				.jsonPath("$.['@context']").isEqualTo("$metadata#Addresses(notes())")
@@ -111,7 +112,7 @@ public class NotesServiceITest {
 
 	@Test
 	public void testGetNotesToSupplier() throws Exception {
-		client.get().uri(notesURI + "(ID=5efc842c-c70d-4ee2-af1d-81c7d257aff7,IsActiveEntity=true)/address").exchange()
+		client.get().uri(notesURI + "(ID=5efc842c-c70d-4ee2-af1d-81c7d257aff7,IsActiveEntity=true)/address").headers(this::authenticatedCredentials).exchange()
 				.expectStatus().isOk()
 				.expectBody()
 				.jsonPath("$.['@context']").isEqualTo("$metadata#Addresses/$entity")
@@ -122,7 +123,7 @@ public class NotesServiceITest {
 
 	@Test
 	public void testGetSupplierToNotes() throws Exception {
-		client.get().uri(addressesURI + "(businessPartner='10401010',ID='100')/notes").exchange()
+		client.get().uri(addressesURI + "(businessPartner='10401010',ID='100')/notes").headers(this::authenticatedCredentials).exchange()
 				.expectStatus().isOk()
 				.expectBody()
 				.jsonPath("$.value[0].ID").isEqualTo("83e2643b-aecc-47d3-9f85-a8ba14eff07d")
@@ -138,7 +139,9 @@ public class NotesServiceITest {
 
 	@Test
 	public void testGetSupplierToSpecificNote() throws Exception {
-		client.get().uri(addressesURI + "(businessPartner='10401010',ID='100')/notes(ID=83e2643b-aecc-47d3-9f85-a8ba14eff07d,IsActiveEntity=true)").exchange()
+		client.get().uri(addressesURI + "(businessPartner='10401010',ID='100')/notes(ID=83e2643b-aecc-47d3-9f85-a8ba14eff07d,IsActiveEntity=true)")
+				.headers(this::authenticatedCredentials)
+				.exchange()
 				.expectStatus().isOk()
 				.expectBody()
 				.jsonPath("$.ID").isEqualTo("83e2643b-aecc-47d3-9f85-a8ba14eff07d")
@@ -149,7 +152,7 @@ public class NotesServiceITest {
 
 	@Test
 	public void testGetNotesWithNestedExpands() throws Exception {
-		client.get().uri(notesURI + "?$select=note&$expand=address($select=postalCode;$expand=notes($select=note))&$top=1").exchange()
+		client.get().uri(notesURI + "?$select=note&$expand=address($select=postalCode;$expand=notes($select=note))&$top=1").headers(this::authenticatedCredentials).exchange()
 				.expectStatus().isOk()
 				.expectBody()
 				.jsonPath("$.value[0].ID").isEqualTo("5efc842c-c70d-4ee2-af1d-81c7d257aff7")
@@ -165,7 +168,9 @@ public class NotesServiceITest {
 
 	@Test
 	public void testGetAddressesWithNestedExpands() throws Exception {
-		client.get().uri(addressesURI + "?$select=postalCode&$expand=notes($select=note;$expand=address($select=postalCode))&$filter=businessPartner eq '1000020'").exchange()
+		client.get().uri(addressesURI + "?$select=postalCode&$expand=notes($select=note;$expand=address($select=postalCode))&$filter=businessPartner eq '1000020'")
+				.headers(this::authenticatedCredentials)
+				.exchange()
 				.expectStatus().isOk()
 				.expectBody()
 				.jsonPath("$.value[0].businessPartner").isEqualTo("1000020")
@@ -184,4 +189,7 @@ public class NotesServiceITest {
 				.jsonPath("$.value[2]").doesNotExist();
 	}
 
+	private void authenticatedCredentials(HttpHeaders headers) {
+		headers.setBasicAuth("authenticated", "");
+	}
 }

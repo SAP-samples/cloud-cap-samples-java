@@ -38,7 +38,7 @@ entity Authors : cuid, managed {
 // annotations for Data Privacy
 annotate Authors with
 @PersonalData : { DataSubjectRole : 'Author', EntitySemantics : 'DataSubject' }
-@AuditLog.Operation : { Read : true, Create : true, Update : true, Delete : true }
+@AuditLog.Operation : { Read : true, Insert : true, Update : true, Delete : true }
 {
   ID    @PersonalData.FieldSemantics : 'DataSubjectID';
   name  @PersonalData.IsPotentiallySensitive;

@@ -11,6 +11,7 @@ import org.springframework.stereotype.Component;
 
 import com.sap.cds.ql.Select;
 import com.sap.cds.ql.cqn.CqnDelete;
+import com.sap.cds.services.EventContext;
 import com.sap.cds.services.auditlog.Action;
 import com.sap.cds.services.auditlog.AuditLogService;
 import com.sap.cds.services.auditlog.ChangedAttribute;
@@ -53,7 +54,7 @@ class AdminServiceAuditHandler implements EventHandler {
 	}
 
 	@Before(event = { CqnService.EVENT_UPDATE, CqnService.EVENT_UPSERT })
-	public void beforeUpdateOrUpsertOrder(Stream<Orders> orders) {
+	public void beforeUpdateOrUpsertOrder(EventContext context, Stream<Orders> orders) {
 		orders.forEach(order -> {
 			ConfigChange cfgChange = null;
 			Action action = null;
@@ -68,7 +69,7 @@ class AdminServiceAuditHandler implements EventHandler {
 				action = Action.CREATE;
 			}
 			if (cfgChange != null && action != null) {
-				this.auditLog.logConfigChange(action, cfgChange);
+				auditCfgChange(action, cfgChange, context);
 			}
 		});
 	}
@@ -81,7 +82,15 @@ class AdminServiceAuditHandler implements EventHandler {
 		// read old order number from DB
 		this.db.run(ordersSelect).first(Orders.class).ifPresent(oldOrders -> {
 			ConfigChange cfgChange = createConfigChange(null, oldOrders);
-			this.auditLog.logConfigChange(Action.DELETE, cfgChange);
+			auditCfgChange(Action.DELETE, cfgChange, context);
+		});
+	}
+
+	private void auditCfgChange(final Action action, final ConfigChange cfgChange, EventContext context) {
+		// create new request context and set tenant to null
+		context.getCdsRuntime().requestContext().modifyUser(user -> user.setTenant(null)).run(ctx -> {
+			// send audit log message into provider tenant as user's tenant is null
+			this.auditLog.logConfigChange(action, cfgChange);
 		});
 	}
 

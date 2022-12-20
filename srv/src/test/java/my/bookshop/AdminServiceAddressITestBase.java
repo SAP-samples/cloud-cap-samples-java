@@ -88,7 +88,7 @@ public class AdminServiceAddressITestBase {
 		ABusinessPartnerAddress address = ABusinessPartnerAddress.create();
 		address.setHouseNumber("17");
 
-		client.patch().uri(String.format(remoteAddressURI, "10401010", "100"))
+		client.patch().uri(String.format(remoteAddressURI, "10401010", "100")).headers(this::authenticatedCredentials)
 				.header("Content-Type", "application/json")
 				.bodyValue(address.toJson())
 				.exchange()
@@ -108,4 +108,7 @@ public class AdminServiceAddressITestBase {
 		headers.setBasicAuth("admin", "admin");
 	}
 
+	private void authenticatedCredentials(HttpHeaders headers) {
+		headers.setBasicAuth("authenticated", "");
+	}
 }
