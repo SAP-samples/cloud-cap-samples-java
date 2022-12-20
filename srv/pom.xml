@@ -163,7 +163,7 @@
 					</execution>
 
 					<execution>
-						<id>install-cdsdk-with-npm-install</id>
+						<id>cds.install-cdsdk-with-npm-install</id>
 						<goals>
 							<goal>npm</goal>
 						</goals>
