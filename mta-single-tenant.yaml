@@ -40,6 +40,8 @@ modules:
       builder: custom
       commands:
         - npm run build
+      requires:
+        - name: bookshop-srv
     requires:
       - name: bookshop-hdi-container
 # --------------------- APPROUTER MODULE ---------------------
