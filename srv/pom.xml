@@ -168,12 +168,12 @@
 					</execution>
 
 					<execution>
-						<id>cds.install-cdsdk</id>
+						<id>cds.install-dependencies</id>
 						<goals>
-							<goal>install-cdsdk</goal>
+							<goal>npm</goal>
 						</goals>
 						<configuration>
-							<skip>${cdsdk-global}</skip>
+							<arguments>install</arguments>
 						</configuration>
 					</execution>
 
