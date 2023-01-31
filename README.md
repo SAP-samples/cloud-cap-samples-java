@@ -209,6 +209,7 @@ Prerequisites:
 - Get an SAP Business Technology Platform account to deploy the services and applications.
 - [Create a SAP HANA Cloud Instance](https://developers.sap.com/tutorials/hana-cloud-deploying.html) in your SAP Business Technology Platform space.
 - Ensure you have an entitlement for `SAP HANA Schemas & HDI Containers` with plan `hdi-shared` in the same space.
+- Ensure that your CF instances are connected to Internet to download SAPMachine JRE 17 as it is available in `sap_java_buildpack` in online mode only.
 
 Deploy as Single Tenant Application:
 - Rename `mta-single-tenant.yaml` to `mta.yaml`
