@@ -64,7 +64,7 @@ public class CatalogServiceITest {
 	public void testCreateReviewNotAuthenticated() throws Exception {
 		String payload = createTestReview().toJson();
 		mockMvc.perform(post(addReviewURI).contentType(MediaType.APPLICATION_JSON).content(payload))
-			.andExpect(status().isForbidden());
+			.andExpect(status().isUnauthorized());
 	}
 
 	@Test
