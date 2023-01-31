@@ -15,13 +15,13 @@
 		<revision>1.0.0-SNAPSHOT</revision>
 
 		<!-- DEPENDENCIES VERSION -->
-		<jdk.version>1.8</jdk.version>
-		<cds.services.version>1.30.0</cds.services.version>
-		<spring.boot.version>2.7.6</spring.boot.version>
-		<cloud.sdk.version>4.3.0</cloud.sdk.version>
-		<xsuaa.version>2.13.4</xsuaa.version>
+		<jdk.version>17</jdk.version>
+		<cds.services.version>1.31.0</cds.services.version>
+		<spring.boot.version>2.7.8</spring.boot.version>
+		<cloud.sdk.version>4.5.0</cloud.sdk.version>
+		<xsuaa.version>2.13.5</xsuaa.version>
 		<cf-java-logging-support.version>3.6.3</cf-java-logging-support.version>
-		<cds.install-cdsdk.version>6.3.2</cds.install-cdsdk.version>
+		<cds.install-cdsdk.version>6.5.0</cds.install-cdsdk.version>
 	</properties>
 
 	<modules>
@@ -76,8 +76,7 @@
 				<artifactId>maven-compiler-plugin</artifactId>
 				<version>3.8.1</version>
 				<configuration>
-					<source>${jdk.version}</source>
-					<target>${jdk.version}</target>
+					<release>${jdk.version}</release>
 					<encoding>UTF-8</encoding>
 				</configuration>
 			</plugin>

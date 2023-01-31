@@ -28,7 +28,6 @@ import com.sap.cds.reflect.CdsModel;
 import com.sap.cds.services.ErrorStatuses;
 import com.sap.cds.services.EventContext;
 import com.sap.cds.services.ServiceException;
-import com.sap.cds.services.cds.CdsService;
 import com.sap.cds.services.cds.CdsUpdateEventContext;
 import com.sap.cds.services.cds.CqnService;
 import com.sap.cds.services.draft.DraftCancelEventContext;
@@ -269,7 +268,7 @@ class AdminServiceHandler implements EventHandler {
 	/**
 	 * @return the static CSV singleton upload entity
 	 */
-	@On(entity = Upload_.CDS_NAME, event = CdsService.EVENT_READ)
+	@On(entity = Upload_.CDS_NAME, event = CqnService.EVENT_READ)
 	public Upload getUploadSingleton() {
 		return Upload.create();
 	}
@@ -279,7 +278,7 @@ class AdminServiceHandler implements EventHandler {
 	 * @param context
 	 * @param csv
 	 */
-	@On(event = CdsService.EVENT_UPDATE)
+	@On
 	public void addBooksViaCsv(CdsUpdateEventContext context, Upload upload) {
 		InputStream is = upload.getCsv();
 		if (is != null) {

@@ -17,8 +17,8 @@ import com.sap.cds.ql.Insert;
 import com.sap.cds.ql.Predicate;
 import com.sap.cds.ql.Select;
 import com.sap.cds.ql.Upsert;
-import com.sap.cds.ql.cqn.CqnModifier;
 import com.sap.cds.ql.cqn.CqnSelect;
+import com.sap.cds.ql.cqn.Modifier;
 import com.sap.cds.services.ErrorStatuses;
 import com.sap.cds.services.EventContext;
 import com.sap.cds.services.ServiceException;
@@ -71,7 +71,7 @@ public class AdminServiceAddressHandler implements EventHandler {
 		String businessPartner = context.getUserInfo().getAttributeValues("businessPartner").stream().findFirst()
 			.orElseThrow(() -> new ServiceException(ErrorStatuses.FORBIDDEN, MessageKeys.BUPA_MISSING));
 
-		CqnSelect select = CQL.copy(context.getCqn(), new CqnModifier() {
+		CqnSelect select = CQL.copy(context.getCqn(), new Modifier() {
 
 			public Predicate where(Predicate original) {
 				Predicate where = CQL.get(Addresses.BUSINESS_PARTNER).eq(businessPartner);
