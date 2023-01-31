@@ -32,6 +32,8 @@ srv:
     tag: latest
   env:
     SPRING_PROFILES_ACTIVE: cloud
+    BP_JVM_VERSION: 17
+    BP_JVM_TYPE: JRE
   resources:
     limits:
       cpu: 2000m
