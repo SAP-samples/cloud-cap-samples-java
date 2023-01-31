@@ -18,11 +18,13 @@ modules:
     path: srv
     parameters:
       memory: 1024M
-      disk-quota: 256M
+      disk-quota: 512M
       buildpack: sap_java_buildpack
     properties:
       SPRING_PROFILES_ACTIVE: cloud,sandbox
       CDS_MULTITENANCY_APPUI_TENANTSEPARATOR: "-"
+      JBP_CONFIG_COMPONENTS: "jres: ['com.sap.xs.java.buildpack.jre.SAPMachineJRE']"
+      JBP_CONFIG_SAP_MACHINE_JRE: '{ use_offline_repository: false, version: 17.+ }'
     build-parameters:
       builder: custom
       commands:
@@ -50,7 +52,7 @@ modules:
     path: mtx-sidecar
     parameters:
       memory: 256M
-      disk-quota: 512M
+      disk-quota: 1024M
     requires:
       - name: bookshop-mt-service-manager
       - name: bookshop-mt-uaa
