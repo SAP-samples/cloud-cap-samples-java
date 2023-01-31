@@ -237,7 +237,7 @@ Before you can access the UI using the (tenant-specific) URL to the bookshop(-mt
 - Container Registry (e.g. [Docker Hub](https://hub.docker.com/))
 - Command Line Tools: [`kubectl`](https://kubernetes.io/de/docs/tasks/tools/install-kubectl/), [`kubectl-oidc_login`](https://github.com/int128/kubelogin#setup), [`pack`](https://buildpacks.io/docs/tools/pack/), [`docker`](https://docs.docker.com/get-docker/), [`helm`](https://helm.sh/docs/intro/install/), [`cf`](https://docs.cloudfoundry.org/cf-cli/install-go-cli.html)
 - Logged into Kyma Runtime (with `kubectl` CLI), Cloud Foundry space (with `cf` CLI) and Container Registry (with `docker login`)
-- `@sap/cds-dk` >= 6.0.1
+- `@sap/cds-dk` >= 6.5.0
 
 ### Add Deployment Files
 
@@ -246,9 +246,7 @@ CAP tooling provides your a Helm chart for deployment to Kyma.
 Add the CAP Helm chart with the required features to this project:
 
 ```bash
-cds add helm:hana_deployer
-cds add helm:xsuaa
-cds add helm:html5_apps_deployer
+cds add helm
 ```
 
 #### Helm chart configuration
@@ -257,46 +255,6 @@ This project contains a pre-configured configuration file `values.yaml`, you jus
 
 - `<your-container-registry>` - full-qualified hostname of your container registry
 - `domain`- full-qualified domain name used to access applications in your Kyma cluster
-
-#### Use API_BUSSINESS_PARTNER Remote Service (optional)
-
-You can try the `API_BUSINESS_PARTNER` service with a real S/4HANA system with the following configuration:
-
-1. Create either an on-premise or cloud destination in your subaccount.
-
-2. Add the binding to the destination service for the service (`srv`) to the `values.yaml` file:
-
-    ```yaml
-    srv:
-      ...
-      bindings:
-        ...
-        destinations:
-          serviceInstanceName: destinations
-    ```
-
-    (The destination service instance is already configured)
-
-3. Set the profiles `cloud` and `destination` active in your `values.yaml` file:
-
-    ```yaml
-    srv:
-      ...
-      env:
-        SPRING_PROFILES_ACTIVE: cloud,destination
-        # TODO: To be removed after @sap/cds-dk patch
-        CDS_ENVIRONMENT_K8S_SERVICEBINDINGS_CONNECTIVITY_SECRETSPATH: '/bindings/connectivity'
-        CDS_ENVIRONMENT_K8S_SERVICEBINDINGS_CONNECTIVITY_SERVICE: 'connectivity'
-    ```
-
-4. For on-premise only: Add the connectivity service to your Helm chart:
-
-    ```bash
-    cds add helm:connectivity
-    ```
-
-*See also: [API_BUSINESS_PARTNER Remote Service and Spring Profiles](#api_business_partner-remote-service-and-spring-profiles)*
-
 ### Prepare Kubernetes Namespace
 
 #### Create container registry secret
@@ -311,23 +269,48 @@ The *Docker Server* is the full qualified hostname of your container registry.
 
 #### Create a HDI container and a secret
 
+This step is only required if you're using a BTP Trial account. If you're using a production or a free tier account then you can create HDI Container from Kyma directly by adding a [mapping to your Kyma namespace in your HANA Cloud Instance](https://blogs.sap.com/2022/12/15/consuming-sap-hana-cloud-from-the-kyma-environment/) and skip this step.
+
 ```
 bash ./scripts/create-db-secret.sh bookshop-db
 ```
 
 It will create a HDI container `bookshop-db` on your currently targeted Cloud Foundry space and creates a secret `bookshop-db` with the HDI container's credentials in your current Kubernetes namespace.
 
+Make the following changes to your _`chart/values.yaml`_.
+
+```diff
+srv:
+  bindings:
+    db:
+-     serviceInstanceName: hana
++     fromSecret: bookshop-db
+...
+
+hana-deployer:
+  bindings:
+    hana:
+-     serviceInstanceName: hana
++     fromSecret: bookshop-db
+
+...
+- hana:
+-   serviceOfferingName: hana
+-   servicePlanName: hdi-shared
+```
+
 ### Build
 
 **Build data base deployer image:**
 
-```
+```bash
 cds build --production
 
 pack build $YOUR_CONTAINER_REGISTRY/bookshop-hana-deployer \
      --path db \
      --buildpack gcr.io/paketo-buildpacks/nodejs \
-     --builder paketobuildpacks/builder:base
+     --builder paketobuildpacks/builder:base \
+     --env BP_NODE_RUN_SCRIPTS=""
 ```
 
 (Replace `$YOUR_CONTAINER_REGISTRY` with the full-qualified hostname of your container registry)
@@ -335,23 +318,28 @@ pack build $YOUR_CONTAINER_REGISTRY/bookshop-hana-deployer \
 
 **Build image for CAP service:**
 
-```
-mvn package
+```bash
+mvn clean package -DskipTests=true
 ```
 
-```
+```bash
 pack build $YOUR_CONTAINER_REGISTRY/bookshop-srv \
         --path srv/target/*-exec.jar \
         --buildpack gcr.io/paketo-buildpacks/sap-machine \
         --buildpack gcr.io/paketo-buildpacks/java \
         --builder paketobuildpacks/builder:base \
-        --env SPRING_PROFILES_ACTIVE=cloud
+        --env SPRING_PROFILES_ACTIVE=cloud \
+        --env BP_JVM_VERSION=11
 ```
 
-**Build HTML5 application deployer image:**
+**Build Approuter Image:**
 
-```
-bash ./scripts/build-ui-image.sh
+```bash
+pack build $YOUR_CONTAINER_REGISTRY/bookshop-approuter \
+     --path app \
+     --buildpack gcr.io/paketo-buildpacks/nodejs \
+     --builder paketobuildpacks/builder:base \
+     --env BP_NODE_RUN_SCRIPTS=""
 ```
 
 ### Push container images
@@ -363,24 +351,43 @@ docker push $YOUR_CONTAINER_REGISTRY/bookshop-hana-deployer
 
 docker push $YOUR_CONTAINER_REGISTRY/bookshop-srv
 
-docker push $YOUR_CONTAINER_REGISTRY/bookshop-html5-deployer
+docker push $YOUR_CONTAINER_REGISTRY/bookshop-approuter
 ```
 
 ### Deployment
 
+1. Replace `<your-cluster-domain>` in `xsuaa.parameters.oauth2-configuration.redirect-uris` with you cluster domain in _`chart/values.yaml`_.
+
+2. Replace `<your-container-registry>` with your container registry in _`chart/values.yaml`_.
+
+3. Make the following change to add backend destinations required by Approuter.
+   
+```diff
+-  backendDestinations: {}
++  backendDestinations:
++     backend:
++       service: srv
 ```
-helm upgrade bookshop ./chart --install -f values.yaml
+
+4. Add your image registry secret created in [Create container registry secret](#create-container-registry-secret) step.
+
+```diff
+global:
+  domain: null
+-  imagePullSecret: {}
++  imagePullSecret:
++    name: container-registry
 ```
 
-### Access the UI
+5. Deploy the helm chart using the following command:
 
-Before you can access the UI you should make sure to [Setup Authorizations in SAP Business Technology Platform](#setup-authorizations-in-sap-business-technology-platform).
+```bash
+helm upgrade bookshop ./chart --install
+```
 
-1. Create a Launchpad Service subscription in the BTP Cockpit
-2. Go to **HTML5 Applications**
-3. Start any of the HTML5 applications
+5. Before you can access the UI you should make sure to [Setup Authorizations in SAP Business Technology Platform](#setup-authorizations-in-sap-business-technology-platform).
 
-Additionally, you can add the UIs to a Launchpad Service site like it is described in in the last two steps of [this tutorial](https://developers.sap.com/tutorials/btp-app-kyma-launchpad-service.html#9aab2dd0-18ea-4ccd-bc44-24e87c845740).
+6. Click on the approuter url logged by the `helm upgrade` to access the UI.
 
 ## Setup Authorizations in SAP Business Technology Platform
 
