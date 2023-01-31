@@ -15,7 +15,7 @@ import com.sap.cds.ql.cqn.CqnSelectListItem;
 import com.sap.cds.reflect.CdsEntity;
 import com.sap.cds.reflect.CdsModel;
 import com.sap.cds.services.ServiceCatalog;
-import com.sap.cds.services.cds.CdsService;
+import com.sap.cds.services.cds.CqnService;
 
 import graphql.schema.DataFetcher;
 import graphql.schema.DataFetchingEnvironment;
@@ -44,7 +44,7 @@ public class CqnDataFetcher implements DataFetcher<Object> {
 		select.columns(toColumns(environment.getSelectionSet()));
 
 		// execute statement
-		Result result = serviceCatalog.getService(CdsService.class, entity.getQualifier()).run(select);
+		Result result = serviceCatalog.getService(CqnService.class, entity.getQualifier()).run(select);
 
 		if(environment.getFieldType() instanceof GraphQLList) {
 			// arrayed result expected

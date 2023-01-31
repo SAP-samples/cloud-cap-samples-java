@@ -36,7 +36,6 @@ public class TypeMappings {
 				case INTEGER:
 					return "Int";
 				case DECIMAL:
-				case DECIMAL_FLOAT:
 				case DOUBLE:
 					return "Float";
 				default:
