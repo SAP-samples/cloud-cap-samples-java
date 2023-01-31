@@ -88,11 +88,9 @@ class AdminServiceAuditHandler implements EventHandler {
 
 	private void auditCfgChange(final Action action, final ConfigChange cfgChange, EventContext context) {
 		// create new request context and set tenant to null
-		context.getCdsRuntime().requestContext().modifyUser(user -> user.setTenant(null)).run(requestContext -> {
-			context.getCdsRuntime().changeSetContext().run(changeSetContext -> {
-				// send audit log message into provider tenant as user's tenant is null
-				this.auditLog.logConfigChange(action, cfgChange);
-			});
+		context.getCdsRuntime().requestContext().modifyUser(user -> user.setTenant(null)).run(ctx -> {
+			// send audit log message into provider tenant as user's tenant is null
+			this.auditLog.logConfigChange(action, cfgChange);
 		});
 	}
 

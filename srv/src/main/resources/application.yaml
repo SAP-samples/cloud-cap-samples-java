@@ -9,18 +9,18 @@ spring:
 cds:
   odata-v4.endpoint.path: "/api"
   multi-tenancy.mtxs.enabled: true
-  security.mock.users:
-    - name: admin
-      password: admin
-      roles:
-      - admin
-      attributes:
-        businessPartner:
-        - "10401010"
-      tenant: t1
-    - name: user
-      password: user
-      tenant: t1
+  security:
+    authentication.normalize-provider-tenant: true
+    mock.users:
+      admin:
+        password: admin
+        roles:
+        - admin
+        attributes:
+          businessPartner:
+          - "10401010"
+      user:
+        password: user
 server.servlet.encoding:
   charset: UTF-8
   force: true
@@ -97,6 +97,11 @@ spring:
   config.activate.on-profile: local-mtxs
 cds:
   multi-tenancy.sidecar.url: http://localhost:4004
+  security.mock.users:
+    admin:
+      tenant: t1
+    user:
+      tenant: t1
 
 ---
 spring:
