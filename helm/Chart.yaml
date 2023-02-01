@@ -1,0 +1,25 @@
+apiVersion: v2
+name: cloud-sample-java
+type: application
+version: 0.1.0
+dependencies:
+  - name: web-application
+    version: '>=0.8.0'
+    repository: https://int.repositories.cloud.sap/artifactory/virtual-unified-runtime-helm-dmz/
+    alias: bookshop-srv
+  - name: web-application
+    version: '>=0.8.0'
+    repository: https://int.repositories.cloud.sap/artifactory/virtual-unified-runtime-helm-dmz/
+    alias: bookshop-app
+  - name: content-deployment
+    version: '>=0.3.1'
+    repository: https://int.repositories.cloud.sap/artifactory/virtual-unified-runtime-helm-dmz/
+    alias: bookshop-db
+  - name: service-instance
+    version: '>=0.0.1'
+    repository: https://int.repositories.cloud.sap/artifactory/virtual-unified-runtime-helm-dmz/
+    alias: bookshop-uaa
+  - name: service-instance
+    version: '>=0.0.1'
+    repository: https://int.repositories.cloud.sap/artifactory/virtual-unified-runtime-helm-dmz/
+    alias: bookshop-hdi-container

@@ -1,0 +1,12 @@
+bookshop-srv:
+  image:
+    repository: dhlam/bookshop-srv
+    tag: 1.0.0
+bookshop-app:
+  image:
+    repository: dhlam/bookshop-app
+    tag: 1.0.0
+bookshop-db:
+  image:
+    repository: dhlam/bookshop-db
+    tag: 1.0.3

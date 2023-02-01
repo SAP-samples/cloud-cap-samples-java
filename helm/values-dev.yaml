@@ -1,0 +1,24 @@
+bookshop-uaa:
+  parameters:
+    oauth2-configuration:
+      redirect-uris:
+        - https://*.c-81ddb81.stage.kyma.ondemand.com/login/callback
+    xsappname: bookshop-java-public
+    tenant-mode: dedicated
+    scopes:
+      - name: $XSAPPNAME.admin
+        description: admin
+    attributes:
+      - name: businessPartner
+        description: S/4 BusinessPartner ID assigned to the user
+        valueType: string
+    role-templates:
+      - name: admin
+        description: generated
+        scope-references:
+          - $XSAPPNAME.admin
+        attribute-references:
+          - businessPartner
+bookshop-app:
+  env:
+    destinations: '[{"forwardAuthToken":true,"name":"backend","strictSSL":true,"url":"https://rel1-bookshop-srv-bookshop.c-81ddb81.stage.kyma.ondemand.com"}]'
