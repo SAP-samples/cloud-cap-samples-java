@@ -4,12 +4,6 @@ version: 1.0.0
 description: "Multitenant Bookshop CAP Java Project with UI"
 parameters:
   enable-parallel-deployments: true
-build-parameters:
-  before-all:
-   - builder: custom
-     commands:
-      - npm install --production
-      - npx -p @sap/cds-dk cds build --production
 modules:
 # --------------------- SERVER MODULE ------------------------
   - name: bookshop-mt-srv
@@ -49,10 +43,17 @@ modules:
   - name: bookshop-mt-sidecar
 # ------------------------------------------------------------
     type: nodejs
-    path: mtx-sidecar
+    path: mtx/sidecar
     parameters:
       memory: 256M
       disk-quota: 1024M
+    build-parameters:
+      builder: custom
+      build-result: gen
+      commands:
+        - npm run build
+      requires:
+        - name: bookshop-mt-srv
     requires:
       - name: bookshop-mt-service-manager
       - name: bookshop-mt-uaa
