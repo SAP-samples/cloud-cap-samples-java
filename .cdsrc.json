@@ -1,4 +1,9 @@
 {
+    "requires": {
+        "multitenancy": true,
+        "extensibility": true,
+        "toggles": true
+    },
     "build": {
         "target": ".",
         "tasks": [
@@ -6,9 +11,7 @@
                 "for": "java"
             },
             {
-                "for": "mtx",
-                "src": ".",
-                "dest": "mtx-sidecar"
+                "for": "mtx-sidecar"
             },
             {
                 "for": "hana"
