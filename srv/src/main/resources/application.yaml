@@ -46,9 +46,6 @@ cds:
       kind: enterprise-messaging
       format: cloudevents
       subscribe-prefix: sap/S4HANAOD/java/ce/
-  security:
-    authentication.mode: never
-    authorization.enabled: false
 
 ---
 spring:
