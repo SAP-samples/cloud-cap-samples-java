@@ -31,6 +31,6 @@
   },
   "scripts": {
     "start": "cds run",
-    "build": "npm install && npx cds build ../.. --for mtx-sidecar && cd gen && npm install"
+    "build": "npm ci && npx cds build ../.. --for mtx-sidecar && cd gen && npm ci"
   }
 }
