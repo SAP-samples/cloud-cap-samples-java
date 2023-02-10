@@ -48,7 +48,7 @@
 			"name": "Extension_Developer",
 			"description": "CDS Extension Developer",
 			"scope-references": [
-				"$XSAPPNAME.cds.ExtensionDeveloper""
+				"$XSAPPNAME.cds.ExtensionDeveloper"
 			],
 			"attribute-references": []
 		}
