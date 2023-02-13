@@ -1,5 +1,5 @@
 <!-- omit in toc -->
-# Welcome to CAP Samples for Java
+# Welcome to C AP Samples for Java
 
 ![CI status](https://github.com/SAP-samples/cloud-cap-samples-java/workflows/Java%20CI%20with%20Maven/badge.svg)
 [![REUSE status](https://api.reuse.software/badge/github.com/SAP-samples/cloud-cap-samples-java)](https://api.reuse.software/info/github.com/SAP-samples/cloud-cap-samples-java)
