@@ -1,0 +1,28 @@
+{
+    "requires": {
+        "multitenancy": true,
+        "auth": {
+            "kind": "xsuaa"
+        },
+        "approuter": {
+            "kind": "cloudfoundry"
+        }
+    },
+    "build": {
+        "target": ".",
+        "tasks": [
+            {
+                "for": "java"
+            },
+            {
+                "for": "mtx-sidecar"
+            },
+            {
+                "for": "hana"
+            }
+        ]
+    },
+    "hana": {
+        "deploy-format": "hdbtable"
+    }
+}

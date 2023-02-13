@@ -1,0 +1,32 @@
+{
+    "build": {
+        "target": ".",
+        "tasks": [
+            {
+                "for": "java"
+            },
+            {
+                "for": "mtx",
+                "src": ".",
+                "dest": "mtx-sidecar"
+            },
+            {
+                "for": "hana"
+            }
+        ]
+    },
+    "hana": {
+        "deploy-format": "hdbtable"
+    },
+    "requires": {
+        "auth": {
+            "kind": "xsuaa"
+        },
+        "approuter": {
+            "kind": "cloudfoundry"
+        },
+        "db": {
+            "kind": "hana-cloud"
+        }
+    }
+}

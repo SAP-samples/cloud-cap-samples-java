@@ -244,7 +244,10 @@ Before you can access the UI using the (tenant-specific) URL to the bookshop(-mt
 
 ### Add Deployment Files
 
-CAP tooling provides your a Helm chart for deployment to Kyma.
+CAP tooling provides you a Helm chart for deployment to Kyma.
+
+For single tenant deployment, replace the contents of _`cdsrc.json`_ with _`kyma-st.json`_.
+For multi tenant deployment, replace the contents of _`cdsrc.json`_ with _`kyma-mt.json`_.
 
 Add the CAP Helm chart with the required features to this project:
 
@@ -252,12 +255,45 @@ Add the CAP Helm chart with the required features to this project:
 cds add helm
 ```
 
-#### Helm chart configuration
+#### Use API_BUSSINESS_PARTNER Remote Service (optional, single tenant only)
 
-This project contains a pre-configured configuration file `values.yaml`, you just need to do the following changes in this file:
+You can try the `API_BUSINESS_PARTNER` service with a real S/4HANA system with the following configuration:
 
-- `<your-container-registry>` - full-qualified hostname of your container registry
-- `domain`- full-qualified domain name used to access applications in your Kyma cluster
+1. Create either an on-premise or cloud destination in your subaccount.
+
+2. Add the binding to the destination service for the service (`srv`) to the `values.yaml` file:
+
+    ```yaml
+    srv:
+      ...
+      bindings:
+        ...
+        destinations:
+          serviceInstanceName: destinations
+    ```
+
+    (The destination service instance is already configured)
+
+3. Set the profiles `cloud` and `destination` active in your `values.yaml` file:
+
+    ```yaml
+    srv:
+      ...
+      env:
+        SPRING_PROFILES_ACTIVE: cloud,destination
+        # TODO: To be removed after @sap/cds-dk patch
+        CDS_ENVIRONMENT_K8S_SERVICEBINDINGS_CONNECTIVITY_SECRETSPATH: '/bindings/connectivity'
+        CDS_ENVIRONMENT_K8S_SERVICEBINDINGS_CONNECTIVITY_SERVICE: 'connectivity'
+    ```
+
+4. For on-premise only: Add the connectivity service to your Helm chart:
+
+    ```bash
+    cds add helm:connectivity
+    ```
+
+*See also: [API_BUSINESS_PARTNER Remote Service and Spring Profiles](#api_business_partner-remote-service-and-spring-profiles)*
+
 ### Prepare Kubernetes Namespace
 
 #### Create container registry secret
@@ -270,17 +306,27 @@ bash ./scripts/create-container-registry-secret.sh
 
 The *Docker Server* is the full qualified hostname of your container registry.
 
-#### Create a HDI container and a secret
+#### Create a HDI container / Service Manager Instance and a Secret
 
 This step is only required if you're using a BTP Trial account. If you're using a production or a free tier account then you can create HDI Container from Kyma directly by adding a [mapping to your Kyma namespace in your HANA Cloud Instance](https://blogs.sap.com/2022/12/15/consuming-sap-hana-cloud-from-the-kyma-environment/) and skip this step.
+
+##### Single Tenant
 
 ```
 bash ./scripts/create-db-secret.sh bookshop-db
 ```
 
-It will create a HDI container `bookshop-db` on your currently targeted Cloud Foundry space and creates a secret `bookshop-db` with the HDI container's credentials in your current Kubernetes namespace.
+##### Multi Tenant
+
+```
+bash ./scripts/create-sm-secret.sh bookshop-sm
+```
+
+It will create a HDI container `bookshop-db` (single tenant) or a Service Manager `bookshop-sm` (multi tenant) instance on your currently targeted Cloud Foundry space and creates a secret `bookshop-db/sm` with the credentials in your current Kubernetes namespace.
 
 Make the following changes to your _`chart/values.yaml`_.
+
+##### Single Tenant
 
 ```diff
 srv:
@@ -302,22 +348,33 @@ hana-deployer:
 -   servicePlanName: hdi-shared
 ```
 
-### Build
+##### Multi Tenant
 
-**Build data base deployer image:**
+```diff
+srv:
+  bindings:
+    service-manager:
+-     serviceInstanceName: service-manager
++     fromSecret: bookshop-sm
+...
+
+sidecar:
+  bindings:
+    service-manager:
+-     serviceInstanceName: service-manager
++     fromSecret: bookshop-sm
+
+...
+- service_manager:
+-   serviceOfferingName: service-manager
+-   servicePlanName: container
+```
+
+### Build
 
 ```bash
 cds build --production
-
-pack build $YOUR_CONTAINER_REGISTRY/bookshop-hana-deployer \
-     --path db \
-     --buildpack gcr.io/paketo-buildpacks/nodejs \
-     --builder paketobuildpacks/builder:base \
-     --env BP_NODE_RUN_SCRIPTS=""
 ```
-
-(Replace `$YOUR_CONTAINER_REGISTRY` with the full-qualified hostname of your container registry)
-
 
 **Build image for CAP service:**
 
@@ -335,6 +392,8 @@ pack build $YOUR_CONTAINER_REGISTRY/bookshop-srv \
         --env BP_JVM_VERSION=17
 ```
 
+(Replace `$YOUR_CONTAINER_REGISTRY` with the full-qualified hostname of your container registry)
+
 **Build Approuter Image:**
 
 ```bash
@@ -345,25 +404,59 @@ pack build $YOUR_CONTAINER_REGISTRY/bookshop-approuter \
      --env BP_NODE_RUN_SCRIPTS=""
 ```
 
+**Build data base deployer image (single tenant only):**
+
+```bash
+pack build $YOUR_CONTAINER_REGISTRY/bookshop-hana-deployer \
+     --path db \
+     --buildpack gcr.io/paketo-buildpacks/nodejs \
+     --builder paketobuildpacks/builder:base \
+     --env BP_NODE_RUN_SCRIPTS=""
+```
+
+**Build sidecar image (multi tenant only):**
+
+```bash
+pack build $YOUR_CONTAINER_REGISTRY/bookshop-sidecar \
+     --path mtx/sidecar/gen \
+     --buildpack gcr.io/paketo-buildpacks/nodejs \
+     --builder paketobuildpacks/builder:base \
+     --env BP_NODE_RUN_SCRIPTS=""
+```
+
 ### Push container images
 
 You can push all the container images to your container registry, using:
 
-```
-docker push $YOUR_CONTAINER_REGISTRY/bookshop-hana-deployer
-
+```bash
 docker push $YOUR_CONTAINER_REGISTRY/bookshop-srv
 
 docker push $YOUR_CONTAINER_REGISTRY/bookshop-approuter
 ```
 
+#### Single Tenant
+
+```bash
+docker push $YOUR_CONTAINER_REGISTRY/bookshop-hana-deployer 
+```
+
+#### Multi Tenant
+
+```bash
+docker push $YOUR_CONTAINER_REGISTRY/bookshop-sidecar
+```
+
 ### Deployment
 
-1. Replace `<your-cluster-domain>` in `xsuaa.parameters.oauth2-configuration.redirect-uris` with you cluster domain in _`chart/values.yaml`_.
+Make the following changes in the _`chart/values.yaml`_ file.
 
-2. Replace `<your-container-registry>` with your container registry in _`chart/values.yaml`_.
+1. Change value of `global.domain` key to your cluster domain.
 
-3. Make the following change to add backend destinations required by Approuter.
+2. Replace `<your-cluster-domain>` in `xsuaa.parameters.oauth2-configuration.redirect-uris` with your cluster domain.
+
+3. Replace `<your-container-registry>` with your container registry.
+
+4. Make the following change to add backend destinations required by Approuter.
    
 ```diff
 -  backendDestinations: {}
@@ -372,7 +465,7 @@ docker push $YOUR_CONTAINER_REGISTRY/bookshop-approuter
 +       service: srv
 ```
 
-4. Add your image registry secret created in [Create container registry secret](#create-container-registry-secret) step.
+5. Add your image registry secret created in [Create container registry secret](#create-container-registry-secret) step.
 
 ```diff
 global:
@@ -382,15 +475,21 @@ global:
 +    name: container-registry
 ```
 
-5. Deploy the helm chart using the following command:
+Deploy the helm chart using the following command:
 
 ```bash
 helm upgrade bookshop ./chart --install
 ```
 
-5. Before you can access the UI you should make sure to [Setup Authorizations in SAP Business Technology Platform](#setup-authorizations-in-sap-business-technology-platform).
+#### Single Tenant
 
-6. Click on the approuter url logged by the `helm upgrade` to access the UI.
+Before you can access the UI you should make sure to [Setup Authorizations in SAP Business Technology Platform](#setup-authorizations-in-sap-business-technology-platform).
+
+Click on the approuter url logged by the `helm upgrade` to access the UI.
+
+#### Multi Tenant
+
+In case of multi tenant, you'll have to subscribe to the application from a different subaccount. You can follow the steps mentioned [here](https://cap.cloud.sap/docs/guides/deployment/as-saas#subscribe) to access the application.
 
 ## Setup Authorizations in SAP Business Technology Platform
 
