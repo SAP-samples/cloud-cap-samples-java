@@ -17,15 +17,12 @@
 			"name": "$XSAPPNAME.mtdeployment",
 			"description": "Scope to trigger a re-deployment of the database artifacts"
 		},
-		{
-			"name": "$XSAPPNAME.ExtendCDS",
-			"description": "Extend your own tenant's models"
-		},
-		{
-			"name": "$XSAPPNAME.ExtendCDSdelete",
-			"description": "Undeploy your own tenant's extensions"
-		}
+    		{
+      			"name": "$XSAPPNAME.cds.ExtensionDeveloper",
+      			"description": "Extend CAP applications via extension projects"
+    		}
 	],
+	"authorities-inheritance": false,
 	"authorities": [
 		"$XSAPPNAME.mtdeployment"
 	],
@@ -51,17 +48,9 @@
 			"name": "Extension_Developer",
 			"description": "CDS Extension Developer",
 			"scope-references": [
-				"$XSAPPNAME.ExtendCDS"
+				"$XSAPPNAME.cds.ExtensionDeveloper"
 			],
 			"attribute-references": []
-		},
-		{
-			"name": "Extension_Admin",
-			"description": "CDS Extension Administrator",
-			"scope-references": [
-				"$XSAPPNAME.ExtendCDS",
-				"$XSAPPNAME.ExtendCDSdelete"
-			]
 		}
 	]
 }
