@@ -322,7 +322,7 @@ bash ./scripts/create-db-secret.sh bookshop-db
 bash ./scripts/create-sm-secret.sh bookshop-sm
 ```
 
-It will create a HDI container `bookshop-db` (single tenant) or a Service Manager `bookshop-sm` (multi tenant) instance on your currently targeted Cloud Foundry space and creates a secret `bookshop-db/sm` with the credentials in your current Kubernetes namespace.
+It will create a HDI container `bookshop-db` (single tenant) or a Service Manager `bookshop-sm` (multi tenant) instance on your currently targeted Cloud Foundry space and creates a secret `bookshop-db` (single tenant) or `bookshop-sm` (multi tenant) with the credentials in your current Kubernetes namespace.
 
 Make the following changes to your _`chart/values.yaml`_.
 

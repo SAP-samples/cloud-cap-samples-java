@@ -1,24 +1,24 @@
 {
-  "requires": {
-      "multitenancy": true,
-      "extensibility": true,
-      "toggles": true
-  },
-  "build": {
-      "target": ".",
-      "tasks": [
-          {
-              "for": "java"
-          },
-          {
-              "for": "mtx-sidecar"
-          },
-          {
-              "for": "hana"
-          }
-      ]
-  },
-  "hana": {
-      "deploy-format": "hdbtable"
-  }
+    "requires": {
+        "multitenancy": true,
+        "extensibility": true,
+        "toggles": true
+    },
+    "build": {
+        "target": ".",
+        "tasks": [
+            {
+                "for": "java"
+            },
+            {
+                "for": "mtx-sidecar"
+            },
+            {
+                "for": "hana"
+            }
+        ]
+    },
+    "hana": {
+        "deploy-format": "hdbtable"
+    }
 }
