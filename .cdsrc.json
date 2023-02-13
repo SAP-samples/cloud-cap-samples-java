@@ -1,32 +1,24 @@
 {
+  "requires": {
+      "multitenancy": true,
+      "extensibility": true,
+      "toggles": true
+  },
   "build": {
-    "target": ".",
-    "tasks": [
-      {
-        "for": "java"
-      },
-      {
-        "for": "mtx",
-        "src": ".",
-        "dest": "mtx-sidecar"
-      },
-      {
-        "for": "hana"
-      }
-    ]
+      "target": ".",
+      "tasks": [
+          {
+              "for": "java"
+          },
+          {
+              "for": "mtx-sidecar"
+          },
+          {
+              "for": "hana"
+          }
+      ]
   },
   "hana": {
-    "deploy-format": "hdbtable"
-  },
-  "requires": {
-    "auth": {
-      "kind": "xsuaa"
-    },
-    "approuter": {
-      "kind": "cloudfoundry"
-    },
-    "db": {
-      "kind": "hana-cloud"
-    }
+      "deploy-format": "hdbtable"
   }
 }
