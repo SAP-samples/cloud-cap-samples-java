@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
-
 <head>
+
 	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
 	<meta http-equiv="Content-Type" content="text/html;charset=UTF-8" />
 	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -10,69 +10,21 @@
 	<script>
 		window["sap-ushell-config"] = {
 			defaultRenderer: "fiori2",
-			applications: {
-				"browse-books": {
-					title: "Browse Books",
-					description: "Find your favorite book",
-					additionalInformation: "SAPUI5.Component=bookshop",
-					applicationType : "URL",
-					url: "/browse/webapp",
-					navigationMode: "embedded"
-				},
-				"manage-reviews": {
-					title: "Manage Reviews",
-					description: "Add/edit/delete reviews",
-					additionalInformation: "SAPUI5.Component=reviews",
-					applicationType: "URL",
-					url: "/reviews/webapp",
-					navigationMode: "embedded"
-				},
-				"manage-books": {
-					title: "Manage Books",
-					description: "Add/edit/delete books",
-					additionalInformation: "SAPUI5.Component=admin",
-					applicationType: "URL",
-					url: "/admin/webapp",
-					navigationMode: "embedded"
-				},
-				"manage-orders": {
-					title: "Manage Orders",
-					description: "Find & manage orders",
-					additionalInformation: "SAPUI5.Component=orders",
-					applicationType: "URL",
-					url: "/orders/webapp",
-					navigationMode: "embedded"
-				},
-				"manage-notes": {
-					title: "Manage Notes",
-					description: "Read & create notes for addresses",
-					additionalInformation: "SAPUI5.Component=notes",
-					applicationType: "URL",
-					url: "/notes/webapp",
-					navigationMode: "embedded"
-				},
-				"show-addresses": {
-					title: "Show Shipping Addresses",
-					description: "Find the right shipping address",
-					additionalInformation: "SAPUI5.Component=addresses",
-					applicationType: "URL",
-					url: "/addresses/webapp",
-					navigationMode: "embedded"
-				}
-			}
+			applications: {}
 		};
 	</script>
 
-	<script src="https://sapui5.hana.ondemand.com/test-resources/sap/ushell/bootstrap/sandbox.js"></script>
-	<script src="https://sapui5.hana.ondemand.com/resources/sap-ui-core.js"
-		data-sap-ui-libs="sap.m, sap.ushell, sap.collaboration, sap.ui.layout" data-sap-ui-compatVersion="edge"
-		data-sap-ui-theme="sap_fiori_3" data-sap-ui-frameOptions="allow"></script>
+	<script id="sap-ushell-bootstrap" src="https://sapui5.hana.ondemand.com/1.110.1/test-resources/sap/ushell/bootstrap/sandbox.js"></script>
+	<script id="sap-ui-bootstrap" src="https://sapui5.hana.ondemand.com/1.110.1/resources/sap-ui-core.js"
+			data-sap-ui-libs="sap.m, sap.ushell, sap.collaboration, sap.ui.layout"
+			data-sap-ui-compatVersion="edge"
+			data-sap-ui-theme="sap_horizon"
+			data-sap-ui-frameOptions="allow"
+	></script>
 	<script>
-		sap.ui.getCore().attachInit(() => sap.ushell.Container.createRenderer().placeAt("content"))
+		sap.ui.getCore().attachInit(()=> sap.ushell.Container.createRenderer().placeAt("content"))
 	</script>
 
 </head>
-
 <body class="sapUiBody" id="content"></body>
-
 </html>

@@ -234,11 +234,6 @@ annotate AdminService.OrderItems with @(
                 Value : book_ID,
                 Label : '{i18n>Books}'
             },
-            //The following entry is only used to have the assoication followed in the read event
-            {
-                Value : book.price,
-                Label : '{i18n>BookPrice}'
-            },
             {
                 Value : quantity,
                 Label : '{i18n>Quantity}'
@@ -272,16 +267,16 @@ annotate AdminService.OrderItems with @(
     Common : {
         SideEffects #AmountChanges : {
             SourceProperties : [quantity],
-            TargetProperties : ['Amount']
+            TargetProperties : ['amount']
         },
         SideEffects #BookChanges   : {
             SourceProperties : [book_ID],
             TargetEntities   : [book],
-            TargetProperties : ['Amount']
+            TargetProperties : ['amount']
         }
     }
 ) {
-    Amount
+    amount
     @Common.FieldControl : #ReadOnly;
 //ERROR ALERT: The following line refering to the parents currency code will lead to a server error
 //@Measures.ISOCurrency:parent.currency.code; //Bind the currency field to the quantity field of the parent
