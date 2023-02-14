@@ -24,13 +24,16 @@
     }
   },
   "devDependencies": {
-    "sqlite3": "^5"
+    "sqlite3": "^5",
+    "forever": "^4"
   },
   "engines": {
     "node": "^16"
   },
   "scripts": {
     "start": "cds run",
-    "build": "npm install && npx cds build ../.. --for mtx-sidecar && cd gen && npm install"
+    "build": "npm install && npx cds build ../.. --for mtx-sidecar && cd gen && npm install",
+    "startAsync": "forever start -o out.log -e err.log -c node node_modules/@sap/cds/bin/cds.js run --profile development",
+    "stopAsync": "forever stopall"
   }
 }

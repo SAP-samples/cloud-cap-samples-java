@@ -101,6 +101,15 @@
 				</configuration>
 			</plugin>
 
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-failsafe-plugin</artifactId>
+				<version>3.0.0-M8</version>
+				<configuration>
+
+				</configuration>
+			</plugin>
+
 			<!-- POM FLATTENING FOR CI FRIENDLY VERSIONS -->
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>

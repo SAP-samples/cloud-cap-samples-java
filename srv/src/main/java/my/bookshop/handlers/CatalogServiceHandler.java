@@ -2,6 +2,8 @@ package my.bookshop.handlers;
 
 import static cds.gen.catalogservice.CatalogService_.BOOKS;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -183,6 +185,17 @@ class CatalogServiceHandler implements EventHandler {
 			context.setResult(result);
 		} else {
 			throw new ServiceException(ErrorStatuses.CONFLICT, MessageKeys.ORDER_EXCEEDS_STOCK, quantity);
+		}
+	}
+
+	@After
+	protected void addDiscount(CdsReadEventContext context) {
+		if (context.getFeatureTogglesInfo().isEnabled("discount")) {
+			context.getResult().listOf(Books.class).forEach(book -> {
+				if (book.getPrice() != null) {
+					book.setPrice(book.getPrice().multiply(BigDecimal.valueOf(0.9)).setScale(2, RoundingMode.FLOOR));
+				}
+			});
 		}
 	}
 
