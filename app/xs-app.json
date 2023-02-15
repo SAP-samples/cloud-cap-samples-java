@@ -10,6 +10,11 @@
 		"authenticationType": "xsuaa"
 	  },
 	  {
+		"source": "^/appconfig/(.*)$",
+		"localDir": "./",
+		"authenticationType": "xsuaa"
+	  },
+	  {
 		"source": "^/browse/webapp/(.*)$",
 		"localDir": "./",
 		"authenticationType": "xsuaa"
