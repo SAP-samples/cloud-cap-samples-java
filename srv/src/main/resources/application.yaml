@@ -127,7 +127,6 @@ cds:
       - name: erin
         features:
           - isbn
-          - reviews
           - discount
       - name: fred
         features:
