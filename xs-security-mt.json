@@ -7,6 +7,10 @@
 			"description": "admin"
 		},
 		{
+			"name": "$XSAPPNAME.ft_isbn",
+			"description": "ISBN feature toggle"
+		},
+		{
 			"name": "$XSAPPNAME.mtcallback",
 			"description": "Multi Tenancy Callback Access",
 			"grant-as-authority-to-apps": [
@@ -51,6 +55,13 @@
 				"$XSAPPNAME.cds.ExtensionDeveloper"
 			],
 			"attribute-references": []
+		},
+		{
+			"name": "ft_isbn",
+			"description": "Use this role to enable ISBN feature toggle",
+			"scope-references": [
+				"$XSAPPNAME.ft_isbn"
+			]
 		}
 	]
 }

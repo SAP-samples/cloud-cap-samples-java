@@ -5,6 +5,10 @@
 		{
 			"name": "$XSAPPNAME.admin",
 			"description": "admin"
+		},
+		{
+			"name": "$XSAPPNAME.ft_isbn",
+			"description": "ISBN feature toggle"
 		}
 	],
 	"attributes": [
@@ -23,6 +27,13 @@
 			],
 			"attribute-references": [
 				"businessPartner"
+			]
+		},
+		{
+			"name": "ft_isbn",
+			"description": "Use this role to enable ISBN feature toggle",
+			"scope-references": [
+				"$XSAPPNAME.ft_isbn"
 			]
 		}
 	]

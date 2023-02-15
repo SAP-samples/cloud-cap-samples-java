@@ -1,20 +1,22 @@
 package my.bookshop;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.util.Collections;
-import java.util.Optional;
 
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.web.reactive.server.WebTestClient;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
-import com.sap.cds.reflect.CdsElement;
 import com.sap.cds.reflect.CdsEntity;
 import com.sap.cds.reflect.CdsModel;
 import com.sap.cds.services.request.FeatureTogglesInfo;
@@ -24,46 +26,40 @@ import cds.gen.catalogservice.Books_;
 
 // This test case is executable only when MTX sidecar is running.
 @ActiveProfiles("ft")
-@SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
+@AutoConfigureMockMvc
+@SpringBootTest
 class FeatureToggles_IT {
 
 	private static final String ENDPOINT = "/api/browse/Books(%s)";
 
 	@Autowired
-	private WebTestClient client;
+	private MockMvc client;
 
 	@Autowired
 	CdsRuntime runtime;
 
 	@Test
-	void baseModel_noToggledFeatures() {
-		client.get()
-			.uri(String.format(ENDPOINT, "4a519e61-3c3a-4bd9-ab12-d7e0c5329933"))
-			// This user has all feature toggles disabled
-			.headers(httpHeaders -> httpHeaders.setBasicAuth("fred", ""))
-			.exchange()
-			.expectStatus().is2xxSuccessful()
-			.expectBody()
-			// Elements are not visible and not changed by event handler
-				.jsonPath("$.isbn").doesNotExist()
-				.jsonPath("$.price").isEqualTo(15);
+	@WithMockUser("fred") // This user has all feature toggles disabled
+	void withoutToggles_basicModelVisible() throws Exception {
+		// Elements are not visible and not changed by the event handler
+		client.perform(get(String.format(ENDPOINT, "4a519e61-3c3a-4bd9-ab12-d7e0c5329933")))
+			.andExpect(status().isOk())
+			.andExpect(jsonPath("$.isbn").doesNotExist())
+			.andExpect(jsonPath("$.price").value(15));
 	}
 
 	@Test
-	void modelWithFeatures_allVisible() {
-		client.get().uri(String.format(ENDPOINT, "4a519e61-3c3a-4bd9-ab12-d7e0c5329933"))
-			// This user has all feature toggles enabled
-			.headers(httpHeaders -> httpHeaders.setBasicAuth("erin", ""))
-			.exchange()
-			.expectStatus().is2xxSuccessful()
-			.expectBody()
-			// Elements are visible and changed by event handler
-				.jsonPath("$.isbn").isEqualTo("978-3473523023")
-				.jsonPath("$.price").isEqualTo(13.50);
+	@WithMockUser("erin") // This user has all feature toggles enabled
+	void togglesOn_extensionsAndChangesAreVisible() throws Exception {
+		// Elements are visible and changed by the event handler
+		client.perform(get(String.format(ENDPOINT, "4a519e61-3c3a-4bd9-ab12-d7e0c5329933")))
+			.andExpect(status().isOk())
+			.andExpect(jsonPath("$.isbn").value("978-3473523023"))
+			.andExpect(jsonPath("$.price").value(13.50));
 	}
 
 	@Test
-	void modifyFeatureTogglesAtRuntime() {
+	void featureTogglesModifiedAtRuntime() {
 		this.runtime.requestContext()
 			.featureToggles(FeatureTogglesInfo.create(Collections.singletonMap("isbn", true))).run(ctx -> {
 				CdsModel cdsModel = this.runtime.getCdsModel(ctx.getUserInfo(), ctx.getFeatureTogglesInfo());

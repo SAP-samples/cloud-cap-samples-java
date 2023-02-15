@@ -10,7 +10,7 @@ cds:
   odata-v4.endpoint.path: "/api"
   multi-tenancy.mtxs.enabled: true
   security:
-    authentication.normalize-provider-tenant: true
+    authentication.normalize-provider-tenant: false
     mock.users:
       admin:
         password: admin

@@ -9,12 +9,23 @@ extend my.Books with {
 }
 
 //	UI
-annotate CatalogService.Books with @(UI : {LineItem : [
+annotate CatalogService.Books with @(UI : {
+FieldGroup #General : {Data : [
+	...up to
+	{Value : title},
+	{
+    	Value : isbn,
+        Label : '{i18n>ISBN}'
+    },
+	...
+]},
+LineItem : [
     ...up to
     {Value : title},
     {
         Value : isbn,
-        Label : 'ISBN'
+        Label : '{i18n>ISBN}'
     },
     ...
 ]});
+
