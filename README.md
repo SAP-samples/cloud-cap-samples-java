@@ -289,7 +289,7 @@ You can try the `API_BUSINESS_PARTNER` service with a real S/4HANA system with t
 4. For on-premise only: Add the connectivity service to your Helm chart:
 
     ```bash
-    cds add helm:connectivity
+    cds add connectivity
     ```
 
 *See also: [API_BUSINESS_PARTNER Remote Service and Spring Profiles](#api_business_partner-remote-service-and-spring-profiles)*
