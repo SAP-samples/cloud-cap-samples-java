@@ -8,24 +8,24 @@ extend my.Books with {
     isbn : String(40);
 }
 
-//	UI
-annotate CatalogService.Books with @(UI : {
-FieldGroup #General : {Data : [
-	...up to
-	{Value : title},
-	{
-    	Value : isbn,
-        Label : '{i18n>ISBN}'
-    },
-	...
-]},
-LineItem : [
-    ...up to
-    {Value : title},
-    {
-        Value : isbn,
-        Label : '{i18n>ISBN}'
-    },
-    ...
-]});
-
+// Feature 'isbn' will display ISBN in table and on object page
+annotate CatalogService.Books with @(UI: {
+    FieldGroup #General: {Data: [
+        ...up to
+        {Value: title},
+        {
+            Value: isbn,
+            Label: '{i18n>ISBN}'
+        },
+        ...
+    ]},
+    LineItem: [
+        ...up to
+        {Value: title},
+        {
+            Value: isbn,
+            Label: '{i18n>ISBN}'
+        },
+        ...
+    ]
+});

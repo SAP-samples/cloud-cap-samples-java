@@ -7,8 +7,12 @@
 			"description": "admin"
 		},
 		{
-			"name": "$XSAPPNAME.ft_isbn",
-			"description": "ISBN feature toggle"
+			"name": "$XSAPPNAME.expert",
+			"description": "Expert features in the UI"
+		},
+		{
+			"name": "$XSAPPNAME.premium-customer",
+			"description": "Premium customer"
 		},
 		{
 			"name": "$XSAPPNAME.mtcallback",
@@ -57,10 +61,17 @@
 			"attribute-references": []
 		},
 		{
-			"name": "ft_isbn",
-			"description": "Use this role to enable ISBN feature toggle",
+			"name": "expert",
+			"description": "Expert features in the UI",
 			"scope-references": [
-				"$XSAPPNAME.ft_isbn"
+				"$XSAPPNAME.expert"
+			]
+		},
+		{
+			"name": "premium-customer",
+			"description": "Premium customer",
+			"scope-references": [
+				"$XSAPPNAME.premium-customer"
 			]
 		}
 	]

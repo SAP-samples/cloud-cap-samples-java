@@ -59,14 +59,14 @@ class FeatureToggles_IT {
 	}
 
 	@Test
-	void featureTogglesModifiedAtRuntime() {
-		this.runtime.requestContext()
-			.featureToggles(FeatureTogglesInfo.create(Collections.singletonMap("isbn", true))).run(ctx -> {
-				CdsModel cdsModel = this.runtime.getCdsModel(ctx.getUserInfo(), ctx.getFeatureTogglesInfo());
-				CdsEntity booksEntity = cdsModel.getEntity(Books_.CDS_NAME);
-
-				assertThat(booksEntity.findElement("isbn")).isPresent();
-			});
+	@WithMockUser("carol") // This user has only 'isbn' toggle enabled
+	void toggleIsbnOn_extensionsAndChangesAreVisible() throws Exception {
+		// Elements are visible
+		client.perform(get(String.format(ENDPOINT, "4a519e61-3c3a-4bd9-ab12-d7e0c5329933")))
+			.andExpect(status().isOk())
+			.andExpect(jsonPath("$.isbn").value("978-3473523023"))
+			.andExpect(jsonPath("$.price").value(15));
 	}
+
 }
 
