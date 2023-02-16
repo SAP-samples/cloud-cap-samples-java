@@ -249,9 +249,10 @@ CAP tooling provides your a Helm chart for deployment to Kyma.
 Add the CAP Helm chart with the required features to this project:
 
 ```bash
-cds add helm:hana_deployer
-cds add helm:xsuaa
-cds add helm:html5_apps_deployer
+cds add helm
+cds add hana
+cds add xsuaa
+cds add html5-repo
 ```
 
 #### Helm chart configuration
@@ -295,7 +296,7 @@ You can try the `API_BUSINESS_PARTNER` service with a real S/4HANA system with t
 4. For on-premise only: Add the connectivity service to your Helm chart:
 
     ```bash
-    cds add helm:connectivity
+    cds add connectivity
     ```
 
 *See also: [API_BUSINESS_PARTNER Remote Service and Spring Profiles](#api_business_partner-remote-service-and-spring-profiles)*
