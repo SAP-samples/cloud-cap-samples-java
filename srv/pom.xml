@@ -14,6 +14,10 @@
 
 	<name>bookshop</name>
 
+	<properties>
+		<sidecar.dir>../mtx/sidecar</sidecar.dir>
+	</properties>
+
 	<!-- ACTUAL DEPENDENCIES -->
 	<dependencies>
 		<!-- CDS DEPENDENCIES -->
@@ -204,8 +208,64 @@
 							<basePackage>cds.gen</basePackage>
 						</configuration>
 					</execution>
+
+					<!-- Following steps start and stop MTX sidecar for tests executed by failsafe plugin -->
+					<execution>
+						<id>install-sidecar</id>
+						<goals>
+							<goal>npm</goal>
+						</goals>
+						<phase>pre-integration-test</phase>
+						<configuration>
+							<arguments>install</arguments>
+							<skip>${skipTests}</skip>
+							<workingDirectory>${sidecar.dir}</workingDirectory>
+						</configuration>
+					</execution>
+
+					<execution>
+						<id>start-sidecar</id>
+						<goals>
+							<goal>npm</goal>
+						</goals>
+						<phase>pre-integration-test</phase>
+						<configuration>
+							<arguments>run startAsync</arguments>
+							<skip>${skipTests}</skip>
+							<workingDirectory>${sidecar.dir}</workingDirectory>
+						</configuration>
+					</execution>
+
+					<execution>
+						<id>stop-sidecar</id>
+						<goals>
+							<goal>npm</goal>
+						</goals>
+						<phase>post-integration-test</phase>
+						<configuration>
+							<arguments>run stopAsync</arguments>
+							<skip>${skipTests}</skip>
+							<workingDirectory>${sidecar.dir}</workingDirectory>
+						</configuration>
+					</execution>
 				</executions>
 			</plugin>
+
+			<plugin>
+				<!-- Tests ending with *IT.java will be executed here -->
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-failsafe-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>integration-tests</id>
+						<phase>integration-test</phase>
+						<goals>
+							<goal>integration-test</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+
 		</plugins>
 	</build>
 

@@ -7,6 +7,14 @@
 			"description": "admin"
 		},
 		{
+			"name": "$XSAPPNAME.expert",
+			"description": "Expert features in the UI"
+		},
+		{
+			"name": "$XSAPPNAME.premium-customer",
+			"description": "Premium customer"
+		},
+		{
 			"name": "$XSAPPNAME.mtcallback",
 			"description": "Multi Tenancy Callback Access",
 			"grant-as-authority-to-apps": [
@@ -51,6 +59,20 @@
 				"$XSAPPNAME.cds.ExtensionDeveloper"
 			],
 			"attribute-references": []
+		},
+		{
+			"name": "expert",
+			"description": "Expert features in the UI",
+			"scope-references": [
+				"$XSAPPNAME.expert"
+			]
+		},
+		{
+			"name": "premium-customer",
+			"description": "Premium customer",
+			"scope-references": [
+				"$XSAPPNAME.premium-customer"
+			]
 		}
 	]
 }
