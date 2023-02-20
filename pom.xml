@@ -21,7 +21,7 @@
 		<cloud.sdk.version>4.5.0</cloud.sdk.version>
 		<xsuaa.version>2.13.5</xsuaa.version>
 		<cf-java-logging-support.version>3.6.3</cf-java-logging-support.version>
-		<cds.install-cdsdk.version>6.5.1</cds.install-cdsdk.version>
+		<cds.install-cdsdk.version>6.5.2</cds.install-cdsdk.version>
 	</properties>
 
 	<modules>
@@ -99,6 +99,12 @@
 				<configuration>
 					<failIfNoTests>true</failIfNoTests>
 				</configuration>
+			</plugin>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-failsafe-plugin</artifactId>
+				<version>3.0.0-M9</version>
 			</plugin>
 
 			<!-- POM FLATTENING FOR CI FRIENDLY VERSIONS -->

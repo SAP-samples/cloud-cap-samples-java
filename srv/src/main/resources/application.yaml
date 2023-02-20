@@ -109,3 +109,24 @@ spring:
 cds:
   data-source:
     auto-config.enabled: false
+---
+spring:
+  config.activate.on-profile: ft
+cds:
+  model:
+    provider:
+      url: http://localhost:4004
+  datasource:
+    csv-initialization-mode: "always"
+  security:
+    defaultRestrictionLevel: "any"
+    mock.users:
+      - name: carol
+        features:
+          - isbn
+      - name: erin
+        features:
+          - isbn
+          - discount
+      - name: fred
+        features:
