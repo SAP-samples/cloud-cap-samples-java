@@ -1,4 +1,4 @@
-package my.bookshop;
+package my.bookshop.config;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -11,10 +11,9 @@ import com.sap.cds.services.request.ParameterInfo;
 import com.sap.cds.services.request.UserInfo;
 import com.sap.cds.services.runtime.FeatureTogglesInfoProvider;
 
-// When application executed locally, the toggles can be switched via application.yaml
 @Component
-@Profile("cloud")
-public class FeatureToggleProvider implements FeatureTogglesInfoProvider {
+@Profile("cloud") // locally, feature toggles are configured directly with mock users
+public class CustomFeatureToggleProvider implements FeatureTogglesInfoProvider {
 
 	@Override
 	public FeatureTogglesInfo get(UserInfo userInfo, ParameterInfo parameterInfo) {
