@@ -9,7 +9,7 @@ spring:
 cds:
   odata-v4.endpoint.path: "/api"
   multi-tenancy:
-    compatibility.enabled: true
+    compatibility.enabled: false
     mtxs.enabled: true
   security:
     authentication.normalize-provider-tenant: true
