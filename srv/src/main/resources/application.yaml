@@ -8,7 +8,9 @@ spring:
     enabled: true
 cds:
   odata-v4.endpoint.path: "/api"
-  multi-tenancy.mtxs.enabled: true
+  multi-tenancy:
+    compatibility.enabled: true
+    mtxs.enabled: true
   security:
     authentication.normalize-provider-tenant: true
     mock.users:
