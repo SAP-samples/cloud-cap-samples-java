@@ -112,6 +112,10 @@ resources:
          appUrls:
            getDependencies: ~{srv/url}/mt/v1.0/subscriptions/dependencies
            onSubscription: ~{srv/url}/mt/v1.0/subscriptions/tenants/{tenantId}
+           onSubscriptionAsync: true
+           onUnSubscriptionAsync: true
+           onUpdateDependenciesAsync: true
+           callbackTimeoutMillis: 3600000
     requires:
       - name: srv
   - name: cf-logging
