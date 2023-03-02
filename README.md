@@ -241,7 +241,7 @@ Before you can access the UI using the (tenant-specific) URL to the bookshop(-mt
 - Container Registry (e.g. [Docker Hub](https://hub.docker.com/))
 - Command Line Tools: [`kubectl`](https://kubernetes.io/de/docs/tasks/tools/install-kubectl/), [`kubectl-oidc_login`](https://github.com/int128/kubelogin#setup), [`pack`](https://buildpacks.io/docs/tools/pack/), [`docker`](https://docs.docker.com/get-docker/), [`helm`](https://helm.sh/docs/intro/install/), [`cf`](https://docs.cloudfoundry.org/cf-cli/install-go-cli.html)
 - Logged into Kyma Runtime (with `kubectl` CLI), Cloud Foundry space (with `cf` CLI) and Container Registry (with `docker login`)
-- `@sap/cds-dk` >= 6.5.0
+- `@sap/cds-dk` >= 6.6.0
 
 ### Add Deployment Files
 
@@ -262,18 +262,11 @@ You can try the `API_BUSINESS_PARTNER` service with a real S/4HANA system with t
 
 1. Create either an on-premise or cloud destination in your subaccount.
 
-2. Add the binding to the destination service for the service (`srv`) to the `values.yaml` file:
+2. Add configuration required for the destination service by executing the following command.
 
-    ```yaml
-    srv:
-      ...
-      bindings:
-        ...
-        destinations:
-          serviceInstanceName: destinations
+    ```bash
+    cds add destination
     ```
-
-    (The destination service instance is already configured)
 
 3. Set the profiles `cloud` and `destination` active in your `values.yaml` file:
 
@@ -282,9 +275,6 @@ You can try the `API_BUSINESS_PARTNER` service with a real S/4HANA system with t
       ...
       env:
         SPRING_PROFILES_ACTIVE: cloud,destination
-        # TODO: To be removed after @sap/cds-dk patch
-        CDS_ENVIRONMENT_K8S_SERVICEBINDINGS_CONNECTIVITY_SECRETSPATH: '/bindings/connectivity'
-        CDS_ENVIRONMENT_K8S_SERVICEBINDINGS_CONNECTIVITY_SERVICE: 'connectivity'
     ```
 
 4. For on-premise only: Add the connectivity service to your Helm chart:
@@ -292,6 +282,8 @@ You can try the `API_BUSINESS_PARTNER` service with a real S/4HANA system with t
     ```bash
     cds add connectivity
     ```
+
+5. `cds add helm` will not add configuration required to create a Connectivity Service Instance. This Service Instance should be created by the Kyma Cluster Administrator. For more information regarding configuration of Connectivity Instance, please check the [documentation](https://cap.cloud.sap/docs/guides/deployment/deploy-to-kyma#connectivity-service).
 
 *See also: [API_BUSINESS_PARTNER Remote Service and Spring Profiles](#api_business_partner-remote-service-and-spring-profiles)*
 
@@ -366,7 +358,7 @@ sidecar:
 +     fromSecret: bookshop-sm
 
 ...
-- service_manager:
+- service-manager:
 -   serviceOfferingName: service-manager
 -   servicePlanName: container
 ```
