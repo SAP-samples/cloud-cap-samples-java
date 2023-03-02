@@ -439,7 +439,7 @@ docker push $YOUR_CONTAINER_REGISTRY/bookshop-hana-deployer
 docker push $YOUR_CONTAINER_REGISTRY/bookshop-sidecar
 ```
 
-### Deployment
+### Configuration
 
 Make the following changes in the _`chart/values.yaml`_ file.
 
@@ -468,19 +468,25 @@ global:
 +    name: container-registry
 ```
 
+### Deployment
+
 Deploy the helm chart using the following command:
 
-```bash
-helm upgrade bookshop ./chart --install
-```
-
 #### Single Tenant
+
+```bash
+helm install bookshop ./chart --set-file xsuaa.jsonParameters=xs-security.json
+```
 
 Before you can access the UI you should make sure to [Setup Authorizations in SAP Business Technology Platform](#setup-authorizations-in-sap-business-technology-platform).
 
 Click on the approuter url logged by the `helm upgrade` to access the UI.
 
 #### Multi Tenant
+
+```bash
+helm install bookshop ./chart --set-file xsuaa.jsonParameters=xs-security-mt.json
+```
 
 In case of multi tenant, you'll have to subscribe to the application from a different subaccount. You can follow the steps mentioned [here](https://cap.cloud.sap/docs/guides/deployment/as-saas#subscribe) to access the application.
 
