@@ -4,15 +4,16 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.stream.Stream;
 
-import com.sap.cds.reflect.CdsModel;
-import com.sap.cds.services.draft.DraftService;
-import com.sap.cds.services.messages.Messages;
-import com.sap.cds.services.persistence.PersistenceService;
-
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+
+import com.sap.cds.reflect.CdsModel;
+import com.sap.cds.services.draft.DraftService;
+import com.sap.cds.services.messages.Messages;
+import com.sap.cds.services.persistence.PersistenceService;
+import com.sap.cds.services.request.FeatureTogglesInfo;
 
 import cds.gen.catalogservice.Books;
 import my.bookshop.RatingCalculator;
@@ -31,6 +32,9 @@ public class CatalogServiceHandlerTest {
 	private Messages messages;
 
 	@Mock
+	private FeatureTogglesInfo featureToggles;
+
+	@Mock
 	private RatingCalculator ratingCalculator;
 
 	@Mock
@@ -45,7 +49,7 @@ public class CatalogServiceHandlerTest {
 		book2.setTitle("Book 2");
 		book2.setStock(200);
 
-		CatalogServiceHandler handler = new CatalogServiceHandler(db, reviewService, messages, ratingCalculator, model);
+		CatalogServiceHandler handler = new CatalogServiceHandler(db, reviewService, messages, featureToggles, ratingCalculator, model);
 		handler.discountBooks(Stream.of(book1, book2));
 
 		assertEquals("Book 1", book1.getTitle(), "Book 1 was discounted");

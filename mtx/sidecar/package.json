@@ -33,7 +33,7 @@
   "scripts": {
     "start": "cds run",
     "build": "npm install && npx cds build ../.. --for mtx-sidecar && cd gen && npm install",
-    "startAsync": "forever start -o out.log -e err.log -c node node_modules/@sap/cds/bin/cds.js run --profile development",
+    "startAsync": "forever start -o out.log -e err.log node_modules/.bin/cds run",
     "stopAsync": "forever stopall"
   }
 }

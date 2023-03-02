@@ -2,13 +2,14 @@ package my.bookshop.handlers;
 
 import static cds.gen.catalogservice.CatalogService_.BOOKS;
 
-import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Component;
 
 import com.sap.cds.Result;
 import com.sap.cds.Struct;
@@ -30,9 +31,7 @@ import com.sap.cds.services.handler.annotations.On;
 import com.sap.cds.services.handler.annotations.ServiceName;
 import com.sap.cds.services.messages.Messages;
 import com.sap.cds.services.persistence.PersistenceService;
-
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.stereotype.Component;
+import com.sap.cds.services.request.FeatureTogglesInfo;
 
 import cds.gen.catalogservice.AddReviewContext;
 import cds.gen.catalogservice.Books;
@@ -59,20 +58,19 @@ import my.bookshop.RatingCalculator;
 class CatalogServiceHandler implements EventHandler {
 
 	private final PersistenceService db;
-
 	private final DraftService reviewService;
 
 	private final Messages messages;
-
+	private final FeatureTogglesInfo featureToggles;
 	private final RatingCalculator ratingCalculator;
-
 	private final CqnAnalyzer analyzer;
 
 	CatalogServiceHandler(PersistenceService db, @Qualifier(ReviewService_.CDS_NAME) DraftService reviewService,
-			Messages messages, RatingCalculator ratingCalculator, CdsModel model) {
+			Messages messages, FeatureTogglesInfo featureToggles, RatingCalculator ratingCalculator, CdsModel model) {
 		this.db = db;
 		this.reviewService = reviewService;
 		this.messages = messages;
+		this.featureToggles = featureToggles;
 		this.ratingCalculator = ratingCalculator;
 		this.analyzer = CqnAnalyzer.create(model);
 	}
@@ -137,7 +135,7 @@ class CatalogServiceHandler implements EventHandler {
 	public void discountBooks(Stream<Books> books) {
 		books.filter(b -> b.getTitle() != null).forEach(b -> {
 			loadStockIfNotSet(b);
-			discountBooksWithMoreThan111Stock(b);
+			discountBooksWithMoreThan111Stock(b, featureToggles.isEnabled("discount"));
 		});
 	}
 
@@ -188,20 +186,9 @@ class CatalogServiceHandler implements EventHandler {
 		}
 	}
 
-	@After
-	protected void addDiscount(CdsReadEventContext context) {
-		if (context.getFeatureTogglesInfo().isEnabled("discount")) {
-			context.getResult().listOf(Books.class).forEach(book -> {
-				if (book.getPrice() != null) {
-					book.setPrice(book.getPrice().multiply(BigDecimal.valueOf(0.9)).setScale(2, RoundingMode.FLOOR));
-				}
-			});
-		}
-	}
-
-	private void discountBooksWithMoreThan111Stock(Books b) {
+	private void discountBooksWithMoreThan111Stock(Books b, boolean premium) {
 		if (b.getStock() != null && b.getStock() > 111) {
-			b.setTitle(String.format("%s -- 11%% discount", b.getTitle()));
+			b.setTitle(String.format("%s -- %s%% discount", b.getTitle(), premium ? 14 : 11));
 		}
 	}
 
