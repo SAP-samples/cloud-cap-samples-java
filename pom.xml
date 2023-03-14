@@ -141,6 +141,7 @@
 				<version>3.2.1</version>
 				<executions>
 					<execution>
+						<?m2e ignore?>
 						<id>Project Structure Checks</id>
 						<goals>
 							<goal>enforce</goal>
