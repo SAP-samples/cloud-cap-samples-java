@@ -8,6 +8,7 @@ spring:
     enabled: true
 cds:
   odata-v4.endpoint.path: "/api"
+  odata-v4.serializer.enabled: true
   multi-tenancy:
     compatibility.enabled: false
     mtxs.enabled: true
