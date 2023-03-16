@@ -247,8 +247,8 @@ Before you can access the UI using the (tenant-specific) URL to the bookshop(-mt
 
 CAP tooling provides you a Helm chart for deployment to Kyma.
 
-For single tenant deployment, replace the contents of _`cdsrc.json`_ with _`kyma-st.json`_.
-For multi tenant deployment, replace the contents of _`cdsrc.json`_ with _`kyma-mt.json`_.
+For single tenant deployment, replace the contents of _`.cdsrc.json`_ with _`kyma-st.json`_.
+For multi tenant deployment, replace the contents of _`.cdsrc.json`_ with _`kyma-mt.json`_.
 
 Add the CAP Helm chart with the required features to this project:
 
