@@ -1,6 +1,8 @@
 {
     "requires": {
         "multitenancy": true,
+        "extensibility": true,
+        "toggles": true,
         "auth": {
             "kind": "xsuaa"
         },

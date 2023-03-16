@@ -480,7 +480,7 @@ helm install bookshop ./chart --set-file xsuaa.jsonParameters=xs-security.json
 
 Before you can access the UI you should make sure to [Setup Authorizations in SAP Business Technology Platform](#setup-authorizations-in-sap-business-technology-platform).
 
-Click on the approuter url logged by the `helm upgrade` to access the UI.
+Click on the approuter url logged by the `helm install` to access the UI.
 
 #### Multi Tenant
 
