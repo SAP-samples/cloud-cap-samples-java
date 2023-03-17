@@ -397,7 +397,7 @@ pack build $YOUR_CONTAINER_REGISTRY/bookshop-approuter \
      --env BP_NODE_RUN_SCRIPTS=""
 ```
 
-**Build data base deployer image (single tenant only):**
+**Build database deployer image (single tenant only):**
 
 ```bash
 pack build $YOUR_CONTAINER_REGISTRY/bookshop-hana-deployer \
