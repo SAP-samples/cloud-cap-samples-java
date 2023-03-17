@@ -283,7 +283,7 @@ You can try the `API_BUSINESS_PARTNER` service with a real S/4HANA system with t
     cds add connectivity
     ```
 
-5. `cds add helm` will not add configuration required to create a Connectivity Service Instance. This Service Instance should be created by the Kyma Cluster Administrator. For more information regarding configuration of Connectivity Instance, please check the [documentation](https://cap.cloud.sap/docs/guides/deployment/deploy-to-kyma#connectivity-service).
+   Note: `cds add helm` will not add configuration required to create a Connectivity Service Instance. This Service Instance should be created by the Kyma Cluster Administrator. For more information regarding configuration of Connectivity Instance, please check the [documentation](https://cap.cloud.sap/docs/guides/deployment/deploy-to-kyma#connectivity-service).
 
 *See also: [API_BUSINESS_PARTNER Remote Service and Spring Profiles](#api_business_partner-remote-service-and-spring-profiles)*
 
@@ -309,17 +309,9 @@ This step is only required if you're using a BTP Trial account. If you're using 
 bash ./scripts/create-db-secret.sh bookshop-db
 ```
 
-##### Multi Tenant
-
-```
-bash ./scripts/create-sm-secret.sh bookshop-sm
-```
-
-It will create a HDI container `bookshop-db` (single tenant) or a Service Manager `bookshop-sm` (multi tenant) instance on your currently targeted Cloud Foundry space and creates a secret `bookshop-db` (single tenant) or `bookshop-sm` (multi tenant) with the credentials in your current Kubernetes namespace.
+It will create a HDI container `bookshop-db` instance on your currently targeted Cloud Foundry space and a secret `bookshop-db` with the credentials in your current Kubernetes namespace.
 
 Make the following changes to your _`chart/values.yaml`_.
-
-##### Single Tenant
 
 ```diff
 srv:
@@ -342,6 +334,14 @@ hana-deployer:
 ```
 
 ##### Multi Tenant
+
+```
+bash ./scripts/create-sm-secret.sh bookshop-sm
+```
+
+It will create a Service Manager `bookshop-sm` instance on your currently targeted Cloud Foundry space and a secret `bookshop-sm` with the credentials in your current Kubernetes namespace.
+
+Make the following changes to your _`chart/values.yaml`_.
 
 ```diff
 srv:
