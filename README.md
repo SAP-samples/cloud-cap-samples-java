@@ -456,6 +456,8 @@ Make the following changes in the _`chart/values.yaml`_ file.
 +  backendDestinations:
 +     backend:
 +       service: srv
++     mtx-api:
++       service: srv
 ```
 
 5. Add your image registry secret created in [Create container registry secret](#create-container-registry-secret) step.
