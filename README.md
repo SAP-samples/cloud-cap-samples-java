@@ -247,8 +247,37 @@ Before you can access the UI using the (tenant-specific) URL to the bookshop(-mt
 
 CAP tooling provides you a Helm chart for deployment to Kyma.
 
-For single tenant deployment, replace the contents of _`.cdsrc.json`_ with _`kyma-st.json`_.
-For multi tenant deployment, replace the contents of _`.cdsrc.json`_ with _`kyma-mt.json`_.
+For single tenant deployment, replace the `requires` section in _`.cdsrc.json`_ with:
+
+```
+    "requires": {
+        "auth": {
+            "kind": "xsuaa"
+        },
+        "approuter": {
+            "kind": "cloudfoundry"
+        },
+        "db": {
+            "kind": "hana-cloud"
+        }
+    },
+```
+
+For multi tenant deployment, replace the `requires` section in _`.cdsrc.json`_ with:
+
+```
+    "requires": {
+        "multitenancy": true,
+        "extensibility": true,
+        "toggles": true,
+        "auth": {
+            "kind": "xsuaa"
+        },
+        "approuter": {
+            "kind": "cloudfoundry"
+        }
+    },
+```
 
 Add the CAP Helm chart with the required features to this project:
 
