@@ -1,4 +1,15 @@
 {
+    "requires": {
+        "auth": {
+            "kind": "xsuaa"
+        },
+        "approuter": {
+            "kind": "cloudfoundry"
+        },
+        "db": {
+            "kind": "hana-cloud"
+        }
+    },
     "build": {
         "target": ".",
         "tasks": [
@@ -15,16 +26,5 @@
     },
     "hana": {
         "deploy-format": "hdbtable"
-    },
-    "requires": {
-        "auth": {
-            "kind": "xsuaa"
-        },
-        "approuter": {
-            "kind": "cloudfoundry"
-        },
-        "db": {
-            "kind": "hana-cloud"
-        }
     }
 }
