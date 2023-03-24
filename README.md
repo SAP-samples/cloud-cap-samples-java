@@ -499,6 +499,8 @@ global:
 +    name: container-registry
 ```
 
+6. If the application is deployed multiple times in the same cluster, make sure to adapt the values of `xsappname` and `appName` under `saasRegistryParameters` in `values/Chart.yaml`
+
 ### Deployment
 
 Deploy the helm chart using the following command:
