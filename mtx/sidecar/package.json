@@ -25,15 +25,13 @@
   },
   "devDependencies": {
     "sqlite3": "^5",
-    "forever": "^4"
+    "pm2": "^5.3.0"
   },
   "engines": {
     "node": "^16"
   },
   "scripts": {
     "start": "cds run",
-    "build": "npm install && npx cds build ../.. --for mtx-sidecar && cd gen && npm install",
-    "startAsync": "forever start -o out.log -e err.log node_modules/.bin/cds run",
-    "stopAsync": "forever stopall"
+    "build": "npm install && npx cds build ../.. --for mtx-sidecar && cd gen && npm install"
   }
 }

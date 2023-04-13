@@ -26,6 +26,7 @@
 
 	<modules>
 		<module>srv</module>
+		<module>integration-tests</module>
 	</modules>
 
 	<dependencyManagement>

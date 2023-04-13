@@ -1,4 +1,4 @@
-package my.bookshop;
+package my.bookshop.it;
 
 import static org.hamcrest.CoreMatchers.containsString;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
