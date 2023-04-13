@@ -2,10 +2,10 @@
   "dependencies": {
     "@sap/cds": "^6",
     "@sap/cds-mtxs": "^1",
-    "@sap/xssec": "^3",
     "express": "^4",
     "hdb": "^0",
-    "passport": "^0"
+    "passport": "^0",
+    "@sap/xssec": "^3"
   },
   "cds": {
     "requires": {
