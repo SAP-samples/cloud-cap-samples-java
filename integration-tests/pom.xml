@@ -84,7 +84,7 @@
 						</goals>
 						<phase>pre-integration-test</phase>
 						<configuration>
-							<arguments>install pm2</arguments>
+							<arguments>install --no-save pm2</arguments>
 							<skip>${skipTests}</skip>
 							<workingDirectory>${sidecar.dir}</workingDirectory>
 						</configuration>
