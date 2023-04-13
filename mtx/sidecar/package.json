@@ -24,7 +24,8 @@
     }
   },
   "devDependencies": {
-    "sqlite3": "^5"
+    "sqlite3": "^5",
+    "pm2": "^5.3.0"
   },
   "engines": {
     "node": "^16"

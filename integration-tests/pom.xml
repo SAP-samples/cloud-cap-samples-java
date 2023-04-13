@@ -41,7 +41,6 @@
 			<artifactId>spring-security-test</artifactId>
 			<scope>test</scope>
 		</dependency>
-
 	</dependencies>
 
 	<build>
@@ -76,20 +75,6 @@
 				<artifactId>cds-maven-plugin</artifactId>
 				<version>${cds.services.version}</version>
 				<executions>
-					<!-- pm2 is used ONLY for tests to start and stop sidecar around the application -->
-					<execution>
-						<id>install-pm2</id>
-						<goals>
-							<goal>npm</goal>
-						</goals>
-						<phase>pre-integration-test</phase>
-						<configuration>
-							<arguments>install --no-save pm2</arguments>
-							<skip>${skipTests}</skip>
-							<workingDirectory>${sidecar.dir}</workingDirectory>
-						</configuration>
-					</execution>
-
 					<!-- Following steps start and stop MTX sidecar for tests executed by failsafe plugin -->
 					<execution>
 						<id>install-sidecar</id>
