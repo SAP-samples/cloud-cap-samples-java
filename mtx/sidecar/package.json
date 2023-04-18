@@ -31,7 +31,7 @@
     "node": "^16"
   },
   "scripts": {
-    "start": "cds run",
+    "start": "cds-serve",
     "build": "npm install && npx cds build ../.. --for mtx-sidecar && cd gen && npm install"
   }
 }
