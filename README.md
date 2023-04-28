@@ -362,6 +362,17 @@ hana-deployer:
 -   servicePlanName: hdi-shared
 ```
 
+Make the following changes to your _`chart/Chart.yaml`_.
+
+```diff
+dependencies:
+  ...
+-  - name: service-instance
+-    alias: hana
+-    version: ">0.0.0"
+  ...
+```
+
 ##### Multi Tenant
 
 ```
@@ -390,6 +401,17 @@ sidecar:
 - service-manager:
 -   serviceOfferingName: service-manager
 -   servicePlanName: container
+```
+
+Make the following changes to your _`chart/Chart.yaml`_.
+
+```diff
+dependencies:
+  ...
+-  - name: service-instance
+-    alias: service-manager
+-    version: ">0.0.0"
+  ...
 ```
 
 ### Build
