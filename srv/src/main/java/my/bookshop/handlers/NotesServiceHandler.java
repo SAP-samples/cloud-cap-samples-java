@@ -62,7 +62,7 @@ public class NotesServiceHandler implements EventHandler {
 			CqnSelect addressOfNote = CQL.copy(context.getCqn(), new Modifier() {
 
 				@Override
-				public CqnStructuredTypeRef ref(StructuredTypeRef ref) {
+				public CqnStructuredTypeRef ref(CqnStructuredTypeRef ref) {
 					return CQL.entity(Addresses_.CDS_NAME)
 							.filter(p -> p.get(Addresses.BUSINESS_PARTNER).eq(note.getAddressBusinessPartner())
 									.and(p.get(Addresses.ID).eq(note.getAddressId())))
@@ -120,7 +120,7 @@ public class NotesServiceHandler implements EventHandler {
 			CqnSelect notesOfAddress = CQL.copy(context.getCqn(), new Modifier() {
 
 				@Override
-				public CqnStructuredTypeRef ref(StructuredTypeRef ref) {
+				public CqnStructuredTypeRef ref(CqnStructuredTypeRef ref) {
 					return CQL.entity(Notes_.CDS_NAME).filter(predicate(segments.get(1))).asRef();
 				}
 
