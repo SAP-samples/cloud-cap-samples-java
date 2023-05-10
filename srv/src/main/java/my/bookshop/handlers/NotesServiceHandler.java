@@ -16,7 +16,6 @@ import com.sap.cds.Result;
 import com.sap.cds.ql.CQL;
 import com.sap.cds.ql.Predicate;
 import com.sap.cds.ql.Select;
-import com.sap.cds.ql.StructuredTypeRef;
 import com.sap.cds.ql.cqn.CqnAnalyzer;
 import com.sap.cds.ql.cqn.CqnExpand;
 import com.sap.cds.ql.cqn.CqnPredicate;
