@@ -3,8 +3,5 @@
     "version": "1.0.0",
     "description": "Bookshop using CAP Java NG",
     "license": "Apache License Version 2.0",
-    "repository": "https://github.com/SAP-samples/cloud-cap-samples-java.git",
-    "workspaces": [
-        "mtx/sidecar"
-    ]
+    "repository": "https://github.com/SAP-samples/cloud-cap-samples-java.git"
 }

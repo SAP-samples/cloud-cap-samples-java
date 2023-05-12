@@ -75,6 +75,20 @@
 				<artifactId>cds-maven-plugin</artifactId>
 				<version>${cds.services.version}</version>
 				<executions>
+					<!-- Following steps start and stop MTX sidecar for tests executed by failsafe plugin -->
+					<execution>
+						<id>install-sidecar</id>
+						<goals>
+							<goal>npm</goal>
+						</goals>
+						<phase>pre-integration-test</phase>
+						<configuration>
+							<arguments>install</arguments>
+							<skip>${skipTests}</skip>
+							<workingDirectory>${sidecar.dir}</workingDirectory>
+						</configuration>
+					</execution>
+
 					<execution>
 						<id>start-sidecar</id>
 						<goals>
