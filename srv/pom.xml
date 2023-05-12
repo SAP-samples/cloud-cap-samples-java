@@ -179,12 +179,12 @@
 					</execution>
 
 					<execution>
-						<id>cds.install-dependencies</id>
+						<id>cds.install-cdsdk</id>
 						<goals>
-							<goal>npm</goal>
+							<goal>install-cdsdk</goal>
 						</goals>
 						<configuration>
-							<arguments>install @sap/cds-dk@${cds.install-cdsdk.version} @sap/cds-mtxs@^1 --no-save</arguments>
+							<skip>${cdsdk-global}</skip>
 						</configuration>
 					</execution>
 
