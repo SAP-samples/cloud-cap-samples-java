@@ -61,10 +61,9 @@
 				<version>3.0.0</version>
 				<executions>
 					<execution>
-						<id>integration-tests</id>
-						<phase>integration-test</phase>
 						<goals>
 							<goal>integration-test</goal>
+							<goal>verify</goal>
 						</goals>
 					</execution>
 				</executions>
@@ -83,7 +82,7 @@
 						</goals>
 						<phase>pre-integration-test</phase>
 						<configuration>
-							<arguments>install</arguments>
+							<arguments>install --no-save</arguments>
 							<skip>${skipTests}</skip>
 							<workingDirectory>${sidecar.dir}</workingDirectory>
 						</configuration>

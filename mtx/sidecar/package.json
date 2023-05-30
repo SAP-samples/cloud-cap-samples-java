@@ -15,7 +15,10 @@
     "node": "^16"
   },
   "cds": {
-    "profile": "mtx-sidecar"
+    "profile": "mtx-sidecar",
+    "[development]": {
+      "requires": { "auth": "dummy" }
+    }
   },
   "scripts": {
     "start": "cds-serve",
