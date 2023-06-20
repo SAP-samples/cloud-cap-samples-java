@@ -1,5 +1,7 @@
 package my.bookshop.config;
 
+import static org.springframework.security.web.util.matcher.AntPathRequestMatcher.antMatcher;
+
 import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -16,10 +18,8 @@ public class WebSecurityConfig {
 
 	@Bean
 	public SecurityFilterChain configure(HttpSecurity http) throws Exception {
-		return http.requestMatchers() //
-				.antMatchers("/actuator/health") //
-				.antMatchers("/swagger/**") //
-				.and().csrf().disable().authorizeRequests().anyRequest().permitAll().and()
+		return http.securityMatchers().requestMatchers(antMatcher("/actuator/health"), antMatcher("/swagger/**")) //
+				.and().csrf().disable().authorizeHttpRequests().anyRequest().permitAll().and()
 				.build();
 	}
 }
