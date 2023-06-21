@@ -72,7 +72,7 @@ modules:
       disk-quota: 512M
       keep-existing-routes: true
     properties:
-      TENANT_HOST_PATTERN: ^(.*)-${default-uri}
+      TENANT_HOST_PATTERN: ^(.*)-${default-uri} # testing only, use custom domain with wildcard for production
     requires:
     - name: srv-api
       group: destinations
@@ -97,6 +97,9 @@ resources:
       path: ./xs-security-mt.json
       config: # override xsappname as it needs to be unique
         xsappname: bookshop-mt-${org}-${space}
+        oauth2-configuration:
+          redirect-uris:
+          - 'https://*.${default-domain}' # testing only, use custom domain with wildcard for production
   - name: bookshop-mt-service-manager
     type: org.cloudfoundry.managed-service
     parameters:
