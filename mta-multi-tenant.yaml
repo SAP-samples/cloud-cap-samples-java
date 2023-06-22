@@ -86,6 +86,7 @@ modules:
       - name: app-api
         properties:
           app-url: '${default-url}'
+          app-domain: '${domain}'
 # --------------------- RESOURCES ---------------------
 resources:
 # -----------------------------------------------------
@@ -99,7 +100,9 @@ resources:
         xsappname: bookshop-mt-${org}-${space}
         oauth2-configuration:
           redirect-uris:
-          - 'https://*.${default-domain}' # testing only, use custom domain with wildcard for production
+          - https://*.~{app-api/app-domain}/**
+    requires:
+      - name: app-api
   - name: bookshop-mt-service-manager
     type: org.cloudfoundry.managed-service
     parameters:
