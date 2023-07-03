@@ -63,6 +63,10 @@ modules:
         forwardAuthToken: true
         strictSSL: true
     - name: bookshop-uaa
+    provides:
+      - name: app-api
+        properties:
+          app-url: '${default-url}'
 # --------------------- RESOURCES ---------------------
 resources:
 # -----------------------------------------------------
@@ -74,6 +78,11 @@ resources:
       path: ./xs-security.json
       config: # override xsappname as it needs to be unique
         xsappname: bookshop-${org}-${space}
+        oauth2-configuration:
+          redirect-uris:
+          - ~{app-api/app-url}/**
+    requires:
+      - name: app-api
   - name: bookshop-hdi-container
     type: org.cloudfoundry.managed-service
     parameters:
