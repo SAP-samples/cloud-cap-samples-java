@@ -184,7 +184,7 @@
 							<goal>npm</goal>
 						</goals>
 						<configuration>
-							<arguments>install @sap/cds-dk@${cds.install-cdsdk.version} @sap/cds-mtxs@^1 --no-save</arguments>
+							<arguments>install @sap/cds-dk@${cds.install-cdsdk.version} @sap/cds@~6.8.0 @sap/cds-mtxs@~1.8.0 --no-save</arguments>
 						</configuration>
 					</execution>
 
