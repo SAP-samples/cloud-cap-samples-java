@@ -136,7 +136,6 @@
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
-				<version>${spring.boot.version}</version>
 				<configuration>
 					<skip>false</skip>
 					<!-- use project root directory as working directory to deliver fiori resources -->
@@ -153,6 +152,11 @@
 						</configuration>
 					</execution>
 				</executions>
+			</plugin>
+
+			<plugin>
+				<groupId>org.graalvm.buildtools</groupId>
+				<artifactId>native-maven-plugin</artifactId>
 			</plugin>
 
 			<!-- STEPS TO BUILD CDS MODEL AND GENERATE POJOs -->

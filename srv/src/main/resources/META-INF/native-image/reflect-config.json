@@ -1,0 +1,10 @@
+[
+	{
+		"name": "org.springframework.jmx.export.MBeanExporter",
+		"allDeclaredFields": true
+	},
+	{
+		"name": "com.sap.cds.services.utils.model.Privilege",
+		"allDeclaredMethods": true
+	}
+]

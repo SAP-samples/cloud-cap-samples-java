@@ -55,6 +55,14 @@
 			</plugin>
 
 			<plugin>
+				<groupId>org.graalvm.buildtools</groupId>
+				<artifactId>native-maven-plugin</artifactId>
+				<configuration>
+					<skipNativeTests>true</skipNativeTests>
+				</configuration>
+			</plugin>
+
+			<plugin>
 				<!-- Tests ending with *IT.java will be executed here -->
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-failsafe-plugin</artifactId>
