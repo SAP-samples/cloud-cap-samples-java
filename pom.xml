@@ -16,17 +16,13 @@
 
 		<!-- DEPENDENCIES VERSION -->
 		<jdk.version>17</jdk.version>
-		<cds.services.version>2.0.2</cds.services.version>
-		<spring.boot.version>3.0.8</spring.boot.version>
-		<cloud.sdk.version>4.14.0</cloud.sdk.version>
-		<xsuaa.version>3.0.1</xsuaa.version>
+		<cds.services.version>2.1.0</cds.services.version>
+		<spring.boot.version>3.1.2</spring.boot.version>
 		<cf-java-logging-support.version>3.7.0</cf-java-logging-support.version>
-		<cds.install-cdsdk.version>7.0.1</cds.install-cdsdk.version>
 	</properties>
 
 	<modules>
 		<module>srv</module>
-		<module>integration-tests</module>
 	</modules>
 
 	<dependencyManagement>
@@ -45,24 +41,6 @@
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-dependencies</artifactId>
 				<version>${spring.boot.version}</version>
-				<type>pom</type>
-				<scope>import</scope>
-			</dependency>
-
-			<!-- CLOUD SDK -->
-			<dependency>
-				<groupId>com.sap.cloud.sdk</groupId>
-				<artifactId>sdk-modules-bom</artifactId>
-				<version>${cloud.sdk.version}</version>
-				<type>pom</type>
-				<scope>import</scope>
-			</dependency>
-
-			<!-- XSUAA -->
-			<dependency>
-				<groupId>com.sap.cloud.security</groupId>
-				<artifactId>java-bom</artifactId>
-				<version>${xsuaa.version}</version>
 				<type>pom</type>
 				<scope>import</scope>
 			</dependency>
@@ -100,12 +78,6 @@
 				<configuration>
 					<failIfNoTests>true</failIfNoTests>
 				</configuration>
-			</plugin>
-
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-failsafe-plugin</artifactId>
-				<version>3.0.0-M9</version>
 			</plugin>
 
 			<!-- POM FLATTENING FOR CI FRIENDLY VERSIONS -->

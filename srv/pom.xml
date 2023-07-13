@@ -24,6 +24,22 @@
 
 		<dependency>
 			<groupId>com.sap.cds</groupId>
+			<artifactId>cds-starter-cloudfoundry</artifactId>
+			<scope>runtime</scope>
+			<exclusions>
+				<exclusion>
+					<groupId>com.sap.cds</groupId>
+					<artifactId>cds-feature-hana</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>com.sap.cds</groupId>
+					<artifactId>cds-feature-mt</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+
+		<dependency>
+			<groupId>com.sap.cds</groupId>
 			<artifactId>cds-adapter-api</artifactId>
 		</dependency>
 
@@ -32,52 +48,16 @@
 			<artifactId>cds-adapter-odata-v4</artifactId>
 			<scope>runtime</scope>
 		</dependency>
-
+		
 		<dependency>
 			<groupId>com.sap.cds</groupId>
-			<artifactId>cds-starter-cloudfoundry</artifactId>
+			<artifactId>cds-feature-postgresql</artifactId>
 			<scope>runtime</scope>
 		</dependency>
 
 		<dependency>
-			<groupId>com.sap.cds</groupId>
-			<artifactId>cds-starter-k8s</artifactId>
-			<scope>runtime</scope>
-		</dependency>
-
-		<dependency>
-			<groupId>com.sap.cds</groupId>
-			<artifactId>cds-feature-enterprise-messaging</artifactId>
-			<scope>runtime</scope>
-		</dependency>
-
-		<dependency>
-			<groupId>com.sap.cds</groupId>
-			<artifactId>cds-feature-remote-odata</artifactId>
-			<scope>runtime</scope>
-		</dependency>
-
-		<!-- CLOUD SDK dependencies -->
-		<dependency>
-			<groupId>com.sap.cloud.sdk.cloudplatform</groupId>
-			<artifactId>resilience</artifactId>
-		</dependency>
-
-		<dependency>
-			<groupId>com.sap.cloud.sdk.cloudplatform</groupId>
-			<artifactId>scp-cf</artifactId>
-		</dependency>
-
-		<!-- OTHER DEPENDENCIES -->
-		<dependency>
-			<groupId>com.h2database</groupId>
-			<artifactId>h2</artifactId>
-			<scope>runtime</scope>
-		</dependency>
-
-		<dependency>
-			<groupId>org.xerial</groupId>
-			<artifactId>sqlite-jdbc</artifactId>
+			<groupId>org.liquibase</groupId>
+			<artifactId>liquibase-core</artifactId>
 			<scope>runtime</scope>
 		</dependency>
 
@@ -95,16 +75,6 @@
 
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-security</artifactId>
-		</dependency>
-
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-actuator</artifactId>
-		</dependency>
-
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
 		</dependency>
@@ -117,15 +87,20 @@
 
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-webflux</artifactId>
+			<artifactId>spring-boot-devtools</artifactId>
+			<optional>true</optional>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-testcontainers</artifactId>
 			<scope>test</scope>
 		</dependency>
 
-		<!-- DEV TOOLS -->
 		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-devtools</artifactId>
-			<optional>true</optional>
+			<groupId>org.testcontainers</groupId>
+			<artifactId>postgresql</artifactId>
+			<scope>test</scope>
 		</dependency>
 	</dependencies>
 
@@ -173,9 +148,6 @@
 						<goals>
 							<goal>install-node</goal>
 						</goals>
-						<configuration>
-							<skip>${cdsdk-global}</skip>
-						</configuration>
 					</execution>
 
 					<execution>
@@ -184,7 +156,7 @@
 							<goal>npm</goal>
 						</goals>
 						<configuration>
-							<arguments>install @sap/cds-dk@${cds.install-cdsdk.version} @sap/cds-mtxs@^1 --no-save</arguments>
+							<arguments>install</arguments>
 						</configuration>
 					</execution>
 
@@ -196,12 +168,6 @@
 						<configuration>
 							<commands>
 								<command>build --for java</command>
-								<command>deploy --to h2 --with-mocks --dry >
-									${project.basedir}/src/main/resources/schema.sql</command>
-								<command>deploy --to h2 --dry >
-									${project.basedir}/src/main/resources/schema-nomocks.sql</command>
-								<command>compile srv/cat-service.cds -2 openapi --openapi:url /api/browse >
-									${project.basedir}/src/main/resources/swagger/openapi.json</command>
 							</commands>
 						</configuration>
 					</execution>
@@ -219,14 +185,4 @@
 			</plugin>
 		</plugins>
 	</build>
-
-	<profiles>
-		<!-- A profile that uses global installation of @sap/cds-dk -->
-		<profile>
-			<id>cdsdk-global</id>
-			<properties>
-				<cdsdk-global>true</cdsdk-global>
-			</properties>
-		</profile>
-	</profiles>
 </project>

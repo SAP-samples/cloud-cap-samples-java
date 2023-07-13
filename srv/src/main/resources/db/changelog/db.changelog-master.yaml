@@ -1,0 +1,15 @@
+databaseChangeLog:
+  - changeSet:
+      id: "initial"
+      author: CAP Java
+      changes:
+        - sqlFile:
+            dbms: postgresql
+            path: db/changelog/v1/model.sql
+  - changeSet:
+      id: "with-isbn"
+      author: CAP Java
+      changes:
+        - sqlFile:
+            dbms: postgresql
+            path: db/changelog/v2/model.sql

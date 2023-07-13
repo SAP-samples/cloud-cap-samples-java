@@ -37,6 +37,10 @@ annotate AdminService.Books with @(UI : {
         {Value : author_ID},
         {Value : genre_ID},
         {Value : descr},
+        {
+            Value: isbn,
+            Label: '{i18n>ISBN}'
+        },
     ]},
     FieldGroup #Details : {Data : [
         {Value : stock},
@@ -92,42 +96,4 @@ annotate AdminService.Books.texts {
         entity : 'Languages',
         type : #fixed
     }
-}
-
-annotate AdminService.Books actions {
-    @(
-        Common.SideEffects : {
-            TargetProperties : ['_it/order_ID'],
-            TargetEntities : [_it]
-        },
-        cds.odata.bindingparameter.name : '_it'
-    )
-    addToOrder(order_ID @(
-        title : '{i18n>Order}',
-        Common : {ValueListMapping : {
-            Label : '{i18n>Orders}',
-            CollectionPath : 'Orders',
-            Parameters : [
-                {
-                    $Type : 'Common.ValueListParameterInOut',
-                    LocalDataProperty : order_ID,
-                    ValueListProperty : 'ID'
-                },
-                {
-                    $Type : 'Common.ValueListParameterDisplayOnly',
-                    ValueListProperty : 'OrderNo'
-                },
-                {
-                    $Type : 'Common.ValueListParameterDisplayOnly',
-                    ValueListProperty : 'createdBy'
-                },
-                {
-                    $Type : 'Common.ValueListParameterDisplayOnly',
-                    ValueListProperty : 'createdAt'
-                }
-            ],
-        }}
-    ),
-    quantity @title : '{i18n>Quantity}'
-    )
 }

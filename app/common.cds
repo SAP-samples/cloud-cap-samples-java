@@ -1,7 +1,7 @@
 /*
   Common Annotations shared by all apps
 */
-using {my.bookshop as my} from '../db/index';
+using {my.bookshop as my} from '../db/schema';
 
 
 ////////////////////////////////////////////////////////////////////////////
@@ -32,12 +32,7 @@ annotate my.Books with
             {
                 Value : currency.symbol,
                 Label : ' '
-            },
-            {
-                $Type : 'UI.DataFieldForAction',
-                Label : '{i18n>AddToOrder}',
-                Action : 'AdminService.addToOrder'
-            },
+            }
         ]
     }
 ) {
@@ -88,82 +83,6 @@ annotate my.Books with {
     @title : '{i18n>Stock}';
     descr
     @title : '{i18n>Description}'
-    @UI.MultiLineText;
-}
-
-
-////////////////////////////////////////////////////////////////////////////
-//
-//	Reviews List
-//
-annotate my.Reviews with
-@(UI : {
-    Identification : [
-        {
-            Value : ID,
-            ![@UI.Hidden]
-        },
-        {Value : title}
-    ],
-    SelectionFields : [
-        book_ID,
-        rating
-    ],
-    LineItem : [
-        {
-            Value : modifiedAt,
-            Label : 'Date'
-        },
-        {
-            Value : createdBy,
-            Label : '{i18n>User}'
-        },
-        {
-            $Type : 'UI.DataFieldForAnnotation',
-            Label : '{i18n>Book}',
-            Target : '@UI.FieldGroup#BookAndAuthor'
-        },
-        {
-            $Type : 'UI.DataFieldForAnnotation',
-            Label : '{i18n>Rating}',
-            Target : '@UI.DataPoint#rating'
-        },
-        {
-            Value : title,
-            Label : '{i18n>Review}'
-        }
-    ],
-    FieldGroup #BookAndAuthor : {Data : [
-        {Value : book.title},
-        {Value : book.author.name}
-    ]},
-    DataPoint #rating : {
-        Value : rating,
-        Visualization : #Rating,
-        MinimumValue : 0,
-        MaximumValue : 5
-    }
-});
-
-annotate my.Reviews with {
-    ID
-    @title : '{i18n>ID}'
-    @UI.HiddenFilter;
-    title
-    @title : '{i18n>Title}';
-    book
-    @ValueList.entity : 'Books'
-    @title : '{i18n>Book}'
-    @Common : {
-        Text : book.title,
-        TextArrangement : #TextOnly
-    };
-    date
-    @title : '{i18n>Date}';
-    rating
-    @title : '{i18n>Rating}';
-    text
-    @title : '{i18n>Text}'
     @UI.MultiLineText;
 }
 

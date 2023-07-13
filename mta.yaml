@@ -1,0 +1,87 @@
+_schema-version: '2.1'
+ID: bookshop-pg
+version: 1.0.0
+description: "CAP Java Bookshop on PostgreSQL with UI"
+parameters:
+  enable-parallel-deployments: true
+modules:
+# --------------------- SERVER MODULE ------------------------
+  - name: bookshop-pg-srv
+# ------------------------------------------------------------
+    type: java
+    path: srv
+    parameters:
+      memory: 1024M
+      disk-quota: 512M
+      buildpack: sap_java_buildpack
+    properties:
+        SPRING_PROFILES_ACTIVE: cloud
+        JBP_CONFIG_COMPONENTS: "jres: ['com.sap.xs.java.buildpack.jre.SAPMachineJRE']"
+        JBP_CONFIG_SAP_MACHINE_JRE: '{ use_offline_repository: false, version: 17.+ }'
+    build-parameters:
+      builder: custom
+      commands:
+        - mvn clean package -DskipTests=true
+      build-result: target/*-exec.jar
+    requires:
+      - name: bookshop-pg-db
+      - name: bookshop-pg-uaa
+      - name: cf-logging
+    provides:
+      - name: srv-api
+        properties:
+          srv-url: '${default-url}'
+
+# --------------------- APPROUTER MODULE ---------------------
+  - name: bookshop-pg-app
+# ------------------------------------------------------------
+    type: approuter.nodejs
+    path: app
+    parameters:
+      memory: 256M
+      disk-quota: 512M
+    requires:
+    - name: srv-api
+      group: destinations
+      properties:
+        name: backend
+        url: ~{srv-url}
+        forwardAuthToken: true
+        strictSSL: true
+    - name: bookshop-pg-uaa
+    provides:
+      - name: app-api
+        properties:
+          app-url: '${default-url}'
+
+# --------------------- RESOURCES ---------------------
+resources:
+# -----------------------------------------------------
+  - name: bookshop-pg-uaa
+    type: org.cloudfoundry.managed-service
+    parameters:
+      service: xsuaa
+      service-plan: application
+      path: ./xs-security.json
+      config: # override xsappname as it needs to be unique
+        xsappname: bookshop-pg-${org}-${space}
+        oauth2-configuration:
+          redirect-uris:
+          - ~{app-api/app-url}/**
+    requires:
+      - name: app-api
+
+  - name: bookshop-pg-db
+    type: org.cloudfoundry.managed-service
+    parameters:
+      service: postgresql-db
+      service-plan: standard
+      config:
+        engine_version: "13"
+        multi_az: false
+
+  - name: cf-logging
+    type: org.cloudfoundry.managed-service
+    parameters:
+      service: application-logs
+      service-plan: lite

@@ -1,128 +1,30 @@
 ---
-logging:
-  level:
-    '[com.sap.cds.auditlog]': DEBUG
+my.bookshop.postgresImage: postgres:13
+
 spring:
   web.resources.static-locations: "file:./app"
-  jmx:
-    enabled: true
+
 cds:
+  dataSource.csv:
+    initializationMode: always
+    singleChangeset: true
   odata-v4.endpoint.path: "/api"
-  odata-v4.serializer.enabled: true
-  multi-tenancy:
-    compatibility.enabled: false
-    mtxs.enabled: true
-  security:
-    authentication.normalize-provider-tenant: true
-    mock.users:
-      admin:
-        password: admin
-        roles:
-        - admin
-        attributes:
-          businessPartner:
-          - "10401010"
-      user:
-        password: user
-server.servlet.encoding:
-  charset: UTF-8
-  force: true
-management:
-  endpoint:
-    health:
-      show-components: always
-      show-details: always
-  endpoints:
-    web:
-      exposure:
-        include: "health"
-  health:
-    defaults.enabled: false
-    ping.enabled: true
-    db.enabled: true
-    myhealth.enabled: true
+  security.mock.users:
+    admin:
+      password: admin
+      roles:
+      - admin
+    user:
+      password: user
 
 ---
 spring:
   config.activate.on-profile: cloud
-  sql.init.schema-locations: "classpath:schema-nomocks.sql"
-cds:
-  messaging.services:
-    bupa-messaging:
-      kind: enterprise-messaging
-      format: cloudevents
-      subscribe-prefix: sap/S4HANAOD/java/ce/
-
----
-spring:
-  config.activate.on-profile: sandbox
-cds:
-  remote.services:
-    '[API_BUSINESS_PARTNER]':
-      destination:
-        type: "odata-v2"
-        properties:
-          url: "https://sandbox.api.sap.com/s4hanacloud/sap/opu/odata/sap"
-        headers:
-          APIKey: "" # Place API Key from SAP API Business Hub here or use environment variable CDS_REMOTE_SERVICES_API_BUSINESS_PARTNER_DESTINATION_HEADERS_APIKEY
-
----
-spring:
-  config.activate.on-profile: destination
-cds:
-  remote.services:
-    '[API_BUSINESS_PARTNER]':
-      destination:
-        type: "odata-v2"
-        name: "s4-destination"
-        suffix: "/sap/opu/odata/sap"
-
----
-spring:
-  config.activate.on-profile: mocked
-cds:
-  messaging.services:
-    bupa-messaging:
-      kind: file-based-messaging
-  application.services:
-    api-business-partner-mocked:
-      model: API_BUSINESS_PARTNER
-      serve:
-        path: API_BUSINESS_PARTNER
-  remote.services:
-    '[API_BUSINESS_PARTNER]':
-      destination:
-        name: "myself"
-        suffix: "/api"
-
----
-spring:
-  config.activate.on-profile: ft
-cds:
-  model.provider.url: http://localhost:4005
-  security.mock.users:
-    admin:
-      features:
-      - isbn
-      - discount
-    user:
-      features:
-      - isbn
-
----
-spring:
-  config.activate.on-profile: local-mtxs
-cds:
-  multi-tenancy.sidecar.url: http://localhost:4005
-  security.mock.users:
-    admin:
-      tenant: t1
-    user:
-      tenant: t1
 
 ---
 spring:
   config.activate.on-profile: default
 cds:
-  data-source:
+  dataSource:
     auto-config.enabled: false
+    
