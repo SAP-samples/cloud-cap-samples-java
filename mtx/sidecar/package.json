@@ -1,6 +1,6 @@
 {
   "dependencies": {
-    "@sap/cds": "^6",
+    "@sap/cds": "^7",
     "@sap/cds-mtxs": "^1",
     "@sap/xssec": "^3",
     "express": "^4",
