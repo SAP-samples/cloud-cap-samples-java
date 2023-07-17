@@ -23,8 +23,8 @@
 		</dependency>
 
 		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-actuator</artifactId>
+			<groupId>com.sap.cds</groupId>
+			<artifactId>cds-adapter-api</artifactId>
 		</dependency>
 
 		<dependency>
@@ -36,11 +36,12 @@
 		<dependency>
 			<groupId>com.sap.cds</groupId>
 			<artifactId>cds-starter-cloudfoundry</artifactId>
+			<scope>runtime</scope>
 		</dependency>
 
 		<dependency>
 			<groupId>com.sap.cds</groupId>
-			<artifactId>cds-feature-k8s</artifactId>
+			<artifactId>cds-starter-k8s</artifactId>
 			<scope>runtime</scope>
 		</dependency>
 
@@ -103,6 +104,16 @@
 			<groupId>com.sap.hcp.cf.logging</groupId>
 			<artifactId>cf-java-logging-support-logback</artifactId>
 			<version>${cf-java-logging-support.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-security</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-actuator</artifactId>
 		</dependency>
 
 		<dependency>
@@ -186,7 +197,7 @@
 							<goal>npm</goal>
 						</goals>
 						<configuration>
-							<arguments>install @sap/cds-dk@${cds.install-cdsdk.version} @sap/cds-mtxs@^1 --no-save</arguments>
+							<arguments>install @sap/cds-dk@${cds.install-cdsdk.version} @sap/cds@~6.8.0 @sap/cds-mtxs@~1.8.0 --no-save</arguments>
 						</configuration>
 					</execution>
 

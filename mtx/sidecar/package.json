@@ -1,36 +1,27 @@
 {
   "dependencies": {
-    "@sap/cds": "^6",
-    "@sap/cds-mtxs": "^1",
+    "@sap/cds": "~6.8.0",
+    "@sap/cds-mtxs": "~1.8.0",
+    "@sap/xssec": "^3",
     "express": "^4",
     "hdb": "^0",
-    "passport": "^0",
-    "@sap/xssec": "^3"
-  },
-  "cds": {
-    "requires": {
-      "[production]": {
-        "db": "hana-mt",
-        "auth": "xsuaa"
-      },
-      "[development]": {
-        "db": "sqlite",
-        "auth": "dummy"
-      },
-      "cds.xt.ModelProviderService": "in-sidecar",
-      "cds.xt.DeploymentService": true,
-      "cds.xt.SaasProvisioningService": true,
-      "cds.xt.ExtensibilityService": true
-    }
+    "passport": "^0"
   },
   "devDependencies": {
-    "sqlite3": "^5"
+    "sqlite3": "^5",
+    "pm2": "^5.3.0"
   },
   "engines": {
     "node": "^16"
   },
+  "cds": {
+    "profile": "mtx-sidecar",
+    "[development]": {
+      "requires": { "auth": "dummy" }
+    }
+  },
   "scripts": {
-    "start": "cds run",
-    "build": "npm install && npx cds build ../.. --for mtx-sidecar && cd gen && npm install"
+    "start": "cds-serve",
+    "build": "cds build ../.. --for mtx-sidecar --production && cd gen && npm install"
   }
 }
