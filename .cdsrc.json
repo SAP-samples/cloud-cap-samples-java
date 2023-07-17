@@ -5,20 +5,10 @@
         "toggles": true
     },
     "build": {
-        "target": ".",
-        "tasks": [
-            {
-                "for": "java"
-            },
-            {
-                "for": "mtx-sidecar"
-            },
-            {
-                "for": "hana"
-            }
-        ]
+        "target": "."
     },
-    "hana": {
-        "deploy-format": "hdbtable"
-    }
+    "profiles": [
+        "with-mtx-sidecar",
+        "java"
+    ]
 }

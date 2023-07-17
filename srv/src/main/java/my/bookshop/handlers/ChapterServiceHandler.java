@@ -1,7 +1,7 @@
 package my.bookshop.handlers;
 
-import static com.sap.cds.services.cds.CdsService.EVENT_CREATE;
-import static com.sap.cds.services.cds.CdsService.EVENT_UPDATE;
+import static com.sap.cds.services.cds.CqnService.EVENT_CREATE;
+import static com.sap.cds.services.cds.CqnService.EVENT_UPDATE;
 
 import java.util.ArrayList;
 import java.util.HashSet;

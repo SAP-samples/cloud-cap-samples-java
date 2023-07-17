@@ -8,7 +8,10 @@ spring:
     enabled: true
 cds:
   odata-v4.endpoint.path: "/api"
-  multi-tenancy.mtxs.enabled: true
+  odata-v4.serializer.enabled: true
+  multi-tenancy:
+    compatibility.enabled: false
+    mtxs.enabled: true
   security:
     authentication.normalize-provider-tenant: true
     mock.users:
@@ -94,9 +97,23 @@ cds:
 
 ---
 spring:
+  config.activate.on-profile: ft
+cds:
+  model.provider.url: http://localhost:4005
+  security.mock.users:
+    admin:
+      features:
+      - isbn
+      - discount
+    user:
+      features:
+      - isbn
+
+---
+spring:
   config.activate.on-profile: local-mtxs
 cds:
-  multi-tenancy.sidecar.url: http://localhost:4004
+  multi-tenancy.sidecar.url: http://localhost:4005
   security.mock.users:
     admin:
       tenant: t1

@@ -3,9 +3,10 @@ package my.bookshop;
 import static cds.gen.adminservice.AdminService_.AUTHORS;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+
 import java.math.BigDecimal;
 import java.util.Collections;
-import javax.annotation.Resource;
+
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -24,6 +25,7 @@ import cds.gen.adminservice.Authors;
 import cds.gen.adminservice.OrderItems;
 import cds.gen.adminservice.Orders;
 import cds.gen.adminservice.Orders_;
+import jakarta.annotation.Resource;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest

@@ -9,9 +9,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 
-import org.apache.tomcat.util.http.fileupload.util.Streams;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -155,7 +155,7 @@ public class ChangeSetBasedValidationsITest {
 
 	@Test
 	public void testSuccessAndErrorBatches() throws Exception {
-		String batchSuccess = Streams.asString(Resources.getResource("batchSuccess.txt").openStream());
+		String batchSuccess = new String(Resources.getResource("batchSuccess.txt").openStream().readAllBytes(), StandardCharsets.UTF_8);
 		mockMvc.perform(post(batchURI).contentType("multipart/mixed; boundary=batch_1").content(batchSuccess))
 				.andExpect(status().isOk());
 
@@ -163,7 +163,7 @@ public class ChangeSetBasedValidationsITest {
 				.andExpect(status().isOk())
 				.andExpect(jsonPath("$.value[0].wordCount").value(44));
 
-		String batchError = Streams.asString(Resources.getResource("batchError.txt").openStream());
+		String batchError = new String(Resources.getResource("batchError.txt").openStream().readAllBytes(), StandardCharsets.UTF_8);
 		mockMvc.perform(post(batchURI).contentType("multipart/mixed; boundary=batch_1").content(batchError))
 				.andExpect(status().isOk())
 				.andExpect(content().string(containsString("HTTP/1.1 400 Bad Request")))
@@ -172,7 +172,7 @@ public class ChangeSetBasedValidationsITest {
 
 	@Test
 	public void testSuccessAndErrorBatchesV2() throws Exception {
-		String batchSuccess = Streams.asString(Resources.getResource("batchSuccessV2.txt").openStream()).replace("\n", "\r\n");
+		String batchSuccess = new String(Resources.getResource("batchSuccessV2.txt").openStream().readAllBytes(), StandardCharsets.UTF_8).replace("\n", "\r\n");
 		mockMvc.perform(post(batchURIV2).contentType("multipart/mixed; boundary=batch_1").content(batchSuccess))
 				.andExpect(status().isAccepted());
 
@@ -180,7 +180,7 @@ public class ChangeSetBasedValidationsITest {
 				.andExpect(status().isOk())
 				.andExpect(jsonPath("$.d.results[0].wordCount").value(44));
 
-		String batchError = Streams.asString(Resources.getResource("batchErrorV2.txt").openStream()).replace("\n", "\r\n");
+		String batchError = new String(Resources.getResource("batchErrorV2.txt").openStream().readAllBytes(), StandardCharsets.UTF_8).replace("\n", "\r\n");
 		mockMvc.perform(post(batchURIV2).contentType("multipart/mixed; boundary=batch_1").content(batchError))
 				.andExpect(status().isAccepted())
 				.andExpect(content().string(containsString("HTTP/1.1 400 Bad Request")))
@@ -189,7 +189,7 @@ public class ChangeSetBasedValidationsITest {
 
 	@Test
 	public void testCombinedBatch() throws Exception {
-		String batch = Streams.asString(Resources.getResource("batchCombined.txt").openStream());
+		String batch = new String(Resources.getResource("batchCombined.txt").openStream().readAllBytes(), StandardCharsets.UTF_8);
 		mockMvc.perform(post(batchURI).contentType("multipart/mixed; boundary=batch_1").content(batch))
 				.andExpect(status().isOk())
 				.andExpect(content().string(containsString("HTTP/1.1 201 Created")))
@@ -199,7 +199,7 @@ public class ChangeSetBasedValidationsITest {
 
 	@Test
 	public void testCombinedBatchV2() throws Exception {
-		String batch = Streams.asString(Resources.getResource("batchCombinedV2.txt").openStream()).replace("\n", "\r\n");
+		String batch = new String(Resources.getResource("batchCombinedV2.txt").openStream().readAllBytes(), StandardCharsets.UTF_8).replace("\n", "\r\n");
 		mockMvc.perform(post(batchURIV2).contentType("multipart/mixed; boundary=batch_1").content(batch))
 				.andExpect(status().isAccepted())
 				.andExpect(content().string(containsString("HTTP/1.1 201 Created")))

@@ -1,0 +1,185 @@
+{
+  "services": {
+    "LaunchPage": {
+      "adapter": {
+        "config": {
+          "catalogs": [],
+          "groups": [
+            {
+              "id": "Bookshop",
+              "title": "Bookshop",
+              "isPreset": true,
+              "isVisible": true,
+              "isGroupLocked": false,
+              "tiles": [
+                {
+                  "id": "browse-books",
+                  "tileType": "sap.ushell.ui.tile.StaticTile",
+                  "properties": {
+                    "targetURL": "#Books-display",
+                    "title": "Browse Books",
+                    "description": "Find your favorite book"
+                  }
+                }
+              ]
+            },
+            {
+              "id": "Administration",
+              "title": "Administration",
+              "isPreset": true,
+              "isVisible": true,
+              "isGroupLocked": false,
+              "tiles": [
+                {
+                  "id": "manage-books",
+                  "tileType": "sap.ushell.ui.tile.StaticTile",
+                  "properties": {
+                    "targetURL": "#Books-manage",
+                    "title": "Manage Books",
+                    "description": "Add/edit/delete books"
+                  }
+                },
+                {
+                  "id": "manage-orders",
+                  "tileType": "sap.ushell.ui.tile.StaticTile",
+                  "properties": {
+                    "targetURL": "#Orders-manage",
+                    "title": "Manage Orders",
+                    "description": "Find & manage orders"
+                  }
+                },
+                {
+                  "id": "manage-reviews",
+                  "tileType": "sap.ushell.ui.tile.StaticTile",
+                  "properties": {
+                    "targetURL": "#Reviews-manage",
+                    "title": "Manage Reviews",
+                    "description": "Add/edit/delete reviews"
+                  }
+                }
+              ]
+            },
+            {
+              "id": "Shipping",
+              "title": "Shipping",
+              "isPreset": true,
+              "isVisible": true,
+              "isGroupLocked": false,
+              "tiles": [
+                {
+                  "id": "manage-notes",
+                  "tileType": "sap.ushell.ui.tile.StaticTile",
+                  "properties": {
+                    "targetURL": "#Notes-manage",
+                    "title": "Manage Notes",
+                    "description": "Read & create notes for addresses"
+                  }
+                },
+                {
+                  "id": "show-addresses",
+                  "tileType": "sap.ushell.ui.tile.StaticTile",
+                  "properties": {
+                    "targetURL": "#Addresses-display",
+                    "title": "Show Shipping Addresses",
+                    "description": "Find the right shipping address"
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      }
+    },
+    "NavTargetResolution": {
+      "config": {
+        "enableClientSideTargetResolution": true
+      }
+    },
+    "ClientSideTargetResolution": {
+      "adapter": {
+        "config": {
+          "inbounds": {
+            "browse-books": {
+              "semanticObject": "Books",
+              "action": "display",
+              "signature": {
+                "parameters": {},
+                "additionalParameters": "allowed"
+              },
+              "resolutionResult": {
+                "applicationType": "SAPUI5",
+                "additionalInformation": "SAPUI5.Component=bookshop",
+                "url": "/browse/webapp"
+              }
+            },
+            "manage-books": {
+              "semanticObject": "Books",
+              "action": "manage",
+              "signature": {
+                "parameters": {},
+                "additionalParameters": "allowed"
+              },
+              "resolutionResult": {
+                "applicationType": "SAPUI5",
+                "additionalInformation": "SAPUI5.Component=admin",
+                "url": "/admin/webapp"
+              }
+            },
+            "manage-orders": {
+              "semanticObject": "Orders",
+              "action": "manage",
+              "signature": {
+                "parameters": {},
+                "additionalParameters": "allowed"
+              },
+              "resolutionResult": {
+                "applicationType": "SAPUI5",
+                "additionalInformation": "SAPUI5.Component=orders",
+                "url": "/orders/webapp"
+              }
+            },
+            "manage-reviews": {
+              "semanticObject": "Reviews",
+              "action": "manage",
+              "signature": {
+                "parameters": {},
+                "additionalParameters": "allowed"
+              },
+              "resolutionResult": {
+                "applicationType": "SAPUI5",
+                "additionalInformation": "SAPUI5.Component=reviews",
+                "url": "/reviews/webapp"
+              }
+            },
+            "manage-notes": {
+              "semanticObject": "Notes",
+              "action": "manage",
+              "signature": {
+                "parameters": {},
+                "additionalParameters": "allowed"
+              },
+              "resolutionResult": {
+                "applicationType": "SAPUI5",
+                "additionalInformation": "SAPUI5.Component=notes",
+                "url": "/notes/webapp"
+              }
+            },
+            "show-addresses": {
+              "semanticObject": "Addresses",
+              "action": "display",
+              "signature": {
+                "parameters": {},
+                "additionalParameters": "allowed"
+              },
+              "resolutionResult": {
+                "applicationType": "SAPUI5",
+                "additionalInformation": "SAPUI5.Component=addresses",
+                "url": "/addresses/webapp"
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
