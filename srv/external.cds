@@ -31,7 +31,7 @@ entity my.bookshop.Addresses as projection on external.A_BusinessPartnerAddress 
   false as tombstone: Boolean
 }
 
-/**
+/*
  * Extend Orders with references to replicated external Addresses
  */
 using { my.bookshop } from '../db/index';

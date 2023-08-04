@@ -17,7 +17,7 @@ entity my.bookshop.NoteableAddresses as select from API_BUSINESS_PARTNER.A_Busin
   notes
 };
 
-/**
+/*
  * Extend Notes with references to external Addresses.
  */
 using { my.bookshop } from '../db/index';
