@@ -2,6 +2,7 @@
   Common Annotations shared by all apps
 */
 using {my.bookshop as my} from '../db/index';
+using {sap.common as common} from '@sap/cds/common';
 
 
 ////////////////////////////////////////////////////////////////////////////
@@ -158,8 +159,6 @@ annotate my.Reviews with {
         Text : book.title,
         TextArrangement : #TextOnly
     };
-    date
-    @title : '{i18n>Date}';
     rating
     @title : '{i18n>Rating}';
     text
@@ -382,25 +381,9 @@ annotate common.Currencies with
         {Value : descr}
     ]},
     FieldGroup #Extended : {Data : [
-        {Value : numcode},
-        {Value : minor},
-        {Value : exponent}
+        {Value : minorUnit}
     ]},
 });
-
-
-////////////////////////////////////////////////////////////////////////////
-//
-//	Currencies Elements
-//
-annotate common.Currencies with {
-    numcode
-    @title : '{i18n>NumCode}';
-    minor
-    @title : '{i18n>MinorUnit}';
-    exponent
-    @title : '{i18n>Exponent}';
-}
 
 ////////////////////////////////////////////////////////////////////////////
 //
