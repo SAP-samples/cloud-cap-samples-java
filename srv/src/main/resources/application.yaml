@@ -97,6 +97,28 @@ cds:
 
 ---
 spring:
+  config.activate.on-profile: kafka-messaging-cloud
+  sql.init.schema-locations: "classpath:schema-nomocks.sql"
+cds:
+  messaging.services:
+    bupa-messaging:
+      binding: bookshop-mt-messaging-kafka
+      queue:
+        channel: cds.default.cdsjava-testing
+      enabled: true
+  application.services:
+    api-business-partner-mocked:
+      model: API_BUSINESS_PARTNER
+      serve:
+        path: API_BUSINESS_PARTNER
+  remote.services:
+    '[API_BUSINESS_PARTNER]':
+      destination:
+        name: "myself"
+        suffix: "/api"
+
+---
+spring:
   config.activate.on-profile: ft
 cds:
   model.provider.url: http://localhost:4005
