@@ -104,7 +104,8 @@ cds:
     bupa-messaging:
       binding: bookshop-mt-messaging-kafka
       queue:
-        channel: cds.default.cdsjava-testing
+        config:
+          channel: cds.default.cdsjava-testing
       enabled: true
   application.services:
     api-business-partner-mocked:
