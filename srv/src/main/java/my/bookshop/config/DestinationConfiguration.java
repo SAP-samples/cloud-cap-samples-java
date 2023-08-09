@@ -13,7 +13,7 @@ import com.sap.cloud.sdk.cloudplatform.connectivity.DestinationAccessor;
 import com.sap.cloud.sdk.cloudplatform.security.BasicCredentials;
 
 @Component
-@Profile("mocked")
+@Profile("mocked,mocked-api-business-partner")
 public class DestinationConfiguration {
 
 	@Autowired
