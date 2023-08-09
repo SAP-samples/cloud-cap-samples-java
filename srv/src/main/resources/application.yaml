@@ -100,6 +100,8 @@ spring:
   config.activate.on-profile: kafka-messaging-cloud
   sql.init.schema-locations: "classpath:schema-nomocks.sql"
 cds:
+  security:
+    authentication.normalize-provider-tenant: false
   messaging.services:
     bupa-messaging:
       binding: bookshop-mt-messaging-kafka
