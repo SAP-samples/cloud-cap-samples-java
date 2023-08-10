@@ -1,8 +1,11 @@
 package my.bookshop.config;
 
+import java.util.Collections;
 import java.util.Map;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
+import org.apache.http.HttpHeaders;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +21,11 @@ import com.sap.cloud.environment.servicebinding.api.ServiceBinding;
 import com.sap.cloud.sdk.cloudplatform.connectivity.DefaultDestinationLoader;
 import com.sap.cloud.sdk.cloudplatform.connectivity.DefaultHttpDestination;
 import com.sap.cloud.sdk.cloudplatform.connectivity.DestinationAccessor;
+import com.sap.cloud.sdk.cloudplatform.connectivity.DestinationProperty;
 import com.sap.cloud.sdk.cloudplatform.connectivity.OAuth2DestinationBuilder;
+import com.sap.cloud.sdk.cloudplatform.connectivity.OAuth2DestinationBuilder.BuilderWithTargetUrl;
+import com.sap.cloud.sdk.cloudplatform.connectivity.OAuth2ServiceImpl;
+import com.sap.cloud.sdk.cloudplatform.connectivity.OAuthHeaderProvider;
 import com.sap.cloud.sdk.cloudplatform.connectivity.OnBehalfOf;
 import com.sap.cloud.sdk.cloudplatform.security.BasicCredentials;
 import com.sap.cloud.security.config.ClientCertificate;
@@ -66,6 +73,7 @@ public class DestinationConfiguration {
 										.forTargetUrl(applicationUrl)
 										.withTokenEndpoint(tokenUrl)
 										.withClient((ClientIdentity)client, OnBehalfOf.NAMED_USER_CURRENT_TENANT)
+										.withProperties(Collections.singletonMap(DestinationProperty.NAME.getKeyName(), destinationName))
 										.build()));
 	}
 
