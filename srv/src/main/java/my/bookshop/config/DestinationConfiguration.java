@@ -32,12 +32,15 @@ public class DestinationConfiguration {
 	@EventListener
 	void applicationReady(ApplicationReadyEvent ready) {
 		Integer port = environment.getProperty("local.server.port", Integer.class);
-		String applicationUrl = runtime.getEnvironment().getApplicationInfo().getUrl();
 		String destinationName = environment.getProperty("cds.remote.services.'[API_BUSINESS_PARTNER]'.destination.name");
 
 		logger.info("Application URL: {}", applicationUrl);
 
 		if(port != null && destinationName != null) {
+			String applicationUrl = runtime.getEnvironment().getApplicationInfo().getUrl();
+
+			logger.info("Application URL for mocked API_BUSINESS_PARTNER service: {}", applicationUrl);
+
 			DefaultHttpDestination httpDestination = DefaultHttpDestination
 			.builder("http://localhost:" + port)
 			.basicCredentials(new BasicCredentials("authenticated", ""))
