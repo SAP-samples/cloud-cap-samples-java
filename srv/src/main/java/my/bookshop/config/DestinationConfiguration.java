@@ -62,7 +62,7 @@ public class DestinationConfiguration {
 				new DefaultDestinationLoader()
 						.registerDestination(
 								OAuth2DestinationBuilder
-										.forTargetUrl(applicationUrl)
+										.forTargetUrl("https://" + applicationUrl + "/")
 										.withTokenEndpoint(tokenUrl)
 										.withClient((ClientIdentity)client, OnBehalfOf.NAMED_USER_CURRENT_TENANT)
 										.withProperties(Collections.singletonMap(DestinationProperty.NAME.getKeyName(), destinationName))
