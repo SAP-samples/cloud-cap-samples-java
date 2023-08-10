@@ -11,11 +11,13 @@ import org.springframework.context.event.EventListener;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 
+import com.sap.cds.integration.cloudsdk.destination.DestinationResolver;
 import com.sap.cds.services.runtime.CdsRuntime;
 import com.sap.cloud.environment.servicebinding.api.ServiceBinding;
 import com.sap.cloud.sdk.cloudplatform.connectivity.DefaultDestinationLoader;
 import com.sap.cloud.sdk.cloudplatform.connectivity.DefaultHttpDestination;
 import com.sap.cloud.sdk.cloudplatform.connectivity.DestinationAccessor;
+import com.sap.cloud.sdk.cloudplatform.connectivity.OnBehalfOf;
 import com.sap.cloud.sdk.cloudplatform.security.BasicCredentials;
 
 @Component
@@ -45,8 +47,13 @@ public class DestinationConfiguration {
 	private void registerCloudDestination(String applicationUrl) {
 		String destinationName = environment.getProperty("cds.remote.services.'[API_BUSINESS_PARTNER]'.destination.name");
 
-		logger.info("TEST BINDINGS: {}", runtime.getEnvironment().getServiceBindings().map(ServiceBinding::getName).collect(Collectors.toList()));
-		//DestinationResolver.getDestinationForXsuaaBasedServiceBinding(applicationUrl, null, OnBehalfOf.NAMED_USER_CURRENT_TENANT);
+		ServiceBinding uaaBinding = runtime.getEnvironment().getServiceBindings().filter(b -> b.getName().get().equals("bookshop-mt-messaging-uaa")).findFirst().get();
+		logger.info("UAA Service Binding: {} / {}", uaaBinding.getName(), uaaBinding.getServiceName().get());
+		DestinationAccessor.prependDestinationLoader(
+				new DefaultDestinationLoader()
+						.registerDestination(
+								DestinationResolver
+										.getDestinationForXsuaaBasedServiceBinding(applicationUrl, uaaBinding, OnBehalfOf.NAMED_USER_CURRENT_TENANT)));
 	}
 
 	private void registerLocalDestination() {
