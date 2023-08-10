@@ -34,8 +34,6 @@ public class DestinationConfiguration {
 		Integer port = environment.getProperty("local.server.port", Integer.class);
 		String destinationName = environment.getProperty("cds.remote.services.'[API_BUSINESS_PARTNER]'.destination.name");
 
-		logger.info("Application URL: {}", applicationUrl);
-
 		if(port != null && destinationName != null) {
 			String applicationUrl = runtime.getEnvironment().getApplicationInfo().getUrl();
 
