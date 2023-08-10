@@ -40,13 +40,27 @@ public class DestinationConfiguration {
 			logger.info("Application URL for mocked API_BUSINESS_PARTNER service: {}", applicationUrl);
 
 			DefaultHttpDestination httpDestination = DefaultHttpDestination
-			.builder("http://localhost:" + port)
+			.builder(buildUrl(applicationUrl, port))
 			.basicCredentials(new BasicCredentials("authenticated", ""))
 			.name(destinationName).build();
 
 			DestinationAccessor.prependDestinationLoader(
 				new DefaultDestinationLoader().registerDestination(httpDestination));
 		}
+	}
+
+	private String buildUrl(String applicationUrl, Integer port) {
+		String url;
+
+		if (applicationUrl != null) {
+			url = "https://" + applicationUrl + ":" + port;
+		} else {
+			url = "http://localhost:" + port;
+		}
+
+		logger.info("Application URL for mocked API_BUSINESS_PARTNER service: {}", url);
+
+		return url;
 	}
 
 }
