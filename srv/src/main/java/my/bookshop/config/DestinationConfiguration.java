@@ -1,5 +1,6 @@
 package my.bookshop.config;
 
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
@@ -17,8 +18,12 @@ import com.sap.cloud.environment.servicebinding.api.ServiceBinding;
 import com.sap.cloud.sdk.cloudplatform.connectivity.DefaultDestinationLoader;
 import com.sap.cloud.sdk.cloudplatform.connectivity.DefaultHttpDestination;
 import com.sap.cloud.sdk.cloudplatform.connectivity.DestinationAccessor;
+import com.sap.cloud.sdk.cloudplatform.connectivity.OAuth2DestinationBuilder;
 import com.sap.cloud.sdk.cloudplatform.connectivity.OnBehalfOf;
 import com.sap.cloud.sdk.cloudplatform.security.BasicCredentials;
+import com.sap.cloud.security.config.ClientCertificate;
+import com.sap.cloud.security.config.ClientCredentials;
+import com.sap.cloud.security.config.ClientIdentity;
 
 @Component
 @Profile({"mocked", "mocked-api-business-partner"})
@@ -47,13 +52,21 @@ public class DestinationConfiguration {
 	private void registerCloudDestination(String applicationUrl) {
 		String destinationName = environment.getProperty("cds.remote.services.'[API_BUSINESS_PARTNER]'.destination.name");
 
-		ServiceBinding uaaBinding = runtime.getEnvironment().getServiceBindings().filter(b -> b.getName().get().equals("bookshop-mt-messaging-uaa")).findFirst().get();
-		logger.info("UAA Service Binding: {} / {}", uaaBinding.getName(), uaaBinding.getServiceName().get());
+		ServiceBinding uaaBinding = runtime.getEnvironment().getServiceBindings().filter(b -> b.getServiceName().get().equals("xsuaa")).findFirst().get();
+		logger.info("UAA Service Binding: {} / {}", uaaBinding.getName().get(), uaaBinding.getServiceName().get());
+
+		Map<String, Object> credentials = uaaBinding.getCredentials();
+		Object client = new ClientCredentials((String)credentials.get("clientid"), (String)credentials.get("clientsecret"));
+		String tokenUrl = (String)credentials.get("url");
+
 		DestinationAccessor.prependDestinationLoader(
 				new DefaultDestinationLoader()
 						.registerDestination(
-								DestinationResolver
-										.getDestinationForXsuaaBasedServiceBinding(applicationUrl, uaaBinding, OnBehalfOf.NAMED_USER_CURRENT_TENANT)));
+								OAuth2DestinationBuilder
+										.forTargetUrl(applicationUrl)
+										.withTokenEndpoint(tokenUrl)
+										.withClient((ClientIdentity)client, OnBehalfOf.NAMED_USER_CURRENT_TENANT)
+										.build()));
 	}
 
 	private void registerLocalDestination() {

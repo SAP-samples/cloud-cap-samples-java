@@ -24,7 +24,6 @@ modules:
         - mvn clean package -DskipTests=true
       build-result: target/*-exec.jar
     requires:
-      - name: bookshop-mt-messaging-srv
       - name: bookshop-mt-messaging-kafka
       - name: bookshop-mt-messaging-service-manager
       - name: bookshop-mt-messaging-uaa
