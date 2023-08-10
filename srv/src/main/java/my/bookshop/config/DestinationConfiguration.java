@@ -58,7 +58,7 @@ public class DestinationConfiguration {
 			url = "http://localhost:" + port;
 		}
 
-		logger.info("Application URL for mocked API_BUSINESS_PARTNER service: {}", url);
+		logger.info("Destination URL for mocked API_BUSINESS_PARTNER service: {}", url);
 
 		return url;
 	}
