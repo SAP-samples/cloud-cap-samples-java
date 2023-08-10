@@ -1,6 +1,5 @@
 package my.bookshop.config;
 
-import java.util.List;
 import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
@@ -12,12 +11,11 @@ import org.springframework.context.event.EventListener;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 
-import com.sap.cds.integration.cloudsdk.destination.DestinationResolver;
 import com.sap.cds.services.runtime.CdsRuntime;
+import com.sap.cloud.environment.servicebinding.api.ServiceBinding;
 import com.sap.cloud.sdk.cloudplatform.connectivity.DefaultDestinationLoader;
 import com.sap.cloud.sdk.cloudplatform.connectivity.DefaultHttpDestination;
 import com.sap.cloud.sdk.cloudplatform.connectivity.DestinationAccessor;
-import com.sap.cloud.sdk.cloudplatform.connectivity.OnBehalfOf;
 import com.sap.cloud.sdk.cloudplatform.security.BasicCredentials;
 
 @Component
@@ -38,16 +36,16 @@ public class DestinationConfiguration {
 
 		if (applicationUrl != null) {
 			// it seems we're running in the cloud
-			recisterCloudDestination(applicationUrl);
+			registerCloudDestination(applicationUrl);
 		} else {
 			registerLocalDestination();
 		}
 	}
 
-	private void recisterCloudDestination(String applicationUrl) {
+	private void registerCloudDestination(String applicationUrl) {
 		String destinationName = environment.getProperty("cds.remote.services.'[API_BUSINESS_PARTNER]'.destination.name");
 
-		logger.info("TEST BINDINGS: {}", runtime.getEnvironment().getServiceBindings().collect(Collectors.toList()));
+		logger.info("TEST BINDINGS: {}", runtime.getEnvironment().getServiceBindings().map(ServiceBinding::getName).collect(Collectors.toList()));
 		//DestinationResolver.getDestinationForXsuaaBasedServiceBinding(applicationUrl, null, OnBehalfOf.NAMED_USER_CURRENT_TENANT);
 	}
 
