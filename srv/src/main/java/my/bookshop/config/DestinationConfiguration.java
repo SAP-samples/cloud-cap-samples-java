@@ -53,7 +53,7 @@ public class DestinationConfiguration {
 		String url;
 
 		if (applicationUrl != null) {
-			url = "https://" + applicationUrl + ":" + port;
+			url = "https://" + applicationUrl;
 		} else {
 			url = "http://localhost:" + port;
 		}
