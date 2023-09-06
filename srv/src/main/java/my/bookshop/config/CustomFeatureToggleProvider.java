@@ -12,7 +12,7 @@ import com.sap.cds.services.request.UserInfo;
 import com.sap.cds.services.runtime.FeatureTogglesInfoProvider;
 
 @Component
-@Profile("cloud") // locally, feature toggles are configured directly with mock users
+@Profile({"cloud", "kafka-messaging-cloud"}) // locally, feature toggles are configured directly with mock users
 public class CustomFeatureToggleProvider implements FeatureTogglesInfoProvider {
 
 	@Override
