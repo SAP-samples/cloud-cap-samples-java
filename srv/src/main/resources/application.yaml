@@ -104,7 +104,7 @@ cds:
   security:
     authentication.normalize-provider-tenant: false
   data-source:
-    auto-config.enabled: false
+    auto-config.enabled: true
   messaging.services:
     bupa-messaging:
       binding: bookshop-mt-messaging-kafka
