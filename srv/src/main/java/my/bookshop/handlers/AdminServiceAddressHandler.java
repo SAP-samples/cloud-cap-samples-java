@@ -124,7 +124,9 @@ public class AdminServiceAddressHandler implements EventHandler {
 	@On(service = ApiBusinessPartner_.CDS_NAME)
 	public void updateBusinessPartnerAddresses(BusinessPartnerChangedContext context) {
 		logger.info(">> received: " + context.getData());
-		logger.info("BusinessPartnerChanged event received for tenant id = {} and user = {}", context.getUserInfo().getTenant(), context.getUserInfo().getName());
+		logger.info("BusinessPartnerChanged event received for tenant id = {}. User Info: name = {}, id = {}, attributes = {}, additional attributes = {}",
+				context.getUserInfo().getTenant(), context.getUserInfo().getName(), context.getUserInfo().getId(),
+				context.getUserInfo().getAttributes(), context.getUserInfo().getAdditionalAttributes());
 
 		String businessPartner = context.getData().getBusinessPartner();
 
