@@ -9,14 +9,6 @@
             <appender-ref ref="STDOUT-JSON" />
          </root>
     </springProfile>
-    <springProfile name="kafka-messaging-cloud">
-        <appender name="STDOUT-JSON" class="ch.qos.logback.core.ConsoleAppender">
-            <encoder class="com.sap.hcp.cf.logback.encoder.JsonEncoder"/>
-        </appender>
-        <root level="${LOG_ROOT_LEVEL:-INFO}">
-            <appender-ref ref="STDOUT-JSON" />
-        </root>
-    </springProfile>
     <springProfile name="!cloud">
         <include resource="org/springframework/boot/logging/logback/base.xml" />
         <logger name="com.sap.hcp.cf.logging.servlet.filter.RequestLogger" level="WARN" />
