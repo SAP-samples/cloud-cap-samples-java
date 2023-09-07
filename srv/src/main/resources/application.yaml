@@ -113,6 +113,10 @@ cds:
         config:
           channel: cds.default.cdsjava-testing
       enabled: true
+      outbox:
+        enabled: false
+        persistent:
+          enabled: false
   application.services:
     api-business-partner-mocked:
       model: API_BUSINESS_PARTNER
