@@ -51,6 +51,8 @@ public class DestinationConfiguration {
 	private void registerCloudDestination(String applicationUrl) {
 		String destinationName = environment.getProperty("cds.remote.services.'[API_BUSINESS_PARTNER]'.destination.name");
 
+		logger.info("Destination name for mocked API_BUSINESS_PARTNER: {}", destinationName);
+
 		ServiceBinding uaaBinding = runtime.getEnvironment().getServiceBindings().filter(b -> b.getServiceName().get().equals("xsuaa")).findFirst().get();
 		logger.info("UAA Service Binding: {} / {}", uaaBinding.getName().get(), uaaBinding.getServiceName().get());
 
