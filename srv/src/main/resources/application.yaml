@@ -5,6 +5,7 @@ logging:
     '[com.sap.cds.persistence.sql]': DEBUG
     '[com.sap.cds.persistence.sql-tx]': DEBUG
     '[com.sap.cds.messaging]': DEBUG
+    '[com.sap.cds.services]': DEBUG
 spring:
   web.resources.static-locations: "file:./app"
   jmx:
