@@ -118,6 +118,9 @@ cds:
 #        enabled: false
 #        persistent:
 #          enabled: false
+      outbox:
+        persistent:
+          tenants-info-refresh-interval: 5
   application.services:
     api-business-partner-mocked:
       model: API_BUSINESS_PARTNER
