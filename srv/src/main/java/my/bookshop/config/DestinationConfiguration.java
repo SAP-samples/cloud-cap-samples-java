@@ -66,7 +66,7 @@ public class DestinationConfiguration {
 								OAuth2DestinationBuilder
 										.forTargetUrl("https://" + applicationUrl + "/")
 										.withTokenEndpoint(tokenUrl)
-										.withClient((ClientIdentity)client, OnBehalfOf.NAMED_USER_CURRENT_TENANT)
+										.withClient((ClientIdentity)client, OnBehalfOf.TECHNICAL_USER_CURRENT_TENANT)
 										.withProperties(Collections.singletonMap(DestinationProperty.NAME.getKeyName(), destinationName))
 										.build()));
 	}
