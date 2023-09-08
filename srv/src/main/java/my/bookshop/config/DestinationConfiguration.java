@@ -58,7 +58,7 @@ public class DestinationConfiguration {
 
 		Map<String, Object> credentials = uaaBinding.getCredentials();
 		Object client = new ClientCredentials((String)credentials.get("clientid"), (String)credentials.get("clientsecret"));
-		String tokenUrl = (String)credentials.get("url");
+		String tokenUrl = (String)credentials.get("url") + "/oauth/token";
 
 		DestinationAccessor.prependDestinationLoader(
 				new DefaultDestinationLoader()
