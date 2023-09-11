@@ -193,6 +193,13 @@
 					</execution>
 
 					<execution>
+						<id>cds.resolve</id>
+						<goals>
+							<goal>resolve</goal>
+						</goals>
+					</execution>
+
+					<execution>
 						<id>cds.build</id>
 						<goals>
 							<goal>cds</goal>
