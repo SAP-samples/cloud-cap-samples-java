@@ -9,6 +9,8 @@ import java.util.Collections;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.test.context.support.WithMockUser;
@@ -25,14 +27,14 @@ import cds.gen.adminservice.Authors;
 import cds.gen.adminservice.OrderItems;
 import cds.gen.adminservice.Orders;
 import cds.gen.adminservice.Orders_;
-import jakarta.annotation.Resource;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
 @AutoConfigureMockMvc
 public class AdminServiceTest {
 
-	@Resource(name = AdminService_.CDS_NAME)
+	@Autowired
+	@Qualifier(AdminService_.CDS_NAME)
 	private DraftService adminService;
 
 	@Test
