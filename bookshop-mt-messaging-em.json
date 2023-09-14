@@ -1,0 +1,30 @@
+{
+  "emname": "bookshop-mt-messaging-em",
+  "namespace": "z/bookshopmtmessagingem/-",
+  "instanceType": "reuse",
+  "authorities": ["$ACCEPT_GRANTED_AUTHORITIES"],
+  "version": "1.1.0",
+  "options": {
+    "management": true,
+    "messaging": true,
+    "messagingrest": true
+  },
+  "rules": {
+    "queueRules": {
+      "publishFilter": [
+        "${namespace}/*"
+      ],
+      "subscribeFilter": [
+        "${namespace}/*"
+      ]
+    },
+    "topicRules": {
+      "publishFilter": [
+        "${namespace}/*"
+      ],
+      "subscribeFilter": [
+        "${namespace}/*"
+      ]
+    }
+  }
+}

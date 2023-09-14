@@ -25,6 +25,7 @@ modules:
       build-result: target/*-exec.jar
     requires:
       - name: bookshop-mt-messaging-kafka
+      - name: bookshop-mt-messaging-em
       - name: bookshop-mt-messaging-service-manager
       - name: bookshop-mt-messaging-uaa
       - name: bookshop-mt-messaging-saas-registry
@@ -97,6 +98,12 @@ resources:
       service-plan: reference
       config:
         advertisement: "3315eb2d-3142-4ed5-91ab-1c3665fef3a8"
+  - name: bookshop-mt-messaging-em
+    type: org.cloudfoundry.managed-service
+    parameters:
+      service: enterprise-messaging
+      service-plan: default
+      path: bookshop-mt-messaging-em.json
   - name: bookshop-mt-messaging-uaa
     type: org.cloudfoundry.managed-service
     parameters:
