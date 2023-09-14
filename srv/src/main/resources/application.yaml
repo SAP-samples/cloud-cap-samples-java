@@ -136,6 +136,9 @@ cds:
     em-messaging:
       binding: bookshop-mt-messaging-em
       enabled: false
+    mq-messaging:
+      binding: bookshop-mt-messaging-mq
+      enabled: false
 
 ---
 spring:
@@ -147,6 +150,28 @@ cds:
       enabled: false
     bupa-messaging:
       binding: bookshop-mt-messaging-em
+      enabled: true
+      outbox:
+        enabled: false
+        persistent:
+          enabled: false
+    mq-messaging:
+      binding: bookshop-mt-messaging-mq
+      enabled: false
+
+---
+spring:
+  config.activate.on-profile: mq-messaging-cloud
+cds:
+  messaging.services:
+    kafka-messaging:
+      binding: bookshop-mt-messaging-kafka
+      enabled: false
+    em-messaging:
+      binding: bookshop-mt-messaging-em
+      enabled: false
+    bupa-messaging:
+      binding: bookshop-mt-messaging-mq
       enabled: true
       outbox:
         enabled: false

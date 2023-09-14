@@ -26,6 +26,7 @@ modules:
     requires:
       - name: bookshop-mt-messaging-kafka
       - name: bookshop-mt-messaging-em
+      - name: bookshop-mt-messaging-mq
       - name: bookshop-mt-messaging-service-manager
       - name: bookshop-mt-messaging-uaa
       - name: bookshop-mt-messaging-saas-registry
@@ -104,6 +105,12 @@ resources:
       service: enterprise-messaging
       service-plan: default
       path: bookshop-mt-messaging-em.json
+  - name: bookshop-mt-messaging-mq
+    type: org.cloudfoundry.managed-service
+    parameters:
+      service: message-queuing
+      service-plan: standard
+      path: bookshop-mt-messaging-mq.json
   - name: bookshop-mt-messaging-uaa
     type: org.cloudfoundry.managed-service
     parameters:

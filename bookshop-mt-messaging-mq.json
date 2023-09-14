@@ -1,0 +1,14 @@
+{
+  "notificationsEnabled": false,
+  "resources": {
+    "units": "100"
+  },
+  "sourceIPs": "0.0.0.0/0",
+  "xs-security": {
+    "oauth2-configuration": {
+      "credential-types": [
+        "binding-secret"
+      ]
+    }
+  }
+}
