@@ -15,7 +15,7 @@ import com.sap.cds.services.mt.SubscribeEventContext;
  * Handler that implements subscription logic
  */
 @Component
-@Profile({"cloud", "kafka-messaging-cloud"})
+@Profile({"cloud", "messaging-cloud"})
 @ServiceName(DeploymentService.DEFAULT_NAME)
 class SubscriptionHandler implements EventHandler {
 

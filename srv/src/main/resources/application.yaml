@@ -101,12 +101,27 @@ cds:
 
 ---
 spring:
-  config.activate.on-profile: kafka-messaging-cloud
+  config.activate.on-profile: messaging-cloud
 cds:
   security:
     authentication.normalize-provider-tenant: false
   data-source:
     auto-config.enabled: true
+  application.services:
+    api-business-partner-mocked:
+      model: API_BUSINESS_PARTNER
+      serve:
+        path: API_BUSINESS_PARTNER
+  remote.services:
+    '[API_BUSINESS_PARTNER]':
+      destination:
+        name: "myself"
+        suffix: "/api"
+
+---
+spring:
+  config.activate.on-profile: kafka-messaging-cloud
+cds:
   messaging.services:
     bupa-messaging:
       binding: bookshop-mt-messaging-kafka
@@ -118,16 +133,6 @@ cds:
         enabled: false
         persistent:
           enabled: false
-  application.services:
-    api-business-partner-mocked:
-      model: API_BUSINESS_PARTNER
-      serve:
-        path: API_BUSINESS_PARTNER
-  remote.services:
-    '[API_BUSINESS_PARTNER]':
-      destination:
-        name: "myself"
-        suffix: "/api"
 
 ---
 spring:
