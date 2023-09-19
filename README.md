@@ -58,6 +58,9 @@ Framework and Infrastructure related Features:
 - Application Router configuration including authentication via the XSUAA Service. See [package.json](app/package.json), [xs-app.json](app/xs-app.json) and [xs-security.json](xs-security.json)
 - [Multitenancy configuration](https://cap.cloud.sap/docs/java/multitenancy) via [mta-multi-tenant.yaml](mta-multi-tenant.yaml), [.cdsrc.json](.cdsrc.json), [sidecar module](mtx-sidecar)
 - [Feature toggles](https://cap.cloud.sap/docs/guides/extensibility/feature-toggles?impl-variant=java#limitations). In CF, features can be toggled by assigning the roles `expert` or `premium-customer` to the user.
+- [Messaging configuration and handlers](https://cap.cloud.sap/docs/java/messaging-foundation) with local messaging and message brokers.
+- Consumption of [Remote services](https://cap.cloud.sap/docs/java/remote-services) in [srv/notes-mashup.cds]
+
 
 Domain Model related Features:
 
@@ -73,7 +76,7 @@ Service Model related Features:
 - [Custom actions](https://cap.cloud.sap/docs/cds/cdl#actions) such as `addToOrder` in the [Admin Service](srv/admin-service.cds). The Action implementation is in the [Admin Service Event Handler](srv/src/main/java/my/bookshop/handlers/AdminServiceHandler.java)
 - Add annotations for [searchable elements](https://github.wdf.sap.corp/pages/cap/java/query-api#select) in the [Admin Service](srv/admin-service.cds)
 - [Localized Messages](https://cap.cloud.sap/docs/java/indicating-errors) in the [Admin Service Event Handler](srv/src/main/java/my/bookshop/handlers/AdminServiceHandler.java)
-- role-based restrictions in [AdminService](srv/admin-service.cds) and [ReviewService](srv/review-service.cds)
+- role- and instance-based restrictions in [AdminService](srv/admin-service.cds) and [ReviewService](srv/review-service.cds)
 - Use of [`@cds.persistence.skip`](https://cap.cloud.sap/docs/advanced/hana#cdspersistenceskip) in [AdminService](srv/admin-service.cds)
 - [Media Data](https://cap.cloud.sap/docs/guides/providing-services#media-data) processing in the [Admin Service Event Handler](srv/src/main/java/my/bookshop/handlers/AdminServiceHandler.java)
 
