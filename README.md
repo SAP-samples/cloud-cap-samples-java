@@ -59,8 +59,7 @@ Framework and Infrastructure related Features:
 - [Multitenancy configuration](https://cap.cloud.sap/docs/java/multitenancy) via [mta-multi-tenant.yaml](mta-multi-tenant.yaml), [.cdsrc.json](.cdsrc.json), [sidecar module](mtx-sidecar)
 - [Feature toggles](https://cap.cloud.sap/docs/guides/extensibility/feature-toggles?impl-variant=java#limitations). In CF, features can be toggled by assigning the roles `expert` or `premium-customer` to the user.
 - [Messaging configuration and handlers](https://cap.cloud.sap/docs/java/messaging-foundation) with local messaging and message brokers.
-- Consumption of [Remote services](https://cap.cloud.sap/docs/java/remote-services) in [srv/notes-mashup.cds]
-
+- Consumption of [Remote services](https://cap.cloud.sap/docs/java/remote-services) in [srv/external.cds] and [srv/notes-mashup.cds]
 
 Domain Model related Features:
 
