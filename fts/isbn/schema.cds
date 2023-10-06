@@ -5,7 +5,7 @@ using {my.bookshop as my} from '../../db/index';
 // domain model
 
 extend my.Books with {
-    isbn : String(40);
+    isbn : String(40) @cds.collate: false;
 }
 
 // Feature 'isbn' will display ISBN in table and on object page
