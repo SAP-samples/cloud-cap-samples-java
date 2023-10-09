@@ -13,11 +13,11 @@ modules:
     parameters:
       memory: 1024M
       disk-quota: 512M
-      buildpack: sap_java_buildpack
+      buildpack: java_buildpack
     properties:
         SPRING_PROFILES_ACTIVE: cloud
-        JBP_CONFIG_COMPONENTS: "jres: ['com.sap.xs.java.buildpack.jre.SAPMachineJRE']"
-        JBP_CONFIG_SAP_MACHINE_JRE: '{ use_offline_repository: false, version: 17.+ }'
+        JBP_CONFIG_COMPONENTS: '{jres: ["JavaBuildpack::Jre::SapMachineJRE"]}'
+        JBP_CONFIG_SAP_MACHINE_JRE: '{ jre: { version: "17.+" } }'
     build-parameters:
       builder: custom
       commands:

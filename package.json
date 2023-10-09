@@ -6,6 +6,6 @@
     "repository": "https://github.com/SAP-samples/cloud-cap-samples-java.git",
     "devDependencies": {
         "@sap/cds-dk": "^7.2",
-        "@cap-js/postgres": "^1.1"
+        "@cap-js/postgres": "~1.2"
     }
 }
