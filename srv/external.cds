@@ -34,7 +34,7 @@ entity my.bookshop.Addresses as projection on external.A_BusinessPartnerAddress 
 /*
  * Extend Orders with references to replicated external Addresses
  */
-using { my.bookshop } from '../db/index';
-extend bookshop.Orders with {
-  shippingAddress : Association to bookshop.Addresses;
+using { my.bookshop.Orders } from '../db/index';
+extend Orders with {
+  shippingAddress : Association to my.bookshop.Addresses;
 }
