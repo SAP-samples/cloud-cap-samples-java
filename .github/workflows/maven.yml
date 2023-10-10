@@ -5,9 +5,13 @@ name: Java CI with Maven
 
 on:
   push:
-    branches: [ main, postgres ]
+    branches:
+      - main
+      - postgres
   pull_request:
-    branches: [ main, postrgres ]
+    branches: 
+      - main
+      - postgres
 
 jobs:
   build:
