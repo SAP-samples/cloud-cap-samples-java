@@ -14,7 +14,7 @@ databaseChangeLog:
             dbms: postgresql
             path: db/changelog/v2/model.sql
   - changeSet:
-      id: "current development"
+      id: "development"
       author: CAP Java
       changes:
         - sqlFile:
