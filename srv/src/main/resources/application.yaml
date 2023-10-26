@@ -3,7 +3,6 @@ my.bookshop.postgresImage: postgres:13
 
 spring:
   web.resources.static-locations: "file:./app"
-  devtools.restart.trigger-file: ".reloadtrigger"
 
 cds:
   dataSource.csv:
