@@ -20,11 +20,13 @@ cds:
 ---
 spring:
   config.activate.on-profile: cloud
+  liquibase.contexts: "!dev"
 
 ---
 spring:
   config.activate.on-profile: default
+  liquibase.contexts: "dev"
 cds:
   dataSource:
     auto-config.enabled: false
-    
+

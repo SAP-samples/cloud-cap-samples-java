@@ -1,2 +1,5 @@
 !*.sql
 !*.json
+/dev/*.sql
+/dev/*.csn
+/dev/*.json

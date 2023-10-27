@@ -13,3 +13,11 @@ databaseChangeLog:
         - sqlFile:
             dbms: postgresql
             path: db/changelog/v2/model.sql
+  - changeSet:
+      id: "development"
+      author: CAP Java
+      contextFilter: dev
+      changes:
+        - sqlFile:
+            dbms: postgresql
+            path: db/changelog/dev/model.sql
