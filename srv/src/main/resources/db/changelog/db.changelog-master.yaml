@@ -16,6 +16,7 @@ databaseChangeLog:
   - changeSet:
       id: "development"
       author: CAP Java
+      context: dev
       changes:
         - sqlFile:
             dbms: postgresql
