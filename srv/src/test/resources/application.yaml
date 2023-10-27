@@ -1,5 +1,0 @@
----
-my.bookshop.postgresImage: postgres:13
-
-spring:
-  liquibase.contexts: dev
