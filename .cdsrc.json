@@ -1,7 +1,4 @@
 {
-    "build": {
-        "target": "."
-    },
     "profiles": [
         "java"
     ]
