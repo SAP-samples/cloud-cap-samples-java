@@ -265,7 +265,7 @@ For single tenant deployment, replace the `requires` section in _`.cdsrc.json`_ 
     },
 ```
 
-**In addition** remove `with-mtx-sidecar` from `profiles` in `.cdsrc.json` and delete the `mtx` folder in root.
+**In addition** remove `profile: "with-mtx-sidecar"` from `.cdsrc.json` and delete the `mtx` folder in root.
 
 For multi tenant deployment, replace the `requires` section in _`.cdsrc.json`_ with:
 
