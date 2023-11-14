@@ -1,6 +1,5 @@
 package my.bookshop;
 
-import static cds.gen.catalogservice.CatalogService_.BOOKS;
 import static cds.gen.catalogservice.CatalogService_.REVIEWS;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -18,11 +17,9 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import com.sap.cds.ql.CQL;
 import com.sap.cds.ql.Delete;
-import com.sap.cds.ql.Select;
 import com.sap.cds.services.ServiceException;
 import com.sap.cds.services.persistence.PersistenceService;
 
-import cds.gen.catalogservice.AddReviewContext;
 import cds.gen.catalogservice.Books_;
 import cds.gen.catalogservice.CatalogService;
 import cds.gen.catalogservice.Reviews;
@@ -105,16 +102,16 @@ public class CatalogServiceTest {
 	public void testAddReviewSameBookMoreThanOnceBySameUser() {
 
 		String bookId = "4a519e61-3c3a-4bd9-ab12-d7e0c5329933";
-		String anotherBookId = "9b084139-0b1e-43b6-b12a-7b3669d75f02";
+		Books_ ref = CQL.entity(Books_.class).filter(b -> b.ID().eq(bookId));
 
-		AddReviewContext firstReview = addReviewContext(createReview(bookId, 1, "quite bad", "disappointing..."));
-		AddReviewContext secondReview = addReviewContext(createReview(bookId, 5, "great read", "just amazing..."));
-		AddReviewContext anotherReview = addReviewContext(createReview(anotherBookId, 4, "very good", "entertaining..."));
-
-		assertDoesNotThrow(() -> catalogService.emit(firstReview));
-		assertThrows(ServiceException.class, () -> catalogService.emit(secondReview),
+		assertDoesNotThrow(() -> catalogService.addReview(ref, 1, "quite bad", "disappointing..."));
+		assertThrows(ServiceException.class, () -> catalogService.addReview(ref, 5, "great read", "just amazing..."),
 				"User not allowed to add more than one review for a given book");
-		assertDoesNotThrow(() -> catalogService.emit(anotherReview));
+
+		String anotherBookId = "9b084139-0b1e-43b6-b12a-7b3669d75f02";
+		Books_ anotherRef = CQL.entity(Books_.class).filter(b -> b.ID().eq(anotherBookId));
+
+		assertDoesNotThrow(() -> catalogService.addReview(anotherRef, 4, "very good", "entertaining..."));
 	}
 
 	private Reviews createReview(String bookId, Integer rating, String title, String text) {
@@ -137,15 +134,6 @@ public class CatalogServiceTest {
 			this.review = review;
 			this.exceptionMessage = exceptionMessage;
 		}
-	}
-
-	private AddReviewContext addReviewContext(Reviews review) {
-		AddReviewContext context = AddReviewContext.create();
-		context.setCqn(Select.from(BOOKS).byId(review.getBookId()));
-		context.setRating(review.getRating());
-		context.setTitle(review.getTitle());
-		context.setText(review.getText());
-		return context;
 	}
 
 }
