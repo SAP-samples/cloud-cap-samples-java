@@ -10,7 +10,6 @@ import java.util.Collections;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.test.context.support.WithMockUser;
@@ -19,10 +18,9 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import com.sap.cds.Result;
 import com.sap.cds.ql.Insert;
 import com.sap.cds.services.ServiceException;
-import com.sap.cds.services.draft.DraftService;
 import com.sap.cds.services.utils.CdsErrorStatuses;
 
-import cds.gen.adminservice.AdminService_;
+import cds.gen.adminservice.AdminService;
 import cds.gen.adminservice.Authors;
 import cds.gen.adminservice.OrderItems;
 import cds.gen.adminservice.Orders;
@@ -34,8 +32,7 @@ import cds.gen.adminservice.Orders_;
 public class AdminServiceTest {
 
 	@Autowired
-	@Qualifier(AdminService_.CDS_NAME)
-	private DraftService adminService;
+	private AdminService.Draft adminService;
 
 	@Test
 	@WithMockUser(username = "user")
