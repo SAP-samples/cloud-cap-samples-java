@@ -12,19 +12,19 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
+import com.sap.cds.ql.CQL;
 import com.sap.cds.ql.Delete;
 import com.sap.cds.ql.Select;
 import com.sap.cds.services.ServiceException;
-import com.sap.cds.services.cds.CqnService;
 import com.sap.cds.services.persistence.PersistenceService;
 
 import cds.gen.catalogservice.AddReviewContext;
-import cds.gen.catalogservice.CatalogService_;
+import cds.gen.catalogservice.Books_;
+import cds.gen.catalogservice.CatalogService;
 import cds.gen.catalogservice.Reviews;
 
 @ExtendWith(SpringExtension.class)
@@ -32,8 +32,7 @@ import cds.gen.catalogservice.Reviews;
 public class CatalogServiceTest {
 
 	@Autowired
-	@Qualifier(CatalogService_.CDS_NAME)
-	private CqnService catalogService;
+	private CatalogService catalogService;
 
 	@Autowired
 	private PersistenceService db;
@@ -51,10 +50,8 @@ public class CatalogServiceTest {
 				createReview("aebdfc8a-0dfa-4468-bd36-48aabd65e663", 5, "great read", "just amazing..."));
 
 		bookReviews.forEach(bookReview -> {
-			AddReviewContext context = addReviewContext(bookReview);
-			catalogService.emit(context);
-
-			Reviews result = context.getResult();
+			Books_ ref = CQL.entity(Books_.class).filter(b -> b.ID().eq(bookReview.getBookId()));
+			Reviews result = catalogService.addReview(ref, bookReview.getRating(), bookReview.getTitle(), bookReview.getText());
 
 			assertEquals(bookReview.getBookId(), result.getBookId());
 			assertEquals(bookReview.getRating(), result.getRating());
@@ -75,8 +72,9 @@ public class CatalogServiceTest {
 		String message = "Valid rating range needs to be within 1 and 5";
 
 		bookReviews.forEach(bookReview -> {
-			AddReviewContext context = addReviewContext(bookReview);
-			assertThrows(ServiceException.class, () -> catalogService.emit(context), message);
+			Books_ ref = CQL.entity(Books_.class).filter(b -> b.ID().eq(bookReview.getBookId()));
+			assertThrows(ServiceException.class, () -> catalogService.addReview(ref, bookReview.getRating(),
+					bookReview.getTitle(), bookReview.getText()), message);
 		});
 	}
 
