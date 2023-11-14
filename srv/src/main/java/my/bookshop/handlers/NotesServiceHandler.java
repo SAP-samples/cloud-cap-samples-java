@@ -9,7 +9,6 @@ import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
 import com.sap.cds.Result;
@@ -26,12 +25,11 @@ import com.sap.cds.ql.cqn.CqnStructuredTypeRef;
 import com.sap.cds.ql.cqn.Modifier;
 import com.sap.cds.reflect.CdsModel;
 import com.sap.cds.services.cds.CdsReadEventContext;
-import com.sap.cds.services.cds.CqnService;
 import com.sap.cds.services.handler.EventHandler;
 import com.sap.cds.services.handler.annotations.On;
 import com.sap.cds.services.handler.annotations.ServiceName;
 
-import cds.gen.api_business_partner.ApiBusinessPartner_;
+import cds.gen.api_business_partner.ApiBusinessPartner;
 import cds.gen.notesservice.Addresses;
 import cds.gen.notesservice.Addresses_;
 import cds.gen.notesservice.Notes;
@@ -42,11 +40,11 @@ import cds.gen.notesservice.Notes_;
 @ServiceName(NotesService_.CDS_NAME)
 public class NotesServiceHandler implements EventHandler {
 
-	private final CqnService bupa;
+	private final ApiBusinessPartner bupa;
 	private final CqnAnalyzer analyzer;
 
 	@Autowired
-	NotesServiceHandler(@Qualifier(ApiBusinessPartner_.CDS_NAME) CqnService bupa, CdsModel model) {
+	NotesServiceHandler(ApiBusinessPartner bupa, CdsModel model) {
 		this.bupa = bupa;
 		this.analyzer = CqnAnalyzer.create(model);
 	}

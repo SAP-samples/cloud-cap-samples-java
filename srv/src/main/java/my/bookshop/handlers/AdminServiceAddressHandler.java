@@ -8,7 +8,6 @@ import java.util.stream.Stream;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
 import com.sap.cds.Result;
@@ -38,6 +37,7 @@ import cds.gen.adminservice.Addresses;
 import cds.gen.adminservice.Addresses_;
 import cds.gen.adminservice.AdminService_;
 import cds.gen.adminservice.Orders;
+import cds.gen.api_business_partner.ApiBusinessPartner;
 import cds.gen.api_business_partner.ApiBusinessPartner_;
 import cds.gen.api_business_partner.BusinessPartnerChangedContext;
 import my.bookshop.MessageKeys;
@@ -53,9 +53,9 @@ public class AdminServiceAddressHandler implements EventHandler {
 
 	// We are mashing up the AdminService with two other services...
 	private final PersistenceService db;
-	private final CqnService bupa;
+	private final ApiBusinessPartner bupa;
 
-	AdminServiceAddressHandler(PersistenceService db, @Qualifier(ApiBusinessPartner_.CDS_NAME) CqnService bupa) {
+	AdminServiceAddressHandler(PersistenceService db, ApiBusinessPartner bupa) {
 		this.db = db;
 		this.bupa = bupa;
 	}

@@ -40,6 +40,7 @@ import cds.gen.catalogservice.CatalogService_;
 import cds.gen.catalogservice.Reviews;
 import cds.gen.catalogservice.Reviews_;
 import cds.gen.catalogservice.SubmitOrderContext;
+import cds.gen.reviewservice.ReviewService;
 import cds.gen.reviewservice.ReviewService_;
 import my.bookshop.MessageKeys;
 import my.bookshop.RatingCalculator;
@@ -58,15 +59,15 @@ import my.bookshop.RatingCalculator;
 class CatalogServiceHandler implements EventHandler {
 
 	private final PersistenceService db;
-	private final DraftService reviewService;
+	private final ReviewService.Draft reviewService;
 
 	private final Messages messages;
 	private final FeatureTogglesInfo featureToggles;
 	private final RatingCalculator ratingCalculator;
 	private final CqnAnalyzer analyzer;
 
-	CatalogServiceHandler(PersistenceService db, @Qualifier(ReviewService_.CDS_NAME) DraftService reviewService,
-			Messages messages, FeatureTogglesInfo featureToggles, RatingCalculator ratingCalculator, CdsModel model) {
+	CatalogServiceHandler(PersistenceService db, ReviewService.Draft reviewService, Messages messages,
+			FeatureTogglesInfo featureToggles, RatingCalculator ratingCalculator, CdsModel model) {
 		this.db = db;
 		this.reviewService = reviewService;
 		this.messages = messages;
