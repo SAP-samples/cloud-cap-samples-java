@@ -8,6 +8,7 @@ import java.util.stream.Stream;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
 import com.sap.cds.Result;
@@ -55,7 +56,7 @@ public class AdminServiceAddressHandler implements EventHandler {
 	private final PersistenceService db;
 	private final ApiBusinessPartner bupa;
 
-	AdminServiceAddressHandler(PersistenceService db, ApiBusinessPartner bupa) {
+	AdminServiceAddressHandler(PersistenceService db, @Qualifier(ApiBusinessPartner_.CDS_NAME) ApiBusinessPartner bupa) {
 		this.db = db;
 		this.bupa = bupa;
 	}

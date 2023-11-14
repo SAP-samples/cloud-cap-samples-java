@@ -9,6 +9,7 @@ import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
 import com.sap.cds.Result;
@@ -30,6 +31,7 @@ import com.sap.cds.services.handler.annotations.On;
 import com.sap.cds.services.handler.annotations.ServiceName;
 
 import cds.gen.api_business_partner.ApiBusinessPartner;
+import cds.gen.api_business_partner.ApiBusinessPartner_;
 import cds.gen.notesservice.Addresses;
 import cds.gen.notesservice.Addresses_;
 import cds.gen.notesservice.Notes;
@@ -44,7 +46,7 @@ public class NotesServiceHandler implements EventHandler {
 	private final CqnAnalyzer analyzer;
 
 	@Autowired
-	NotesServiceHandler(ApiBusinessPartner bupa, CdsModel model) {
+	NotesServiceHandler(@Qualifier(ApiBusinessPartner_.CDS_NAME) ApiBusinessPartner bupa, CdsModel model) {
 		this.bupa = bupa;
 		this.analyzer = CqnAnalyzer.create(model);
 	}

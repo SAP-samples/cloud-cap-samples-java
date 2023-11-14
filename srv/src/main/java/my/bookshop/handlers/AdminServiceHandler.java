@@ -69,8 +69,7 @@ class AdminServiceHandler implements EventHandler {
 
 	private final CqnAnalyzer analyzer;
 
-	AdminServiceHandler(AdminService.Draft adminService, PersistenceService db,
-			Messages messages, CdsModel model) {
+	AdminServiceHandler(AdminService.Draft adminService, PersistenceService db, Messages messages, CdsModel model) {
 		this.adminService = adminService;
 		this.db = db;
 		this.messages = messages;
