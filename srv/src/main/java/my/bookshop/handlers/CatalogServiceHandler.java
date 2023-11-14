@@ -8,7 +8,6 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
 import com.sap.cds.Result;
@@ -23,7 +22,6 @@ import com.sap.cds.services.ErrorStatuses;
 import com.sap.cds.services.ServiceException;
 import com.sap.cds.services.cds.CdsReadEventContext;
 import com.sap.cds.services.cds.CqnService;
-import com.sap.cds.services.draft.DraftService;
 import com.sap.cds.services.handler.EventHandler;
 import com.sap.cds.services.handler.annotations.After;
 import com.sap.cds.services.handler.annotations.Before;
@@ -59,14 +57,14 @@ import my.bookshop.RatingCalculator;
 class CatalogServiceHandler implements EventHandler {
 
 	private final PersistenceService db;
-	private final ReviewService.Draft reviewService;
+	private final ReviewService reviewService;
 
 	private final Messages messages;
 	private final FeatureTogglesInfo featureToggles;
 	private final RatingCalculator ratingCalculator;
 	private final CqnAnalyzer analyzer;
 
-	CatalogServiceHandler(PersistenceService db, ReviewService.Draft reviewService, Messages messages,
+	CatalogServiceHandler(PersistenceService db, ReviewService reviewService, Messages messages,
 			FeatureTogglesInfo featureToggles, RatingCalculator ratingCalculator, CdsModel model) {
 		this.db = db;
 		this.reviewService = reviewService;
