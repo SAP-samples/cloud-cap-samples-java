@@ -1,5 +1,5 @@
 ---
-my.bookshop.postgresImage: postgres:13
+my.bookshop.postgresImage: postgres:14
 
 spring:
   web.resources.static-locations: "file:./app"

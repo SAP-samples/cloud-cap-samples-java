@@ -16,10 +16,11 @@
 
 		<!-- DEPENDENCIES VERSION -->
 		<jdk.version>17</jdk.version>
-		<cds.services.version>2.3.0</cds.services.version>
-		<spring.boot.version>3.1.4</spring.boot.version>
-		<cf-java-logging-support.version>3.7.0</cf-java-logging-support.version>
-		<cds.install-node.nodeVersion>v18.18.2</cds.install-node.nodeVersion>
+		<cds.services.version>2.4.0</cds.services.version>
+		<spring.boot.version>3.1.5</spring.boot.version>
+		<cf-java-logging-support.version>3.7.1</cf-java-logging-support.version>
+
+		<cds.cdsdk-version>7.3.2</cds.cdsdk-version>
 	</properties>
 
 	<modules>
