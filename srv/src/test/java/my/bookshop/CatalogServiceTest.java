@@ -94,8 +94,9 @@ public class CatalogServiceTest {
 						exMessage2));
 
 		testCases.forEach(testCase -> {
-			AddReviewContext context = addReviewContext(testCase.review);
-			assertThrows(ServiceException.class, () -> catalogService.emit(context), testCase.exceptionMessage);
+			Books_ ref = CQL.entity(Books_.class).filter(b -> b.ID().eq(testCase.review.getBookId()));
+			assertThrows(ServiceException.class, () -> catalogService.addReview(ref, testCase.review.getRating(),
+					testCase.review.getTitle(), testCase.review.getText()), testCase.exceptionMessage);
 		});
 	}
 
