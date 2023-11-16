@@ -30,7 +30,7 @@ class SimpleIntegrationIT {
 	private static PostgreSQLContainer<?> pgContainer = new PostgreSQLContainer<>("postgres:14");
 
 	@DynamicPropertySource
-	static void registerMySQLProperties(DynamicPropertyRegistry registry) {
+	static void registerPosgreSQLProperties(DynamicPropertyRegistry registry) {
 		registry.add("spring.datasource.url", pgContainer::getJdbcUrl);
 		registry.add("spring.datasource.username", pgContainer::getUsername);
 		registry.add("spring.datasource.password", pgContainer::getPassword);
