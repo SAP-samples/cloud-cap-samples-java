@@ -21,7 +21,7 @@ import my.bookshop.Application;
 @SpringBootTest(classes = Application.class)
 @AutoConfigureMockMvc
 @Testcontainers
-class SimpleIntegrationTest {
+class SimpleIntegrationIT {
 
 	@Autowired
 	MockMvc client;
