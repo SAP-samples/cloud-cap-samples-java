@@ -13,10 +13,6 @@
 
 	<name>bookshop-integration-tests</name>
 
-	<properties>
-		<sidecar.dir>../mtx/sidecar</sidecar.dir>
-	</properties>
-
 	<dependencies>
 		<dependency>
 			<groupId>my</groupId>
