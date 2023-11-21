@@ -1,6 +1,7 @@
 package my.bookshop.handlers;
 
 import static cds.gen.catalogservice.CatalogService_.BOOKS;
+import static cds.gen.catalogservice.CatalogService_.REVIEWS;
 
 import java.util.List;
 import java.util.Optional;
@@ -36,7 +37,6 @@ import cds.gen.catalogservice.Books;
 import cds.gen.catalogservice.Books_;
 import cds.gen.catalogservice.CatalogService_;
 import cds.gen.catalogservice.Reviews;
-import cds.gen.catalogservice.Reviews_;
 import cds.gen.catalogservice.SubmitOrderContext;
 import cds.gen.reviewservice.ReviewService;
 import cds.gen.reviewservice.ReviewService_;
@@ -84,12 +84,12 @@ class CatalogServiceHandler implements EventHandler {
 		String user = context.getUserInfo().getName();
 		String bookId = (String) analyzer.analyze(context.getCqn()).targetKeys().get(Books.ID);
 
-		Result result = db.run(Select.from(CatalogService_.REVIEWS)
+		Result result = db.run(Select.from(REVIEWS)
 				.where(review -> review.book_ID().eq(bookId).and(review.createdBy().eq(user))));
 
 		if (result.first().isPresent()) {
 			throw new ServiceException(ErrorStatuses.METHOD_NOT_ALLOWED, MessageKeys.REVIEW_ADD_FORBIDDEN)
-					.messageTarget(Reviews_.class, r -> r.createdBy());
+					.messageTarget(REVIEWS, r -> r.createdBy());
 		}
 	}
 
@@ -100,23 +100,17 @@ class CatalogServiceHandler implements EventHandler {
 	 */
 	@On(entity = Books_.CDS_NAME)
 	public void onAddReview(AddReviewContext context) {
-		Integer rating = context.getRating();
-		String title = context.getTitle();
-		String text = context.getText();
-
 		String bookId = (String) analyzer.analyze(context.getCqn()).targetKeys().get(Books.ID);
-
 		cds.gen.reviewservice.Reviews review = cds.gen.reviewservice.Reviews.create();
 		review.setBookId(bookId);
-		review.setRating(rating);
-		review.setTitle(title);
-		review.setText(text);
+		review.setRating(context.getRating());
+		review.setTitle(context.getTitle());
+		review.setText(context.getText());
 
 		Result res = reviewService.run(Insert.into(ReviewService_.REVIEWS).entry(review));
 		cds.gen.reviewservice.Reviews inserted = res.single(cds.gen.reviewservice.Reviews.class);
 
 		messages.success(MessageKeys.REVIEW_ADDED);
-
 		context.setResult(Struct.access(inserted).as(Reviews.class));
 	}
 
@@ -148,7 +142,7 @@ class CatalogServiceHandler implements EventHandler {
 			return;
 		}
 
-		CqnSelect query = Select.from(CatalogService_.BOOKS, b -> b.filter(b.ID().in(bookIds)).reviews())
+		CqnSelect query = Select.from(BOOKS, b -> b.filter(b.ID().in(bookIds)).reviews())
 				.where(r -> r.createdBy().eq(user));
 
 		Set<String> reviewedBooks = db.run(query).streamOf(Reviews.class).map(Reviews::getBookId)
@@ -169,7 +163,7 @@ class CatalogServiceHandler implements EventHandler {
 		Optional<Books> book = db.run(Select.from(BOOKS).columns(Books_::stock).byId(bookId)).first(Books.class);
 
 		book.orElseThrow(() -> new ServiceException(ErrorStatuses.NOT_FOUND, MessageKeys.BOOK_MISSING)
-				.messageTarget(Books_.class, b -> b.ID()));
+				.messageTarget(BOOKS, b -> b.ID()));
 
 		int stock = book.map(Books::getStock).get();
 

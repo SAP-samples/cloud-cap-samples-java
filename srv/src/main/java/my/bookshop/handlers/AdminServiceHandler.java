@@ -296,7 +296,7 @@ class AdminServiceHandler implements EventHandler {
 
 					// separate transaction per line
 					context.getCdsRuntime().changeSetContext().run(ctx -> {
-						db.run(Upsert.into(Bookshop_.BOOKS).entry(book));
+						db.run(Upsert.into(BOOKS).entry(book));
 					});
 				});
 			} catch (IOException e) {
