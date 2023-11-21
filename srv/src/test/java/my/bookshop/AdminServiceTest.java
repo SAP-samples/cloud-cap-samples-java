@@ -1,6 +1,7 @@
 package my.bookshop;
 
 import static cds.gen.adminservice.AdminService_.AUTHORS;
+import static cds.gen.adminservice.AdminService_.ORDERS;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
@@ -24,7 +25,6 @@ import cds.gen.adminservice.AdminService;
 import cds.gen.adminservice.Authors;
 import cds.gen.adminservice.OrderItems;
 import cds.gen.adminservice.Orders;
-import cds.gen.adminservice.Orders_;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
@@ -74,7 +74,7 @@ public class AdminServiceTest {
 
 		// Runtime ensures that book is present in the order item, when it is created.
 		ServiceException exception =
-			assertThrows(ServiceException.class, () -> adminService.run(Insert.into(Orders_.class).entry(order)));
+			assertThrows(ServiceException.class, () -> adminService.run(Insert.into(ORDERS).entry(order)));
 		assertEquals(CdsErrorStatuses.VALUE_REQUIRED.getCodeString(), exception.getErrorStatus().getCodeString());
 	}
 
@@ -92,7 +92,7 @@ public class AdminServiceTest {
 
 		// Runtime ensures that book exists when order item is created.
 		ServiceException exception =
-			assertThrows(ServiceException.class, () -> adminService.run(Insert.into(Orders_.class).entry(order)));
+			assertThrows(ServiceException.class, () -> adminService.run(Insert.into(ORDERS).entry(order)));
 		assertEquals(CdsErrorStatuses.TARGET_ENTITY_MISSING.getCodeString(), exception.getErrorStatus().getCodeString());
 	}
 

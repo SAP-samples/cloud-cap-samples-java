@@ -1,5 +1,6 @@
 package my.bookshop;
 
+import static cds.gen.catalogservice.CatalogService_.BOOKS;
 import static cds.gen.catalogservice.CatalogService_.REVIEWS;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -47,7 +48,8 @@ public class CatalogServiceTest {
 				createReview("aebdfc8a-0dfa-4468-bd36-48aabd65e663", 5, "great read", "just amazing..."));
 
 		bookReviews.forEach(bookReview -> {
-			Books_ ref = CQL.entity(Books_.class).filter(b -> b.ID().eq(bookReview.getBookId()));
+
+			Books_ ref = CQL.entity(BOOKS).filter(b -> b.ID().eq(bookReview.getBookId()));
 			Reviews result = catalogService.addReview(ref, bookReview.getRating(), bookReview.getTitle(), bookReview.getText());
 
 			assertEquals(bookReview.getBookId(), result.getBookId());
@@ -69,7 +71,7 @@ public class CatalogServiceTest {
 		String message = "Valid rating range needs to be within 1 and 5";
 
 		bookReviews.forEach(bookReview -> {
-			Books_ ref = CQL.entity(Books_.class).filter(b -> b.ID().eq(bookReview.getBookId()));
+			Books_ ref = CQL.entity(BOOKS).filter(b -> b.ID().eq(bookReview.getBookId()));
 			assertThrows(ServiceException.class, () -> catalogService.addReview(ref, bookReview.getRating(),
 					bookReview.getTitle(), bookReview.getText()), message);
 		});
@@ -91,7 +93,7 @@ public class CatalogServiceTest {
 						exMessage2));
 
 		testCases.forEach(testCase -> {
-			Books_ ref = CQL.entity(Books_.class).filter(b -> b.ID().eq(testCase.review.getBookId()));
+			Books_ ref = CQL.entity(BOOKS).filter(b -> b.ID().eq(testCase.review.getBookId()));
 			assertThrows(ServiceException.class, () -> catalogService.addReview(ref, testCase.review.getRating(),
 					testCase.review.getTitle(), testCase.review.getText()), testCase.exceptionMessage);
 		});
@@ -102,14 +104,14 @@ public class CatalogServiceTest {
 	public void testAddReviewSameBookMoreThanOnceBySameUser() {
 
 		String bookId = "4a519e61-3c3a-4bd9-ab12-d7e0c5329933";
-		Books_ ref = CQL.entity(Books_.class).filter(b -> b.ID().eq(bookId));
+		Books_ ref = CQL.entity(BOOKS).filter(b -> b.ID().eq(bookId));
 
 		assertDoesNotThrow(() -> catalogService.addReview(ref, 1, "quite bad", "disappointing..."));
 		assertThrows(ServiceException.class, () -> catalogService.addReview(ref, 5, "great read", "just amazing..."),
 				"User not allowed to add more than one review for a given book");
 
 		String anotherBookId = "9b084139-0b1e-43b6-b12a-7b3669d75f02";
-		Books_ anotherRef = CQL.entity(Books_.class).filter(b -> b.ID().eq(anotherBookId));
+		Books_ anotherRef = CQL.entity(BOOKS).filter(b -> b.ID().eq(anotherBookId));
 
 		assertDoesNotThrow(() -> catalogService.addReview(anotherRef, 4, "very good", "entertaining..."));
 	}
