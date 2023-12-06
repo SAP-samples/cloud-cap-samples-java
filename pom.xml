@@ -24,8 +24,8 @@
 		<!-- DEPENDENCIES VERSION -->
 		<jdk.version>17</jdk.version>
 		<cds.services.version>2.4.1</cds.services.version>
-		<cloud.sdk.version>4.26.0</cloud.sdk.version>
-		<xsuaa.version>3.2.1</xsuaa.version>
+		<cloud.sdk.version>4.27.0</cloud.sdk.version>
+		<xsuaa.version>3.3.0</xsuaa.version>
 		<cf-java-logging-support.version>3.7.1</cf-java-logging-support.version>
 		<cds.install-cdsdk.version>7.4.1</cds.install-cdsdk.version>
 	</properties>
