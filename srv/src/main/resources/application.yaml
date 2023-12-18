@@ -7,8 +7,9 @@ spring:
   jmx:
     enabled: true
 cds:
-  odata-v4.endpoint.path: "/api"
-  odata-v4.serializer.enabled: true
+  odata-v4:
+    endpoint.path: "/api"
+    lazy-i18n.enabled: true
   multi-tenancy:
     compatibility.enabled: false
     mtxs.enabled: true
