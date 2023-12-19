@@ -5,7 +5,8 @@
     "@sap/xssec": "^3",
     "express": "^4",
     "hdb": "^0",
-    "passport": "^0"
+    "passport": "^0",
+    "@sap/hdi-deploy": "4.8.2"
   },
   "devDependencies": {
     "sqlite3": "^5",
