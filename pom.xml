@@ -23,7 +23,7 @@
 
 		<!-- DEPENDENCIES VERSION -->
 		<jdk.version>17</jdk.version>
-		<cds.services.version>2.5.0</cds.services.version>
+		<cds.services.version>2.6.0</cds.services.version>
 		<cloud.sdk.version>5.1.0</cloud.sdk.version>
 		<xsuaa.version>3.3.1</xsuaa.version>
 		<cf-java-logging-support.version>3.7.1</cf-java-logging-support.version>
