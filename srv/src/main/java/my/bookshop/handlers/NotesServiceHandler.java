@@ -11,7 +11,6 @@ import java.util.Set;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
@@ -48,7 +47,6 @@ public class NotesServiceHandler implements EventHandler {
 	private final ApiBusinessPartner bupa;
 	private final CqnAnalyzer analyzer;
 
-	@Autowired
 	NotesServiceHandler(@Qualifier(ApiBusinessPartner_.CDS_NAME) ApiBusinessPartner bupa, CdsModel model) {
 		this.bupa = bupa;
 		this.analyzer = CqnAnalyzer.create(model);
