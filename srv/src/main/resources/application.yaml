@@ -151,6 +151,8 @@ cds:
     bupa-messaging:
       binding: bookshop-mt-messaging-em
       enabled: true
+      queue:
+        name: "$namespace/bookshop-mt-messaging-em-queue"
       outbox:
         enabled: false
         persistent:
