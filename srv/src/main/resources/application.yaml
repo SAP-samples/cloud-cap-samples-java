@@ -48,6 +48,7 @@ spring:
   config.activate.on-profile: cloud
   sql.init.schema-locations: "classpath:schema-nomocks.sql"
 cds:
+  sql.hana.optimizationMode: hex
   messaging.services:
     bupa-messaging:
       kind: enterprise-messaging
