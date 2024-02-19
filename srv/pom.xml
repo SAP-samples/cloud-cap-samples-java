@@ -64,8 +64,8 @@
 		</dependency>
 
 		<dependency>
-			<groupId>com.sap.cloud.sdk.cloudplatform</groupId>
-			<artifactId>scp-cf</artifactId>
+			<groupId>com.sap.cloud.sdk</groupId>
+			<artifactId>sdk-core</artifactId>
 		</dependency>
 
 		<dependency>
