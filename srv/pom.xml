@@ -37,12 +37,32 @@
 			<groupId>com.sap.cds</groupId>
 			<artifactId>cds-starter-cloudfoundry</artifactId>
 			<scope>runtime</scope>
+			<exclusions>
+				<exclusion>
+					<groupId>com.sap.cds</groupId>
+					<artifactId>cds-feature-xsuaa</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>com.sap.cloud.security.xsuaa</groupId>
+					<artifactId>xsuaa-spring-boot-starter</artifactId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 
 		<dependency>
 			<groupId>com.sap.cds</groupId>
 			<artifactId>cds-starter-k8s</artifactId>
 			<scope>runtime</scope>
+			<exclusions>
+				<exclusion>
+					<groupId>com.sap.cds</groupId>
+					<artifactId>cds-feature-xsuaa</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>com.sap.cloud.security.xsuaa</groupId>
+					<artifactId>xsuaa-spring-boot-starter</artifactId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 
 		<dependency>
@@ -72,7 +92,7 @@
 			<groupId>com.sap.cloud.sdk.cloudplatform</groupId>
 			<artifactId>connectivity-apache-httpclient4</artifactId>
 		</dependency>
-		
+
 		<!-- OTHER DEPENDENCIES -->
 		<dependency>
 			<groupId>com.h2database</groupId>
