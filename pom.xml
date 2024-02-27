@@ -20,7 +20,7 @@
 		<spring.boot.version>3.2.3</spring.boot.version>
 		<cf-java-logging-support.version>3.8.2</cf-java-logging-support.version>
 
-		<cds.cdsdk-version>7.6.1</cds.cdsdk-version>
+		<cds.cdsdk-version>7.7.0</cds.cdsdk-version>
 
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
