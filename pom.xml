@@ -21,6 +21,8 @@
 		<cf-java-logging-support.version>3.8.2</cf-java-logging-support.version>
 
 		<cds.cdsdk-version>7.6.1</cds.cdsdk-version>
+
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
 
 	<modules>
