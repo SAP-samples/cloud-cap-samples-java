@@ -77,7 +77,7 @@ resources:
       service: postgresql-db
       service-plan: standard
       config:
-        engine_version: "13"
+        engine_version: "14"
         multi_az: false
 
   - name: cf-logging
