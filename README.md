@@ -442,7 +442,7 @@ pack build $YOUR_CONTAINER_REGISTRY/bookshop-srv \
         --path srv/target/*-exec.jar \
         --buildpack gcr.io/paketo-buildpacks/sap-machine \
         --buildpack gcr.io/paketo-buildpacks/java \
-        --builder paketobuildpacks/builder:base \
+        --builder paketobuildpacks/builder-jammy-base \
         --env SPRING_PROFILES_ACTIVE=cloud \
         --env BP_JVM_VERSION=17
 ```
@@ -455,7 +455,7 @@ pack build $YOUR_CONTAINER_REGISTRY/bookshop-srv \
 pack build $YOUR_CONTAINER_REGISTRY/bookshop-approuter \
      --path app \
      --buildpack gcr.io/paketo-buildpacks/nodejs \
-     --builder paketobuildpacks/builder:base \
+     --builder paketobuildpacks/builder-jammy-base \
      --env BP_NODE_RUN_SCRIPTS=""
 ```
 
@@ -465,7 +465,7 @@ pack build $YOUR_CONTAINER_REGISTRY/bookshop-approuter \
 pack build $YOUR_CONTAINER_REGISTRY/bookshop-hana-deployer \
      --path db \
      --buildpack gcr.io/paketo-buildpacks/nodejs \
-     --builder paketobuildpacks/builder:base \
+     --builder paketobuildpacks/builder-jammy-base \
      --env BP_NODE_RUN_SCRIPTS=""
 ```
 
@@ -475,7 +475,7 @@ pack build $YOUR_CONTAINER_REGISTRY/bookshop-hana-deployer \
 pack build $YOUR_CONTAINER_REGISTRY/bookshop-sidecar \
      --path mtx/sidecar/gen \
      --buildpack gcr.io/paketo-buildpacks/nodejs \
-     --builder paketobuildpacks/builder:base \
+     --builder paketobuildpacks/builder-jammy-base \
      --env BP_NODE_RUN_SCRIPTS=""
 ```
 
