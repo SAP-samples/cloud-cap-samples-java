@@ -23,6 +23,6 @@
   },
   "scripts": {
     "start": "cds-serve",
-    "build": "cds build ../.. --for mtx-sidecar --production && cd gen && npm install"
+    "build": "cds build ../.. --for mtx-sidecar --production && cd gen && npm ci"
   }
 }
