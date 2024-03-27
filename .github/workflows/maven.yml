@@ -22,9 +22,9 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v4
     - name: Set up JDK
-      uses: actions/setup-java@v4
+      uses: Shegox/setup-java@main
       with:
         java-version: 17
-        distribution: 'temurin'
+        distribution: 'sapmachine'
     - name: Build with Maven
       run: mvn -B clean install
