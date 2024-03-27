@@ -22,7 +22,7 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v4
     - name: Set up JDK
-      uses: Shegox/setup-java
+      uses: Shegox/setup-java@main
       with:
         java-version: 17
         distribution: 'sapmachine'
