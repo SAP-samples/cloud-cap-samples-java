@@ -10,11 +10,9 @@ import java.util.stream.Stream;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.test.context.support.WithMockUser;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import com.sap.cds.ql.CQL;
 import com.sap.cds.ql.Delete;
@@ -25,7 +23,6 @@ import cds.gen.catalogservice.Books_;
 import cds.gen.catalogservice.CatalogService;
 import cds.gen.catalogservice.Reviews;
 
-@ExtendWith(SpringExtension.class)
 @SpringBootTest
 public class CatalogServiceTest {
 
