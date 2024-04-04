@@ -18,7 +18,7 @@ public class CustomFeatureToggleProvider implements FeatureTogglesInfoProvider {
 	@Override
 	public FeatureTogglesInfo get(UserInfo userInfo, ParameterInfo parameterInfo) {
 		if (userInfo.getTenant() == null && userInfo.isSystemUser()) {
-			// technical provier user runs with all feature toggles
+			// technical provider user runs with all feature toggles
 			return FeatureTogglesInfo.all();
 		}
 
