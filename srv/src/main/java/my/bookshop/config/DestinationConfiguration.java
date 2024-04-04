@@ -1,6 +1,5 @@
 package my.bookshop.config;
 
-import java.util.Collections;
 import java.util.Map;
 
 import org.slf4j.Logger;
@@ -17,7 +16,6 @@ import com.sap.cloud.environment.servicebinding.api.ServiceBinding;
 import com.sap.cloud.sdk.cloudplatform.connectivity.DefaultDestinationLoader;
 import com.sap.cloud.sdk.cloudplatform.connectivity.DefaultHttpDestination;
 import com.sap.cloud.sdk.cloudplatform.connectivity.DestinationAccessor;
-import com.sap.cloud.sdk.cloudplatform.connectivity.DestinationProperty;
 import com.sap.cloud.sdk.cloudplatform.connectivity.OAuth2DestinationBuilder;
 import com.sap.cloud.sdk.cloudplatform.connectivity.OnBehalfOf;
 import com.sap.cloud.sdk.cloudplatform.security.BasicCredentials;
@@ -67,7 +65,7 @@ public class DestinationConfiguration {
 										.forTargetUrl("https://" + applicationUrl + "/")
 										.withTokenEndpoint(tokenUrl)
 										.withClient((ClientIdentity)client, OnBehalfOf.TECHNICAL_USER_CURRENT_TENANT)
-										.withProperties(Collections.singletonMap(DestinationProperty.NAME.getKeyName(), destinationName))
+										.name(destinationName)
 										.build()));
 	}
 
