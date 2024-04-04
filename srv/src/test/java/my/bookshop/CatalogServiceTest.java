@@ -12,19 +12,17 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
+import com.sap.cds.ql.CQL;
 import com.sap.cds.ql.Delete;
-import com.sap.cds.ql.Select;
 import com.sap.cds.services.ServiceException;
-import com.sap.cds.services.cds.CqnService;
 import com.sap.cds.services.persistence.PersistenceService;
 
-import cds.gen.catalogservice.AddReviewContext;
-import cds.gen.catalogservice.CatalogService_;
+import cds.gen.catalogservice.Books_;
+import cds.gen.catalogservice.CatalogService;
 import cds.gen.catalogservice.Reviews;
 
 @ExtendWith(SpringExtension.class)
@@ -32,8 +30,7 @@ import cds.gen.catalogservice.Reviews;
 public class CatalogServiceTest {
 
 	@Autowired
-	@Qualifier(CatalogService_.CDS_NAME)
-	private CqnService catalogService;
+	private CatalogService catalogService;
 
 	@Autowired
 	private PersistenceService db;
@@ -51,10 +48,9 @@ public class CatalogServiceTest {
 				createReview("aebdfc8a-0dfa-4468-bd36-48aabd65e663", 5, "great read", "just amazing..."));
 
 		bookReviews.forEach(bookReview -> {
-			AddReviewContext context = addReviewContext(bookReview);
-			catalogService.emit(context);
 
-			Reviews result = context.getResult();
+			Books_ ref = CQL.entity(BOOKS).filter(b -> b.ID().eq(bookReview.getBookId()));
+			Reviews result = catalogService.addReview(ref, bookReview.getRating(), bookReview.getTitle(), bookReview.getText());
 
 			assertEquals(bookReview.getBookId(), result.getBookId());
 			assertEquals(bookReview.getRating(), result.getRating());
@@ -75,8 +71,9 @@ public class CatalogServiceTest {
 		String message = "Valid rating range needs to be within 1 and 5";
 
 		bookReviews.forEach(bookReview -> {
-			AddReviewContext context = addReviewContext(bookReview);
-			assertThrows(ServiceException.class, () -> catalogService.emit(context), message);
+			Books_ ref = CQL.entity(BOOKS).filter(b -> b.ID().eq(bookReview.getBookId()));
+			assertThrows(ServiceException.class, () -> catalogService.addReview(ref, bookReview.getRating(),
+					bookReview.getTitle(), bookReview.getText()), message);
 		});
 	}
 
@@ -96,8 +93,9 @@ public class CatalogServiceTest {
 						exMessage2));
 
 		testCases.forEach(testCase -> {
-			AddReviewContext context = addReviewContext(testCase.review);
-			assertThrows(ServiceException.class, () -> catalogService.emit(context), testCase.exceptionMessage);
+			Books_ ref = CQL.entity(BOOKS).filter(b -> b.ID().eq(testCase.review.getBookId()));
+			assertThrows(ServiceException.class, () -> catalogService.addReview(ref, testCase.review.getRating(),
+					testCase.review.getTitle(), testCase.review.getText()), testCase.exceptionMessage);
 		});
 	}
 
@@ -106,16 +104,16 @@ public class CatalogServiceTest {
 	public void testAddReviewSameBookMoreThanOnceBySameUser() {
 
 		String bookId = "4a519e61-3c3a-4bd9-ab12-d7e0c5329933";
-		String anotherBookId = "9b084139-0b1e-43b6-b12a-7b3669d75f02";
+		Books_ ref = CQL.entity(BOOKS).filter(b -> b.ID().eq(bookId));
 
-		AddReviewContext firstReview = addReviewContext(createReview(bookId, 1, "quite bad", "disappointing..."));
-		AddReviewContext secondReview = addReviewContext(createReview(bookId, 5, "great read", "just amazing..."));
-		AddReviewContext anotherReview = addReviewContext(createReview(anotherBookId, 4, "very good", "entertaining..."));
-
-		assertDoesNotThrow(() -> catalogService.emit(firstReview));
-		assertThrows(ServiceException.class, () -> catalogService.emit(secondReview),
+		assertDoesNotThrow(() -> catalogService.addReview(ref, 1, "quite bad", "disappointing..."));
+		assertThrows(ServiceException.class, () -> catalogService.addReview(ref, 5, "great read", "just amazing..."),
 				"User not allowed to add more than one review for a given book");
-		assertDoesNotThrow(() -> catalogService.emit(anotherReview));
+
+		String anotherBookId = "9b084139-0b1e-43b6-b12a-7b3669d75f02";
+		Books_ anotherRef = CQL.entity(BOOKS).filter(b -> b.ID().eq(anotherBookId));
+
+		assertDoesNotThrow(() -> catalogService.addReview(anotherRef, 4, "very good", "entertaining..."));
 	}
 
 	private Reviews createReview(String bookId, Integer rating, String title, String text) {
@@ -138,15 +136,6 @@ public class CatalogServiceTest {
 			this.review = review;
 			this.exceptionMessage = exceptionMessage;
 		}
-	}
-
-	private AddReviewContext addReviewContext(Reviews review) {
-		AddReviewContext context = AddReviewContext.create();
-		context.setCqn(Select.from(BOOKS).byId(review.getBookId()));
-		context.setRating(review.getRating());
-		context.setTitle(review.getTitle());
-		context.setText(review.getText());
-		return context;
 	}
 
 }

@@ -58,6 +58,8 @@ Framework and Infrastructure related Features:
 - Application Router configuration including authentication via the XSUAA Service. See [package.json](app/package.json), [xs-app.json](app/xs-app.json) and [xs-security.json](xs-security.json)
 - [Multitenancy configuration](https://cap.cloud.sap/docs/java/multitenancy) via [mta-multi-tenant.yaml](mta-multi-tenant.yaml), [.cdsrc.json](.cdsrc.json), [sidecar module](mtx-sidecar)
 - [Feature toggles](https://cap.cloud.sap/docs/guides/extensibility/feature-toggles?impl-variant=java#limitations). In CF, features can be toggled by assigning the roles `expert` or `premium-customer` to the user.
+- [Messaging configuration and handlers](https://cap.cloud.sap/docs/java/messaging-foundation) with local messaging and message brokers.
+- Consumption of [Remote services](https://cap.cloud.sap/docs/java/remote-services) in [srv/external.cds] and [srv/notes-mashup.cds]
 
 Domain Model related Features:
 
@@ -73,7 +75,7 @@ Service Model related Features:
 - [Custom actions](https://cap.cloud.sap/docs/cds/cdl#actions) such as `addToOrder` in the [Admin Service](srv/admin-service.cds). The Action implementation is in the [Admin Service Event Handler](srv/src/main/java/my/bookshop/handlers/AdminServiceHandler.java)
 - Add annotations for [searchable elements](https://github.wdf.sap.corp/pages/cap/java/query-api#select) in the [Admin Service](srv/admin-service.cds)
 - [Localized Messages](https://cap.cloud.sap/docs/java/indicating-errors) in the [Admin Service Event Handler](srv/src/main/java/my/bookshop/handlers/AdminServiceHandler.java)
-- role-based restrictions in [AdminService](srv/admin-service.cds) and [ReviewService](srv/review-service.cds)
+- role- and instance-based restrictions in [AdminService](srv/admin-service.cds) and [ReviewService](srv/review-service.cds)
 - Use of [`@cds.persistence.skip`](https://cap.cloud.sap/docs/advanced/hana#cdspersistenceskip) in [AdminService](srv/admin-service.cds)
 - [Media Data](https://cap.cloud.sap/docs/guides/providing-services#media-data) processing in the [Admin Service Event Handler](srv/src/main/java/my/bookshop/handlers/AdminServiceHandler.java)
 
@@ -212,6 +214,10 @@ Prerequisites:
 - Ensure you have an entitlement for `SAP HANA Schemas & HDI Containers` with plan `hdi-shared` in the same space.
 - Ensure that your CF instances are connected to Internet to download SAPMachine JRE 17 as it is available in `sap_java_buildpack` in online mode only.
 
+> [!NOTE]
+> Please note that some IDEs may interfere with their autobuild during the MTA build and thus lead to corrupt MTA build results. Therefore, please ensure that no IDEs are running in parallel with your MTA build.
+
+
 Deploy as Single Tenant Application:
 - Rename `mta-single-tenant.yaml` to `mta.yaml`
 - Run `mbt build`
@@ -225,6 +231,9 @@ Deploy as Multitenant Application:
 - Run `cf deploy mta_archives/bookshop-mt_1.0.0.mtar`
 - Go to another subaccount in your global account, under subscriptions and subscribe to the application you deployed.
 - Run `cf map-route bookshop-mt-app <YOUR DOMAIN> --hostname <SUBSCRIBER TENANT>-<ORG>-<SPACE>-bookshop-mt-app` or create and bind the route manually.
+
+> [!NOTE] 
+> Please note that the route length is limited to 63 characters and can easily be exceeded. So keeping the app name and sub-account subdomain as short as possible will help you stay within length.
 
 Before you can access the UI using the (tenant-specific) URL to the bookshop(-mt)-app application, make sure to [Setup Authorizations in SAP Business Technology Platform](#setup-authorizations-in-sap-business-technology-platform).
 
@@ -262,6 +271,8 @@ For single tenant deployment, replace the `requires` section in _`.cdsrc.json`_ 
         }
     },
 ```
+
+**In addition** remove `"profile": "with-mtx-sidecar"` from `.cdsrc.json` and delete the `mtx` folder in root.
 
 For multi tenant deployment, replace the `requires` section in _`.cdsrc.json`_ with:
 
@@ -431,7 +442,7 @@ pack build $YOUR_CONTAINER_REGISTRY/bookshop-srv \
         --path srv/target/*-exec.jar \
         --buildpack gcr.io/paketo-buildpacks/sap-machine \
         --buildpack gcr.io/paketo-buildpacks/java \
-        --builder paketobuildpacks/builder:base \
+        --builder paketobuildpacks/builder-jammy-base \
         --env SPRING_PROFILES_ACTIVE=cloud \
         --env BP_JVM_VERSION=17
 ```
@@ -444,7 +455,7 @@ pack build $YOUR_CONTAINER_REGISTRY/bookshop-srv \
 pack build $YOUR_CONTAINER_REGISTRY/bookshop-approuter \
      --path app \
      --buildpack gcr.io/paketo-buildpacks/nodejs \
-     --builder paketobuildpacks/builder:base \
+     --builder paketobuildpacks/builder-jammy-base \
      --env BP_NODE_RUN_SCRIPTS=""
 ```
 
@@ -454,7 +465,7 @@ pack build $YOUR_CONTAINER_REGISTRY/bookshop-approuter \
 pack build $YOUR_CONTAINER_REGISTRY/bookshop-hana-deployer \
      --path db \
      --buildpack gcr.io/paketo-buildpacks/nodejs \
-     --builder paketobuildpacks/builder:base \
+     --builder paketobuildpacks/builder-jammy-base \
      --env BP_NODE_RUN_SCRIPTS=""
 ```
 
@@ -464,7 +475,7 @@ pack build $YOUR_CONTAINER_REGISTRY/bookshop-hana-deployer \
 pack build $YOUR_CONTAINER_REGISTRY/bookshop-sidecar \
      --path mtx/sidecar/gen \
      --buildpack gcr.io/paketo-buildpacks/nodejs \
-     --builder paketobuildpacks/builder:base \
+     --builder paketobuildpacks/builder-jammy-base \
      --env BP_NODE_RUN_SCRIPTS=""
 ```
 

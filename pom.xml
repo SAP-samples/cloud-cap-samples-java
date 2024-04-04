@@ -3,6 +3,13 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
+	<parent>
+		<groupId>org.springframework.boot</groupId>
+		<artifactId>spring-boot-starter-parent</artifactId>
+		<version>3.2.4</version>
+		<relativePath/> <!-- lookup parent from repository -->
+	</parent>
+
 	<groupId>my</groupId>
 	<artifactId>bookshop-parent</artifactId>
 	<version>${revision}</version>
@@ -17,8 +24,7 @@
 		<!-- DEPENDENCIES VERSION -->
 		<jdk.version>17</jdk.version>
 		<cds.services.version>2.8.1</cds.services.version>
-		<spring.boot.version>3.2.4</spring.boot.version>
-		<cloud.sdk.version>4.24.0</cloud.sdk.version>
+		<cloud.sdk.version>5.6.0</cloud.sdk.version>
 		<xsuaa.version>3.3.5</xsuaa.version>
 		<cf-java-logging-support.version>3.8.3</cf-java-logging-support.version>
 		<cds.install-cdsdk.version>7.8.0</cds.install-cdsdk.version>
@@ -36,15 +42,6 @@
 				<groupId>com.sap.cds</groupId>
 				<artifactId>cds-services-bom</artifactId>
 				<version>${cds.services.version}</version>
-				<type>pom</type>
-				<scope>import</scope>
-			</dependency>
-
-			<!-- SPRING BOOT -->
-			<dependency>
-				<groupId>org.springframework.boot</groupId>
-				<artifactId>spring-boot-dependencies</artifactId>
-				<version>${spring.boot.version}</version>
 				<type>pom</type>
 				<scope>import</scope>
 			</dependency>
@@ -75,7 +72,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
-				<version>3.10.1</version>
+				<version>3.12.1</version>
 				<configuration>
 					<release>${jdk.version}</release>
 					<encoding>UTF-8</encoding>
@@ -86,7 +83,6 @@
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
-				<version>${spring.boot.version}</version>
 				<configuration>
 					<skip>true</skip>
 				</configuration>
@@ -96,7 +92,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-surefire-plugin</artifactId>
-				<version>3.0.0-M9</version>
+				<version>3.2.5</version>
 				<configuration>
 					<failIfNoTests>true</failIfNoTests>
 				</configuration>
@@ -105,14 +101,14 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-failsafe-plugin</artifactId>
-				<version>3.0.0-M9</version>
+				<version>3.2.5</version>
 			</plugin>
 
 			<!-- POM FLATTENING FOR CI FRIENDLY VERSIONS -->
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>flatten-maven-plugin</artifactId>
-				<version>1.3.0</version>
+				<version>1.6.0</version>
 				<configuration>
 					<updatePomFile>true</updatePomFile>
 					<flattenMode>resolveCiFriendliesOnly</flattenMode>
@@ -139,7 +135,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-enforcer-plugin</artifactId>
-				<version>3.2.1</version>
+				<version>3.4.1</version>
 				<executions>
 					<execution>
 						<id>Project Structure Checks</id>

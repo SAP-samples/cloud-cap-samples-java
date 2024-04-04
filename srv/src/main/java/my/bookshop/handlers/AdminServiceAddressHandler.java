@@ -38,6 +38,7 @@ import cds.gen.adminservice.Addresses;
 import cds.gen.adminservice.Addresses_;
 import cds.gen.adminservice.AdminService_;
 import cds.gen.adminservice.Orders;
+import cds.gen.api_business_partner.ApiBusinessPartner;
 import cds.gen.api_business_partner.ApiBusinessPartner_;
 import cds.gen.api_business_partner.BusinessPartnerChangedContext;
 import my.bookshop.MessageKeys;
@@ -53,9 +54,9 @@ public class AdminServiceAddressHandler implements EventHandler {
 
 	// We are mashing up the AdminService with two other services...
 	private final PersistenceService db;
-	private final CqnService bupa;
+	private final ApiBusinessPartner bupa;
 
-	AdminServiceAddressHandler(PersistenceService db, @Qualifier(ApiBusinessPartner_.CDS_NAME) CqnService bupa) {
+	AdminServiceAddressHandler(PersistenceService db, @Qualifier(ApiBusinessPartner_.CDS_NAME) ApiBusinessPartner bupa) {
 		this.db = db;
 		this.bupa = bupa;
 	}

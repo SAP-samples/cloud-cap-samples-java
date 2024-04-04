@@ -16,7 +16,6 @@ import java.util.UUID;
 import java.util.function.Supplier;
 import java.util.stream.Stream;
 
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
 import com.sap.cds.Result;
@@ -41,6 +40,7 @@ import com.sap.cds.services.messages.Messages;
 import com.sap.cds.services.persistence.PersistenceService;
 
 import cds.gen.adminservice.AddToOrderContext;
+import cds.gen.adminservice.AdminService;
 import cds.gen.adminservice.AdminService_;
 import cds.gen.adminservice.Books;
 import cds.gen.adminservice.Books_;
@@ -61,7 +61,7 @@ import my.bookshop.MessageKeys;
 @ServiceName(AdminService_.CDS_NAME)
 class AdminServiceHandler implements EventHandler {
 
-	private final DraftService adminService;
+	private final AdminService.Draft adminService;
 
 	private final PersistenceService db;
 
@@ -69,8 +69,7 @@ class AdminServiceHandler implements EventHandler {
 
 	private final CqnAnalyzer analyzer;
 
-	AdminServiceHandler(@Qualifier(AdminService_.CDS_NAME) DraftService adminService, PersistenceService db,
-			Messages messages, CdsModel model) {
+	AdminServiceHandler(AdminService.Draft adminService, PersistenceService db, Messages messages, CdsModel model) {
 		this.adminService = adminService;
 		this.db = db;
 		this.messages = messages;
@@ -297,7 +296,7 @@ class AdminServiceHandler implements EventHandler {
 
 					// separate transaction per line
 					context.getCdsRuntime().changeSetContext().run(ctx -> {
-						db.run(Upsert.into(Bookshop_.BOOKS).entry(book));
+						db.run(Upsert.into(BOOKS).entry(book));
 					});
 				});
 			} catch (IOException e) {

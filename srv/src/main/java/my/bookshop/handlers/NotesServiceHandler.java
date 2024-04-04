@@ -1,5 +1,8 @@
 package my.bookshop.handlers;
 
+import static cds.gen.notesservice.NotesService_.ADDRESSES;
+import static cds.gen.notesservice.NotesService_.NOTES;
+
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -8,7 +11,6 @@ import java.util.Set;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
@@ -26,11 +28,11 @@ import com.sap.cds.ql.cqn.CqnStructuredTypeRef;
 import com.sap.cds.ql.cqn.Modifier;
 import com.sap.cds.reflect.CdsModel;
 import com.sap.cds.services.cds.CdsReadEventContext;
-import com.sap.cds.services.cds.CqnService;
 import com.sap.cds.services.handler.EventHandler;
 import com.sap.cds.services.handler.annotations.On;
 import com.sap.cds.services.handler.annotations.ServiceName;
 
+import cds.gen.api_business_partner.ApiBusinessPartner;
 import cds.gen.api_business_partner.ApiBusinessPartner_;
 import cds.gen.notesservice.Addresses;
 import cds.gen.notesservice.Addresses_;
@@ -42,11 +44,10 @@ import cds.gen.notesservice.Notes_;
 @ServiceName(NotesService_.CDS_NAME)
 public class NotesServiceHandler implements EventHandler {
 
-	private final CqnService bupa;
+	private final ApiBusinessPartner bupa;
 	private final CqnAnalyzer analyzer;
 
-	@Autowired
-	NotesServiceHandler(@Qualifier(ApiBusinessPartner_.CDS_NAME) CqnService bupa, CdsModel model) {
+	NotesServiceHandler(@Qualifier(ApiBusinessPartner_.CDS_NAME) ApiBusinessPartner bupa, CdsModel model) {
 		this.bupa = bupa;
 		this.analyzer = CqnAnalyzer.create(model);
 	}
@@ -57,7 +58,7 @@ public class NotesServiceHandler implements EventHandler {
 		// via note
 		if(segments.size() == 2 && segments.get(0).id().equals(Notes_.CDS_NAME)) {
 			Map<String, Object> noteKeys = analyzer.analyze(context.getCqn()).rootKeys();
-			Notes note = context.getService().run(Select.from(Notes_.class).columns(n -> n.address_businessPartner(), n -> n.address_ID()).matching(noteKeys)).single(Notes.class);
+			Notes note = context.getService().run(Select.from(NOTES).columns(n -> n.address_businessPartner(), n -> n.address_ID()).matching(noteKeys)).single(Notes.class);
 			CqnSelect addressOfNote = CQL.copy(context.getCqn(), new Modifier() {
 
 				@Override
@@ -89,7 +90,7 @@ public class NotesServiceHandler implements EventHandler {
 		// add expanded notes?
 		CqnExpand notesExpand = notesExpandHolder.get();
 		if(notesExpand != null) {
-			Select<?> notesSelect = Select.from(Notes_.class)
+			Select<?> notesSelect = Select.from(NOTES)
 					.columns(ensureSelected(notesExpand.items(), Notes.ADDRESS_BUSINESS_PARTNER, Notes.ADDRESS_ID))
 					.orderBy(notesExpand.orderBy())
 					.where(n -> CQL.or(addresses.streamOf(Addresses.class)
@@ -155,7 +156,7 @@ public class NotesServiceHandler implements EventHandler {
 			Result notes = context.getService().run(noAddressExpand);
 			List<Notes> notesWithAddresses = notes.streamOf(Notes.class).filter(n -> n.getAddressBusinessPartner() != null && n.getAddressId() != null).collect(Collectors.toList());
 			if (notesWithAddresses.size() > 0) {
-				Select<?> addressSelect = Select.from(Addresses_.class)
+				Select<?> addressSelect = Select.from(ADDRESSES)
 						.columns(ensureSelected(addressExpand.items(), Addresses.BUSINESS_PARTNER, Addresses.ID))
 						.orderBy(addressExpand.orderBy())
 						.where(a -> CQL.or(notesWithAddresses.stream()

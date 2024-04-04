@@ -1,5 +1,7 @@
 package my.bookshop;
 
+import static cds.gen.my.bookshop.Bookshop_.BOOKS;
+
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.OptionalDouble;
@@ -13,7 +15,6 @@ import com.sap.cds.ql.Update;
 import com.sap.cds.services.persistence.PersistenceService;
 
 import cds.gen.my.bookshop.Books;
-import cds.gen.my.bookshop.Bookshop_;
 import cds.gen.my.bookshop.Reviews;
 
 /**
@@ -33,7 +34,7 @@ public class RatingCalculator {
 	 * Initializes the ratings for all existing books based on their reviews.
 	 */
 	public void initBookRatings() {
-		Result result = db.run(Select.from(Bookshop_.BOOKS).columns(b -> b.ID()));
+		Result result = db.run(Select.from(BOOKS).columns(b -> b.ID()));
 		for (Books book : result.listOf(Books.class)) {
 			setBookRating(book.getId());
 		}
@@ -45,12 +46,12 @@ public class RatingCalculator {
 	 * @param bookId
 	 */
 	public void setBookRating(String bookId) {
-		Result run = db.run(Select.from(Bookshop_.BOOKS, b -> b.filter(b.ID().eq(bookId)).reviews()));
+		Result run = db.run(Select.from(BOOKS, b -> b.filter(b.ID().eq(bookId)).reviews()));
 
 		Stream<Double> ratings = run.streamOf(Reviews.class).map(r -> r.getRating().doubleValue());
 		BigDecimal rating = getAvgRating(ratings);
 
-		db.run(Update.entity(Bookshop_.BOOKS).byId(bookId).data(Books.RATING, rating));
+		db.run(Update.entity(BOOKS).byId(bookId).data(Books.RATING, rating));
 	}
 
 	static BigDecimal getAvgRating(Stream<Double> ratings) {
