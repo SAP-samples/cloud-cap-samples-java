@@ -13,7 +13,7 @@ modules:
     parameters:
       memory: 1024M
       disk-quota: 512M
-      buildpack: sap_java_buildpack
+      buildpack: sap_java_buildpack_jakarta
     properties:
       SPRING_PROFILES_ACTIVE: cloud,sandbox
       CDS_MULTITENANCY_APPUI_TENANTSEPARATOR: "-"
