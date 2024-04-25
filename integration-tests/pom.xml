@@ -113,6 +113,7 @@
 				</executions>
 				<configuration>
 					<executable>node</executable>
+					<skip>${skipTests}</skip>
 					<workingDirectory>${sidecar.dir}</workingDirectory>
 					<async>true</async>
 					<useMavenLogger>true</useMavenLogger>
