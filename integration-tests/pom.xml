@@ -15,6 +15,7 @@
 
 	<properties>
 		<sidecar.dir>../mtx/sidecar</sidecar.dir>
+		<cds.node.executable>node</cds.node.executable>
 	</properties>
 
 	<dependencies>
