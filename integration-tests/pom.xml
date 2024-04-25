@@ -113,14 +113,12 @@
 				</executions>
 				<configuration>
 					<executable>node</executable>
-					<!-- optional -->
 					<workingDirectory>${sidecar.dir}</workingDirectory>
 					<async>true</async>
 					<useMavenLogger>true</useMavenLogger>
 					<commandlineArgs>node_modules/@sap/cds/bin/cds-serve.js</commandlineArgs>
 				</configuration>
 			</plugin>
-
 		</plugins>
 	</build>
 </project>
