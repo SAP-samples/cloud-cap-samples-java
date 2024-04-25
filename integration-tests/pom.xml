@@ -92,7 +92,6 @@
 						</configuration>
 					</execution>
 
-					<!-- Following steps start and stop MTX sidecar for tests executed by failsafe plugin -->
 					<execution>
 						<id>install-sidecar</id>
 						<goals>
