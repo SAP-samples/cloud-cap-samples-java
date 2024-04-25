@@ -9,8 +9,7 @@
     "@sap/hdi-deploy": "4.8.2"
   },
   "devDependencies": {
-    "sqlite3": "^5",
-    "pm2": "^5.3.0"
+    "sqlite3": "^5"
   },
   "engines": {
     "node": "^18"

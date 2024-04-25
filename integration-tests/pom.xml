@@ -95,34 +95,32 @@
 							<workingDirectory>${sidecar.dir}</workingDirectory>
 						</configuration>
 					</execution>
-
-					<execution>
-						<id>start-sidecar</id>
-						<goals>
-							<goal>npx</goal>
-						</goals>
-						<phase>pre-integration-test</phase>
-						<configuration>
-							<arguments>pm2 -l sidecar.log --time start --name=sidecar npm -- run start</arguments>
-							<skip>${skipTests}</skip>
-							<workingDirectory>${sidecar.dir}</workingDirectory>
-						</configuration>
-					</execution>
-
-					<execution>
-						<id>stop-sidecar</id>
-						<goals>
-							<goal>npx</goal>
-						</goals>
-						<phase>post-integration-test</phase>
-						<configuration>
-							<arguments>pm2 delete sidecar</arguments>
-							<skip>${skipTests}</skip>
-							<workingDirectory>${sidecar.dir}</workingDirectory>
-						</configuration>
-					</execution>
 				</executions>
 			</plugin>
+
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>exec-maven-plugin</artifactId>
+				<version>3.2.0</version>
+				<executions>
+					<execution>
+						<phase>pre-integration-test</phase>
+						<id>start-sidecar</id>
+						<goals>
+							<goal>exec</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<executable>node</executable>
+					<!-- optional -->
+					<workingDirectory>${sidecar.dir}</workingDirectory>
+					<async>true</async>
+					<useMavenLogger>true</useMavenLogger>
+					<commandlineArgs>node_modules/@sap/cds/bin/cds-serve.js</commandlineArgs>
+				</configuration>
+			</plugin>
+
 		</plugins>
 	</build>
 </project>
