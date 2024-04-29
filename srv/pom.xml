@@ -109,8 +109,6 @@
 				<version>${spring.boot.version}</version>
 				<configuration>
 					<skip>false</skip>
-					<!-- use project root directory as working directory to deliver fiori resources -->
-					<workingDirectory>..</workingDirectory>
 				</configuration>
 				<executions>
 					<execution>
