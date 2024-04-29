@@ -1,9 +1,6 @@
 ---
 my.bookshop.postgresImage: postgres:14
 
-spring:
-  web.resources.static-locations: "file:./app"
-
 cds:
   dataSource.csv:
     initializationMode: always
