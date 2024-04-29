@@ -15,6 +15,7 @@
 
 	<properties>
 		<sidecar.dir>../mtx/sidecar</sidecar.dir>
+		<cds.node.executable>node</cds.node.executable>
 	</properties>
 
 	<dependencies>
@@ -82,7 +83,16 @@
 				<artifactId>cds-maven-plugin</artifactId>
 				<version>${cds.services.version}</version>
 				<executions>
-					<!-- Following steps start and stop MTX sidecar for tests executed by failsafe plugin -->
+					<execution>
+						<id>cds.install-node</id>
+						<goals>
+							<goal>install-node</goal>
+						</goals>
+						<configuration>
+							<skip>${cdsdk-global}</skip>
+						</configuration>
+					</execution>
+
 					<execution>
 						<id>install-sidecar</id>
 						<goals>
@@ -95,33 +105,30 @@
 							<workingDirectory>${sidecar.dir}</workingDirectory>
 						</configuration>
 					</execution>
+				</executions>
+			</plugin>
 
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>exec-maven-plugin</artifactId>
+				<version>3.2.0</version>
+				<executions>
 					<execution>
+						<phase>pre-integration-test</phase>
 						<id>start-sidecar</id>
 						<goals>
-							<goal>npx</goal>
+							<goal>exec</goal>
 						</goals>
-						<phase>pre-integration-test</phase>
-						<configuration>
-							<arguments>pm2 -l sidecar.log --time start --name=sidecar npm -- run start</arguments>
-							<skip>${skipTests}</skip>
-							<workingDirectory>${sidecar.dir}</workingDirectory>
-						</configuration>
-					</execution>
-
-					<execution>
-						<id>stop-sidecar</id>
-						<goals>
-							<goal>npx</goal>
-						</goals>
-						<phase>post-integration-test</phase>
-						<configuration>
-							<arguments>pm2 delete sidecar</arguments>
-							<skip>${skipTests}</skip>
-							<workingDirectory>${sidecar.dir}</workingDirectory>
-						</configuration>
 					</execution>
 				</executions>
+				<configuration>
+					<executable>${cds.node.executable}</executable>
+					<skip>${skipTests}</skip>
+					<workingDirectory>${sidecar.dir}</workingDirectory>
+					<async>true</async>
+					<useMavenLogger>true</useMavenLogger>
+					<commandlineArgs>node_modules/@sap/cds/bin/cds-serve.js</commandlineArgs>
+				</configuration>
 			</plugin>
 		</plugins>
 	</build>

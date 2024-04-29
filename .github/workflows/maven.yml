@@ -9,7 +9,7 @@ on:
       - main
       - postgres
   pull_request:
-    branches: 
+    branches:
       - main
       - postgres
 
@@ -27,4 +27,4 @@ jobs:
         java-version: 17
         distribution: 'sapmachine'
     - name: Build with Maven
-      run: mvn -B clean install
+      run: mvn -ntp -B clean install

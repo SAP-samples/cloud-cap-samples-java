@@ -24,11 +24,6 @@
 
 		<dependency>
 			<groupId>com.sap.cds</groupId>
-			<artifactId>cds-adapter-api</artifactId>
-		</dependency>
-
-		<dependency>
-			<groupId>com.sap.cds</groupId>
 			<artifactId>cds-adapter-odata-v4</artifactId>
 			<scope>runtime</scope>
 		</dependency>
@@ -163,8 +158,6 @@
 				<artifactId>spring-boot-maven-plugin</artifactId>
 				<configuration>
 					<skip>false</skip>
-					<!-- use project root directory as working directory to deliver fiori resources -->
-					<workingDirectory>..</workingDirectory>
 				</configuration>
 				<executions>
 					<execution>
