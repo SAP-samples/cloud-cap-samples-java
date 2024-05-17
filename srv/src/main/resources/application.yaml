@@ -1,10 +1,6 @@
 ---
 my.bookshop.postgresImage: postgres:14
 
-cfenv.service:
-  '[bookshop-pg-db]':
-    enabled: false
-
 cds:
   dataSource.csv:
     initializationMode: always
