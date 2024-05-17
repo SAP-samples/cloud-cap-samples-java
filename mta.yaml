@@ -18,10 +18,10 @@ modules:
         SPRING_PROFILES_ACTIVE: cloud
         JBP_CONFIG_COMPONENTS: '{jres: ["JavaBuildpack::Jre::SapMachineJRE"]}'
         JBP_CONFIG_SAP_MACHINE_JRE: '{ jre: { version: "17.+" } }'
-        # The library Java CF Env is added to the classpath by the java_buildpack on startup.
-        # CF Env detects the PostegreSQL binding and sets the property spring.datasource.url, but this
-        # disables the CDS datasource auto-configuration and the PostgreSQL datasource of CAP Java is not setup.
-        # The next option disables CF Env and makes the PostgreSQL datasource provided by CAP Java working.
+        # The Java CF Env library is added to the classpath by the java_buildpack on application start.
+        # CF Env detects the PostgreSQL binding and sets the property spring.datasource.url, but this
+        # disables the CDS datasource auto-configuration and the CAP Java PostgreSQL datasource is not set up.
+        # The next option disables CF Env and makes the PostgreSQL datasource provided by CAP Java work.
         JBP_CONFIG_SPRING_AUTO_RECONFIGURATION: '{enabled: false}'
     build-parameters:
       builder: custom
