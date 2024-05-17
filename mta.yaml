@@ -18,7 +18,7 @@ modules:
         SPRING_PROFILES_ACTIVE: cloud
         JBP_CONFIG_COMPONENTS: '{jres: ["JavaBuildpack::Jre::SapMachineJRE"]}'
         JBP_CONFIG_SAP_MACHINE_JRE: '{ jre: { version: "17.+" } }'
-        # disable auto-reconfiguration with cf-env
+        # disable auto-reconfiguration of cf-env
         JBP_CONFIG_SPRING_AUTO_RECONFIGURATION: '{enabled: false}'
     build-parameters:
       builder: custom
