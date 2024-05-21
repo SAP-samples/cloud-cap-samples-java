@@ -18,7 +18,7 @@ modules:
         SPRING_PROFILES_ACTIVE: cloud
         JBP_CONFIG_COMPONENTS: '{jres: ["JavaBuildpack::Jre::SapMachineJRE"]}'
         JBP_CONFIG_SAP_MACHINE_JRE: '{ jre: { version: "17.+" } }'
-        # We need datasource to be configured by CAP, not by cfenv
+        # We do not want cfenv to configure the DataSource for us
         # cfenv uses names of the services, so this variable must be adapted if needed
         # as CFENV_SERVICE_[service-name]_ENABLED
         # See https://docs.cloudfoundry.org/buildpacks/java/configuring-service-connections.html
