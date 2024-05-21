@@ -18,11 +18,11 @@ modules:
         SPRING_PROFILES_ACTIVE: cloud
         JBP_CONFIG_COMPONENTS: '{jres: ["JavaBuildpack::Jre::SapMachineJRE"]}'
         JBP_CONFIG_SAP_MACHINE_JRE: '{ jre: { version: "17.+" } }'
-        # The Java CF Env library is added to the classpath by the java_buildpack on application start.
-        # CF Env detects the PostgreSQL binding and sets the property spring.datasource.url, but this
-        # disables the CDS datasource auto-configuration and the CAP Java PostgreSQL datasource is not set up.
-        # The next option disables CF Env and makes the PostgreSQL datasource provided by CAP Java work.
-        JBP_CONFIG_SPRING_AUTO_RECONFIGURATION: '{enabled: false}'
+        # We need datasource to be configured by CAP, not by cfenv
+        # cfenv uses names of the services, so this variable must be adapted if needed
+        # as CFENV_SERVICE_[service-name]_ENABLED
+        # See https://docs.cloudfoundry.org/buildpacks/java/configuring-service-connections.html
+        CFENV_SERVICE_BOOKSHOP-PG-DB_ENABLED: false
     build-parameters:
       builder: custom
       commands:
