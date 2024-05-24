@@ -19,6 +19,11 @@ spring:
   config.activate.on-profile: cloud
   liquibase.contexts: "!dev"
 
+# This prevents the cfenv library from configuring Spring DataSource for Postgres instance
+# which can cause problems with TLS configurations on hyperscalers
+# Format: cfenv.service.<postgres-instance-name>.enabled: false
+# See https://docs.cloudfoundry.org/buildpacks/java/configuring-service-connections.html
+cfenv.service.bookshop-pg-db.enabled: false
 ---
 spring:
   config.activate.on-profile: default
