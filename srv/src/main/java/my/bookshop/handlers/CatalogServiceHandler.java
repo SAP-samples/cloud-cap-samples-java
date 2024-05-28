@@ -23,7 +23,6 @@ import com.sap.cds.reflect.CdsModel;
 import com.sap.cds.services.ErrorStatuses;
 import com.sap.cds.services.ServiceException;
 import com.sap.cds.services.cds.CdsReadEventContext;
-import com.sap.cds.services.cds.CqnService;
 import com.sap.cds.services.handler.EventHandler;
 import com.sap.cds.services.handler.annotations.After;
 import com.sap.cds.services.handler.annotations.Before;
@@ -126,7 +125,7 @@ class CatalogServiceHandler implements EventHandler {
 		ratingCalculator.setBookRating(context.getResult().getBookId());
 	}
 
-	@After(event = CqnService.EVENT_READ)
+	@After
 	public void discountBooks(CdsReadEventContext context, Stream<Books> books) {
 		CqnExpression titlePatternExpr = context.getTarget().getElement(Books.TITLE)
 				.getAnnotationValue("discountTitlePattern", null);
