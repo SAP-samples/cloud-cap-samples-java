@@ -17,6 +17,7 @@ import com.sap.cds.ql.Insert;
 import com.sap.cds.ql.Select;
 import com.sap.cds.ql.Update;
 import com.sap.cds.ql.cqn.CqnAnalyzer;
+import com.sap.cds.ql.cqn.CqnExpression;
 import com.sap.cds.ql.cqn.CqnSelect;
 import com.sap.cds.reflect.CdsModel;
 import com.sap.cds.services.ErrorStatuses;
@@ -40,6 +41,7 @@ import cds.gen.catalogservice.Reviews;
 import cds.gen.catalogservice.SubmitOrderContext;
 import cds.gen.reviewservice.ReviewService;
 import cds.gen.reviewservice.ReviewService_;
+import my.bookshop.DiscountUtils;
 import my.bookshop.MessageKeys;
 import my.bookshop.RatingCalculator;
 
@@ -125,10 +127,12 @@ class CatalogServiceHandler implements EventHandler {
 	}
 
 	@After(event = CqnService.EVENT_READ)
-	public void discountBooks(Stream<Books> books) {
+	public void discountBooks(CdsReadEventContext context, Stream<Books> books) {
+		CqnExpression titlePatternExpr = context.getTarget().getElement(Books.TITLE)
+				.getAnnotationValue("discountTitlePattern", null);
 		books.filter(b -> b.getTitle() != null).forEach(b -> {
 			loadStockIfNotSet(b);
-			discountBooksWithMoreThan111Stock(b, featureToggles.isEnabled("discount"));
+			discountBooksWithMoreThan111Stock(b, featureToggles.isEnabled("discount"), titlePatternExpr);
 		});
 	}
 
@@ -179,9 +183,9 @@ class CatalogServiceHandler implements EventHandler {
 		}
 	}
 
-	private void discountBooksWithMoreThan111Stock(Books b, boolean premium) {
+	private void discountBooksWithMoreThan111Stock(Books b, boolean premium, CqnExpression expr) {
 		if (b.getStock() != null && b.getStock() > 111) {
-			b.setTitle(String.format("%s -- %s%% discount", b.getTitle(), premium ? 14 : 11));
+			b.setTitle(DiscountUtils.getDiscountTitle(expr, b, premium ? 14 : 11));
 		}
 	}
 

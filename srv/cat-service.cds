@@ -31,4 +31,6 @@ service CatalogService @(requires: 'any') {
             to : 'authenticated-user'
         }
     ];
+
+    annotate Books : title with @discountTitlePattern: (title + ' -- %d%% discount');
 }
