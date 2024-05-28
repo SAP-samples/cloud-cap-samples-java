@@ -32,5 +32,5 @@ service CatalogService @(requires: 'any') {
         }
     ];
 
-    annotate Books : title with @discountTitlePattern: (title + ' -- %d%% discount');
+    annotate Books : title with @discountTitlePattern: (title + '-- %d%% discount');
 }

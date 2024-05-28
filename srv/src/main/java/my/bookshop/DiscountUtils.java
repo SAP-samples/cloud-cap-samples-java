@@ -4,11 +4,13 @@ import java.util.Map;
 
 import com.sap.cds.ql.cqn.CqnElementRef;
 import com.sap.cds.ql.cqn.CqnExpression;
+import com.sap.cds.ql.cqn.CqnPlain;
 import com.sap.cds.ql.cqn.CqnStringLiteral;
 import com.sap.cds.ql.cqn.CqnVisitor;
 
 /**
- * Takes care of processing expressions to calculate the discount title
+ * Takes care of processing annotation expressions to calculate the title with
+ * discount
  */
 public class DiscountUtils {
 
@@ -21,28 +23,33 @@ public class DiscountUtils {
 
 class ExpressionProcessor implements CqnVisitor {
 
-	private int discountPercent;
-	private Map<String, ?> row;
-	private String result;
+	private final int discount;
+	private final Map<String, ?> row;
+	private String title = "";
 
-	public ExpressionProcessor(Map<String, ?> row, int discountPercent) {
+	public ExpressionProcessor(Map<String, ?> row, int discount) {
 		this.row = row;
-		this.discountPercent = discountPercent;
-		this.result = "";
+		this.discount = discount;
 	}
 
 	public String getTitle() {
-		return result;
+		return title;
 	}
 
 	@Override
 	public void visit(CqnElementRef elementRef) {
-		result += row.get(elementRef.displayName());
+		title += row.get(elementRef.displayName());
+	}
+
+	@Override
+	public void visit(CqnPlain p) {
+		if ("+".equals(p.plain())) {
+			title += " ";
+		}
 	}
 
 	@Override
 	public void visit(CqnStringLiteral l) {
-		String value = l.value();
-		result += value.replace("%d%", String.valueOf(discountPercent));
+		title += l.value().replace("%d%", String.valueOf(discount));
 	}
 }

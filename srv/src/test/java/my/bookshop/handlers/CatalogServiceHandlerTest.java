@@ -6,12 +6,11 @@ import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-import java.util.List;
 import java.util.stream.Stream;
 
 import org.junit.jupiter.api.Test;
 
-import com.sap.cds.impl.parser.ExprParser;
+import com.sap.cds.impl.parser.builder.ExpressionBuilder;
 import com.sap.cds.ql.CQL;
 import com.sap.cds.reflect.CdsElement;
 import com.sap.cds.reflect.CdsEntity;
@@ -29,9 +28,8 @@ public class CatalogServiceHandlerTest {
 		CdsReadEventContext ctx = mock(CdsReadEventContext.class);
 		when(ctx.getTarget()).thenReturn(entity);
 		when(entity.getElement(anyString())).thenReturn(el);
-		when(el.getAnnotationValue(anyString(), any()))
-				.thenReturn(new ExprParser().parseValue(
-						List.of(CQL.get("title"), CQL.plain("+"), CQL.val(" -- %d%% discount"))));
+		when(el.getAnnotationValue(anyString(), any())).thenReturn(
+				ExpressionBuilder.create(CQL.get("title"), CQL.plain("+"), CQL.val("-- %d%% discount")).value());
 
 		Books book1 = Books.create();
 		book1.setTitle("Book 1");
