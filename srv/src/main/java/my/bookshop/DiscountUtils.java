@@ -14,20 +14,20 @@ import com.sap.cds.ql.cqn.CqnVisitor;
  */
 public class DiscountUtils {
 
-	public static String getDiscountTitle(CqnExpression discountRule, Map<String, ?> row, int discountPercent) {
-		ExpressionProcessor v = new ExpressionProcessor(row, discountPercent);
-		discountRule.accept(v);
+	public static String getDiscountTitle(CqnExpression expression, Map<String, ?> row, int discountPercent) {
+		ExpressionVisitor v = new ExpressionVisitor(row, discountPercent);
+		expression.accept(v);
 		return v.getTitle();
 	}
 }
 
-class ExpressionProcessor implements CqnVisitor {
+class ExpressionVisitor implements CqnVisitor {
 
 	private final int discount;
 	private final Map<String, ?> row;
 	private String title = "";
 
-	public ExpressionProcessor(Map<String, ?> row, int discount) {
+	public ExpressionVisitor(Map<String, ?> row, int discount) {
 		this.row = row;
 		this.discount = discount;
 	}

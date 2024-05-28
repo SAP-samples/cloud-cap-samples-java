@@ -182,6 +182,14 @@ class CatalogServiceHandler implements EventHandler {
 		}
 	}
 
+	/**
+	 * Calculates the book title based on the stock condition, premium flag and
+	 * discount annotation expression
+	 * 
+	 * @param b       the book
+	 * @param premium feature toggle flag for premium discounts
+	 * @param expr    expression
+	 */
 	private void discountBooksWithMoreThan111Stock(Books b, boolean premium, CqnExpression expr) {
 		if (b.getStock() != null && b.getStock() > 111) {
 			b.setTitle(DiscountUtils.getDiscountTitle(expr, b, premium ? 14 : 11));
