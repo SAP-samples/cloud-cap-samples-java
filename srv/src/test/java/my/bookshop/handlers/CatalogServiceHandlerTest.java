@@ -29,7 +29,8 @@ public class CatalogServiceHandlerTest {
 		when(ctx.getTarget()).thenReturn(entity);
 		when(entity.getElement(anyString())).thenReturn(el);
 		when(el.getAnnotationValue(anyString(), any())).thenReturn(
-				ExpressionBuilder.create(CQL.get("title"), CQL.plain("+"), CQL.val("-- %d%% discount")).value());
+				ExpressionBuilder.create(CQL.get("title"), CQL.plain("||"), CQL.val(" -- "), CQL.plain("||"),
+						CQL.get("percentDiscount"), CQL.plain("||"), CQL.val("% discount")).value());
 
 		Books book1 = Books.create();
 		book1.setTitle("Book 1");

@@ -192,7 +192,8 @@ class CatalogServiceHandler implements EventHandler {
 	 */
 	private void discountBooksWithMoreThan111Stock(Books b, boolean premium, CqnExpression expr) {
 		if (b.getStock() != null && b.getStock() > 111) {
-			b.setTitle(DiscountUtils.getDiscountTitle(expr, b, premium ? 14 : 11));
+			b.setPercentDiscount(premium ? 14 : 11);
+			b.setTitle(DiscountUtils.getDiscountTitle(expr, b));
 		}
 	}
 

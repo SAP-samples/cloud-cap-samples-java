@@ -1,6 +1,7 @@
 package my.bookshop;
 
 import java.util.Map;
+import java.util.function.BiFunction;
 
 import com.sap.cds.ql.cqn.CqnElementRef;
 import com.sap.cds.ql.cqn.CqnExpression;
@@ -14,8 +15,8 @@ import com.sap.cds.ql.cqn.CqnVisitor;
  */
 public class DiscountUtils {
 
-	public static String getDiscountTitle(CqnExpression expression, Map<String, ?> row, int discountPercent) {
-		ExpressionVisitor v = new ExpressionVisitor(row, discountPercent);
+	public static String getDiscountTitle(CqnExpression expression, Map<String, ?> row) {
+		ExpressionVisitor v = new ExpressionVisitor(row);
 		expression.accept(v);
 		return v.getTitle();
 	}
@@ -23,13 +24,12 @@ public class DiscountUtils {
 
 class ExpressionVisitor implements CqnVisitor {
 
-	private final int discount;
 	private final Map<String, ?> row;
-	private String title = "";
+	private String title;
+	private BiFunction<String, Object, String> operator;
 
-	public ExpressionVisitor(Map<String, ?> row, int discount) {
+	public ExpressionVisitor(Map<String, ?> row) {
 		this.row = row;
-		this.discount = discount;
 	}
 
 	public String getTitle() {
@@ -38,18 +38,22 @@ class ExpressionVisitor implements CqnVisitor {
 
 	@Override
 	public void visit(CqnElementRef elementRef) {
-		title += row.get(elementRef.displayName());
+		if (operator == null) {
+			title = (String) row.get(elementRef.displayName());
+		} else {
+			title = operator.apply(title, row.get(elementRef.displayName()));
+		}
 	}
 
 	@Override
 	public void visit(CqnPlain p) {
-		if ("+".equals(p.plain())) {
-			title += " ";
+		if ("||".equals(p.plain())) {
+			operator = (s1, s2) -> s1 + s2;
 		}
 	}
 
 	@Override
 	public void visit(CqnStringLiteral l) {
-		title += l.value().replace("%d%", String.valueOf(discount));
+		title = operator.apply(title, l.value());
 	}
 }

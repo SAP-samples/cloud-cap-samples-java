@@ -31,6 +31,10 @@ service CatalogService @(requires: 'any') {
             to : 'authenticated-user'
         }
     ];
+    
+    extend projection Books with {
+        virtual null as percentDiscount : Integer
+    }
 
-    annotate Books : title with @discountTitlePattern: (title + '-- %d%% discount');
+    annotate Books : title with @discountTitlePattern: (title || ' -- ' || percentDiscount || '% discount');
 }
