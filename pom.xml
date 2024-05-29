@@ -63,6 +63,14 @@
 				<type>pom</type>
 				<scope>import</scope>
 			</dependency>
+
+			<!-- Override version until 4.0.1 is released -->
+			<dependency>
+				<groupId>com.sap.cloud.servicesdk.xbem</groupId>
+				<artifactId>emjapi-extension-sap-cp-jms</artifactId>
+				<version>4.0.0</version>
+			</dependency>
+
 		</dependencies>
 	</dependencyManagement>
 
