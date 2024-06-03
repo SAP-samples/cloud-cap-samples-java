@@ -1,5 +1,8 @@
 using {sap.common.Languages as CommonLanguages} from '@sap/cds/common';
 using {my.bookshop as my} from '../db/index';
+using {sap.changelog as changelog} from 'com.sap.cds/change-tracking';
+
+extend my.Orders with changelog.changeTracked;
 
 @path : 'admin'
 service AdminService @(requires : 'admin') {
@@ -40,3 +43,25 @@ annotate AdminService.Books with @odata.draft.enabled;
 extend service AdminService with {
   entity Languages as projection on CommonLanguages;
 }
+
+// Change-track orders and items
+annotate AdminService.Orders {
+  OrderNo @changelog;
+};
+
+annotate AdminService.OrderItems {
+  amount @changelog;
+  quantity @changelog;
+  book @changelog: [
+    book.title,
+    book.isbn
+  ]
+};
+
+// Assign identifiers to the tracked entities
+annotate AdminService.Orders with @changelog: [OrderNo];
+annotate AdminService.OrderItems with @changelog: [
+    Items.parent.OrderNo,
+    Items.book.title,
+    Items.book.isbn
+  ];
