@@ -18,6 +18,9 @@
     "profile": "mtx-sidecar",
     "[development]": {
       "requires": { "auth": "dummy" }
+    },
+    "prod": {
+      "requires": { "auth": "dummy", "db": "../../db.sqlite" }
     }
   },
   "scripts": {
