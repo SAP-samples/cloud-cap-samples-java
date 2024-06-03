@@ -108,6 +108,14 @@
 				</executions>
 			</plugin>
 
+			<!-- Introduces a hack: MTX sidecar is executed in the pseudo-production mode
+			 	 where authentication is not enforced, the SQLite is used as the database,
+			 	 but the model comes from the single compiled csn.json. This is required until
+			 	 the sidecar will be able to import our CDS models from the JARs using
+			 	 development profile.
+			 	 To start sidecar locally cd to the mtx/sidecar/gen
+			 	 and run `cds w` with profile `prod`
+			 -->
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>exec-maven-plugin</artifactId>
@@ -124,10 +132,10 @@
 				<configuration>
 					<executable>${cds.node.executable}</executable>
 					<skip>${skipTests}</skip>
-					<workingDirectory>${sidecar.dir}</workingDirectory>
+					<workingDirectory>${sidecar.dir}/gen/</workingDirectory>
 					<async>true</async>
 					<useMavenLogger>true</useMavenLogger>
-					<commandlineArgs>node_modules/@sap/cds/bin/cds-serve.js</commandlineArgs>
+					<commandlineArgs>../node_modules/@sap/cds/bin/cds-serve.js --profile prod</commandlineArgs>
 				</configuration>
 			</plugin>
 		</plugins>
