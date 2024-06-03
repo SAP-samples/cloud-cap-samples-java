@@ -61,7 +61,6 @@ annotate AdminService.OrderItems {
 // Assign identifiers to the tracked entities
 annotate AdminService.Orders with @changelog: [OrderNo];
 annotate AdminService.OrderItems with @changelog: [
-    Items.parent.OrderNo,
-    Items.book.title,
-    Items.book.isbn
+    parent.OrderNo,
+    book.title,
   ];
