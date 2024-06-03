@@ -75,7 +75,6 @@
 		<dependency>
 			<groupId>com.sap.cds</groupId>
 			<artifactId>cds-feature-change-tracking</artifactId>
-			<scope>runtime</scope>
 		</dependency>
 
 		<!-- CLOUD SDK dependencies -->

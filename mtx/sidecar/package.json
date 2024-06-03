@@ -16,18 +16,8 @@
   },
   "cds": {
     "profile": "mtx-sidecar",
-    "[prod]": {
-      "requires": {
-        "auth": "dummy",
-        "db": {
-          "kind": "sqlite"
-        }
-      }
-    },
     "[development]": {
-      "requires": {
-        "auth": "dummy"
-      }
+      "requires": { "auth": "dummy" }
     }
   },
   "scripts": {
