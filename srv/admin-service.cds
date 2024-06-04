@@ -50,7 +50,6 @@ annotate AdminService.Orders {
 };
 
 annotate AdminService.OrderItems {
-  amount @changelog;
   quantity @changelog;
   book @changelog: [
     book.title,
