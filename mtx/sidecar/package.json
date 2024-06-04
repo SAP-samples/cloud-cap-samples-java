@@ -19,8 +19,8 @@
     "[development]": {
       "requires": { "auth": "dummy" }
     },
-    "prod": {
-      "requires": { "auth": "dummy", "db": "../../db.sqlite" }
+    "cdsc": {
+      "moduleLookupDirectories": [ "node_modules/", "srv/target/cds/", "srv/", "fts/isbn/", "db/" ]
     }
   },
   "scripts": {

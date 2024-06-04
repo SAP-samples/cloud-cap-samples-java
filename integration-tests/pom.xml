@@ -131,10 +131,9 @@
 				<configuration>
 					<executable>${cds.node.executable}</executable>
 					<skip>${skipTests}</skip>
-					<workingDirectory>${sidecar.dir}/gen</workingDirectory>
 					<async>true</async>
 					<useMavenLogger>true</useMavenLogger>
-					<commandlineArgs>node_modules/@sap/cds/bin/cds-serve.js --profile prod</commandlineArgs>
+					<commandlineArgs>node_modules/@sap/cds/bin/cds-serve.js ${sidecar.dir}</commandlineArgs>
 				</configuration>
 			</plugin>
 		</plugins>
