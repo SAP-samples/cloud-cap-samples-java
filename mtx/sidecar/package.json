@@ -20,7 +20,7 @@
       "requires": { "auth": "dummy" }
     },
     "cdsc": {
-      "moduleLookupDirectories": [ "node_modules/", "srv/target/cds/", "srv/", "fts/isbn/", "db/" ]
+      "moduleLookupDirectories": [ "node_modules/", "srv/target/cds/" ]
     }
   },
   "scripts": {
