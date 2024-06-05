@@ -68,6 +68,7 @@ annotate AdminService.Orders with {
 //	UI
 //
 annotate AdminService.Orders with @(
+    title : '{i18n>Order}',
     UI     : {
         ////////////////////////////////////////////////////////////////////////////
         //
@@ -147,6 +148,13 @@ annotate AdminService.Orders with @(
                 Label  : '{i18n>OrderItems}',
                 Target : 'Items/@UI.LineItem'
             },
+            {
+                $Type               : 'UI.ReferenceFacet',
+                ID                  : 'ChangeHistoryFacet',
+                Label               : '{i18n>ChangeHistory}',
+                Target              : 'changes/@UI.PresentationVariant',
+                ![@UI.PartOfPreview]: false
+            }
         ],
         FieldGroup #Details         : {Data : [
             {
@@ -216,6 +224,7 @@ annotate AdminService.Orders with @(
 //The enity types name is AdminService.my_bookshop_OrderItems
 //The annotations below are not generated in edmx WHY?
 annotate AdminService.OrderItems with @(
+    title : '{i18n>OrderItem}',
     UI     : {
         HeaderInfo      : {
             TypeName       : '{i18n>OrderItem}',
@@ -236,26 +245,21 @@ annotate AdminService.OrderItems with @(
             },
             {
                 Value : quantity,
-                Label : '{i18n>Quantity}'
             },
             {
                 Value : amount,
-                Label : '{i18n>Amount}'
             }
         ],
         Identification  : [ //Is the main field group
             //{Value: ID, Label:'{i18n>ID}'}, //A guid shouldn't be on the UI
             {
                 Value : book_ID,
-                Label : '{i18n>Book}'
             },
             {
                 Value : quantity,
-                Label : '{i18n>Quantity}'
             },
             {
                 Value : amount,
-                Label : '{i18n>Amount}'
             }
         ],
         Facets          : [{
@@ -276,8 +280,14 @@ annotate AdminService.OrderItems with @(
         }
     }
 ) {
+    @title: '{i18n>Amount}'
     amount
     @Common.FieldControl : #ReadOnly;
+
+    @title: '{i18n>Quantity}'
+    quantity;
+    @title: '{i18n>Book}'
+    book;
 //ERROR ALERT: The following line refering to the parents currency code will lead to a server error
 //@Measures.ISOCurrency:parent.currency.code; //Bind the currency field to the quantity field of the parent
 };
