@@ -9,12 +9,10 @@ import java.math.BigDecimal;
 import java.util.Collections;
 
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.test.context.support.WithMockUser;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import com.sap.cds.Result;
 import com.sap.cds.ql.Insert;
@@ -26,7 +24,6 @@ import cds.gen.adminservice.Authors;
 import cds.gen.adminservice.OrderItems;
 import cds.gen.adminservice.Orders;
 
-@ExtendWith(SpringExtension.class)
 @SpringBootTest
 @AutoConfigureMockMvc
 public class AdminServiceTest {

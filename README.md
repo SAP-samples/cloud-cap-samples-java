@@ -196,7 +196,7 @@ The behavior of the API_BUSINESS_PARTNER remote service is controlled using prof
 
 - **Using mock data via internal service through OData:** With the `mocked` profile, all requests to the API_BUSINESS_PARTNER service will be routed through HTTP and OData to itself (`http://localhost:<port>/api/API_BUSINESS_PARTNER/...`). This mode is similar to using a real remote destination, and such helps to prevent issues from differences in local service and remote service behavior.
 
-- **Using the sandbox environment:** You can access data from the [SAP API Business Hub sandbox](https://api.sap.com/api/API_BUSINESS_PARTNER/overview) with the `sandbox` profile. The API key needs to be provided with the environment variable `CDS_REMOTE_SERVICES_API_BUSINESS_PARTNER_DESTINATION_HEADERS_APIKEY`. You can retrieve it by clicking on *Show API Key* on [this page](https://api.sap.com/api/API_BUSINESS_PARTNER/overview) after logging in.
+- **Using the sandbox environment:** You can access data from the [SAP API Business Hub sandbox](https://api.sap.com/api/API_BUSINESS_PARTNER/overview) with the `sandbox` profile. The API key needs to be provided with the environment variable `CDS_REMOTE_SERVICES_API_BUSINESS_PARTNER_HTTP_HEADERS_APIKEY` or in the respective section in [`application.yaml`](srv/src/main/resources/application.yaml). You can retrieve it by clicking on *Show API Key* on [this page](https://api.sap.com/api/API_BUSINESS_PARTNER/overview) after logging in.
 
 - **Using S/4HANA cloud or on-premise system:** With the `destination` profile, you can access data from a real S/4HANA system. You need to create a destination with name `s4-destination` and make sure that an instance of XSUAA and destination service are bound to your application. For an on-premise destination, you additionally need to bind the connectivity service and add an additional property `URL.headers.sap-client` with the S/4HANA client number to your destination.
 
@@ -212,7 +212,7 @@ Prerequisites:
 - Get an SAP Business Technology Platform account to deploy the services and applications.
 - [Create a SAP HANA Cloud Instance](https://developers.sap.com/tutorials/hana-cloud-deploying.html) in your SAP Business Technology Platform space.
 - Ensure you have an entitlement for `SAP HANA Schemas & HDI Containers` with plan `hdi-shared` in the same space.
-- Ensure that your CF instances are connected to Internet to download SAPMachine JRE 17 as it is available in `sap_java_buildpack` in online mode only.
+- Ensure you have provided an API Key for the sandbox environment as described in the previous section.
 
 > [!NOTE]
 > Please note that some IDEs may interfere with their autobuild during the MTA build and thus lead to corrupt MTA build results. Therefore, please ensure that no IDEs are running in parallel with your MTA build.
