@@ -20,7 +20,7 @@
       "requires": { "auth": "dummy" }
     },
     "cdsc": {
-      "moduleLookupDirectories": [ "node_modules/", "srv/target/cds/" ]
+      "moduleLookupDirectories": [ "node_modules/", "target/cds/" ]
     }
   },
   "scripts": {
