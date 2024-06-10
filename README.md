@@ -16,6 +16,7 @@ Welcome to the bookshop-java project. It demonstrates how to build business appl
 - [Getting Started](#getting-started)
   - [Prerequisites](#prerequisites)
   - [Clone Build & Run](#clone-build--run)
+  - [Using VS Code](#using-vs-code)
   - [Using Eclipse](#using-eclipse)
     - [Building and Running](#building-and-running)
   - [Using IntelliJ Idea (Community and Ultimate)](#using-intellij-idea-community-and-ultimate)
@@ -108,21 +109,41 @@ Make sure you have set up a development environment (that means, you’ve instal
 
 ## Clone Build & Run
 
-1.  Clone the project:
+1. Clone the project:
 
-```bash
+  ```bash
   git clone https://github.com/SAP-samples/cloud-cap-samples-java.git
-```
+  ```
 
 2. Build and run the application:
 
-```
+  ```
   mvn spring-boot:run
-```
+  ```
+
+> [!NOTE]
+> Please note that some IDEs may interfere with their autobuild when launching the application from the CLI using Maven. Therefore, please ensure that no IDEs are running in parallel or launch the application natively from your preferred IDE as described below.
+
+3. Use the following links in the browser to check if everything works fine:
+
+  - http://localhost:8080: This should show the automatically generated index page of served paths.
+  - http://localhost:8080/fiori.html: This is the actual bookshop application UI.
+  - http://localhost:8080/swagger/index.html: This is providing a Swagger UI for the CatalogService API.
+
+You'll start with a predefined stock of books as this procedure starts the bookshop application with a CSV-initialized in-memory H2 database.
+
+Two mock users are defined for local development:
+- User: `user`, password: `user` to browse books
+- User: `admin`, password: `admin` to manage books and orders
+
+## Using VS Code
+
+VS Code supports the project out-of-the-box, when using the [Extension Pack for Java](https://marketplace.visualstudio.com/items?itemName=vscjava.vscode-java-pack).
+To launch the application in VS Code navigate to the `Application` class and click on `Run` or `Debug`.
 
 ## Using Eclipse
 
-Optionally, use the following steps to import the project to Eclipse:
+Use the following steps to import the project to Eclipse:
 
 1.  Import the project using **File > Import > Existing Maven Projects**.
 
@@ -149,18 +170,6 @@ Optionally, use the following steps to import the project to Eclipse:
 
 	Afterwards, click **Run**. This step starts the applications `main` method located in `src/main/java/my/bookshop/Application.java`.
 
-4.  Use the following links in the browser to check if everything works fine:
-
-    <http://localhost:8080/>: This should show the automatically generated index page of served paths.
-    <http://localhost:8080/fiori.html>: This is the actual bookshop application UI.
-    <http://localhost:8080/swagger/index.html>: This is providing a Swagger UI for the CatalogService API.
-
-    You'll start with a predefined stock of books as this procedure starts the bookshop application with a CSV-initialized in-memory H2 database.
-
-    Two mock users are defined for local development:
-    - User: `user`, password: `user` to browse books
-    - User: `admin`, password: `admin` to manage books and orders
-
 ## Using IntelliJ Idea (Community and Ultimate)
 
 IntelliJ can handle the project more or less out-of-the-box. Since some of the event handlers in the project rely on
@@ -168,11 +177,11 @@ the code generated from the CDS model the build path of the project (module) nee
 with the folder containing the generated code. In order to add the generated code you need to add the 'gen' folder
 to the build path:
 
-* Open the project settings.
-* Navigate to the 'modules' section.
-* Select the srv/src/gen folder and mark it as 'sources'.
-* Save and leave the project settings.
-* Trigger a rebuild.
+1. Open the project settings.
+2. Navigate to the 'modules' section.
+3. Select the srv/src/gen folder and mark it as 'sources'.
+4. Save and leave the project settings.
+5. Trigger a rebuild.
 
 After the generated code is considered by IntelliJ's build the application can be handled just as any other Spring Boot
 application in IntelliJ.
@@ -217,7 +226,6 @@ Prerequisites:
 > [!NOTE]
 > Please note that some IDEs may interfere with their autobuild during the MTA build and thus lead to corrupt MTA build results. Therefore, please ensure that no IDEs are running in parallel with your MTA build.
 
-
 Deploy as Single Tenant Application:
 - Rename `mta-single-tenant.yaml` to `mta.yaml`
 - Run `mbt build`
@@ -232,7 +240,7 @@ Deploy as Multitenant Application:
 - Go to another subaccount in your global account, under subscriptions and subscribe to the application you deployed.
 - Run `cf map-route bookshop-mt-app <YOUR DOMAIN> --hostname <SUBSCRIBER TENANT>-<ORG>-<SPACE>-bookshop-mt-app` or create and bind the route manually.
 
-> [!NOTE] 
+> [!NOTE]
 > Please note that the route length is limited to 63 characters and can easily be exceeded. So keeping the app name and sub-account subdomain as short as possible will help you stay within length.
 
 Before you can access the UI using the (tenant-specific) URL to the bookshop(-mt)-app application, make sure to [Setup Authorizations in SAP Business Technology Platform](#setup-authorizations-in-sap-business-technology-platform).
@@ -492,7 +500,7 @@ docker push $YOUR_CONTAINER_REGISTRY/bookshop-approuter
 #### Single Tenant
 
 ```bash
-docker push $YOUR_CONTAINER_REGISTRY/bookshop-hana-deployer 
+docker push $YOUR_CONTAINER_REGISTRY/bookshop-hana-deployer
 ```
 
 #### Multi Tenant
@@ -512,7 +520,7 @@ Make the following changes in the _`chart/values.yaml`_ file.
 3. Replace `<your-container-registry>` with your container registry.
 
 4. Make the following change to add backend destinations required by Approuter.
-   
+
 ```diff
 -  backendDestinations: {}
 +  backendDestinations:
