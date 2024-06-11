@@ -264,6 +264,7 @@
 						</goals>
 						<configuration>
 							<basePackage>cds.gen</basePackage>
+							<uniqueEventContexts>true</uniqueEventContexts>
 						</configuration>
 					</execution>
 				</executions>
