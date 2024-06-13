@@ -39,7 +39,7 @@ import com.sap.cds.services.handler.annotations.ServiceName;
 import com.sap.cds.services.messages.Messages;
 import com.sap.cds.services.persistence.PersistenceService;
 
-import cds.gen.adminservice.AddToOrderContext;
+import cds.gen.adminservice.BooksAddToOrderContext;
 import cds.gen.adminservice.AdminService;
 import cds.gen.adminservice.AdminService_;
 import cds.gen.adminservice.Books;
@@ -233,7 +233,7 @@ class AdminServiceHandler implements EventHandler {
 	 * @param context
 	 */
 	@On(entity = Books_.CDS_NAME)
-	public void addBookToOrder(AddToOrderContext context) {
+	public void addBookToOrder(BooksAddToOrderContext context) {
 		String orderId = context.getOrderId();
 		List<Orders> orders = adminService.run(Select.from(ORDERS).columns(o -> o._all(), o -> o.Items().expand()).where(o -> o.ID().eq(orderId))).listOf(Orders.class);
 		Orders order = orders.stream().filter(p -> p.getIsActiveEntity()).findFirst().orElse(null);
