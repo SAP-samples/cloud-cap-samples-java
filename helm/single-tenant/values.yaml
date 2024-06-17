@@ -1,9 +1,9 @@
 global:
-  domain: c-865b338.stage.kyma.ondemand.com # <kyma_cluster_domain> e.g. c-865b338.stage.kyma.ondemand.com
+  domain: # <kyma_cluster_domain> e.g. c-123b456.stage.kyma.ondemand.com
   imagePullSecret:
-    name: image-pull-secret # <image_pull_secret> e.g. image-pull-secret
+    name: # <image_pull_secret> e.g. image-pull-secret
   image:
-    registry: cdsjava.common.repositories.cloud.sap # <container_image_registry> e.g. cdsjava.common.repositories.cloud.sap
+    registry: # <container_image_registry> e.g. cdsjava.common.repositories.cloud.sap
 srv:
   bindings:
     auth:
@@ -35,8 +35,8 @@ approuter:
   env:
     destinations: '[{"name":"backend","url":"https://{{ .Release.Name }}-srv-{{ .Release.Namespace }}.{{ .Values.global.domain }}","forwardAuthToken":true,"strictSSL": true}]'
   image:
-    repository: i541520/bookshop/bookshop-approuter # <image_path> e.g. bookshop/bookshop-approuter
-    tag: latest-1 # <tag> e.g. latest
+    repository: # <image_path> e.g. bookshop/bookshop-approuter
+    tag: # <tag> e.g. latest
   resources:
     limits:
       ephemeral-storage: 1G
@@ -52,8 +52,8 @@ approuter:
       path: /
 hdi-deployer:
   image:
-    repository: i541520/bookshop/bookshop-hdi-deployer # <image_repository> bookshop/hdi-deployer
-    tag: latest-1 # <tag> latest
+    repository: # <image_repository> e.g. bookshop/hdi-deployer
+    tag: # <tag> e.g. latest
   bindings:
     bookshop-hdi:
       serviceInstanceName: bookshop-hdi

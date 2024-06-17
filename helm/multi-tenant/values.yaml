@@ -1,5 +1,5 @@
 global:
-  domain: # <kyma_cluster_domain> e.g. c-865b338.stage.kyma.ondemand.com
+  domain: # <kyma_cluster_domain> e.g. c-123b456.stage.kyma.ondemand.com
   imagePullSecret:
     name: image-pull-secret # <image_pull_secret> e.g. image-pull-secret
   image:
@@ -13,7 +13,7 @@ srv:
     saas-registry:
       serviceInstanceName: saas-registry
   image:
-    repository: i541520/bookshop/bookshop-srv # <image_path> e.g. bookshop/bookshop-srv
+    repository: # <image_path> e.g. bookshop/bookshop-srv
     tag: latest # <tag> e.g. latest
   env:
     SPRING_PROFILES_ACTIVE: cloud
@@ -39,8 +39,8 @@ approuter:
     auth:
       serviceInstanceName: xsuaa
   image:
-    repository: i541520/bookshop/bookshop-approuter # <image_path> e.g. bookshop/bookshop-approuter
-    tag: latest-1 # <tag> e.g. latest
+    repository: # <image_path> e.g. bookshop/bookshop-approuter
+    tag: # <tag> e.g. latest
   env:
     TENANT_HOST_PATTERN: "^(.*)-{{ .Release.Name }}-approuter-{{ .Release.Namespace }}.{{ .Values.global.domain }}"
     destinations: '[{"name":"backend","url":"https://{{ .Release.Name }}-srv-{{ .Release.Namespace }}.{{ .Values.global.domain }}","forwardAuthToken":true}]'
@@ -57,6 +57,29 @@ approuter:
       path: /
     readiness:
       path: /
+sidecar:
+  bindings:
+    auth:
+      serviceInstanceName: xsuaa
+    service-manager:
+      serviceInstanceName: service-manager
+  image:
+    repository: # <image_path> e.g. bookshop/bookshop-sidecar
+    tag: # <tag> e.g. latest
+  resources:
+    limits:
+      ephemeral-storage: 1G
+      memory: 500M
+    requests:
+      ephemeral-storage: 1G
+      cpu: 500m
+      memory: 500M
+  health:
+    liveness:
+      path: /health
+    readiness:
+      path: /health
+  startupTimeoutSeconds: 120
 xsuaa:
   serviceOfferingName: xsuaa
   servicePlanName: application
@@ -84,26 +107,3 @@ saas-registry:
       onUnSubscriptionAsync: true
       onUpdateDependenciesAsync: true
       callbackTimeoutMillis: 300000
-sidecar:
-  bindings:
-    auth:
-      serviceInstanceName: xsuaa
-    service-manager:
-      serviceInstanceName: service-manager
-  image:
-    repository: i541520/bookshop/bookshop-sidecar # <image_path> e.g. bookshop/bookshop-sidecar
-    tag: latest # <tag> e.g. latest
-  resources:
-    limits:
-      ephemeral-storage: 1G
-      memory: 500M
-    requests:
-      ephemeral-storage: 1G
-      cpu: 500m
-      memory: 500M
-  health:
-    liveness:
-      path: /health
-    readiness:
-      path: /health
-  startupTimeoutSeconds: 120

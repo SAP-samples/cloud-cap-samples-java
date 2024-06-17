@@ -416,18 +416,65 @@ pack build $YOUR_CONTAINER_REGISTRY/bookshop-sidecar \
 
 ### Configuration
 
-Complete the configuration in the _`helm/single-tenant/values.yaml`_ and/or _`helm/multi-tenant/values.yaml`_ files:
+Complete the configuration in the
+- _`helm/single-tenant/values.yaml`_ file if you're going for a **single-tenant deployment**, or the 
+- _`helm/multi-tenant/values.yaml`_ file if you're going for a **multi-tenant deployment**
 
+#### For both single- and multi-tenant deployment
 1. Change value of `global.domain` key to your cluster domain.
 2. Change value of `global.image.registry` to the URL of your container registry.
 3. Change value of `global.imagePullSecret.name` to the image registry secret created in [Create container registry secret](#create-container-registry-secret) step if you haven't used the name `image-pull-secret`.
 
+```yaml
+global:
+  domain: # <kyma_cluster_domain> e.g. c-865b338.stage.kyma.ondemand.com
+  imagePullSecret:
+    name: image-pull-secret # <image_pull_secret> e.g. image-pull-secret
+  image:
+    registry: # <container_image_registry> e.g. cdsjava.common.repositories.cloud.sap
+```
+
+4. Set `srv.image.repository` and `srv.image.tag` to the image path and tag you used in the `pack build` command for the `bookshop-srv`.
+```yaml
+srv:
+  image:
+    repository: # <image_path> e.g. bookshop/bookshop-srv
+    tag: latest # <tag> e.g. latest
+```
+
+5. Set `approuter.image.repository` and `approuter.image.tag` to the image path and tag you used in the `pack build` command for the `bookshop-approuter`.
+```yaml
+approuter:
+  image:
+    repository: # <image_path> e.g. bookshop/bookshop-approuter
+    tag: # <tag> e.g. latest
+```
+
+#### For single-tenant deployment only
+
+6. In the `helm/single-tenant/values.yaml` file, set `hdi-deployer.image.repository` and `hdi-deployer.image.tag` to the image path and tag you used in the `pack build` command for the `bookshop-hdi-deployer`.
+```yaml
+hdi-deployer:
+  image:
+    repository: # <image_repository> e.g. bookshop/bookshop-hdi-deployer
+    tag: # <tag> e.g. latest
+```
+
+#### For multi-tenant deployment only
+
+6. In the `helm/multi-tenant/values.yaml` file, set `sidecar.image.repository` and `sidecar.image.tag` to the image path and tag you used in the `pack build` command for the `bookshop-sidecar`.
+```yaml
+sidecar:
+  image:
+    repository: # <image_path> e.g. bookshop/bookshop-sidecar
+    tag: # <tag> e.g. latest
+```
 
 ### Deployment
 
 Deploy the helm chart using the following command from the project root directory:
 
-#### Single Tenant
+#### Single-Tenant
 
 ```bash
 helm upgrade --install --namespace=<namespace> <release_name> ./helm/single-tenant --set-file xsuaa.jsonParameters=xs-security.json
@@ -437,7 +484,7 @@ Before you can access the UI you should make sure to [Setup Authorizations in SA
 
 URL to access the UI: `https://<release_name>-approuter-<namespace>.<cluster_domain>`
 
-#### Multi Tenant
+#### Multi-Tenant
 
 ```bash
 helm upgrade --install --namespace=<namespace> <release_name> ./helm/multi-tenant --set-file xsuaa.jsonParameters=xs-security-mt.json
