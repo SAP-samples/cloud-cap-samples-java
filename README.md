@@ -260,86 +260,11 @@ Before you can access the UI using the (tenant-specific) URL to the bookshop(-mt
 - Logged into Kyma Runtime (with `kubectl` CLI), Cloud Foundry space (with `cf` CLI) and Container Registry (with `docker login`)
 - `@sap/cds-dk` >= 6.6.0
 
-### Add Deployment Files
-
-CAP tooling provides you a Helm chart for deployment to Kyma.
-
-For single tenant deployment, replace the `requires` section in _`.cdsrc.json`_ with:
-
-```
-    "requires": {
-        "auth": {
-            "kind": "xsuaa"
-        },
-        "approuter": {
-            "kind": "cloudfoundry"
-        },
-        "db": {
-            "kind": "hana-cloud"
-        }
-    },
-```
-
-**In addition** remove `"profile": "with-mtx-sidecar"` from `.cdsrc.json` and delete the `mtx` folder in root.
-
-For multi tenant deployment, replace the `requires` section in _`.cdsrc.json`_ with:
-
-```
-    "requires": {
-        "multitenancy": true,
-        "extensibility": true,
-        "toggles": true,
-        "auth": {
-            "kind": "xsuaa"
-        },
-        "approuter": {
-            "kind": "cloudfoundry"
-        }
-    },
-```
-
-Add the CAP Helm chart with the required features to this project:
-
-```bash
-cds add helm
-```
-
-#### Use API_BUSSINESS_PARTNER Remote Service (optional, single tenant only)
-
-You can try the `API_BUSINESS_PARTNER` service with a real S/4HANA system with the following configuration:
-
-1. Create either an on-premise or cloud destination in your subaccount.
-
-2. Add configuration required for the destination service by executing the following command.
-
-    ```bash
-    cds add destination
-    ```
-
-3. Set the profiles `cloud` and `destination` active in your `values.yaml` file:
-
-    ```yaml
-    srv:
-      ...
-      env:
-        SPRING_PROFILES_ACTIVE: cloud,destination
-    ```
-
-4. For on-premise only: Add the connectivity service to your Helm chart:
-
-    ```bash
-    cds add connectivity
-    ```
-
-   Note: `cds add helm` will not add configuration required to create a Connectivity Service Instance. This Service Instance should be created by the Kyma Cluster Administrator. For more information regarding configuration of Connectivity Instance, please check the [documentation](https://cap.cloud.sap/docs/guides/deployment/deploy-to-kyma#connectivity-service).
-
-*See also: [API_BUSINESS_PARTNER Remote Service and Spring Profiles](#api_business_partner-remote-service-and-spring-profiles)*
-
 ### Prepare Kubernetes Namespace
 
 #### Create container registry secret
 
-Create a secret `container-registry` with credentials to access the container registry:
+Create a secret `image-pull-secret` with credentials to access the container registry:
 
 ```
 bash ./scripts/create-container-registry-secret.sh
@@ -359,7 +284,7 @@ bash ./scripts/create-db-secret.sh bookshop-db
 
 It will create a HDI container `bookshop-db` instance on your currently targeted Cloud Foundry space and a secret `bookshop-db` with the credentials in your current Kubernetes namespace.
 
-Make the following changes to your _`chart/values.yaml`_.
+Make the following changes to your _`helm/single-tenant/values.yaml`_.
 
 ```diff
 srv:
@@ -381,7 +306,7 @@ hana-deployer:
 -   servicePlanName: hdi-shared
 ```
 
-Make the following changes to your _`chart/Chart.yaml`_.
+Make the following changes to your _`helm/single-tenant/Chart.yaml`_.
 
 ```diff
 dependencies:
@@ -439,7 +364,7 @@ dependencies:
 cds build --production
 ```
 
-**Build image for CAP service:**
+**Build & publish container images for CAP service:**
 
 ```bash
 mvn clean package -DskipTests=true
@@ -450,116 +375,72 @@ pack build $YOUR_CONTAINER_REGISTRY/bookshop-srv \
         --path srv/target/*-exec.jar \
         --buildpack gcr.io/paketo-buildpacks/sap-machine \
         --buildpack gcr.io/paketo-buildpacks/java \
-        --builder paketobuildpacks/builder-jammy-base \
+        --builder paketobuildpacks/builder:base \
         --env SPRING_PROFILES_ACTIVE=cloud \
-        --env BP_JVM_VERSION=17
+        --env BP_JVM_VERSION=17 \
+        --publish
 ```
 
 (Replace `$YOUR_CONTAINER_REGISTRY` with the full-qualified hostname of your container registry)
 
-**Build Approuter Image:**
+**Build & publish Approuter Image:**
 
 ```bash
 pack build $YOUR_CONTAINER_REGISTRY/bookshop-approuter \
      --path app \
-     --buildpack gcr.io/paketo-buildpacks/nodejs \
-     --builder paketobuildpacks/builder-jammy-base \
-     --env BP_NODE_RUN_SCRIPTS=""
+     --builder paketobuildpacks/builder:base \
+     --env BP_NODE_RUN_SCRIPTS="" \
+     --publish
 ```
 
-**Build database deployer image (single tenant only):**
+**Build & publish database deployer image (single tenant only):**
 
 ```bash
-pack build $YOUR_CONTAINER_REGISTRY/bookshop-hana-deployer \
+pack build $YOUR_CONTAINER_REGISTRY/bookshop-hdi-deployer \
      --path db \
-     --buildpack gcr.io/paketo-buildpacks/nodejs \
-     --builder paketobuildpacks/builder-jammy-base \
-     --env BP_NODE_RUN_SCRIPTS=""
+     --builder paketobuildpacks/builder:base \
+     --env BP_NODE_RUN_SCRIPTS="" \
+     --publish
 ```
 
-**Build sidecar image (multi tenant only):**
+**Build & publish sidecar image (multi tenant only):**
 
 ```bash
 pack build $YOUR_CONTAINER_REGISTRY/bookshop-sidecar \
      --path mtx/sidecar/gen \
-     --buildpack gcr.io/paketo-buildpacks/nodejs \
-     --builder paketobuildpacks/builder-jammy-base \
-     --env BP_NODE_RUN_SCRIPTS=""
+     --builder paketobuildpacks/builder:base \
+     --env BP_NODE_RUN_SCRIPTS="" \
+     --publish
 ```
 
-### Push container images
-
-You can push all the container images to your container registry, using:
-
-```bash
-docker push $YOUR_CONTAINER_REGISTRY/bookshop-srv
-
-docker push $YOUR_CONTAINER_REGISTRY/bookshop-approuter
-```
-
-#### Single Tenant
-
-```bash
-docker push $YOUR_CONTAINER_REGISTRY/bookshop-hana-deployer
-```
-
-#### Multi Tenant
-
-```bash
-docker push $YOUR_CONTAINER_REGISTRY/bookshop-sidecar
-```
 
 ### Configuration
 
-Make the following changes in the _`chart/values.yaml`_ file.
+Complete the configuration in the _`helm/single-tenant/values.yaml`_ and/or _`helm/multi-tenant/values.yaml`_ files:
 
 1. Change value of `global.domain` key to your cluster domain.
+2. Change value of `global.image.registry` to the URL of your container registry.
+3. Change value of `global.imagePullSecret.name` to the image registry secret created in [Create container registry secret](#create-container-registry-secret) step if you haven't used the name `image-pull-secret`.
 
-2. Replace `<your-cluster-domain>` in `xsuaa.parameters.oauth2-configuration.redirect-uris` with your cluster domain.
-
-3. Replace `<your-container-registry>` with your container registry.
-
-4. Make the following change to add backend destinations required by Approuter.
-
-```diff
--  backendDestinations: {}
-+  backendDestinations:
-+     backend:
-+       service: srv
-+     mtx-api:
-+       service: srv
-```
-
-5. Add your image registry secret created in [Create container registry secret](#create-container-registry-secret) step.
-
-```diff
-global:
-  domain: null
--  imagePullSecret: {}
-+  imagePullSecret:
-+    name: container-registry
-```
-
-6. If the application is deployed multiple times in the same cluster, make sure to adapt the values of `xsappname` and `appName` under `saasRegistryParameters` in `values/Chart.yaml`
 
 ### Deployment
 
-Deploy the helm chart using the following command:
+Deploy the helm chart using the following command from the project root directory:
 
 #### Single Tenant
 
 ```bash
-helm install bookshop ./chart --set-file xsuaa.jsonParameters=xs-security.json
+helm upgrade --install --namespace=<namespace> <release_name> ./helm/single-tenant --set-file xsuaa.jsonParameters=xs-security.json
 ```
 
 Before you can access the UI you should make sure to [Setup Authorizations in SAP Business Technology Platform](#setup-authorizations-in-sap-business-technology-platform).
 
-Click on the approuter url logged by the `helm install` to access the UI.
+URL to access the UI: `https://<release_name>-approuter-<namespace>.<cluster_domain>`
 
 #### Multi Tenant
 
 ```bash
-helm install bookshop ./chart --set-file xsuaa.jsonParameters=xs-security-mt.json
+helm upgrade --install --namespace=<namespace> <release_name> ./helm/multi-tenant --set-file xsuaa.jsonParameters=xs-security-mt.json
 ```
 
 In case of multi tenant, you'll have to subscribe to the application from a different subaccount. You can follow the steps mentioned [here](https://cap.cloud.sap/docs/guides/deployment/as-saas#subscribe) to access the application.

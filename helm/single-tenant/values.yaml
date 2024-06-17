@@ -64,7 +64,7 @@ xsuaa:
     xsappname: bookshop
     oauth2-configuration:
       redirect-uris:
-        - https://*.{{ .Values.global.domain}}/**
+        - "https://*.{{ .Values.global.domain}}/**"
 bookshop-hdi:
   serviceOfferingName: hana
   servicePlanName: hdi-shared
