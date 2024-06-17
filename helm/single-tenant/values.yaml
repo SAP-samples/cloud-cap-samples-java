@@ -1,0 +1,70 @@
+global:
+  domain: c-865b338.stage.kyma.ondemand.com # <kyma_cluster_domain> e.g. c-865b338.stage.kyma.ondemand.com
+  imagePullSecret:
+    name: image-pull-secret # <image_pull_secret> e.g. image-pull-secret
+  image:
+    registry: cdsjava.common.repositories.cloud.sap # <container_image_registry> e.g. cdsjava.common.repositories.cloud.sap
+srv:
+  bindings:
+    auth:
+      serviceInstanceName: xsuaa
+    db:
+      serviceInstanceName: bookshop-hdi
+  image:
+    repository: i541520/bookshop/bookshop-srv # <image_path> e.g. bookshop/bookshop-srv
+    tag: latest # <tag> e.g. latest
+  env:
+    SPRING_PROFILES_ACTIVE: cloud
+  resources:
+    limits:
+      ephemeral-storage: 1G
+      memory: 1G
+    requests:
+      ephemeral-storage: 1G
+      cpu: 1000m
+      memory: 1G
+  health:
+    liveness:
+      path: /actuator/health
+    readiness:
+      path: /actuator/health
+approuter:
+  bindings:
+    auth:
+      serviceInstanceName: xsuaa
+  env:
+    destinations: '[{"name":"backend","url":"https://{{ .Release.Name }}-srv-{{ .Release.Namespace }}.{{ .Values.global.domain }}","forwardAuthToken":true,"strictSSL": true}]'
+  image:
+    repository: i541520/bookshop/bookshop-approuter # <image_path> e.g. bookshop/bookshop-approuter
+    tag: latest-1 # <tag> e.g. latest
+  resources:
+    limits:
+      ephemeral-storage: 1G
+      memory: 500M
+    requests:
+      ephemeral-storage: 1G
+      cpu: 500m
+      memory: 500M
+  health:
+    liveness:
+      path: /
+    readiness:
+      path: /
+hdi-deployer:
+  image:
+    repository: i541520/bookshop/bookshop-hdi-deployer # <image_repository> bookshop/hdi-deployer
+    tag: latest-1 # <tag> latest
+  bindings:
+    bookshop-hdi:
+      serviceInstanceName: bookshop-hdi
+xsuaa:
+  serviceOfferingName: xsuaa
+  servicePlanName: broker
+  parameters:
+    xsappname: bookshop
+    oauth2-configuration:
+      redirect-uris:
+        - https://*.{{ .Values.global.domain}}/**
+bookshop-hdi:
+  serviceOfferingName: hana
+  servicePlanName: hdi-shared

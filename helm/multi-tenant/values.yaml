@@ -1,0 +1,109 @@
+global:
+  domain: c-865b338.stage.kyma.ondemand.com # <kyma_cluster_domain> e.g. c-865b338.stage.kyma.ondemand.com
+  imagePullSecret:
+    name: image-pull-secret # <image_pull_secret> e.g. image-pull-secret
+  image:
+    registry: cdsjava.common.repositories.cloud.sap # <container_image_registry> e.g. cdsjava.common.repositories.cloud.sap
+srv:
+  bindings:
+    auth:
+      serviceInstanceName: xsuaa
+    service-manager:
+      serviceInstanceName: service-manager
+    saas-registry:
+      serviceInstanceName: saas-registry
+  image:
+    repository: i541520/bookshop/bookshop-srv # <image_path> e.g. bookshop/bookshop-srv
+    tag: latest # <tag> e.g. latest
+  env:
+    SPRING_PROFILES_ACTIVE: cloud
+    CDS_MULTITENANCY_APPUI_TENANTSEPARATOR: "-"
+    CDS_MULTITENANCY_APPUI_URL: https://{{ .Release.Name }}-approuter-{{ .Release.Namespace }}.{{ .Values.global.domain }}
+    CDS_MULTITENANCY_MTXS_ENABLED: "true"
+    CDS_MULTITENANCY_SIDECAR_URL: https://{{ .Release.Name }}-sidecar-{{ .Release.Namespace }}.{{ .Values.global.domain }}
+  resources:
+    limits:
+      ephemeral-storage: 1G
+      memory: 1G
+    requests:
+      ephemeral-storage: 1G
+      cpu: 1000m
+      memory: 1G
+  health:
+    liveness:
+      path: /actuator/health
+    readiness:
+      path: /actuator/health
+approuter:
+  bindings:
+    auth:
+      serviceInstanceName: xsuaa
+  image:
+    repository: i541520/bookshop/bookshop-approuter # <image_path> e.g. bookshop/bookshop-approuter
+    tag: latest-1 # <tag> e.g. latest
+  env:
+    TENANT_HOST_PATTERN: "^(.*)-{{ .Release.Name }}-approuter-{{ .Release.Namespace }}.{{ .Values.global.domain }}"
+    destinations: '[{"name":"backend","url":"https://{{ .Release.Name }}-srv-{{ .Release.Namespace }}.{{ .Values.global.domain }}","forwardAuthToken":true}]'
+  resources:
+    limits:
+      ephemeral-storage: 1G
+      memory: 500M
+    requests:
+      ephemeral-storage: 1G
+      cpu: 500m
+      memory: 500M
+  health:
+    liveness:
+      path: /
+    readiness:
+      path: /
+xsuaa:
+  serviceOfferingName: xsuaa
+  servicePlanName: application
+  parameters:
+    xsappname: bookshop-mtx
+    oauth2-configuration:
+      redirect-uris:
+        - https://*.{{ .Values.global.domain}}/**
+service-manager:
+  serviceOfferingName: service-manager
+  servicePlanName: container
+saas-registry:
+  serviceOfferingName: saas-registry
+  servicePlanName: application
+  parameters:
+    xsappname: bookshop-mtx
+    appName: bookshop-mtx
+    displayName: bookshop-mtx
+    description: A simple MTX CAP project.
+    category: "CAP Application"
+    appUrls:
+      getDependencies: "https://{{ .Release.Name }}-srv-{{ .Release.Namespace }}.{{ .Values.global.domain }}/mt/v1.0/subscriptions/dependencies"
+      onSubscription: "https://{{ .Release.Name }}-srv-{{ .Release.Namespace }}.{{ .Values.global.domain }}/mt/v1.0/subscriptions/tenants/{tenantId}"
+      onSubscriptionAsync: true
+      onUnSubscriptionAsync: true
+      onUpdateDependenciesAsync: true
+      callbackTimeoutMillis: 300000
+sidecar:
+  bindings:
+    auth:
+      serviceInstanceName: xsuaa
+    service-manager:
+      serviceInstanceName: service-manager
+  image:
+    repository: i541520/bookshop/bookshop-sidecar # <image_path> e.g. bookshop/bookshop-sidecar
+    tag: latest # <tag> e.g. latest
+  resources:
+    limits:
+      ephemeral-storage: 1G
+      memory: 500M
+    requests:
+      ephemeral-storage: 1G
+      cpu: 500m
+      memory: 500M
+  health:
+    liveness:
+      path: /health
+    readiness:
+      path: /health
+  startupTimeoutSeconds: 120
