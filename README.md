@@ -279,10 +279,10 @@ This step is only required if you're using a BTP Trial account. If you're using 
 ##### Single Tenant
 
 ```
-bash ./scripts/create-db-secret.sh bookshop-db
+bash ./scripts/create-db-secret.sh bookshop-hdi
 ```
 
-It will create a HDI container `bookshop-db` instance on your currently targeted Cloud Foundry space and a secret `bookshop-db` with the credentials in your current Kubernetes namespace.
+It will create a HDI container `bookshop-hdi` instance on your currently targeted Cloud Foundry space and a secret `bookshop-hdi` with the credentials in your current Kubernetes namespace.
 
 Make the following changes to your _`helm/single-tenant/values.yaml`_.
 
@@ -294,14 +294,14 @@ srv:
 +     fromSecret: bookshop-db
 ...
 
-hana-deployer:
+hdi-deployer:
   bindings:
-    hana:
--     serviceInstanceName: hana
+    bookshop-hdi:
+-     serviceInstanceName: bookshop-hdi
 +     fromSecret: bookshop-db
 
 ...
-- hana:
+- bookshop-hdi:
 -   serviceOfferingName: hana
 -   servicePlanName: hdi-shared
 ```
@@ -312,8 +312,9 @@ Make the following changes to your _`helm/single-tenant/Chart.yaml`_.
 dependencies:
   ...
 -  - name: service-instance
--    alias: hana
+-    repository: https://int.repositories.cloud.sap/artifactory/virtual-unified-runtime-helm-dmz/
 -    version: ">0.0.0"
+-    alias: bookshop-hdi
   ...
 ```
 
@@ -325,7 +326,7 @@ bash ./scripts/create-sm-secret.sh bookshop-sm
 
 It will create a Service Manager `bookshop-sm` instance on your currently targeted Cloud Foundry space and a secret `bookshop-sm` with the credentials in your current Kubernetes namespace.
 
-Make the following changes to your _`chart/values.yaml`_.
+Make the following changes to your _`helm/multi-tenant/values.yaml`_.
 
 ```diff
 srv:
@@ -347,14 +348,15 @@ sidecar:
 -   servicePlanName: container
 ```
 
-Make the following changes to your _`chart/Chart.yaml`_.
+Make the following changes to your _`helm/multi-tenant/Chart.yaml`_.
 
 ```diff
 dependencies:
   ...
 -  - name: service-instance
--    alias: service-manager
+-    repository: https://int.repositories.cloud.sap/artifactory/virtual-unified-runtime-helm-dmz/
 -    version: ">0.0.0"
+-    alias: service-manager
   ...
 ```
 
