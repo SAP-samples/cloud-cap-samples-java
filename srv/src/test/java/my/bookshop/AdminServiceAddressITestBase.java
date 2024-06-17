@@ -9,11 +9,11 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpHeaders;
 import org.springframework.test.web.reactive.server.WebTestClient;
 
-import com.sap.cds.services.cds.CqnService;
 import com.sap.cds.services.changeset.ChangeSetListener;
 
 import cds.gen.adminservice.Orders;
 import cds.gen.api_business_partner.ABusinessPartnerAddress;
+import cds.gen.api_business_partner.ApiBusinessPartner;
 import cds.gen.api_business_partner.ApiBusinessPartner_;
 import cds.gen.api_business_partner.BusinessPartnerChangedContext;
 
@@ -29,7 +29,7 @@ public class AdminServiceAddressITestBase {
 
 	@Autowired
 	@Qualifier(ApiBusinessPartner_.CDS_NAME)
-	private CqnService bupa;
+	private ApiBusinessPartner bupa;
 
 	public void testAddressesValueHelp() {
 		client.get().uri(addressesURI).headers(this::adminCredentials).exchange()

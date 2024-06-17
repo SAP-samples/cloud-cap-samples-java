@@ -32,7 +32,9 @@ hs_err*
 .DS_Store
 
 *.db
+*.sqlite
 
 .cdsrc-private.json
 
 /chart/
+.reloadtrigger

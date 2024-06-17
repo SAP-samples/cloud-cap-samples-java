@@ -17,8 +17,8 @@ import com.sap.cds.ql.Insert;
 import com.sap.cds.ql.Predicate;
 import com.sap.cds.ql.Select;
 import com.sap.cds.ql.Upsert;
-import com.sap.cds.ql.cqn.CqnModifier;
 import com.sap.cds.ql.cqn.CqnSelect;
+import com.sap.cds.ql.cqn.Modifier;
 import com.sap.cds.services.ErrorStatuses;
 import com.sap.cds.services.EventContext;
 import com.sap.cds.services.ServiceException;
@@ -38,6 +38,7 @@ import cds.gen.adminservice.Addresses;
 import cds.gen.adminservice.Addresses_;
 import cds.gen.adminservice.AdminService_;
 import cds.gen.adminservice.Orders;
+import cds.gen.api_business_partner.ApiBusinessPartner;
 import cds.gen.api_business_partner.ApiBusinessPartner_;
 import cds.gen.api_business_partner.BusinessPartnerChangedContext;
 import my.bookshop.MessageKeys;
@@ -53,9 +54,9 @@ public class AdminServiceAddressHandler implements EventHandler {
 
 	// We are mashing up the AdminService with two other services...
 	private final PersistenceService db;
-	private final CqnService bupa;
+	private final ApiBusinessPartner bupa;
 
-	AdminServiceAddressHandler(PersistenceService db, @Qualifier(ApiBusinessPartner_.CDS_NAME) CqnService bupa) {
+	AdminServiceAddressHandler(PersistenceService db, @Qualifier(ApiBusinessPartner_.CDS_NAME) ApiBusinessPartner bupa) {
 		this.db = db;
 		this.bupa = bupa;
 	}
@@ -71,7 +72,7 @@ public class AdminServiceAddressHandler implements EventHandler {
 		String businessPartner = context.getUserInfo().getAttributeValues("businessPartner").stream().findFirst()
 			.orElseThrow(() -> new ServiceException(ErrorStatuses.FORBIDDEN, MessageKeys.BUPA_MISSING));
 
-		CqnSelect select = CQL.copy(context.getCqn(), new CqnModifier() {
+		CqnSelect select = CQL.copy(context.getCqn(), new Modifier() {
 
 			public Predicate where(Predicate original) {
 				Predicate where = CQL.get(Addresses.BUSINESS_PARTNER).eq(businessPartner);

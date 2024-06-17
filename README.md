@@ -16,6 +16,7 @@ Welcome to the bookshop-java project. It demonstrates how to build business appl
 - [Getting Started](#getting-started)
   - [Prerequisites](#prerequisites)
   - [Clone Build & Run](#clone-build--run)
+  - [Using VS Code](#using-vs-code)
   - [Using Eclipse](#using-eclipse)
     - [Building and Running](#building-and-running)
   - [Using IntelliJ Idea (Community and Ultimate)](#using-intellij-idea-community-and-ultimate)
@@ -45,6 +46,8 @@ Although CAP provides generic **event handlers** to serve most CRUD requests out
 
 A SAP Fiori UI is added using predefined SAP Fiori elements templates. **[SAP Fiori annotations](https://cap.cloud.sap/docs/advanced/fiori#fiori-annotations)** add information to the service definitions, on how to render the data.
 
+CAP provides built-in multitenancy support with out-of-the box tenant isolation. The sample application demonstrates usage of MTX sidecar based on [streamlined MTX](https://cap.cloud.sap/docs/guides/deployment/as-saas?impl-variant=java) and can be deployed as multitenant application. The [deprecated classic MTX](https://cap.cloud.sap/docs/java/multitenancy) setup is shown in the [mtx-classic branch](https://github.com/SAP-samples/cloud-cap-samples-java/tree/mtx-classic) for reference.
+
 ## Demonstrated Features
 
 Framework and Infrastructure related Features:
@@ -55,6 +58,9 @@ Framework and Infrastructure related Features:
 - [Cloud Foundry Deployment using MTA](https://cap.cloud.sap/docs/advanced/deploy-to-cloud#deploy-using-mta) with XSUAA [Service Bindings](mta-single-tenant.yaml)
 - Application Router configuration including authentication via the XSUAA Service. See [package.json](app/package.json), [xs-app.json](app/xs-app.json) and [xs-security.json](xs-security.json)
 - [Multitenancy configuration](https://cap.cloud.sap/docs/java/multitenancy) via [mta-multi-tenant.yaml](mta-multi-tenant.yaml), [.cdsrc.json](.cdsrc.json), [sidecar module](mtx-sidecar)
+- [Feature toggles](https://cap.cloud.sap/docs/guides/extensibility/feature-toggles?impl-variant=java#limitations). In CF, features can be toggled by assigning the roles `expert` or `premium-customer` to the user.
+- [Messaging configuration and handlers](https://cap.cloud.sap/docs/java/messaging-foundation) with local messaging and message brokers.
+- Consumption of [Remote services](https://cap.cloud.sap/docs/java/remote-services) in [srv/external.cds] and [srv/notes-mashup.cds]
 
 Domain Model related Features:
 
@@ -70,7 +76,7 @@ Service Model related Features:
 - [Custom actions](https://cap.cloud.sap/docs/cds/cdl#actions) such as `addToOrder` in the [Admin Service](srv/admin-service.cds). The Action implementation is in the [Admin Service Event Handler](srv/src/main/java/my/bookshop/handlers/AdminServiceHandler.java)
 - Add annotations for [searchable elements](https://github.wdf.sap.corp/pages/cap/java/query-api#select) in the [Admin Service](srv/admin-service.cds)
 - [Localized Messages](https://cap.cloud.sap/docs/java/indicating-errors) in the [Admin Service Event Handler](srv/src/main/java/my/bookshop/handlers/AdminServiceHandler.java)
-- role-based restrictions in [AdminService](srv/admin-service.cds) and [ReviewService](srv/review-service.cds)
+- role- and instance-based restrictions in [AdminService](srv/admin-service.cds) and [ReviewService](srv/review-service.cds)
 - Use of [`@cds.persistence.skip`](https://cap.cloud.sap/docs/advanced/hana#cdspersistenceskip) in [AdminService](srv/admin-service.cds)
 - [Media Data](https://cap.cloud.sap/docs/guides/providing-services#media-data) processing in the [Admin Service Event Handler](srv/src/main/java/my/bookshop/handlers/AdminServiceHandler.java)
 
@@ -103,21 +109,41 @@ Make sure you have set up a development environment (that means, you’ve instal
 
 ## Clone Build & Run
 
-1.  Clone the project:
+1. Clone the project:
 
-```bash
+  ```bash
   git clone https://github.com/SAP-samples/cloud-cap-samples-java.git
-```
+  ```
 
 2. Build and run the application:
 
-```
+  ```
   mvn spring-boot:run
-```
+  ```
+
+> [!NOTE]
+> Please note that some IDEs may interfere with their autobuild when launching the application from the CLI using Maven. Therefore, please ensure that no IDEs are running in parallel or launch the application natively from your preferred IDE as described below.
+
+3. Use the following links in the browser to check if everything works fine:
+
+  - http://localhost:8080: This should show the automatically generated index page of served paths.
+  - http://localhost:8080/fiori.html: This is the actual bookshop application UI.
+  - http://localhost:8080/swagger/index.html: This is providing a Swagger UI for the CatalogService API.
+
+You'll start with a predefined stock of books as this procedure starts the bookshop application with a CSV-initialized in-memory H2 database.
+
+Two mock users are defined for local development:
+- User: `user`, password: `user` to browse books
+- User: `admin`, password: `admin` to manage books and orders
+
+## Using VS Code
+
+VS Code supports the project out-of-the-box, when using the [Extension Pack for Java](https://marketplace.visualstudio.com/items?itemName=vscjava.vscode-java-pack).
+To launch the application in VS Code navigate to the `Application` class and click on `Run` or `Debug`.
 
 ## Using Eclipse
 
-Optionally, use the following steps to import the project to Eclipse:
+Use the following steps to import the project to Eclipse:
 
 1.  Import the project using **File > Import > Existing Maven Projects**.
 
@@ -144,18 +170,6 @@ Optionally, use the following steps to import the project to Eclipse:
 
 	Afterwards, click **Run**. This step starts the applications `main` method located in `src/main/java/my/bookshop/Application.java`.
 
-4.  Use the following links in the browser to check if everything works fine:
-
-    <http://localhost:8080/>: This should show the automatically generated index page of served paths.
-    <http://localhost:8080/fiori.html>: This is the actual bookshop application UI.
-    <http://localhost:8080/swagger/index.html>: This is providing a Swagger UI for the CatalogService API.
-
-    You'll start with a predefined stock of books as this procedure starts the bookshop application with a CSV-initialized in-memory H2 database.
-
-    Two mock users are defined for local development:
-    - User: `user`, password: `user` to browse books
-    - User: `admin`, password: `admin` to manage books and orders
-
 ## Using IntelliJ Idea (Community and Ultimate)
 
 IntelliJ can handle the project more or less out-of-the-box. Since some of the event handlers in the project rely on
@@ -163,11 +177,11 @@ the code generated from the CDS model the build path of the project (module) nee
 with the folder containing the generated code. In order to add the generated code you need to add the 'gen' folder
 to the build path:
 
-* Open the project settings.
-* Navigate to the 'modules' section.
-* Select the srv/src/gen folder and mark it as 'sources'.
-* Save and leave the project settings.
-* Trigger a rebuild.
+1. Open the project settings.
+2. Navigate to the 'modules' section.
+3. Select the srv/src/gen folder and mark it as 'sources'.
+4. Save and leave the project settings.
+5. Trigger a rebuild.
 
 After the generated code is considered by IntelliJ's build the application can be handled just as any other Spring Boot
 application in IntelliJ.
@@ -191,7 +205,7 @@ The behavior of the API_BUSINESS_PARTNER remote service is controlled using prof
 
 - **Using mock data via internal service through OData:** With the `mocked` profile, all requests to the API_BUSINESS_PARTNER service will be routed through HTTP and OData to itself (`http://localhost:<port>/api/API_BUSINESS_PARTNER/...`). This mode is similar to using a real remote destination, and such helps to prevent issues from differences in local service and remote service behavior.
 
-- **Using the sandbox environment:** You can access data from the [SAP API Business Hub sandbox](https://api.sap.com/api/API_BUSINESS_PARTNER/overview) with the `sandbox` profile. The API key needs to be provided with the environment variable `CDS_REMOTE_SERVICES_API_BUSINESS_PARTNER_DESTINATION_HEADERS_APIKEY`. You can retrieve it by clicking on *Show API Key* on [this page](https://api.sap.com/api/API_BUSINESS_PARTNER/overview) after logging in.
+- **Using the sandbox environment:** You can access data from the [SAP API Business Hub sandbox](https://api.sap.com/api/API_BUSINESS_PARTNER/overview) with the `sandbox` profile. The API key needs to be provided with the environment variable `CDS_REMOTE_SERVICES_API_BUSINESS_PARTNER_HTTP_HEADERS_APIKEY` or in the respective section in [`application.yaml`](srv/src/main/resources/application.yaml). You can retrieve it by clicking on *Show API Key* on [this page](https://api.sap.com/api/API_BUSINESS_PARTNER/overview) after logging in.
 
 - **Using S/4HANA cloud or on-premise system:** With the `destination` profile, you can access data from a real S/4HANA system. You need to create a destination with name `s4-destination` and make sure that an instance of XSUAA and destination service are bound to your application. For an on-premise destination, you additionally need to bind the connectivity service and add an additional property `URL.headers.sap-client` with the S/4HANA client number to your destination.
 
@@ -207,6 +221,10 @@ Prerequisites:
 - Get an SAP Business Technology Platform account to deploy the services and applications.
 - [Create a SAP HANA Cloud Instance](https://developers.sap.com/tutorials/hana-cloud-deploying.html) in your SAP Business Technology Platform space.
 - Ensure you have an entitlement for `SAP HANA Schemas & HDI Containers` with plan `hdi-shared` in the same space.
+- Ensure you have provided an API Key for the sandbox environment as described in the previous section.
+
+> [!NOTE]
+> Please note that some IDEs may interfere with their autobuild during the MTA build and thus lead to corrupt MTA build results. Therefore, please ensure that no IDEs are running in parallel with your MTA build.
 
 Deploy as Single Tenant Application:
 - Rename `mta-single-tenant.yaml` to `mta.yaml`
@@ -221,6 +239,9 @@ Deploy as Multitenant Application:
 - Run `cf deploy mta_archives/bookshop-mt_1.0.0.mtar`
 - Go to another subaccount in your global account, under subscriptions and subscribe to the application you deployed.
 - Run `cf map-route bookshop-mt-app <YOUR DOMAIN> --hostname <SUBSCRIBER TENANT>-<ORG>-<SPACE>-bookshop-mt-app` or create and bind the route manually.
+
+> [!NOTE]
+> Please note that the route length is limited to 63 characters and can easily be exceeded. So keeping the app name and sub-account subdomain as short as possible will help you stay within length.
 
 Before you can access the UI using the (tenant-specific) URL to the bookshop(-mt)-app application, make sure to [Setup Authorizations in SAP Business Technology Platform](#setup-authorizations-in-sap-business-technology-platform).
 
@@ -237,71 +258,13 @@ Before you can access the UI using the (tenant-specific) URL to the bookshop(-mt
 - Container Registry (e.g. [Docker Hub](https://hub.docker.com/))
 - Command Line Tools: [`kubectl`](https://kubernetes.io/de/docs/tasks/tools/install-kubectl/), [`kubectl-oidc_login`](https://github.com/int128/kubelogin#setup), [`pack`](https://buildpacks.io/docs/tools/pack/), [`docker`](https://docs.docker.com/get-docker/), [`helm`](https://helm.sh/docs/intro/install/), [`cf`](https://docs.cloudfoundry.org/cf-cli/install-go-cli.html)
 - Logged into Kyma Runtime (with `kubectl` CLI), Cloud Foundry space (with `cf` CLI) and Container Registry (with `docker login`)
-- `@sap/cds-dk` >= 6.0.1
-
-### Add Deployment Files
-
-CAP tooling provides your a Helm chart for deployment to Kyma.
-
-Add the CAP Helm chart with the required features to this project:
-
-```bash
-cds add helm:hana_deployer
-cds add helm:xsuaa
-cds add helm:html5_apps_deployer
-```
-
-#### Helm chart configuration
-
-This project contains a pre-configured configuration file `values.yaml`, you just need to do the following changes in this file:
-
-- `<your-container-registry>` - full-qualified hostname of your container registry
-- `domain`- full-qualified domain name used to access applications in your Kyma cluster
-
-#### Use API_BUSSINESS_PARTNER Remote Service (optional)
-
-You can try the `API_BUSINESS_PARTNER` service with a real S/4HANA system with the following configuration:
-
-1. Create either an on-premise or cloud destination in your subaccount.
-
-2. Add the binding to the destination service for the service (`srv`) to the `values.yaml` file:
-
-    ```yaml
-    srv:
-      ...
-      bindings:
-        ...
-        destinations:
-          serviceInstanceName: destinations
-    ```
-
-    (The destination service instance is already configured)
-
-3. Set the profiles `cloud` and `destination` active in your `values.yaml` file:
-
-    ```yaml
-    srv:
-      ...
-      env:
-        SPRING_PROFILES_ACTIVE: cloud,destination
-        # TODO: To be removed after @sap/cds-dk patch
-        CDS_ENVIRONMENT_K8S_SERVICEBINDINGS_CONNECTIVITY_SECRETSPATH: '/bindings/connectivity'
-        CDS_ENVIRONMENT_K8S_SERVICEBINDINGS_CONNECTIVITY_SERVICE: 'connectivity'
-    ```
-
-4. For on-premise only: Add the connectivity service to your Helm chart:
-
-    ```bash
-    cds add helm:connectivity
-    ```
-
-*See also: [API_BUSINESS_PARTNER Remote Service and Spring Profiles](#api_business_partner-remote-service-and-spring-profiles)*
+- `@sap/cds-dk` >= 6.6.0
 
 ### Prepare Kubernetes Namespace
 
 #### Create container registry secret
 
-Create a secret `container-registry` with credentials to access the container registry:
+Create a secret `image-pull-secret` with credentials to access the container registry:
 
 ```
 bash ./scripts/create-container-registry-secret.sh
@@ -309,78 +272,225 @@ bash ./scripts/create-container-registry-secret.sh
 
 The *Docker Server* is the full qualified hostname of your container registry.
 
-#### Create a HDI container and a secret
+#### Create a HDI container / Service Manager Instance and a Secret
+
+This step is only required if you're using a BTP Trial account. If you're using a production or a free tier account then you can create HDI Container from Kyma directly by adding a [mapping to your Kyma namespace in your HANA Cloud Instance](https://blogs.sap.com/2022/12/15/consuming-sap-hana-cloud-from-the-kyma-environment/) and skip this step.
+
+##### Single Tenant
 
 ```
 bash ./scripts/create-db-secret.sh bookshop-db
 ```
 
-It will create a HDI container `bookshop-db` on your currently targeted Cloud Foundry space and creates a secret `bookshop-db` with the HDI container's credentials in your current Kubernetes namespace.
+It will create a HDI container `bookshop-db` instance on your currently targeted Cloud Foundry space and a secret `bookshop-db` with the credentials in your current Kubernetes namespace.
+
+Make the following changes to your _`helm/single-tenant/values.yaml`_.
+
+```diff
+srv:
+  bindings:
+    db:
+-     serviceInstanceName: hana
++     fromSecret: bookshop-db
+...
+
+hana-deployer:
+  bindings:
+    hana:
+-     serviceInstanceName: hana
++     fromSecret: bookshop-db
+
+...
+- hana:
+-   serviceOfferingName: hana
+-   servicePlanName: hdi-shared
+```
+
+Make the following changes to your _`helm/single-tenant/Chart.yaml`_.
+
+```diff
+dependencies:
+  ...
+-  - name: service-instance
+-    alias: hana
+-    version: ">0.0.0"
+  ...
+```
+
+##### Multi Tenant
+
+```
+bash ./scripts/create-sm-secret.sh bookshop-sm
+```
+
+It will create a Service Manager `bookshop-sm` instance on your currently targeted Cloud Foundry space and a secret `bookshop-sm` with the credentials in your current Kubernetes namespace.
+
+Make the following changes to your _`chart/values.yaml`_.
+
+```diff
+srv:
+  bindings:
+    service-manager:
+-     serviceInstanceName: service-manager
++     fromSecret: bookshop-sm
+...
+
+sidecar:
+  bindings:
+    service-manager:
+-     serviceInstanceName: service-manager
++     fromSecret: bookshop-sm
+
+...
+- service-manager:
+-   serviceOfferingName: service-manager
+-   servicePlanName: container
+```
+
+Make the following changes to your _`chart/Chart.yaml`_.
+
+```diff
+dependencies:
+  ...
+-  - name: service-instance
+-    alias: service-manager
+-    version: ">0.0.0"
+  ...
+```
 
 ### Build
 
-**Build data base deployer image:**
-
-```
+```bash
 cds build --production
-
-pack build $YOUR_CONTAINER_REGISTRY/bookshop-hana-deployer \
-     --path db \
-     --buildpack gcr.io/paketo-buildpacks/nodejs \
-     --builder paketobuildpacks/builder:base
 ```
 
-(Replace `$YOUR_CONTAINER_REGISTRY` with the full-qualified hostname of your container registry)
+**Build & publish container images for CAP service:**
 
-
-**Build image for CAP service:**
-
-```
-mvn package
+```bash
+mvn clean package -DskipTests=true
 ```
 
-```
+```bash
 pack build $YOUR_CONTAINER_REGISTRY/bookshop-srv \
         --path srv/target/*-exec.jar \
         --buildpack gcr.io/paketo-buildpacks/sap-machine \
         --buildpack gcr.io/paketo-buildpacks/java \
         --builder paketobuildpacks/builder:base \
-        --env SPRING_PROFILES_ACTIVE=cloud
+        --env SPRING_PROFILES_ACTIVE=cloud \
+        --env BP_JVM_VERSION=17 \
+        --publish
 ```
 
-**Build HTML5 application deployer image:**
+(Replace `$YOUR_CONTAINER_REGISTRY` with the full-qualified hostname of your container registry)
 
+**Build & publish Approuter Image:**
+
+```bash
+pack build $YOUR_CONTAINER_REGISTRY/bookshop-approuter \
+     --path app \
+     --builder paketobuildpacks/builder:base \
+     --env BP_NODE_RUN_SCRIPTS="" \
+     --publish
 ```
-bash ./scripts/build-ui-image.sh
+
+**Build & publish database deployer image (single tenant only):**
+
+```bash
+pack build $YOUR_CONTAINER_REGISTRY/bookshop-hdi-deployer \
+     --path db \
+     --builder paketobuildpacks/builder:base \
+     --env BP_NODE_RUN_SCRIPTS="" \
+     --publish
 ```
 
-### Push container images
+**Build & publish sidecar image (multi tenant only):**
 
-You can push all the container images to your container registry, using:
-
+```bash
+pack build $YOUR_CONTAINER_REGISTRY/bookshop-sidecar \
+     --path mtx/sidecar/gen \
+     --builder paketobuildpacks/builder:base \
+     --env BP_NODE_RUN_SCRIPTS="" \
+     --publish
 ```
-docker push $YOUR_CONTAINER_REGISTRY/bookshop-hana-deployer
 
-docker push $YOUR_CONTAINER_REGISTRY/bookshop-srv
 
-docker push $YOUR_CONTAINER_REGISTRY/bookshop-html5-deployer
+### Configuration
+
+Complete the configuration in the
+- _`helm/single-tenant/values.yaml`_ file if you're going for a **single-tenant deployment**, or the 
+- _`helm/multi-tenant/values.yaml`_ file if you're going for a **multi-tenant deployment**
+
+#### For both single- and multi-tenant deployment
+1. Change value of `global.domain` key to your cluster domain.
+2. Change value of `global.image.registry` to the URL of your container registry.
+3. Change value of `global.imagePullSecret.name` to the image registry secret created in [Create container registry secret](#create-container-registry-secret) step if you haven't used the name `image-pull-secret`.
+
+```yaml
+global:
+  domain: # <kyma_cluster_domain> e.g. c-865b338.stage.kyma.ondemand.com
+  imagePullSecret:
+    name: image-pull-secret # <image_pull_secret> e.g. image-pull-secret
+  image:
+    registry: # <container_image_registry> e.g. cdsjava.common.repositories.cloud.sap
+```
+
+4. Set `srv.image.repository` and `srv.image.tag` to the image path and tag you used in the `pack build` command for the `bookshop-srv`.
+```yaml
+srv:
+  image:
+    repository: # <image_path> e.g. bookshop/bookshop-srv
+    tag: latest # <tag> e.g. latest
+```
+
+5. Set `approuter.image.repository` and `approuter.image.tag` to the image path and tag you used in the `pack build` command for the `bookshop-approuter`.
+```yaml
+approuter:
+  image:
+    repository: # <image_path> e.g. bookshop/bookshop-approuter
+    tag: # <tag> e.g. latest
+```
+
+#### For single-tenant deployment only
+
+6. In the `helm/single-tenant/values.yaml` file, set `hdi-deployer.image.repository` and `hdi-deployer.image.tag` to the image path and tag you used in the `pack build` command for the `bookshop-hdi-deployer`.
+```yaml
+hdi-deployer:
+  image:
+    repository: # <image_repository> e.g. bookshop/bookshop-hdi-deployer
+    tag: # <tag> e.g. latest
+```
+
+#### For multi-tenant deployment only
+
+6. In the `helm/multi-tenant/values.yaml` file, set `sidecar.image.repository` and `sidecar.image.tag` to the image path and tag you used in the `pack build` command for the `bookshop-sidecar`.
+```yaml
+sidecar:
+  image:
+    repository: # <image_path> e.g. bookshop/bookshop-sidecar
+    tag: # <tag> e.g. latest
 ```
 
 ### Deployment
 
-```
-helm upgrade bookshop ./chart --install -f values.yaml
-```
+Deploy the helm chart using the following command from the project root directory:
 
-### Access the UI
+#### Single-Tenant
+
+```bash
+helm upgrade --install --namespace=<namespace> <release_name> ./helm/single-tenant --set-file xsuaa.jsonParameters=xs-security.json
+```
 
 Before you can access the UI you should make sure to [Setup Authorizations in SAP Business Technology Platform](#setup-authorizations-in-sap-business-technology-platform).
 
-1. Create a Launchpad Service subscription in the BTP Cockpit
-2. Go to **HTML5 Applications**
-3. Start any of the HTML5 applications
+URL to access the UI: `https://<release_name>-approuter-<namespace>.<cluster_domain>`
 
-Additionally, you can add the UIs to a Launchpad Service site like it is described in in the last two steps of [this tutorial](https://developers.sap.com/tutorials/btp-app-kyma-launchpad-service.html#9aab2dd0-18ea-4ccd-bc44-24e87c845740).
+#### Multi-Tenant
+
+```bash
+helm upgrade --install --namespace=<namespace> <release_name> ./helm/multi-tenant --set-file xsuaa.jsonParameters=xs-security-mt.json
+```
+
+In case of multi tenant, you'll have to subscribe to the application from a different subaccount. You can follow the steps mentioned [here](https://cap.cloud.sap/docs/guides/deployment/as-saas#subscribe) to access the application.
 
 ## Setup Authorizations in SAP Business Technology Platform
 

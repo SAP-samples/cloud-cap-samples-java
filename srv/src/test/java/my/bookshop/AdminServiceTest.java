@@ -1,37 +1,35 @@
 package my.bookshop;
 
 import static cds.gen.adminservice.AdminService_.AUTHORS;
+import static cds.gen.adminservice.AdminService_.ORDERS;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+
 import java.math.BigDecimal;
 import java.util.Collections;
-import javax.annotation.Resource;
+
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.test.context.support.WithMockUser;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import com.sap.cds.Result;
 import com.sap.cds.ql.Insert;
 import com.sap.cds.services.ServiceException;
-import com.sap.cds.services.draft.DraftService;
 import com.sap.cds.services.utils.CdsErrorStatuses;
 
-import cds.gen.adminservice.AdminService_;
+import cds.gen.adminservice.AdminService;
 import cds.gen.adminservice.Authors;
 import cds.gen.adminservice.OrderItems;
 import cds.gen.adminservice.Orders;
-import cds.gen.adminservice.Orders_;
 
-@ExtendWith(SpringExtension.class)
 @SpringBootTest
 @AutoConfigureMockMvc
 public class AdminServiceTest {
 
-	@Resource(name = AdminService_.CDS_NAME)
-	private DraftService adminService;
+	@Autowired
+	private AdminService.Draft adminService;
 
 	@Test
 	@WithMockUser(username = "user")
@@ -73,7 +71,7 @@ public class AdminServiceTest {
 
 		// Runtime ensures that book is present in the order item, when it is created.
 		ServiceException exception =
-			assertThrows(ServiceException.class, () -> adminService.run(Insert.into(Orders_.class).entry(order)));
+			assertThrows(ServiceException.class, () -> adminService.run(Insert.into(ORDERS).entry(order)));
 		assertEquals(CdsErrorStatuses.VALUE_REQUIRED.getCodeString(), exception.getErrorStatus().getCodeString());
 	}
 
@@ -91,7 +89,7 @@ public class AdminServiceTest {
 
 		// Runtime ensures that book exists when order item is created.
 		ServiceException exception =
-			assertThrows(ServiceException.class, () -> adminService.run(Insert.into(Orders_.class).entry(order)));
+			assertThrows(ServiceException.class, () -> adminService.run(Insert.into(ORDERS).entry(order)));
 		assertEquals(CdsErrorStatuses.TARGET_ENTITY_MISSING.getCodeString(), exception.getErrorStatus().getCodeString());
 	}
 

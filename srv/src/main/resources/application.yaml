@@ -3,21 +3,27 @@ logging:
   level:
     '[com.sap.cds.auditlog]': DEBUG
 spring:
-  web.resources.static-locations: "file:./app"
   jmx:
     enabled: true
 cds:
-  odata-v4.endpoint.path: "/api"
-  security.mock.users:
-    - name: admin
-      password: admin
-      roles:
-      - admin
-      attributes:
-        businessPartner:
-        - "10401010"
-    - name: user
-      password: user
+  odata-v4:
+    endpoint.path: "/api"
+    lazy-i18n.enabled: true
+  multi-tenancy:
+    compatibility.enabled: false
+    mtxs.enabled: true
+  security:
+    authentication.normalize-provider-tenant: true
+    mock.users:
+      admin:
+        password: admin
+        roles:
+        - admin
+        attributes:
+          businessPartner:
+          - "10401010"
+      user:
+        password: user
 server.servlet.encoding:
   charset: UTF-8
   force: true
@@ -41,6 +47,11 @@ spring:
   config.activate.on-profile: cloud
   sql.init.schema-locations: "classpath:schema-nomocks.sql"
 cds:
+  sql.hana:
+    optimizationMode: hex
+    search:
+      fuzzy: true
+      fuzzinessThreshold: 0.9
   messaging.services:
     bupa-messaging:
       kind: enterprise-messaging
@@ -53,12 +64,13 @@ spring:
 cds:
   remote.services:
     '[API_BUSINESS_PARTNER]':
+      type: "odata-v2"
+      http:
+        headers:
+          APIKey: "" # Place API Key from SAP API Business Hub here or use environment variable CDS_REMOTE_SERVICES_API_BUSINESS_PARTNER_HTTP_HEADERS_APIKEY
       destination:
-        type: "odata-v2"
         properties:
           url: "https://sandbox.api.sap.com/s4hanacloud/sap/opu/odata/sap"
-        headers:
-          APIKey: "" # Place API Key from SAP API Business Hub here or use environment variable CDS_REMOTE_SERVICES_API_BUSINESS_PARTNER_DESTINATION_HEADERS_APIKEY
 
 ---
 spring:
@@ -66,10 +78,11 @@ spring:
 cds:
   remote.services:
     '[API_BUSINESS_PARTNER]':
-      destination:
-        type: "odata-v2"
-        name: "s4-destination"
+      type: "odata-v2"
+      http:
         suffix: "/sap/opu/odata/sap"
+      destination:
+        name: "s4-destination"
 
 ---
 spring:
@@ -85,9 +98,35 @@ cds:
         path: API_BUSINESS_PARTNER
   remote.services:
     '[API_BUSINESS_PARTNER]':
+      http:
+        suffix: "/api"
       destination:
         name: "myself"
-        suffix: "/api"
+
+---
+spring:
+  config.activate.on-profile: ft
+cds:
+  model.provider.url: http://localhost:4005
+  security.mock.users:
+    admin:
+      features:
+      - isbn
+      - discount
+    user:
+      features:
+      - isbn
+
+---
+spring:
+  config.activate.on-profile: local-mtxs
+cds:
+  multi-tenancy.sidecar.url: http://localhost:4005
+  security.mock.users:
+    admin:
+      tenant: t1
+    user:
+      tenant: t1
 
 ---
 spring:

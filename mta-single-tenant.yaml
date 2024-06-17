@@ -12,10 +12,12 @@ modules:
     path: srv
     parameters:
       memory: 1024M
-      disk-quota: 256M
-      buildpack: sap_java_buildpack
+      disk-quota: 512M
+      buildpack: sap_java_buildpack_jakarta
     properties:
-      SPRING_PROFILES_ACTIVE: cloud,sandbox
+        SPRING_PROFILES_ACTIVE: cloud,sandbox
+        JBP_CONFIG_COMPONENTS: "jres: ['com.sap.xs.java.buildpack.jre.SAPMachineJRE']"
+        JBP_CONFIG_SAP_MACHINE_JRE: '{ version: 17.+ }'
     build-parameters:
       builder: custom
       commands:
@@ -26,9 +28,9 @@ modules:
       - name: bookshop-uaa
       - name: cf-logging
     provides:
-      - name: srv
+      - name: srv-api
         properties:
-          url: '${default-url}'
+          srv-url: '${default-url}'
 # --------------------- DB MODULE ---------------------------
   - name: bookshop-db
 # -----------------------------------------------------------
@@ -47,39 +49,44 @@ modules:
 # --------------------- APPROUTER MODULE ---------------------
   - name: bookshop-app
 # ------------------------------------------------------------
-    type: nodejs
+    type: approuter.nodejs
     path: app
     parameters:
       memory: 256M
       disk-quota: 512M
     requires:
-    - name: srv
+    - name: srv-api
       group: destinations
       properties:
         name: backend
-        url: ~{url}
+        url: ~{srv-url}
         forwardAuthToken: true
         strictSSL: true
     - name: bookshop-uaa
     provides:
-      - name: app
+      - name: app-api
         properties:
-          url: '${default-url}'
+          app-url: '${default-url}'
 # --------------------- RESOURCES ---------------------
 resources:
 # -----------------------------------------------------
   - name: bookshop-uaa
-    type: com.sap.xs.uaa
+    type: org.cloudfoundry.managed-service
     parameters:
       service: xsuaa
-      service-plan: broker
+      service-plan: application
       path: ./xs-security.json
       config: # override xsappname as it needs to be unique
         xsappname: bookshop-${org}-${space}
+        oauth2-configuration:
+          redirect-uris:
+          - ~{app-api/app-url}/**
+    requires:
+      - name: app-api
   - name: bookshop-hdi-container
     type: org.cloudfoundry.managed-service
     parameters:
-      service: hanatrial
+      service: hana
       service-plan: hdi-shared
   - name: cf-logging
     type: org.cloudfoundry.managed-service

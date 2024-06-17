@@ -23,11 +23,6 @@
 		</dependency>
 
 		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-actuator</artifactId>
-		</dependency>
-
-		<dependency>
 			<groupId>com.sap.cds</groupId>
 			<artifactId>cds-adapter-odata-v4</artifactId>
 			<scope>runtime</scope>
@@ -36,12 +31,33 @@
 		<dependency>
 			<groupId>com.sap.cds</groupId>
 			<artifactId>cds-starter-cloudfoundry</artifactId>
+			<scope>runtime</scope>
+			<exclusions>
+				<exclusion>
+					<groupId>com.sap.cds</groupId>
+					<artifactId>cds-feature-xsuaa</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>com.sap.cloud.security.xsuaa</groupId>
+					<artifactId>xsuaa-spring-boot-starter</artifactId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 
 		<dependency>
 			<groupId>com.sap.cds</groupId>
-			<artifactId>cds-feature-k8s</artifactId>
+			<artifactId>cds-starter-k8s</artifactId>
 			<scope>runtime</scope>
+			<exclusions>
+				<exclusion>
+					<groupId>com.sap.cds</groupId>
+					<artifactId>cds-feature-xsuaa</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>com.sap.cloud.security.xsuaa</groupId>
+					<artifactId>xsuaa-spring-boot-starter</artifactId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 
 		<dependency>
@@ -56,6 +72,12 @@
 			<scope>runtime</scope>
 		</dependency>
 
+		<dependency>
+			<groupId>com.sap.cds</groupId>
+			<artifactId>cds-feature-change-tracking</artifactId>
+			<scope>runtime</scope>
+		</dependency>
+
 		<!-- CLOUD SDK dependencies -->
 		<dependency>
 			<groupId>com.sap.cloud.sdk.cloudplatform</groupId>
@@ -63,8 +85,13 @@
 		</dependency>
 
 		<dependency>
+			<groupId>com.sap.cloud.sdk</groupId>
+			<artifactId>sdk-core</artifactId>
+		</dependency>
+
+		<dependency>
 			<groupId>com.sap.cloud.sdk.cloudplatform</groupId>
-			<artifactId>scp-cf</artifactId>
+			<artifactId>connectivity-apache-httpclient4</artifactId>
 		</dependency>
 
 		<!-- OTHER DEPENDENCIES -->
@@ -75,8 +102,14 @@
 		</dependency>
 
 		<dependency>
+			<groupId>org.xerial</groupId>
+			<artifactId>sqlite-jdbc</artifactId>
+			<scope>runtime</scope>
+		</dependency>
+
+		<dependency>
 			<groupId>com.sap.hcp.cf.logging</groupId>
-			<artifactId>cf-java-logging-support-servlet</artifactId>
+			<artifactId>cf-java-logging-support-servlet-jakarta</artifactId>
 			<version>${cf-java-logging-support.version}</version>
 		</dependency>
 
@@ -84,6 +117,16 @@
 			<groupId>com.sap.hcp.cf.logging</groupId>
 			<artifactId>cf-java-logging-support-logback</artifactId>
 			<version>${cf-java-logging-support.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-security</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-actuator</artifactId>
 		</dependency>
 
 		<dependency>
@@ -119,11 +162,8 @@
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
-				<version>${spring.boot.version}</version>
 				<configuration>
 					<skip>false</skip>
-					<!-- use project root directory as working directory to deliver fiori resources -->
-					<workingDirectory>..</workingDirectory>
 				</configuration>
 				<executions>
 					<execution>
@@ -136,6 +176,11 @@
 						</configuration>
 					</execution>
 				</executions>
+			</plugin>
+
+			<plugin>
+				<groupId>org.graalvm.buildtools</groupId>
+				<artifactId>native-maven-plugin</artifactId>
 			</plugin>
 
 			<!-- STEPS TO BUILD CDS MODEL AND GENERATE POJOs -->
@@ -162,13 +207,20 @@
 					</execution>
 
 					<execution>
-						<id>cds.install-cdsdk</id>
+						<id>cds.install-dependencies</id>
 						<goals>
-							<goal>install-cdsdk</goal>
+							<goal>npm</goal>
 						</goals>
 						<configuration>
-							<skip>${cdsdk-global}</skip>
+							<arguments>install @sap/cds-dk@${cds.install-cdsdk.version} @sap/cds-mtxs@^1 --no-save</arguments>
 						</configuration>
+					</execution>
+
+					<execution>
+						<id>cds.resolve</id>
+						<goals>
+							<goal>resolve</goal>
+						</goals>
 					</execution>
 
 					<execution>
@@ -178,13 +230,13 @@
 						</goals>
 						<configuration>
 							<commands>
-								<command>build --for java</command>
-								<command>deploy --to h2 --with-mocks --dry >
-									${project.basedir}/src/main/resources/schema.sql</command>
-								<command>deploy --to h2 --dry >
-									${project.basedir}/src/main/resources/schema-nomocks.sql</command>
-								<command>compile srv/cat-service.cds -2 openapi --openapi:url /api/browse >
-									${project.basedir}/src/main/resources/swagger/openapi.json</command>
+								<command>build --for java --opts contentLocalizedEdmx=false</command>
+								<command>deploy --to h2 --with-mocks --dry &gt;
+									"${project.basedir}/src/main/resources/schema.sql"</command>
+								<command>deploy --to h2 --dry &gt;
+									"${project.basedir}/src/main/resources/schema-nomocks.sql"</command>
+								<command>compile srv/cat-service.cds -2 openapi --openapi:url /api/browse &gt;
+									"${project.basedir}/src/main/resources/swagger/openapi.json"</command>
 							</commands>
 						</configuration>
 					</execution>
@@ -196,6 +248,7 @@
 						</goals>
 						<configuration>
 							<basePackage>cds.gen</basePackage>
+							<uniqueEventContexts>true</uniqueEventContexts>
 						</configuration>
 					</execution>
 				</executions>

@@ -1,0 +1,30 @@
+{
+  "dependencies": {
+    "@sap/cds": "^7",
+    "@sap/cds-mtxs": "^1",
+    "@sap/xssec": "^3",
+    "express": "^4",
+    "hdb": "^0",
+    "passport": "^0",
+    "@sap/hdi-deploy": "4.8.2"
+  },
+  "devDependencies": {
+    "sqlite3": "^5"
+  },
+  "engines": {
+    "node": "^18"
+  },
+  "cds": {
+    "profile": "mtx-sidecar",
+    "[development]": {
+      "requires": { "auth": "dummy" }
+    },
+    "cdsc": {
+      "moduleLookupDirectories": [ "node_modules/", "target/cds/" ]
+    }
+  },
+  "scripts": {
+    "start": "cds-serve",
+    "build": "cds build ../.. --for mtx-sidecar --production && cd gen && npm install"
+  }
+}

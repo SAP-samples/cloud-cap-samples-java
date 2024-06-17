@@ -1,12 +1,15 @@
 package my.bookshop.handlers;
 
 import static cds.gen.catalogservice.CatalogService_.BOOKS;
+import static cds.gen.catalogservice.CatalogService_.REVIEWS;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+
+import org.springframework.stereotype.Component;
 
 import com.sap.cds.Result;
 import com.sap.cds.Struct;
@@ -20,7 +23,6 @@ import com.sap.cds.services.ErrorStatuses;
 import com.sap.cds.services.ServiceException;
 import com.sap.cds.services.cds.CdsReadEventContext;
 import com.sap.cds.services.cds.CqnService;
-import com.sap.cds.services.draft.DraftService;
 import com.sap.cds.services.handler.EventHandler;
 import com.sap.cds.services.handler.annotations.After;
 import com.sap.cds.services.handler.annotations.Before;
@@ -28,17 +30,15 @@ import com.sap.cds.services.handler.annotations.On;
 import com.sap.cds.services.handler.annotations.ServiceName;
 import com.sap.cds.services.messages.Messages;
 import com.sap.cds.services.persistence.PersistenceService;
+import com.sap.cds.services.request.FeatureTogglesInfo;
 
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.stereotype.Component;
-
-import cds.gen.catalogservice.AddReviewContext;
+import cds.gen.catalogservice.BooksAddReviewContext;
 import cds.gen.catalogservice.Books;
 import cds.gen.catalogservice.Books_;
 import cds.gen.catalogservice.CatalogService_;
 import cds.gen.catalogservice.Reviews;
-import cds.gen.catalogservice.Reviews_;
 import cds.gen.catalogservice.SubmitOrderContext;
+import cds.gen.reviewservice.ReviewService;
 import cds.gen.reviewservice.ReviewService_;
 import my.bookshop.MessageKeys;
 import my.bookshop.RatingCalculator;
@@ -57,20 +57,19 @@ import my.bookshop.RatingCalculator;
 class CatalogServiceHandler implements EventHandler {
 
 	private final PersistenceService db;
-
-	private final DraftService reviewService;
+	private final ReviewService reviewService;
 
 	private final Messages messages;
-
+	private final FeatureTogglesInfo featureToggles;
 	private final RatingCalculator ratingCalculator;
-
 	private final CqnAnalyzer analyzer;
 
-	CatalogServiceHandler(PersistenceService db, @Qualifier(ReviewService_.CDS_NAME) DraftService reviewService,
-			Messages messages, RatingCalculator ratingCalculator, CdsModel model) {
+	CatalogServiceHandler(PersistenceService db, ReviewService reviewService, Messages messages,
+			FeatureTogglesInfo featureToggles, RatingCalculator ratingCalculator, CdsModel model) {
 		this.db = db;
 		this.reviewService = reviewService;
 		this.messages = messages;
+		this.featureToggles = featureToggles;
 		this.ratingCalculator = ratingCalculator;
 		this.analyzer = CqnAnalyzer.create(model);
 	}
@@ -81,16 +80,16 @@ class CatalogServiceHandler implements EventHandler {
 	 * @param context {@link ReviewContext}
 	 */
 	@Before(entity = Books_.CDS_NAME)
-	public void beforeAddReview(AddReviewContext context) {
+	public void beforeAddReview(BooksAddReviewContext context) {
 		String user = context.getUserInfo().getName();
 		String bookId = (String) analyzer.analyze(context.getCqn()).targetKeys().get(Books.ID);
 
-		Result result = db.run(Select.from(CatalogService_.REVIEWS)
+		Result result = db.run(Select.from(REVIEWS)
 				.where(review -> review.book_ID().eq(bookId).and(review.createdBy().eq(user))));
 
 		if (result.first().isPresent()) {
 			throw new ServiceException(ErrorStatuses.METHOD_NOT_ALLOWED, MessageKeys.REVIEW_ADD_FORBIDDEN)
-					.messageTarget(Reviews_.class, r -> r.createdBy());
+					.messageTarget(REVIEWS, r -> r.createdBy());
 		}
 	}
 
@@ -100,24 +99,18 @@ class CatalogServiceHandler implements EventHandler {
 	 * @param context {@link ReviewContext}
 	 */
 	@On(entity = Books_.CDS_NAME)
-	public void onAddReview(AddReviewContext context) {
-		Integer rating = context.getRating();
-		String title = context.getTitle();
-		String text = context.getText();
-
+	public void onAddReview(BooksAddReviewContext context) {
 		String bookId = (String) analyzer.analyze(context.getCqn()).targetKeys().get(Books.ID);
-
 		cds.gen.reviewservice.Reviews review = cds.gen.reviewservice.Reviews.create();
 		review.setBookId(bookId);
-		review.setRating(rating);
-		review.setTitle(title);
-		review.setText(text);
+		review.setRating(context.getRating());
+		review.setTitle(context.getTitle());
+		review.setText(context.getText());
 
 		Result res = reviewService.run(Insert.into(ReviewService_.REVIEWS).entry(review));
 		cds.gen.reviewservice.Reviews inserted = res.single(cds.gen.reviewservice.Reviews.class);
 
 		messages.success(MessageKeys.REVIEW_ADDED);
-
 		context.setResult(Struct.access(inserted).as(Reviews.class));
 	}
 
@@ -127,7 +120,7 @@ class CatalogServiceHandler implements EventHandler {
 	 * @param context {@link ReviewContext}
 	 */
 	@After(entity = Books_.CDS_NAME)
-	public void afterAddReview(AddReviewContext context) {
+	public void afterAddReview(BooksAddReviewContext context) {
 		ratingCalculator.setBookRating(context.getResult().getBookId());
 	}
 
@@ -135,7 +128,7 @@ class CatalogServiceHandler implements EventHandler {
 	public void discountBooks(Stream<Books> books) {
 		books.filter(b -> b.getTitle() != null).forEach(b -> {
 			loadStockIfNotSet(b);
-			discountBooksWithMoreThan111Stock(b);
+			discountBooksWithMoreThan111Stock(b, featureToggles.isEnabled("discount"));
 		});
 	}
 
@@ -149,7 +142,7 @@ class CatalogServiceHandler implements EventHandler {
 			return;
 		}
 
-		CqnSelect query = Select.from(CatalogService_.BOOKS, b -> b.filter(b.ID().in(bookIds)).reviews())
+		CqnSelect query = Select.from(BOOKS, b -> b.filter(b.ID().in(bookIds)).reviews())
 				.where(r -> r.createdBy().eq(user));
 
 		Set<String> reviewedBooks = db.run(query).streamOf(Reviews.class).map(Reviews::getBookId)
@@ -170,7 +163,7 @@ class CatalogServiceHandler implements EventHandler {
 		Optional<Books> book = db.run(Select.from(BOOKS).columns(Books_::stock).byId(bookId)).first(Books.class);
 
 		book.orElseThrow(() -> new ServiceException(ErrorStatuses.NOT_FOUND, MessageKeys.BOOK_MISSING)
-				.messageTarget(Books_.class, b -> b.ID()));
+				.messageTarget(BOOKS, b -> b.ID()));
 
 		int stock = book.map(Books::getStock).get();
 
@@ -186,9 +179,9 @@ class CatalogServiceHandler implements EventHandler {
 		}
 	}
 
-	private void discountBooksWithMoreThan111Stock(Books b) {
+	private void discountBooksWithMoreThan111Stock(Books b, boolean premium) {
 		if (b.getStock() != null && b.getStock() > 111) {
-			b.setTitle(String.format("%s -- 11%% discount", b.getTitle()));
+			b.setTitle(String.format("%s -- %s%% discount", b.getTitle(), premium ? 14 : 11));
 		}
 	}
 

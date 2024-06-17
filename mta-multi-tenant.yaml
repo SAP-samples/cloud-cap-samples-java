@@ -4,12 +4,6 @@ version: 1.0.0
 description: "Multitenant Bookshop CAP Java Project with UI"
 parameters:
   enable-parallel-deployments: true
-build-parameters:
-  before-all:
-   - builder: custom
-     commands:
-      - npm install --production
-      - npx -p @sap/cds-dk cds build --production
 modules:
 # --------------------- SERVER MODULE ------------------------
   - name: bookshop-mt-srv
@@ -18,11 +12,13 @@ modules:
     path: srv
     parameters:
       memory: 1024M
-      disk-quota: 256M
-      buildpack: sap_java_buildpack
+      disk-quota: 512M
+      buildpack: sap_java_buildpack_jakarta
     properties:
       SPRING_PROFILES_ACTIVE: cloud,sandbox
       CDS_MULTITENANCY_APPUI_TENANTSEPARATOR: "-"
+      JBP_CONFIG_COMPONENTS: "jres: ['com.sap.xs.java.buildpack.jre.SAPMachineJRE']"
+      JBP_CONFIG_SAP_MACHINE_JRE: '{ version: 17.+ }'
     build-parameters:
       builder: custom
       commands:
@@ -32,67 +28,81 @@ modules:
       - name: bookshop-mt-service-manager
       - name: bookshop-mt-uaa
       - name: bookshop-mt-saas-registry
-      - name: sidecar
+      - name: mtx-api
         properties:
-          CDS_MULTITENANCY_SIDECAR_URL: ~{url}
-      - name: app
+          CDS_MULTITENANCY_SIDECAR_URL: ~{mtx-url}
+      - name: app-api
         properties:
-          CDS_MULTITENANCY_APPUI_URL: ~{url}
+          CDS_MULTITENANCY_APPUI_URL: ~{app-url}
       - name: cf-logging
     provides:
-      - name: srv
+      - name: srv-api
         properties:
-          url: '${default-url}'
+          srv-url: '${default-url}'
 # --------------------- SIDECAR MODULE -----------------------
   - name: bookshop-mt-sidecar
 # ------------------------------------------------------------
     type: nodejs
-    path: mtx-sidecar
+    path: mtx/sidecar
     parameters:
       memory: 256M
-      disk-quota: 512M
+      disk-quota: 1024M
+    build-parameters:
+      builder: custom
+      build-result: gen
+      commands:
+        - npm run build
+      requires:
+        - name: bookshop-mt-srv
     requires:
       - name: bookshop-mt-service-manager
       - name: bookshop-mt-uaa
       - name: cf-logging
     provides:
-      - name: sidecar
+      - name: mtx-api
         properties:
-          url: ${default-url}
+          mtx-url: ${default-url}
 # --------------------- APPROUTER MODULE ---------------------
   - name: bookshop-mt-app
 # ------------------------------------------------------------
-    type: nodejs
+    type: approuter.nodejs
     path: app
     parameters:
       memory: 256M
       disk-quota: 512M
+      keep-existing-routes: true
     properties:
-      TENANT_HOST_PATTERN: ^(.*)-${default-uri}
+      TENANT_HOST_PATTERN: ^(.*)-${default-uri} # testing only, use custom domain with wildcard for production
     requires:
-    - name: srv
+    - name: srv-api
       group: destinations
       properties:
         name: backend
-        url: ~{url}
+        url: ~{srv-url}
         forwardAuthToken: true
         strictSSL: true
     - name: bookshop-mt-uaa
     provides:
-      - name: app
+      - name: app-api
         properties:
-          url: '${default-url}'
+          app-url: '${default-url}'
+          app-domain: '${domain}'
 # --------------------- RESOURCES ---------------------
 resources:
 # -----------------------------------------------------
   - name: bookshop-mt-uaa
-    type: com.sap.xs.uaa
+    type: org.cloudfoundry.managed-service
     parameters:
       service: xsuaa
-      service-plan: broker
+      service-plan: application
       path: ./xs-security-mt.json
       config: # override xsappname as it needs to be unique
         xsappname: bookshop-mt-${org}-${space}
+        oauth2-configuration:
+          redirect-uris:
+          - https://*.~{app-api/app-domain}/**
+    requires:
+      - name: app-api
   - name: bookshop-mt-service-manager
     type: org.cloudfoundry.managed-service
     parameters:
@@ -104,13 +114,20 @@ resources:
       service: saas-registry
       service-plan: application
       config:
-         appName: bookshop-mt-${org}-${space} # this is the text on the tile
-         xsappname: bookshop-mt-${org}-${space} # this is the value from xsuaa.parameters.config.xsappname
-         appUrls:
-           getDependencies: ~{srv/url}/mt/v1.0/subscriptions/dependencies
-           onSubscription: ~{srv/url}/mt/v1.0/subscriptions/tenants/{tenantId}
+        appName: bookshop-mt-${org}-${space} # this is the text on the tile
+        xsappname: bookshop-mt-${org}-${space} # this is the value from xsuaa.parameters.config.xsappname
+        appUrls:
+          getDependencies: ~{srv-api/srv-url}/mt/v1.0/subscriptions/dependencies
+          onSubscription: ~{srv-api/srv-url}/mt/v1.0/subscriptions/tenants/{tenantId}
+          onSubscriptionAsync: true
+          onUnSubscriptionAsync: true
+          onUpdateDependenciesAsync: true
+          callbackTimeoutMillis: 3600000
+        displayName: bookshop-java
+        description: A simple CAP Java project.
+        category: 'Category'
     requires:
-      - name: srv
+      - name: srv-api
   - name: cf-logging
     type: org.cloudfoundry.managed-service
     parameters:

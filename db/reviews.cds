@@ -17,7 +17,6 @@ entity Reviews : cuid, managed {
 
 // input validation
 annotate Reviews with {
-    subject @mandatory;
     title @mandatory;
     rating @assert.range;
     book @mandatory @assert.target;

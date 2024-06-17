@@ -1,21 +1,8 @@
 {
-    "build": {
-        "target": ".",
-        "tasks": [
-            {
-                "for": "java"
-            },
-            {
-                "for": "mtx",
-                "src": ".",
-                "dest": "mtx-sidecar"
-            },
-            {
-                "for": "hana"
-            }
-        ]
+    "requires": {
+        "multitenancy": true,
+        "extensibility": true,
+        "toggles": true
     },
-    "hana": {
-        "deploy-format": "hdbtable"
-    }
+    "profile": "with-mtx-sidecar"
 }
