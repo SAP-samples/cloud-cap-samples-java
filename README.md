@@ -272,11 +272,11 @@ bash ./scripts/create-container-registry-secret.sh
 
 The *Docker Server* is the full qualified hostname of your container registry.
 
-#### [Optional] Create a HDI container / Service Manager Instance and a Secret
+#### Create a HDI container / Service Manager Instance and a Secret (optional)
 
 **Only required if you're using a BTP Trial account**.
 
-If you're using a production or a free tier account then you can create HDI Container from Kyma directly by adding a [mapping to your Kyma namespace in your HANA Cloud Instance](https://blogs.sap.com/2022/12/15/consuming-sap-hana-cloud-from-the-kyma-environment/) and **skip this step**.
+If you're using a production or a free tier account you can create HDI Container from Kyma directly by adding a [mapping to your Kyma namespace in your HANA Cloud Instance](https://blogs.sap.com/2022/12/15/consuming-sap-hana-cloud-from-the-kyma-environment/). Then **skip this step and continue with [Build](#build)**.
 
 ##### Single Tenant
 
