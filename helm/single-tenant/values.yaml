@@ -11,8 +11,8 @@ srv:
     db:
       serviceInstanceName: bookshop-hdi
   image:
-    repository: i541520/bookshop/bookshop-srv # <image_path> e.g. bookshop/bookshop-srv
-    tag: latest # <tag> e.g. latest
+    repository: # <image_path> e.g. bookshop/bookshop-srv
+    tag: # <tag> e.g. latest
   env:
     SPRING_PROFILES_ACTIVE: cloud
   resources:
