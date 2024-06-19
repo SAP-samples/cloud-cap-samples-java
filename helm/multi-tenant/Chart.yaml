@@ -1,0 +1,31 @@
+apiVersion: v2
+name: bookshop
+description: A simple CAP project.
+type: application
+version: 1.0.0-SNAPSHOT
+appVersion: 1.0.0-SNAPSHOT
+dependencies:
+  - name: web-application
+    repository: https://int.repositories.cloud.sap/artifactory/virtual-unified-runtime-helm-dmz/
+    version: ">0.0.0"
+    alias: srv
+  - name: web-application
+    repository: https://int.repositories.cloud.sap/artifactory/virtual-unified-runtime-helm-dmz/
+    version: ">0.0.0"
+    alias: approuter
+  - name: web-application
+    repository: https://int.repositories.cloud.sap/artifactory/virtual-unified-runtime-helm-dmz/
+    version: ">0.0.0"
+    alias: sidecar
+  - name: service-instance
+    repository: https://int.repositories.cloud.sap/artifactory/virtual-unified-runtime-helm-dmz/
+    version: ">0.0.0"
+    alias: xsuaa
+  - name: service-instance
+    repository: https://int.repositories.cloud.sap/artifactory/virtual-unified-runtime-helm-dmz/
+    version: ">0.0.0"
+    alias: saas-registry
+  - name: service-instance
+    repository: https://int.repositories.cloud.sap/artifactory/virtual-unified-runtime-helm-dmz/
+    version: ">0.0.0"
+    alias: service-manager
