@@ -132,7 +132,8 @@ Make sure you have set up a development environment (that means, you’ve instal
 
 You'll start with a predefined stock of books as this procedure starts the bookshop application with a CSV-initialized in-memory H2 database.
 
-Two mock users are defined for local development:
+Two [additional mock users](https://cap.cloud.sap/docs/java/security#preconfigured-mock-users)
+are defined for local development:
 - User: `user`, password: `user` to browse books
 - User: `admin`, password: `admin` to manage books and orders
 
