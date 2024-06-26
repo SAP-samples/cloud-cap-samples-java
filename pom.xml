@@ -16,11 +16,11 @@
 
 		<!-- DEPENDENCIES VERSION -->
 		<jdk.version>17</jdk.version>
-		<cds.services.version>2.10.0</cds.services.version>
+		<cds.services.version>2.10.1</cds.services.version>
 		<spring.boot.version>3.2.6</spring.boot.version>
 		<cf-java-logging-support.version>3.8.3</cf-java-logging-support.version>
 
-		<cds.cdsdk-version>7.9.2</cds.cdsdk-version>
+		<cds.cdsdk-version>7.9.4</cds.cdsdk-version>
 
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
