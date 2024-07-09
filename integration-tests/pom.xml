@@ -22,6 +22,7 @@
 			<groupId>my</groupId>
 			<artifactId>bookshop</artifactId>
 			<version>${revision}</version>
+			<scope>test</scope>
 			<exclusions>
 				<exclusion>
 					<groupId>ch.qos.logback</groupId>
