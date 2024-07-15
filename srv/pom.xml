@@ -32,32 +32,12 @@
 			<groupId>com.sap.cds</groupId>
 			<artifactId>cds-starter-cloudfoundry</artifactId>
 			<scope>runtime</scope>
-			<exclusions>
-				<exclusion>
-					<groupId>com.sap.cds</groupId>
-					<artifactId>cds-feature-xsuaa</artifactId>
-				</exclusion>
-				<exclusion>
-					<groupId>com.sap.cloud.security.xsuaa</groupId>
-					<artifactId>xsuaa-spring-boot-starter</artifactId>
-				</exclusion>
-			</exclusions>
 		</dependency>
 
 		<dependency>
 			<groupId>com.sap.cds</groupId>
 			<artifactId>cds-starter-k8s</artifactId>
 			<scope>runtime</scope>
-			<exclusions>
-				<exclusion>
-					<groupId>com.sap.cds</groupId>
-					<artifactId>cds-feature-xsuaa</artifactId>
-				</exclusion>
-				<exclusion>
-					<groupId>com.sap.cloud.security.xsuaa</groupId>
-					<artifactId>xsuaa-spring-boot-starter</artifactId>
-				</exclusion>
-			</exclusions>
 		</dependency>
 
 		<dependency>
@@ -230,7 +210,7 @@
 						</goals>
 						<configuration>
 							<commands>
-								<command>build --for java --opts contentLocalizedEdmx=false</command>
+								<command>build --for java</command>
 								<command>deploy --to h2 --with-mocks --dry &gt;
 									"${project.basedir}/src/main/resources/schema.sql"</command>
 								<command>deploy --to h2 --dry &gt;
@@ -248,7 +228,6 @@
 						</goals>
 						<configuration>
 							<basePackage>cds.gen</basePackage>
-							<uniqueEventContexts>true</uniqueEventContexts>
 						</configuration>
 					</execution>
 				</executions>
