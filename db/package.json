@@ -1,7 +1,8 @@
 {
   "name": "deploy",
   "dependencies": {
-    "@sap/hdi-deploy": "^5"
+    "@sap/hdi-deploy": "^5",
+    "@cap-js/hana": "^1"
   },
   "engines": {
     "node": "^18"
