@@ -10,7 +10,7 @@
     "@cap-js/sqlite": "^1"
   },
   "engines": {
-    "node": "^18 || ^20"
+    "node": "^20"
   },
   "cds": {
     "profiles": ["mtx-sidecar", "java"],
