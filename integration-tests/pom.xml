@@ -88,9 +88,6 @@
 						<goals>
 							<goal>install-node</goal>
 						</goals>
-						<configuration>
-							<skip>${cdsdk-global}</skip>
-						</configuration>
 					</execution>
 
 					<execution>
@@ -100,7 +97,7 @@
 						</goals>
 						<phase>pre-integration-test</phase>
 						<configuration>
-							<arguments>install --no-save</arguments>
+							<arguments>ci</arguments>
 							<skip>${skipTests}</skip>
 							<workingDirectory>${sidecar.dir}</workingDirectory>
 						</configuration>
