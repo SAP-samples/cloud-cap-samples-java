@@ -18,7 +18,7 @@ service ReviewService {
         {
             grant : '*',
             to : 'authenticated-user',
-            where : 'createdBy=$user'
+            where : (createdBy=$user)
         },
         {
             grant : '*',
