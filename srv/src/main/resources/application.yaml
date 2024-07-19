@@ -9,6 +9,7 @@ cds:
   odata-v4:
     endpoint.path: "/api"
   security:
+    authentication.normalize-provider-tenant: true
     mock.users:
       admin:
         password: admin

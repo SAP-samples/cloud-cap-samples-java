@@ -123,6 +123,9 @@
 				</executions>
 				<configuration>
 					<executable>${cds.npm.executable}</executable>
+					<environmentVariables>
+						<PATH>${cds.node.directory}${path.separator}${env.PATH}</PATH>
+					</environmentVariables>
 					<skip>${skipTests}</skip>
 					<workingDirectory>${sidecar.dir}</workingDirectory>
 					<async>true</async>
