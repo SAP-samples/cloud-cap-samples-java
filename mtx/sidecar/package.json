@@ -15,7 +15,7 @@
     "node": "^18"
   },
   "cds": {
-    "profile": "mtx-sidecar",
+    "profiles": ["mtx-sidecar", "java"],
     "[development]": {
       "requires": { "auth": "dummy" }
     }

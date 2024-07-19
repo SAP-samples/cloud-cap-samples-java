@@ -32,7 +32,7 @@ import com.sap.cds.services.messages.Messages;
 import com.sap.cds.services.persistence.PersistenceService;
 import com.sap.cds.services.request.FeatureTogglesInfo;
 
-import cds.gen.catalogservice.AddReviewContext;
+import cds.gen.catalogservice.BooksAddReviewContext;
 import cds.gen.catalogservice.Books;
 import cds.gen.catalogservice.Books_;
 import cds.gen.catalogservice.CatalogService_;
@@ -80,7 +80,7 @@ class CatalogServiceHandler implements EventHandler {
 	 * @param context {@link ReviewContext}
 	 */
 	@Before(entity = Books_.CDS_NAME)
-	public void beforeAddReview(AddReviewContext context) {
+	public void beforeAddReview(BooksAddReviewContext context) {
 		String user = context.getUserInfo().getName();
 		String bookId = (String) analyzer.analyze(context.getCqn()).targetKeys().get(Books.ID);
 
@@ -99,7 +99,7 @@ class CatalogServiceHandler implements EventHandler {
 	 * @param context {@link ReviewContext}
 	 */
 	@On(entity = Books_.CDS_NAME)
-	public void onAddReview(AddReviewContext context) {
+	public void onAddReview(BooksAddReviewContext context) {
 		String bookId = (String) analyzer.analyze(context.getCqn()).targetKeys().get(Books.ID);
 		cds.gen.reviewservice.Reviews review = cds.gen.reviewservice.Reviews.create();
 		review.setBookId(bookId);
@@ -120,7 +120,7 @@ class CatalogServiceHandler implements EventHandler {
 	 * @param context {@link ReviewContext}
 	 */
 	@After(entity = Books_.CDS_NAME)
-	public void afterAddReview(AddReviewContext context) {
+	public void afterAddReview(BooksAddReviewContext context) {
 		ratingCalculator.setBookRating(context.getResult().getBookId());
 	}
 
