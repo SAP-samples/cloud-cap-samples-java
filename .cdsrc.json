@@ -4,5 +4,8 @@
         "extensibility": true,
         "toggles": true
     },
-    "profile": "with-mtx-sidecar"
+    "profile": "with-mtx-sidecar",
+    "cdsc": {
+        "moduleLookupDirectories": [ "node_modules/", "target/cds/", "mtx/sidecar/node_modules/" ]
+    }
 }

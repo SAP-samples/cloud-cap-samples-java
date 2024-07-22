@@ -186,13 +186,15 @@
 						</configuration>
 					</execution>
 
+					<!-- required for cds build -->
 					<execution>
-						<id>cds.install-dependencies</id>
+						<id>cds.install-mtx-dependencies</id>
 						<goals>
 							<goal>npm</goal>
 						</goals>
 						<configuration>
-							<arguments>install @sap/cds-dk@${cds.install-cdsdk.version} @sap/cds-mtxs@^2 --ignore-scripts --no-save</arguments>
+							<arguments>ci</arguments>
+							<workingDirectory>../mtx/sidecar</workingDirectory>
 						</configuration>
 					</execution>
 
@@ -234,14 +236,4 @@
 			</plugin>
 		</plugins>
 	</build>
-
-	<profiles>
-		<!-- A profile that uses global installation of @sap/cds-dk -->
-		<profile>
-			<id>cdsdk-global</id>
-			<properties>
-				<cdsdk-global>true</cdsdk-global>
-			</properties>
-		</profile>
-	</profiles>
 </project>
