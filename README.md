@@ -132,7 +132,8 @@ Make sure you have set up a development environment (that means, you’ve instal
 
 You'll start with a predefined stock of books as this procedure starts the bookshop application with a CSV-initialized in-memory H2 database.
 
-Two mock users are defined for local development:
+Two mock users in addition to the [default mock users](https://cap.cloud.sap/docs/java/security#preconfigured-mock-users)
+are defined for local development:
 - User: `user`, password: `user` to browse books
 - User: `admin`, password: `admin` to manage books and orders
 
@@ -168,7 +169,7 @@ Use the following steps to import the project to Eclipse:
 
 	```${workspace_loc:bookshop-parent}```
 
-	Afterwards, click **Run**. This step starts the applications `main` method located in `src/main/java/my/bookshop/Application.java`.
+	Afterward, click **Run**. This step starts the applications `main` method located in `src/main/java/my/bookshop/Application.java`.
 
 ## Using IntelliJ Idea (Community and Ultimate)
 
@@ -446,7 +447,7 @@ mvn clean package -DskipTests=true
 ```
 
 ```bash
-pack build $YOUR_CONTAINER_REGISTRY/bookshop-srv \
+pack build ${YOUR_CONTAINER_REGISTRY:?}/bookshop-srv \
         --path srv/target/*-exec.jar \
         --buildpack gcr.io/paketo-buildpacks/sap-machine \
         --buildpack gcr.io/paketo-buildpacks/java \
@@ -455,12 +456,12 @@ pack build $YOUR_CONTAINER_REGISTRY/bookshop-srv \
         --env BP_JVM_VERSION=17
 ```
 
-(Replace `$YOUR_CONTAINER_REGISTRY` with the full-qualified hostname of your container registry)
+(Replace `${YOUR_CONTAINER_REGISTRY:?}` with the full-qualified hostname of your container registry)
 
 **Build Approuter Image:**
 
 ```bash
-pack build $YOUR_CONTAINER_REGISTRY/bookshop-approuter \
+pack build ${YOUR_CONTAINER_REGISTRY:?}/bookshop-approuter \
      --path app \
      --buildpack gcr.io/paketo-buildpacks/nodejs \
      --builder paketobuildpacks/builder-jammy-base \
@@ -470,7 +471,7 @@ pack build $YOUR_CONTAINER_REGISTRY/bookshop-approuter \
 **Build database deployer image (single tenant only):**
 
 ```bash
-pack build $YOUR_CONTAINER_REGISTRY/bookshop-hana-deployer \
+pack build ${YOUR_CONTAINER_REGISTRY:?}/bookshop-hana-deployer \
      --path db \
      --buildpack gcr.io/paketo-buildpacks/nodejs \
      --builder paketobuildpacks/builder-jammy-base \
@@ -480,7 +481,7 @@ pack build $YOUR_CONTAINER_REGISTRY/bookshop-hana-deployer \
 **Build sidecar image (multi tenant only):**
 
 ```bash
-pack build $YOUR_CONTAINER_REGISTRY/bookshop-sidecar \
+pack build ${YOUR_CONTAINER_REGISTRY:?}/bookshop-sidecar \
      --path mtx/sidecar/gen \
      --buildpack gcr.io/paketo-buildpacks/nodejs \
      --builder paketobuildpacks/builder-jammy-base \
@@ -492,21 +493,21 @@ pack build $YOUR_CONTAINER_REGISTRY/bookshop-sidecar \
 You can push all the container images to your container registry, using:
 
 ```bash
-docker push $YOUR_CONTAINER_REGISTRY/bookshop-srv
+docker push ${YOUR_CONTAINER_REGISTRY:?}/bookshop-srv
 
-docker push $YOUR_CONTAINER_REGISTRY/bookshop-approuter
+docker push ${YOUR_CONTAINER_REGISTRY:?}/bookshop-approuter
 ```
 
 #### Single Tenant
 
 ```bash
-docker push $YOUR_CONTAINER_REGISTRY/bookshop-hana-deployer
+docker push ${YOUR_CONTAINER_REGISTRY:?}/bookshop-hana-deployer
 ```
 
 #### Multi Tenant
 
 ```bash
-docker push $YOUR_CONTAINER_REGISTRY/bookshop-sidecar
+docker push ${YOUR_CONTAINER_REGISTRY:?}/bookshop-sidecar
 ```
 
 ### Configuration
