@@ -12,10 +12,6 @@ spring:
 cds:
   odata-v4:
     endpoint.path: "/api"
-    lazy-i18n.enabled: true
-  multi-tenancy:
-    compatibility.enabled: false
-    mtxs.enabled: true
   security:
     authentication.normalize-provider-tenant: true
     mock.users:
@@ -51,11 +47,9 @@ spring:
   config.activate.on-profile: cloud
   sql.init.schema-locations: "classpath:schema-nomocks.sql"
 cds:
-  sql.hana:
-    optimizationMode: hex
-    search:
-      fuzzy: true
-      fuzzinessThreshold: 0.9
+  sql.hana.search:
+    fuzzy: true
+    fuzzinessThreshold: 0.9
   messaging.services:
     bupa-messaging:
       kind: enterprise-messaging

@@ -1,18 +1,16 @@
 {
   "dependencies": {
-    "@sap/cds": "^7",
-    "@sap/cds-mtxs": "^1",
-    "@sap/xssec": "^3",
-    "express": "^4",
-    "hdb": "^0",
-    "passport": "^0",
-    "@sap/hdi-deploy": "4.8.2"
+    "@cap-js/hana": "^1",
+    "@sap/cds": "^8",
+    "@sap/cds-mtxs": "^2",
+    "@sap/xssec": "^4",
+    "express": "^4"
   },
   "devDependencies": {
-    "sqlite3": "^5"
+    "@cap-js/sqlite": "^1"
   },
   "engines": {
-    "node": "^18"
+    "node": "^20"
   },
   "cds": {
     "profiles": ["mtx-sidecar", "java"],
@@ -22,6 +20,6 @@
   },
   "scripts": {
     "start": "cds-serve",
-    "build": "cds build ../.. --for mtx-sidecar --production && cd gen && npm install"
+    "build": "npm ci && cds build ../.. --for mtx-sidecar --production && npm ci --prefix gen"
   }
 }

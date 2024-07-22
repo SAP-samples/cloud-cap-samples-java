@@ -1,13 +1,14 @@
 {
   "name": "deploy",
   "dependencies": {
-    "@sap/hdi-deploy": "4.8.2"
+    "hdb": "^0",
+    "@sap/hdi-deploy": "^5"
   },
   "engines": {
-    "node": "^18"
+    "node": "^20"
   },
   "scripts": {
-    "start": "node node_modules/@sap/hdi-deploy/deploy.js",
-    "build": "npm i && npx cds build .. --for hana --production"
+    "start": "node node_modules/@sap/hdi-deploy/deploy.js --use-hdb",
+    "build": "npm ci && npx cds build .. --for hana --production"
   }
 }
