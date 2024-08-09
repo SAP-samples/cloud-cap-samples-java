@@ -16,11 +16,11 @@
 
 		<!-- DEPENDENCIES VERSION -->
 		<jdk.version>17</jdk.version>
-		<cds.services.version>3.1.0</cds.services.version>
+		<cds.services.version>3.1.1</cds.services.version>
 		<spring.boot.version>3.3.2</spring.boot.version>
 		<cf-java-logging-support.version>3.8.4</cf-java-logging-support.version>
 
-		<cds.cdsdk-version>8.1.0</cds.cdsdk-version>
+		<cds.cdsdk-version>8.1.1</cds.cdsdk-version>
 
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
@@ -57,7 +57,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
-				<version>3.12.1</version>
+				<version>3.13.0</version>
 				<configuration>
 					<release>${jdk.version}</release>
 					<encoding>UTF-8</encoding>
@@ -78,7 +78,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-surefire-plugin</artifactId>
-				<version>3.2.5</version>
+				<version>3.3.1</version>
 				<configuration>
 					<failIfNoTests>true</failIfNoTests>
 				</configuration>
@@ -115,7 +115,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-enforcer-plugin</artifactId>
-				<version>3.4.1</version>
+				<version>3.5.0</version>
 				<executions>
 					<execution>
 						<id>Project Structure Checks</id>
