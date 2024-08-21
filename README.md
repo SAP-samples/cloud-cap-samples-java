@@ -178,11 +178,8 @@ the code generated from the CDS model the build path of the project (module) nee
 with the folder containing the generated code. In order to add the generated code you need to add the 'gen' folder
 to the build path:
 
-1. Open the project settings.
-2. Navigate to the 'modules' section.
-3. Select the srv/src/gen folder and mark it as 'sources'.
-4. Save and leave the project settings.
-5. Trigger a rebuild.
+1. Right-click the `srv/src/gen/java` folder, select 'Mark Directory as' and mark it as 'Sources Root'.
+1. Right-click the `srv/src/gen/resources` folder, select 'Mark Directory as' and mark it as 'Resources Root'.
 
 After the generated code is considered by IntelliJ's build the application can be handled just as any other Spring Boot
 application in IntelliJ.
