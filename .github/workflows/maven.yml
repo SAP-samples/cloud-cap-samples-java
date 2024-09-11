@@ -24,7 +24,7 @@ jobs:
     - name: Set up JDK
       uses: actions/setup-java@v4
       with:
-        java-version: 17
+        java-version: 21
         distribution: 'sapmachine'
     - name: Build with Maven
       run: mvn -ntp -B clean install
