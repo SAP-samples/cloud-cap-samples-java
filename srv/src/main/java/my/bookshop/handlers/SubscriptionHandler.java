@@ -24,7 +24,7 @@ class SubscriptionHandler implements EventHandler {
 
 	@After
 	public void afterSubscribe(SubscribeEventContext context) {
-		String msg = String.format("New tenant '%s' subscribed.", context.getTenant());
+		String msg = "New tenant '%s' subscribed.".formatted(context.getTenant());
 
 		// send audit log security message to provider tenant as user's tenant is null
 		auditLog.logSecurityEvent("tenant subscribed", msg);
