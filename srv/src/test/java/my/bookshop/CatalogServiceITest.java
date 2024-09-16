@@ -27,7 +27,7 @@ import cds.gen.catalogservice.Reviews;
 public class CatalogServiceITest {
 
 	private static final String booksURI = "/api/browse/Books";
-	private static final String addReviewURI = String.format("%s(ID=%s)/CatalogService.addReview", booksURI, "f846b0b9-01d4-4f6d-82a4-d79204f62278");
+	private static final String addReviewURI = "%s(ID=%s)/CatalogService.addReview".formatted(booksURI, "f846b0b9-01d4-4f6d-82a4-d79204f62278");
 
 	private static final String USER_USER_STRING = "user";
 	private static final String ADMIN_USER_STRING = "admin";

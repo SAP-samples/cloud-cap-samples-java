@@ -181,7 +181,7 @@ class CatalogServiceHandler implements EventHandler {
 
 	private void discountBooksWithMoreThan111Stock(Books b, boolean premium) {
 		if (b.getStock() != null && b.getStock() > 111) {
-			b.setTitle(String.format("%s -- %s%% discount", b.getTitle(), premium ? 14 : 11));
+			b.setTitle("%s -- %s%% discount".formatted(b.getTitle(), premium ? 14 : 11));
 		}
 	}
 

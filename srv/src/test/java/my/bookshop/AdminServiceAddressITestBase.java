@@ -50,14 +50,14 @@ public class AdminServiceAddressITestBase {
 		order.setShippingAddressId("100");
 
 		String id = UUID.randomUUID().toString();
-		client.put().uri(String.format(orderURI, id))
+		client.put().uri(orderURI.formatted(id))
 				.headers(this::adminCredentials)
 				.header("Content-Type", "application/json")
 				.bodyValue(order.toJson())
 				.exchange()
 				.expectStatus().isCreated();
 
-		client.get().uri(String.format(orderURI, id) + "?$expand=shippingAddress").headers(this::adminCredentials).exchange()
+		client.get().uri(orderURI.formatted(id) + "?$expand=shippingAddress").headers(this::adminCredentials).exchange()
 				.expectStatus().isOk()
 				.expectBody()
 				.jsonPath("$.ID").isEqualTo(id)
@@ -66,7 +66,7 @@ public class AdminServiceAddressITestBase {
 				.jsonPath("$.shippingAddress.businessPartner").isEqualTo("10401010")
 				.jsonPath("$.shippingAddress.houseNumber").isEqualTo("16");
 
-		client.get().uri(String.format(orderURI, id) + "/shippingAddress").headers(this::adminCredentials).exchange()
+		client.get().uri(orderURI.formatted(id) + "/shippingAddress").headers(this::adminCredentials).exchange()
 				.expectStatus().isOk()
 				.expectBody()
 				.jsonPath("$.ID").isEqualTo("100")
@@ -88,7 +88,7 @@ public class AdminServiceAddressITestBase {
 		ABusinessPartnerAddress address = ABusinessPartnerAddress.create();
 		address.setHouseNumber("17");
 
-		client.patch().uri(String.format(remoteAddressURI, "10401010", "100")).headers(this::authenticatedCredentials)
+		client.patch().uri(remoteAddressURI.formatted("10401010", "100")).headers(this::authenticatedCredentials)
 				.header("Content-Type", "application/json")
 				.bodyValue(address.toJson())
 				.exchange()
@@ -96,7 +96,7 @@ public class AdminServiceAddressITestBase {
 
 		// wait for remote address update
 		latch.await(30, TimeUnit.SECONDS);
-		client.get().uri(String.format(orderURI, id) + "/shippingAddress").headers(this::adminCredentials).exchange()
+		client.get().uri(orderURI.formatted(id) + "/shippingAddress").headers(this::adminCredentials).exchange()
 				.expectStatus().isOk()
 				.expectBody()
 				.jsonPath("$.ID").isEqualTo("100")
