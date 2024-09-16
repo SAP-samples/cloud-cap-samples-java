@@ -105,7 +105,8 @@ The following sections describe how to set up, build, and run the project.
 
 ## Prerequisites
 
-Make sure you have set up a development environment (that means, you’ve installed the CDS Compiler, Java, and Apache Maven) [as described here](https://cap.cloud.sap/docs/java/getting-started).
+Make sure you have set up a development environment (that means, you’ve installed the CDS Compiler, Java 21, and Apache Maven) [as described here](https://cap.cloud.sap/docs/java/getting-started).
+This sample application requires a Java 21 compatible JDK, unlike the CAP Java SDK itself. We recommend using SAPMachine version 21, which can be downloaded  [here](https://sap.github.io/SapMachine/).
 
 ## Clone Build & Run
 
