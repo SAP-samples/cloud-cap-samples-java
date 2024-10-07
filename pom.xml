@@ -28,9 +28,11 @@
 		<xsuaa.version>3.5.3</xsuaa.version>
 		<cf-java-logging-support.version>3.8.4</cf-java-logging-support.version>
 		<cds.cdsdk-version>8.3.0</cds.cdsdk-version>
+		<cds-feature-attachments.version>1.0.4-SNAPSHOT</cds-feature-attachments.version>
 	</properties>
 
 	<modules>
+		<module>db</module>
 		<module>srv</module>
 		<module>integration-tests</module>
 	</modules>
@@ -73,6 +75,14 @@
 
 		</dependencies>
 	</dependencyManagement>
+
+	<dependencies>
+		<dependency>
+			<groupId>com.sap.cds</groupId>
+			<artifactId>cds-feature-attachments</artifactId>
+			<version>${cds-feature-attachments.version}</version>
+		</dependency>
+	</dependencies>
 
 	<build>
 		<plugins>
@@ -167,4 +177,15 @@
 			</plugin>
 		</plugins>
 	</build>
+
+	<repositories>
+		<repository>
+			<id>Artifactory_DMZ-snapshots</id>
+			<name>SAP's Artifactory</name>
+			<url>https://common.repositories.cloud.sap/artifactory/cap-java/</url>
+			<snapshots>
+				<enabled>true</enabled>
+			</snapshots>
+		</repository>
+	</repositories>
 </project>
