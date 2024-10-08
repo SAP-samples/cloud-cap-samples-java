@@ -10,6 +10,6 @@ type TechnicalBooleanFlag : Boolean @(
     Core.Computed
 );
 
-annotate Attachments with {
-    modifiedAt @(odata.etag: null);
-}
+// annotate Attachments with {
+//     modifiedAt @(odata.etag: null);
+// }
