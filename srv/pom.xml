@@ -230,6 +230,7 @@
 						</goals>
 						<configuration>
 							<basePackage>cds.gen</basePackage>
+							<strictSetters>true</strictSetters>
 						</configuration>
 					</execution>
 				</executions>
