@@ -125,6 +125,15 @@
 										"route": "BooksDetails"
 									}
 								}
+							},
+							"controlConfiguration": {
+								"changes/@com.sap.vocabularies.UI.v1.LineItem": {
+									"columns": {
+										"DataField::up__ID": {
+											"availability": "Hidden"
+										}
+									}
+								}
 							}
 						}
 					}
