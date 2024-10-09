@@ -291,3 +291,6 @@ annotate AdminService.OrderItems with @(
 //ERROR ALERT: The following line refering to the parents currency code will lead to a server error
 //@Measures.ISOCurrency:parent.currency.code; //Bind the currency field to the quantity field of the parent
 };
+
+
+annotate AdminService.Orders.changes:up_ with @UI.Hidden;
