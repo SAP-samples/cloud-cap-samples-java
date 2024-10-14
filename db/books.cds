@@ -26,19 +26,6 @@ entity Books : cuid, managed {
     covers       : Composition of many Attachments;
 }
 
-annotate Attachments with @UI: {
-    LineItem  : [
-        {Value: content},
-        {Value: status},
-        {Value: createdAt},
-        {Value: createdBy},
-        {Value: note},
-        {Value: fileName}
-    ]
-} {
-    modifiedAt @(odata.etag: null);
-}
-
 entity Authors : cuid, managed {
     @assert.format : '^\p{Lu}.*' // assert that name starts with a capital letter
     name         : String(111);
