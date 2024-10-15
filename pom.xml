@@ -79,7 +79,7 @@
 	<dependencies>
 		<dependency>
 			<groupId>com.sap.cds</groupId>
-			<artifactId>cds-feature-attachments-fs</artifactId>
+			<artifactId>cds-feature-attachments</artifactId>
 			<version>${cds-feature-attachments.version}</version>
 		</dependency>
 	</dependencies>
