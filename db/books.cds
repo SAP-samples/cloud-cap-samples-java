@@ -26,6 +26,19 @@ entity Books : cuid, managed {
     covers       : Composition of many Attachments;
 }
 
+annotate Attachments with @UI: {
+    LineItem  : [
+        {Value: content},
+        {Value: fileName},
+        {Value: status},
+        {Value: createdAt},
+        {Value: createdBy},
+        {Value: note}
+    ]
+} {
+    modifiedAt @(odata.etag: null);
+}
+
 entity Authors : cuid, managed {
     @assert.format : '^\p{Lu}.*' // assert that name starts with a capital letter
     name         : String(111);
@@ -35,8 +48,6 @@ entity Authors : cuid, managed {
     placeOfDeath : String;
     books        : Association to many Books
                        on books.author = $self;
-} {
-    modifiedAt @(odata.etag: null);
 }
 
 // annotations for Data Privacy
