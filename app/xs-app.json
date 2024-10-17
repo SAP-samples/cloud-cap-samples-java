@@ -7,66 +7,66 @@
 		"cacheControl": "no-cache, no-store, must-revalidate",
 		"target": "$1",
 		"localDir": "./",
-		"authenticationType": "xsuaa"
+		"authenticationType": "ias"
 	  },
 	  {
 		"source": "^/appconfig/(.*)$",
 		"localDir": "./",
-		"authenticationType": "xsuaa"
+		"authenticationType": "ias"
 	  },
 	  {
 		"source": "^/browse/webapp/(.*)$",
 		"localDir": "./",
-		"authenticationType": "xsuaa"
+		"authenticationType": "ias"
 	  },
 	  {
 		"source": "^/admin/webapp/(.*)$",
 		"localDir": "./",
-		"authenticationType": "xsuaa"
+		"authenticationType": "ias"
 	  },
 	  {
 		"source": "^/orders/webapp/(.*)$",
 		"localDir": "./",
-		"authenticationType": "xsuaa"
+		"authenticationType": "ias"
 	  },
 	  {
 		"source": "^/reviews/webapp/(.*)$",
 		"localDir": "./",
-		"authenticationType": "xsuaa"
+		"authenticationType": "ias"
 	  },
 	  {
 		"source": "^/notes/webapp/(.*)$",
 		"localDir": "./",
-		"authenticationType": "xsuaa"
+		"authenticationType": "ias"
 	  },
 	  {
 		"source": "^/addresses/webapp/(.*)$",
 		"localDir": "./",
-		"authenticationType": "xsuaa"
+		"authenticationType": "ias"
 	  },
 	  {
 		"source": "^/vue/(.*)$",
 		"localDir": "./",
-		"authenticationType": "xsuaa"
+		"authenticationType": "ias"
 	  },
 	  {
 		"source": "^/api/admin/(.*)",
-		"authenticationType": "xsuaa",
+		"authenticationType": "ias",
 		"destination": "backend"
 	  },
 	  {
 		"source": "^/api/browse/(.*)",
-		"authenticationType": "xsuaa",
+		"authenticationType": "ias",
 		"destination": "backend"
 	  },
 	  {
 		"source": "^/api/review/(.*)",
-		"authenticationType": "xsuaa",
+		"authenticationType": "ias",
 		"destination": "backend"
 	  },
 	  {
 		"source": "^/api/notes/(.*)",
-		"authenticationType": "xsuaa",
+		"authenticationType": "ias",
 		"destination": "backend"
 	  },
 	  {
