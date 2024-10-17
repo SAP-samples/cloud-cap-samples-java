@@ -8,6 +8,7 @@ using {
 } from '@sap/cds/common';
 using my.bookshop.Reviews from './reviews';
 using my.bookshop.TechnicalBooleanFlag from './common';
+using {sap.attachments.Attachments} from `com.sap.cds/cds-feature-attachments`;
 
 @fiori.draft.enabled
 entity Books : cuid, managed {
@@ -22,6 +23,21 @@ entity Books : cuid, managed {
     reviews      : Association to many Reviews
                        on reviews.book = $self;
     isReviewable : TechnicalBooleanFlag not null default true;
+    covers       : Composition of many Attachments;
+}
+
+annotate Attachments with @UI: {
+    LineItem  : [
+        {Value: content, @HTML5.CssDefaults: {width: '25%'}},
+        {Value: fileName, @HTML5.CssDefaults: {width: '25%'}},
+        {Value: mimeType, @HTML5.CssDefaults: {width: '10%'}},
+        {Value: status, @HTML5.CssDefaults: {width: '10%'}},
+        {Value: createdAt, @HTML5.CssDefaults: {width: '20%'}},
+        {Value: createdBy, @HTML5.CssDefaults: {width: '15%'}},
+        {Value: note}
+    ]
+} {
+    modifiedAt @(odata.etag: null);
 }
 
 entity Authors : cuid, managed {

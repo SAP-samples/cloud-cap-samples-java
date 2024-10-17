@@ -31,6 +31,12 @@ annotate AdminService.Books with @(UI : {
             Label : '{i18n>Admin}',
             Target : '@UI.FieldGroup#Admin'
         },
+        {
+            $Type  : 'UI.ReferenceFacet',
+            ID     : 'AttachmentsFacet',
+            Label  : '{i18n>covers}',
+            Target : 'covers/@UI.LineItem'
+        }
     ],
     FieldGroup #General : {Data : [
         {Value : title},
