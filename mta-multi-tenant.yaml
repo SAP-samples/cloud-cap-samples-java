@@ -5,9 +5,9 @@ description: "Multitenant Bookshop CAP Java Project with UI"
 parameters:
   enable-parallel-deployments: true
 modules:
-  # --------------------- SERVER MODULE ------------------------
+# --------------------- SERVER MODULE ------------------------
   - name: bookshop-mt-srv
-    # ------------------------------------------------------------
+# ------------------------------------------------------------
     type: java
     path: srv
     parameters:
@@ -39,9 +39,9 @@ modules:
       - name: srv-api
         properties:
           srv-url: '${default-url}'
-  # --------------------- SIDECAR MODULE -----------------------
+# --------------------- SIDECAR MODULE -----------------------
   - name: bookshop-mt-sidecar
-    # ------------------------------------------------------------
+# ------------------------------------------------------------
     type: nodejs
     path: mtx/sidecar
     parameters:
@@ -62,9 +62,9 @@ modules:
       - name: mtx-api
         properties:
           mtx-url: ${default-url}
-  # --------------------- APPROUTER MODULE ---------------------
+# --------------------- APPROUTER MODULE ---------------------
   - name: bookshop-mt-app
-    # ------------------------------------------------------------
+# ------------------------------------------------------------
     type: approuter.nodejs
     path: app
     parameters:
@@ -74,14 +74,14 @@ modules:
     properties:
       TENANT_HOST_PATTERN: ^(.*)-${default-uri} # testing only, use custom domain with wildcard for production
     requires:
-      - name: srv-api
-        group: destinations
-        properties:
-          name: backend
-          url: ~{srv-url}
-          forwardAuthToken: true
-          strictSSL: true
-      - name: bookshop-mt-uaa
+    - name: srv-api
+      group: destinations
+      properties:
+        name: backend
+        url: ~{srv-url}
+        forwardAuthToken: true
+        strictSSL: true
+    - name: bookshop-mt-uaa
     provides:
       - name: app-api
         properties:
@@ -89,7 +89,7 @@ modules:
           app-domain: '${domain}'
 # --------------------- RESOURCES ---------------------
 resources:
-  # -----------------------------------------------------
+# -----------------------------------------------------
   - name: bookshop-mt-uaa
     type: org.cloudfoundry.managed-service
     parameters:
@@ -100,7 +100,7 @@ resources:
         xsappname: bookshop-mt-${org}-${space}
         oauth2-configuration:
           redirect-uris:
-            - https://*.~{app-api/app-domain}/**
+          - https://*.~{app-api/app-domain}/**
     requires:
       - name: app-api
   - name: bookshop-mt-service-manager
