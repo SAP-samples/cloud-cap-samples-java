@@ -133,6 +133,19 @@
 			<artifactId>spring-boot-devtools</artifactId>
 			<optional>true</optional>
 		</dependency>
+
+		<!-- ADD THE AUTHORIZATION MANAGEMENT SERVICE (AMS) -->
+		<dependency>
+			<groupId>com.sap.cloud.security.ams.client</groupId>
+			<artifactId>jakarta-ams</artifactId>
+			<version>1.7.0</version>
+		</dependency>
+		<!-- INTEGRATE CAP WITH AMS -->
+		<dependency>
+			<groupId>com.sap.cloud.security.ams.client</groupId>
+			<artifactId>cap-support</artifactId>
+			<version>1.7.0</version>
+		</dependency>
 	</dependencies>
 
 	<build>
