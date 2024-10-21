@@ -28,6 +28,7 @@
 		<xsuaa.version>3.5.3</xsuaa.version>
 		<cf-java-logging-support.version>3.8.4</cf-java-logging-support.version>
 		<cds.cdsdk-version>8.3.0</cds.cdsdk-version>
+		<ams.client.version>1.7.0</ams.client.version>
 	</properties>
 
 	<modules>
@@ -69,6 +70,19 @@
 				<groupId>com.sap.cloud.servicesdk.xbem</groupId>
 				<artifactId>emjapi-extension-sap-cp-jms</artifactId>
 				<version>4.0.0</version>
+			</dependency>
+
+			<!-- AUTHORIZATION MANAGEMENT SERVICE (AMS) -->
+			<dependency>
+				<groupId>com.sap.cloud.security.ams.client</groupId>
+				<artifactId>jakarta-ams</artifactId>
+				<version>1.7.0</version>
+			</dependency>
+			<!-- INTEGRATE CAP WITH AMS -->
+			<dependency>
+				<groupId>com.sap.cloud.security.ams.client</groupId>
+				<artifactId>cap-support</artifactId>
+				<version>1.7.0</version>
 			</dependency>
 
 		</dependencies>

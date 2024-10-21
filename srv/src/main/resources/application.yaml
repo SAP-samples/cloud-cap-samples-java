@@ -51,6 +51,7 @@ cds:
       kind: enterprise-messaging
       format: cloudevents
       subscribe-prefix: sap/S4HANAOD/java/ce/
+  security.authorization.deep.enabled: true
 
 ---
 spring:

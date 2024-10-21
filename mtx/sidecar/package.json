@@ -17,6 +17,9 @@
     "profiles": ["mtx-sidecar", "java"],
     "[development]": {
       "requires": { "auth": "dummy" }
+    },
+    "requires": {
+      "auth": "ias"
     }
   },
   "scripts": {

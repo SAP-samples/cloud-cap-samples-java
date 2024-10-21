@@ -1,0 +1,173 @@
+_schema-version: '2.1'
+ID: bookshop-mt-ias
+version: 1.0.0
+description: "Multitenant Bookshop CAP Java Project with UI"
+parameters:
+  enable-parallel-deployments: true
+modules:
+  # --------------------- SERVER MODULE ------------------------
+  - name: bookshop-mt-ias-srv
+    # ------------------------------------------------------------
+    type: java
+    path: srv
+    parameters:
+      memory: 1024M
+      disk-quota: 512M
+      buildpacks:
+        - https://github.com/SAP/cloud-authorization-buildpack/releases/latest/download/opa_buildpack.zip
+        - sap_java_buildpack_jakarta
+      routes:
+        - route: '${default-url}'
+        - route: '${default-host}.cert.${default-domain}'
+    properties:
+      SPRING_PROFILES_ACTIVE: cloud,sandbox
+      CDS_MULTITENANCY_APPUI_TENANTSEPARATOR: "-"
+      JBP_CONFIG_COMPONENTS: "jres: ['com.sap.xs.java.buildpack.jre.SAPMachineJRE']"
+      JBP_CONFIG_SAP_MACHINE_JRE: '{ version: 21.+ }'
+      AMS_DCL_ROOT: "/BOOT-INF/classes/ams/"
+    build-parameters:
+      builder: custom
+      commands:
+        - mvn clean package -DskipTests=true
+      build-result: target/*-exec.jar
+    requires:
+      - name: bookshop-mt-ias-service-manager
+      - name: bookshop-mt-ias-sms
+      - name: bookshop-mt-ias-identity
+        parameters:
+          config:
+            credential-type: "X509_GENERATED"
+            key-length: 2048
+            validity: 30
+            validity-type: "DAYS"
+            app-identifier: "microservice1"
+      - name: mtx-api
+        properties:
+          CDS_MULTITENANCY_SIDECAR_URL: ~{mtx-url}
+      - name: app-api
+        properties:
+          CDS_MULTITENANCY_APPUI_URL: ~{app-url}
+      - name: cf-logging
+    provides:
+      - name: srv-api
+        properties:
+          srv-url: '${default-url}'
+          srv-cert-url: '${protocol}://${default-host}.cert.${default-domain}'
+  # --------------------- SIDECAR MODULE -----------------------
+  - name: bookshop-mt-ias-sidecar
+    # ------------------------------------------------------------
+    type: nodejs
+    path: mtx/sidecar
+    parameters:
+      memory: 256M
+      disk-quota: 1024M
+    build-parameters:
+      builder: custom
+      build-result: gen
+      commands:
+        - npm run build
+      requires:
+        - name: bookshop-mt-ias-srv
+    requires:
+      - name: bookshop-mt-ias-service-manager
+      - name: bookshop-mt-ias-identity
+        parameters:
+          config:
+            credential-type: "X509_GENERATED"
+            key-length: 2048
+            validity: 30
+            validity-type: "DAYS"
+            app-identifier: "microservice1"
+      - name: cf-logging
+    provides:
+      - name: mtx-api
+        properties:
+          mtx-url: ${default-url}
+  # --------------------- APPROUTER MODULE ---------------------
+  - name: bookshop-mt-ias-app
+    # ------------------------------------------------------------
+    type: approuter.nodejs
+    path: app
+    parameters:
+      memory: 256M
+      disk-quota: 512M
+      keep-existing-routes: true
+    properties:
+      TENANT_HOST_PATTERN: ^(.*)-${default-host}.${default-domain} # testing only, use custom domain with wildcard for production
+    requires:
+      - name: srv-api
+        group: destinations
+        properties:
+          name: backend
+          url: ~{srv-cert-url}
+          forwardAuthCertificates: true
+          forwardAuthToken: true
+          strictSSL: true
+      - name: bookshop-mt-ias-identity
+        parameters:
+          config:
+            credential-type: "X509_GENERATED"
+            key-length: 2048
+            validity: 30
+            validity-type: "DAYS"
+            app-identifier: "microservice1"
+      - name: bookshop-mt-ias-sms
+    provides:
+      - name: app-api
+        properties:
+          app-url: '${default-url}'
+          app-domain: '${default-domain}'
+# --------------------- RESOURCES ---------------------
+resources:
+# -----------------------------------------------------
+  - name: bookshop-mt-ias-service-manager
+    type: org.cloudfoundry.managed-service
+    parameters:
+      service: service-manager
+      service-plan: container
+  - name: bookshop-mt-ias-identity
+    type: org.cloudfoundry.managed-service
+    parameters:
+      service: identity
+      service-plan: application
+      config:
+        authorization:
+          enabled: true
+          value_help_url: "https://vhp-srv-develop.cert.cfapps.sap.hana.ondemand.com/odata/v4/ExampleValueHelpService/"
+        oauth2-configuration:
+          redirect-uris: [
+            "https://*.cfapps.sap.hana.ondemand.com/**",
+            "https://*.internal.cfapps.sap.hana.ondemand.com/node/signin-oidc/*",
+            "http://localhost:5000/login/callback?authType=ias"
+          ]
+        xsuaa-cross-consumption: true
+        display-name: bookshop-mt-ias-identity
+        multi-tenant: true
+  - name: bookshop-mt-ias-sms
+    type: org.cloudfoundry.managed-service
+    parameters:
+      service: subscription-manager
+      service-plan: provider
+      config:
+        iasServiceInstanceName: bookshop-mt-ias-identity
+        applicationType: application
+        appName: bookshop-mt-ias
+        appCallbacks:
+          dependenciesCallbacks:
+            url: ~{srv-api/srv-cert-url}/mt/sms/subscriptions/tenants/{app_tid}/dependencies
+          subscriptionCallbacks:
+            url: ~{srv-api/srv-cert-url}/mt/sms/subscriptions/tenants/{app_tid}
+        subscribeEnable: true
+        unSubscribeEnable: true
+        timeoutInMillis: 60000
+        displayName: bookshop-mt-ias
+        description: "MT Bookshop using IAS & AMS"
+        category: "Application Development and Automation"
+    requires:
+      - name: srv-api
+    processed-after: [ bookshop-mt-ias-identity ]
+  - name: cf-logging
+    type: org.cloudfoundry.managed-service
+    parameters:
+      service: application-logs
+      service-plan: lite
