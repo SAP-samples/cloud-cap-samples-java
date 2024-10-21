@@ -13,7 +13,9 @@ modules:
     parameters:
       memory: 1024M
       disk-quota: 512M
-      buildpack: sap_java_buildpack_jakarta
+      buildpacks:
+        - https://github.com/SAP/cloud-authorization-buildpack/releases/latest/download/opa_buildpack.zip
+        - sap_java_buildpack_jakarta
       routes:
         - route: '${default-url}'
         - route: '${default-host}.cert.${default-domain}'
@@ -22,6 +24,7 @@ modules:
       CDS_MULTITENANCY_APPUI_TENANTSEPARATOR: "-"
       JBP_CONFIG_COMPONENTS: "jres: ['com.sap.xs.java.buildpack.jre.SAPMachineJRE']"
       JBP_CONFIG_SAP_MACHINE_JRE: '{ version: 21.+ }'
+      AMS_DCL_ROOT: "/BOOT-INF/classes/ams/"
     build-parameters:
       builder: custom
       commands:
