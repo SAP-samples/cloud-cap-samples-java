@@ -26,17 +26,7 @@ entity Books : cuid, managed {
     covers       : Composition of many Attachments;
 }
 
-annotate Attachments with @UI: {
-    LineItem  : [
-        {Value: content, @HTML5.CssDefaults: {width: '25%'}},
-        {Value: fileName, @HTML5.CssDefaults: {width: '25%'}},
-        {Value: mimeType, @HTML5.CssDefaults: {width: '10%'}},
-        {Value: status, @HTML5.CssDefaults: {width: '10%'}},
-        {Value: createdAt, @HTML5.CssDefaults: {width: '20%'}},
-        {Value: createdBy, @HTML5.CssDefaults: {width: '15%'}},
-        {Value: note}
-    ]
-} {
+annotate Attachments with {
     modifiedAt @(odata.etag: null);
 }
 
