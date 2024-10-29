@@ -137,3 +137,6 @@ annotate AdminService.Books actions {
     quantity @title : '{i18n>Quantity}'
     )
 }
+
+// Hides technical field up__ID in View Setitings dialog for Books.covers
+annotate AdminService.Books.covers:up_ with @UI.Hidden;
