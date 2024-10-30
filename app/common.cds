@@ -203,7 +203,7 @@ annotate my.Genres with
     Facets : [{
         $Type : 'UI.ReferenceFacet',
         Label : '{i18n>SubGenres}',
-        Target : 'children/@UI.LineItem'
+        Target : 'parent/@UI.LineItem'
     }, ],
 });
 

@@ -47,8 +47,8 @@ annotate Authors with
  * Hierarchically organized Code List for Genres
  */
 entity Genres : sap.common.CodeList {
-    key ID       : Integer;
-        parent   : Association to Genres;
-        children : Composition of many Genres
-                       on children.parent = $self;
+    key ID      : Integer;
+    node        : Integer not null;
+    parent_node : Integer default 0;
+    parent      : Association to one Genres on parent.node = parent_node;
 }

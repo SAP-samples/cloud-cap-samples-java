@@ -2,77 +2,82 @@
 	"welcomeFile": "/app/fiori.html",
 	"authenticationMethod": "route",
 	"routes": [
-	  {
-		"source": "^/app/(.*)$",
-		"cacheControl": "no-cache, no-store, must-revalidate",
-		"target": "$1",
-		"localDir": "./",
-		"authenticationType": "xsuaa"
-	  },
-	  {
-		"source": "^/appconfig/(.*)$",
-		"localDir": "./",
-		"authenticationType": "xsuaa"
-	  },
-	  {
-		"source": "^/browse/webapp/(.*)$",
-		"localDir": "./",
-		"authenticationType": "xsuaa"
-	  },
-	  {
-		"source": "^/admin/webapp/(.*)$",
-		"localDir": "./",
-		"authenticationType": "xsuaa"
-	  },
-	  {
-		"source": "^/orders/webapp/(.*)$",
-		"localDir": "./",
-		"authenticationType": "xsuaa"
-	  },
-	  {
-		"source": "^/reviews/webapp/(.*)$",
-		"localDir": "./",
-		"authenticationType": "xsuaa"
-	  },
-	  {
-		"source": "^/notes/webapp/(.*)$",
-		"localDir": "./",
-		"authenticationType": "xsuaa"
-	  },
-	  {
-		"source": "^/addresses/webapp/(.*)$",
-		"localDir": "./",
-		"authenticationType": "xsuaa"
-	  },
-	  {
-		"source": "^/vue/(.*)$",
-		"localDir": "./",
-		"authenticationType": "xsuaa"
-	  },
-	  {
-		"source": "^/api/admin/(.*)",
-		"authenticationType": "xsuaa",
-		"destination": "backend"
-	  },
-	  {
-		"source": "^/api/browse/(.*)",
-		"authenticationType": "xsuaa",
-		"destination": "backend"
-	  },
-	  {
-		"source": "^/api/review/(.*)",
-		"authenticationType": "xsuaa",
-		"destination": "backend"
-	  },
-	  {
-		"source": "^/api/notes/(.*)",
-		"authenticationType": "xsuaa",
-		"destination": "backend"
-	  },
-	  {
-		"source": "^/api/(.*)$",
-		"authenticationType": "none",
-		"destination": "backend"
-	  }
+		{
+			"source": "^/app/(.*)$",
+			"cacheControl": "no-cache, no-store, must-revalidate",
+			"target": "$1",
+			"localDir": "./",
+			"authenticationType": "xsuaa"
+		},
+		{
+			"source": "^/appconfig/(.*)$",
+			"localDir": "./",
+			"authenticationType": "xsuaa"
+		},
+		{
+			"source": "^/browse/webapp/(.*)$",
+			"localDir": "./",
+			"authenticationType": "xsuaa"
+		},
+		{
+			"source": "^/admin/webapp/(.*)$",
+			"localDir": "./",
+			"authenticationType": "xsuaa"
+		},
+		{
+			"source": "^/orders/webapp/(.*)$",
+			"localDir": "./",
+			"authenticationType": "xsuaa"
+		},
+		{
+			"source": "^/genres/webapp/(.*)$",
+			"localDir": "./",
+			"authenticationType": "xsuaa"
+		},
+		{
+			"source": "^/reviews/webapp/(.*)$",
+			"localDir": "./",
+			"authenticationType": "xsuaa"
+		},
+		{
+			"source": "^/notes/webapp/(.*)$",
+			"localDir": "./",
+			"authenticationType": "xsuaa"
+		},
+		{
+			"source": "^/addresses/webapp/(.*)$",
+			"localDir": "./",
+			"authenticationType": "xsuaa"
+		},
+		{
+			"source": "^/vue/(.*)$",
+			"localDir": "./",
+			"authenticationType": "xsuaa"
+		},
+		{
+			"source": "^/api/admin/(.*)",
+			"authenticationType": "xsuaa",
+			"destination": "backend"
+		},
+		{
+			"source": "^/api/browse/(.*)",
+			"authenticationType": "xsuaa",
+			"destination": "backend"
+		},
+		{
+			"source": "^/api/review/(.*)",
+			"authenticationType": "xsuaa",
+			"destination": "backend"
+		},
+		{
+			"source": "^/api/notes/(.*)",
+			"authenticationType": "xsuaa",
+			"destination": "backend"
+		},
+		{
+			"source": "^/api/(.*)$",
+			"authenticationType": "none",
+			"destination": "backend"
+		}
 	]
 }
