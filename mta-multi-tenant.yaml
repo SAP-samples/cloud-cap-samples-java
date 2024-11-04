@@ -35,6 +35,7 @@ modules:
         properties:
           CDS_MULTITENANCY_APPUI_URL: ~{app-url}
       - name: cf-logging
+      - name: malware-scanner
     provides:
       - name: srv-api
         properties:
@@ -134,3 +135,8 @@ resources:
     parameters:
       service: application-logs
       service-plan: lite
+  - name: malware-scanner
+    type: org.cloudfoundry.managed-service
+    parameters:
+      service: malware-scanner
+      service-plan: clamav
