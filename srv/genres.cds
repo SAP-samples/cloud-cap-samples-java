@@ -6,6 +6,7 @@ aspect Hierarchy {
   virtual DrillState             : String;
   virtual Matched                : Boolean;
   virtual MatchedDescendantCount : Integer64;
+  virtual LimitedRank            : Integer64;
 }
 
 
@@ -14,7 +15,8 @@ annotate Hierarchy with @Capabilities.FilterRestrictions.NonFilterableProperties
   'DistanceFromRoot',
   'DrillState',
   'Matched',
-  'MatchedDescendantCount'
+  'MatchedDescendantCount',
+  'LimitedRank'
 ];
 
 annotate Hierarchy with @Capabilities.SortRestrictions.NonSortableProperties: [
@@ -22,5 +24,6 @@ annotate Hierarchy with @Capabilities.SortRestrictions.NonSortableProperties: [
   'DistanceFromRoot',
   'DrillState',
   'Matched',
-  'MatchedDescendantCount'
+  'MatchedDescendantCount',
+  'LimitedRank'
 ];

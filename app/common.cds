@@ -177,7 +177,9 @@ annotate my.Genres with
     UI : {
         SelectionFields : [name],
         LineItem : [
-            {Value : name}
+            {Value : name,
+            Label : '{i18n>Name}',
+            },
         ],
     }
 );
