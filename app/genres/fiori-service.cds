@@ -18,5 +18,6 @@ annotate AdminService.GenreHierarchy with @Aggregation.RecursiveHierarchy#AdminH
   DistanceFromRoot: DistanceFromRoot,
   DrillState: DrillState,
   Matched: Matched,
-  MatchedDescendantCount: MatchedDescendantCount
+  MatchedDescendantCount: MatchedDescendantCount,
+  LimitedRank: LimitedRank
 };
