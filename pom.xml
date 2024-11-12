@@ -27,7 +27,7 @@
 		<cloud.sdk.version>5.13.0</cloud.sdk.version>
 		<xsuaa.version>3.5.3</xsuaa.version>
 		<cf-java-logging-support.version>3.8.4</cf-java-logging-support.version>
-		<cds.cdsdk-version>8.4.0</cds.cdsdk-version>
+		<cds.cdsdk-version>8.4.1</cds.cdsdk-version>
 		<cds-feature-attachments.version>1.0.5</cds-feature-attachments.version>
 	</properties>
 
@@ -110,7 +110,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-surefire-plugin</artifactId>
-				<version>3.5.1</version>
+				<version>3.5.2</version>
 				<configuration>
 					<failIfNoTests>true</failIfNoTests>
 				</configuration>
@@ -119,7 +119,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-failsafe-plugin</artifactId>
-				<version>3.5.1</version>
+				<version>3.5.2</version>
 			</plugin>
 
 			<!-- POM FLATTENING FOR CI FRIENDLY VERSIONS -->
