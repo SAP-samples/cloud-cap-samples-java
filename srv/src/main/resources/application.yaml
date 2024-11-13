@@ -1,5 +1,5 @@
 ---
-my.bookshop.postgresImage: postgres:14
+my.bookshop.postgresImage: postgres:16
 
 cds:
   dataSource.csv:
