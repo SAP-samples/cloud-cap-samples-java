@@ -26,4 +26,3 @@ spring:
 cds:
   dataSource:
     auto-config.enabled: false
-
