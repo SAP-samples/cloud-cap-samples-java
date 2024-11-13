@@ -74,7 +74,7 @@ annotate AdminService.GenreHierarchy with @UI: {
     PresentationVariant #VH: {
         $Type                      : 'UI.PresentationVariantType',
         Visualizations             : ['@UI.LineItem'],
-        RecursiveHierarchyQualifier: 'AdminHierarchy'
+        RecursiveHierarchyQualifier: 'GenreHierarchy'
     },
     LineItem               : [{
         $Type: 'UI.DataField',

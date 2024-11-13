@@ -1,4 +1,4 @@
-namespace my.admin.bookshop;
+namespace my.common;
 
 aspect Hierarchy {
   virtual LimitedDescendantCount : Integer64;

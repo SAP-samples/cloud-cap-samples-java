@@ -1,7 +1,7 @@
 using {sap.common.Languages as CommonLanguages} from '@sap/cds/common';
 using {my.bookshop as my} from '../db/index';
 using {sap.changelog as changelog} from 'com.sap.cds/change-tracking';
-using {my.admin.bookshop.Hierarchy as Hierarchy} from './genres';
+using {my.common.Hierarchy as Hierarchy} from './hierarchy';
 
 extend my.Orders with changelog.changeTracked;
 
@@ -69,7 +69,6 @@ annotate AdminService.OrderItems {
 // Assign identifiers to the tracked entities
 annotate AdminService.Orders with @changelog: [OrderNo];
 annotate AdminService.OrderItems with @changelog: [
-   parent.OrderNo,
-   book.title,
- ];
- 
+  parent.OrderNo,
+  book.title,
+];

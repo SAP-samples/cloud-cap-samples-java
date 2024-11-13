@@ -1,17 +1,17 @@
 /*
-  Annotations for the Browse GenreHierarchy App
+  UI annotations for the Browse GenreHierarchy App
 */
 
 using AdminService from '../../srv/admin-service';
 
 
-annotate AdminService.GenreHierarchy with @Aggregation.RecursiveHierarchy#AdminHierarchy: {
+annotate AdminService.GenreHierarchy with @Aggregation.RecursiveHierarchy#GenreHierarchy: {
     $Type: 'Aggregation.RecursiveHierarchyType',
     NodeProperty: node_id, // identifies a node
     ParentNavigationProperty: parent // navigates to a node's parent
   };
 
-  annotate AdminService.GenreHierarchy with @Hierarchy.RecursiveHierarchy#AdminHierarchy: {
+  annotate AdminService.GenreHierarchy with @Hierarchy.RecursiveHierarchy#GenreHierarchy: {
   $Type: 'Hierarchy.RecursiveHierarchyType',
   // ExternalKey           : null,
   LimitedDescendantCount: LimitedDescendantCount,
