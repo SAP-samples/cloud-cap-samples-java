@@ -20,7 +20,7 @@
 		<spring.boot.version>3.3.5</spring.boot.version>
 		<cf-java-logging-support.version>3.8.4</cf-java-logging-support.version>
 
-		<cds.cdsdk-version>8.4.0</cds.cdsdk-version>
+		<cds.cdsdk-version>8.4.1</cds.cdsdk-version>
 
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
@@ -78,7 +78,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-surefire-plugin</artifactId>
-				<version>3.3.1</version>
+				<version>3.5.2</version>
 				<configuration>
 					<failIfNoTests>true</failIfNoTests>
 				</configuration>
