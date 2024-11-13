@@ -54,6 +54,33 @@ annotate AdminService.Books with @(UI : {
     ]}
 });
 
+// Add Value Help for Tree Table
+annotate AdminService.Books with {
+    genre @(Common: {
+        Label    : 'Genre',
+        ValueList: {
+            CollectionPath              : 'GenreHierarchy',
+            Parameters                  : [
+            {
+                $Type            : 'Common.ValueListParameterDisplayOnly',
+                ValueListProperty: 'name',
+            }],
+            PresentationVariantQualifier: 'VH',
+        }
+    });
+}
+
+annotate AdminService.GenreHierarchy with @UI: {
+    PresentationVariant #VH: {
+        $Type                      : 'UI.PresentationVariantType',
+        Visualizations             : ['@UI.LineItem'],
+        RecursiveHierarchyQualifier: 'GenreHierarchy'
+    },
+    LineItem               : [{
+        $Type: 'UI.DataField',
+        Value: name,
+    }]
+};
 
 ////////////////////////////////////////////////////////////
 //
