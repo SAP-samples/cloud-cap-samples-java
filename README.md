@@ -238,6 +238,7 @@ Deploy as Multitenant Application:
 - Run `cf deploy mta_archives/bookshop-mt_1.0.0.mtar`
 - Go to another subaccount in your global account, under subscriptions and subscribe to the application you deployed.
 - Run `cf map-route bookshop-mt-app <YOUR DOMAIN> --hostname <SUBSCRIBER TENANT>-<ORG>-<SPACE>-bookshop-mt-app` or create and bind the route manually.
+  - Example: `cf map-route bookshop cfapps.us10.hana.ondemand.com --hostname subscriber1-myOrg-mySpace-bookshop-mt-app`
 
 > [!NOTE]
 > Please note that the route length is limited to 63 characters and can easily be exceeded. So keeping the app name and sub-account subdomain as short as possible will help you stay within length.
