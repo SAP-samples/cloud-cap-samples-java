@@ -14,6 +14,10 @@ modules:
       memory: 1024M
       disk-quota: 512M
       buildpack: sap_java_buildpack_jakarta
+      health-check-type: http
+      health-check-http-endpoint: /actuator/health/liveness
+      readiness-health-check-type: http
+      readiness-health-check-http-endpoint: /actuator/health/readiness
     properties:
       SPRING_PROFILES_ACTIVE: cloud,sandbox
       CDS_MULTITENANCY_APPUI_TENANTSEPARATOR: "-"
