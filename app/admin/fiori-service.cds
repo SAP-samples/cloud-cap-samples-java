@@ -62,11 +62,6 @@ annotate AdminService.Books with {
             CollectionPath              : 'GenreHierarchy',
             Parameters                  : [
             {
-                $Type            : 'Common.ValueListParameterInOut',
-                LocalDataProperty: genre_ID,
-                ValueListProperty: 'ID',
-            },
-            {
                 $Type            : 'Common.ValueListParameterDisplayOnly',
                 ValueListProperty: 'name',
             },
