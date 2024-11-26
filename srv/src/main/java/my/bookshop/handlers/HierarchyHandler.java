@@ -1,12 +1,13 @@
 package my.bookshop.handlers;
 
+import java.util.ArrayDeque;
 import java.util.Comparator;
+import java.util.Deque;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.Stack;
 import java.util.stream.Collectors;
 
 import org.springframework.context.annotation.Profile;
@@ -225,13 +226,13 @@ public class HierarchyHandler implements EventHandler {
 
         @Override
         public int compare(GenreHierarchy gh1, GenreHierarchy gh2) {
-            Stack<String> path1 = getPath(gh1);
-            Stack<String> path2 = getPath(gh2);
+            Deque<String> path1 = getPath(gh1);
+            Deque<String> path2 = getPath(gh2);
             int res = 0;
 
             while (!path1.isEmpty() && !path2.isEmpty()) {
-                String last1 = path1.pop();
-                String last2 = path2.pop();
+                String last1 = path1.removeFirst();
+                String last2 = path2.removeFirst();
                 res = last1.compareTo(last2);
                 if (res != 0) {
                     return res;
@@ -240,10 +241,10 @@ public class HierarchyHandler implements EventHandler {
             return res;
         }
 
-        Stack<String> getPath(GenreHierarchy gh){
-            Stack<String> path = new Stack<>();
+        Deque<String> getPath(GenreHierarchy gh){
+            Deque<String> path = new ArrayDeque<>();
             do {
-                path.push(gh.getName());
+                path.addFirst(gh.getName());
                 gh = gh.getParent();
             }  while (gh != null);
 
