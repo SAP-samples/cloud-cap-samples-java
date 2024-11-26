@@ -70,6 +70,11 @@ annotate AdminService.Books with {
     });
 }
 
+// Hide ID because of the ValueHelp
+annotate AdminService.GenreHierarchy with {
+  ID @UI.Hidden;
+};
+
 annotate AdminService.GenreHierarchy with @UI: {
     PresentationVariant #VH: {
         $Type                      : 'UI.PresentationVariantType',
