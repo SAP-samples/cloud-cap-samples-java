@@ -38,8 +38,6 @@ annotate AdminService.OrderItems with  {
   quantity
 };
 
-
-
 // Enable Fiori Draft for Orders
 annotate AdminService.Orders with @odata.draft.enabled;
 annotate AdminService.Books with @odata.draft.enabled;
