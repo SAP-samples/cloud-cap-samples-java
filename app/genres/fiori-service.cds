@@ -7,8 +7,8 @@ using AdminService from '../../srv/admin-service';
 
 annotate AdminService.GenreHierarchy with @Aggregation.RecursiveHierarchy#GenreHierarchy: {
     $Type: 'Aggregation.RecursiveHierarchyType',
-    NodeProperty: node_id, // identifies a node
-    ParentNavigationProperty: parent // navigates to a node's parent
+    NodeProperty: ID, // identifies a node
+    ParentNavigationProperty: parnt // navigates to a node's parent
   };
 
   annotate AdminService.GenreHierarchy with @Hierarchy.RecursiveHierarchy#GenreHierarchy: {

@@ -16,11 +16,7 @@ service AdminService @(requires : 'admin') {
   entity Orders  as select from my.Orders;
   extend my.Genres with Hierarchy;
 
-  entity GenreHierarchy as projection on my.Genres {
-    node   as node_id,
-    parent_node as parent_id,
-    *
-  } excluding { node, parent_node }
+  entity GenreHierarchy as projection on my.Genres;
 
   @cds.persistence.skip
   entity Upload @odata.singleton {

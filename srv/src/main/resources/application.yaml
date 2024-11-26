@@ -1,7 +1,8 @@
 ---
 logging:
   level:
-    '[com.sap.cds.auditlog]': DEBUG
+    com.sap.cds.auditlog: DEBUG
+    com.sap.cds.persistence.sql: DEBUG
 spring:
   jmx:
     enabled: true

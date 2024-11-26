@@ -47,9 +47,9 @@ annotate Authors with
  */
 entity Genres {
     key ID      : Integer;
-    node        : Integer not null;
-    parent_node : Integer default 0;
     name        : localized String(255);
     descr       : localized String(1000);
-    parent      : Association to one Genres on parent.node = parent_node;
+    parnt    : Association to Genres;
+    children : Composition of many Genres
+                    on children.parnt = $self;    
 }
