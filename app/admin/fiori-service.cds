@@ -69,7 +69,12 @@ annotate AdminService.Books with {
             {
                 $Type            : 'Common.ValueListParameterDisplayOnly',
                 ValueListProperty: 'name',
-              }
+            },
+            {
+                $Type            : 'Common.ValueListParameterInOut',
+                LocalDataProperty: genre_ID,
+                ValueListProperty: 'ID',
+            }
             ],
             PresentationVariantQualifier: 'VH',
         }
