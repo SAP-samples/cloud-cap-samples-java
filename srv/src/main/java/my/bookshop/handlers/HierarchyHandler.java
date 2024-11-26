@@ -6,6 +6,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.Stack;
 import java.util.stream.Collectors;
 
 import org.springframework.context.annotation.Profile;
@@ -43,7 +44,6 @@ import cds.gen.adminservice.GenreHierarchy_;
 public class HierarchyHandler implements EventHandler {
 
     private final PersistenceService db;
-    private static final Class<GenreHierarchy_> GENRE_HIERARCHY = GenreHierarchy_.class;
 
     HierarchyHandler(PersistenceService db) {
 		this.db = db;
@@ -56,7 +56,9 @@ public class HierarchyHandler implements EventHandler {
 
         if (trafos.size() < 1) {
             return;
-        } else if (getTopLevels(trafos) instanceof CqnTopLevelsTransformation topLevels) {
+        }
+         
+        if (getTopLevels(trafos) instanceof CqnTopLevelsTransformation topLevels) {
             result = topLevels(topLevels, CQL.TRUE);
         } else if (trafos.get(0) instanceof CqnDescendantsTransformation descendants) {
             result = handleDescendants(descendants);
@@ -91,7 +93,7 @@ public class HierarchyHandler implements EventHandler {
     private void addDrillState(List<GenreHierarchy> ghs) {
         List<Integer> ids = ghs.stream().map(gh -> gh.getNodeId()).toList();
         Set<Integer> parents = ghs.stream().map(gh -> gh.getParentId()).filter(p -> p != 0).collect(Collectors.toSet());
-        CqnSelect q = Select.from(GENRE_HIERARCHY, gh -> gh.parent()).columns(gh -> gh.node_id())
+        CqnSelect q = Select.from(AdminService_.GENRE_HIERARCHY, gh -> gh.parent()).columns(gh -> gh.node_id())
                 .where(gh -> gh.node_id().in(ids));
         Set<Object> nonLeafs = db
                 .run(q)
@@ -112,7 +114,11 @@ public class HierarchyHandler implements EventHandler {
     }
         
     private List<GenreHierarchy> handleDescendants(CqnDescendantsTransformation descendants) {
+        Map<Integer, GenreHierarchy> lookup = new HashMap<>();
         CqnFilterTransformation filter = (CqnFilterTransformation) descendants.transformations().get(0);
+        CqnSelect getRoot = Select.from(AdminService_.GENRE_HIERARCHY).where(filter.filter());
+        GenreHierarchy root = db.run(getRoot).single(GenreHierarchy.class);
+        lookup.put(root.getNodeId(), root);
 
         CqnPredicate parentFilter = CQL.copy(filter.filter(), new Modifier() {
             @Override
@@ -121,23 +127,25 @@ public class HierarchyHandler implements EventHandler {
             }
         });
 
-        CqnSelect childrenCQN = Select.from(GENRE_HIERARCHY).where(parentFilter);
+        CqnSelect childrenCQN = Select.from(AdminService_.GENRE_HIERARCHY).where(parentFilter);
         List<GenreHierarchy> children = db.run(childrenCQN).listOf(GenreHierarchy.class);
+        children.forEach(gh -> lookup.put(gh.getNodeId(), gh));
+        children.forEach(gh -> gh.setParent(lookup.get(gh.getParentId())));
 
         return children.stream().sorted(new Sorter()).toList();
     }
 
     private List<GenreHierarchy> handleAncestors(CqnAncestorsTransformation ancestors, CqnTopLevelsTransformation topLevels) {
         CqnTransformation trafo = ancestors.transformations().get(0);
-        Select<GenreHierarchy_> inner = Select.from(GENRE_HIERARCHY).where(gh -> gh.node_id().eq(CQL.get("$outer.node_id")));
+        Select<GenreHierarchy_> inner = Select.from(AdminService_.GENRE_HIERARCHY).columns(gh -> gh.node_id());
         if (trafo instanceof CqnFilterTransformation filter) {
-            inner.where(CQL.and(filter.filter(), inner.where().get()));
+            inner.where(filter.filter());
         } else if (trafo instanceof CqnSearchTransformation search) {
             inner.search(search.search());
         }
-        Select<GenreHierarchy_> outer = Select.from(GENRE_HIERARCHY).columns(gh -> gh.node_id().as("i0"), gh -> gh.parent().node_id().as("i1"),
+        Select<GenreHierarchy_> outer = Select.from(AdminService_.GENRE_HIERARCHY).columns(gh -> gh.node_id().as("i0"), gh -> gh.parent().node_id().as("i1"),
             gh -> gh.parent().parent().node_id().as("i2"), gh -> gh.parent().parent().parent().node_id().as("i3"),
-            gh -> gh.parent().parent().parent().parent().node_id().as("i4")).where(gh -> gh.exists($outer -> inner));
+            gh -> gh.parent().parent().parent().parent().node_id().as("i4")).where(gh -> gh.node_id().in(inner));
 
         Set<Integer> ancestorIds = new HashSet<>();
         db.run(outer).stream().forEach(r -> {
@@ -160,13 +168,13 @@ public class HierarchyHandler implements EventHandler {
     } 
 
     private List<GenreHierarchy> topLevels(CqnTopLevelsTransformation topLevels, CqnPredicate filter) {
-        return topLevels.levels() < 0 ? topLevelsAll(filter) : topLevelsLimit(topLevels.levels(), filter);
+        return topLevels.levels() < 0 || !(topLevels.expandLevels().isEmpty()) ? topLevelsAll(filter) : topLevelsLimit(topLevels.levels(), filter);
     }
 
     private List<GenreHierarchy> topLevelsLimit(long limit, CqnPredicate filter) {
         Map <Integer, GenreHierarchy> lookup = new HashMap<>();
 
-        CqnSelect getRoots = Select.from(GENRE_HIERARCHY).where(gh -> gh.parent_id().eq(0).and(filter));
+        CqnSelect getRoots = Select.from(AdminService_.GENRE_HIERARCHY).where(gh -> gh.parent_id().eq(0).and(filter));
         List<GenreHierarchy> roots = db.run(getRoots).listOf(GenreHierarchy.class);
         roots.forEach(root -> {
             root.setDistanceFromRoot(0l);
@@ -174,7 +182,7 @@ public class HierarchyHandler implements EventHandler {
             List<Integer> parents = List.of(root.getNodeId());
             for (long i = 1; i < limit; i++) {
                 List<Integer> ps = parents;
-                CqnSelect getChildren = Select.from(GENRE_HIERARCHY).where(gh -> gh.parent_id().in(ps).and(filter));
+                CqnSelect getChildren = Select.from(AdminService_.GENRE_HIERARCHY).where(gh -> gh.parent_id().in(ps).and(filter));
                 List<GenreHierarchy> children = db.run(getChildren).listOf(GenreHierarchy.class);
                 if (children.isEmpty()) {
                     break;
@@ -194,16 +202,16 @@ public class HierarchyHandler implements EventHandler {
     private List<GenreHierarchy> topLevelsAll(CqnPredicate filter) {
         Map<Integer, GenreHierarchy> lookup = new HashMap<>();
 
-        CqnSelect allCqn = Select.from(GENRE_HIERARCHY).where(filter);
+        CqnSelect allCqn = Select.from(AdminService_.GENRE_HIERARCHY).where(filter);
         var all = db.run(allCqn).listOf(GenreHierarchy.class);
         all.forEach(gh -> lookup.put(gh.getNodeId(), gh));
         all.forEach(gh -> gh.setParent(lookup.get(gh.getParentId())));
-        all.forEach(gh -> gh.setDistanceFromRoot(dfr(gh)));
+        all.forEach(gh -> gh.setDistanceFromRoot(distanceFromRoot(gh)));
 
         return all.stream().sorted(new Sorter()).toList();
     }
 
-    private static long dfr(GenreHierarchy gh) {
+    private static long distanceFromRoot(GenreHierarchy gh) {
         long dfr = 0;
         while (gh.getParent() != null) {
             dfr++;
@@ -216,21 +224,30 @@ public class HierarchyHandler implements EventHandler {
     private class Sorter implements Comparator<GenreHierarchy> {
 
         @Override
-        public int compare(GenreHierarchy o1, GenreHierarchy o2) {
-            return toPath(o1).compareTo(toPath(o2));
+        public int compare(GenreHierarchy gh1, GenreHierarchy gh2) {
+            Stack<String> path1 = getPath(gh1);
+            Stack<String> path2 = getPath(gh2);
+            int res = 0;
+
+            while (!path1.isEmpty() && !path2.isEmpty()) {
+                String last1 = path1.pop();
+                String last2 = path2.pop();
+                res = last1.compareTo(last2);
+                if (res != 0) {
+                    return res;
+                }
+            }
+            return res;
         }
 
-        String toPath(GenreHierarchy gh) {
-            String path;
-
-            path = gh.getName();
-            while (gh.getParent() != null) {
+        Stack<String> getPath(GenreHierarchy gh){
+            Stack<String> path = new Stack<>();
+            do {
+                path.push(gh.getName());
                 gh = gh.getParent();
-                path = gh.getName() + "." + path;
-            }
+            }  while (gh != null);
 
             return path;
-
-        }
+        } 
     }
 }
