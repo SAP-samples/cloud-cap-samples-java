@@ -74,6 +74,13 @@
 			<artifactId>connectivity-apache-httpclient4</artifactId>
 		</dependency>
 
+		<!-- RE-USE PLUGIN DEPENDENCIES -->
+		<dependency>
+			<groupId>com.sap.cds</groupId>
+			<artifactId>cds-feature-attachments</artifactId>
+			<version>${cds-feature-attachments.version}</version>
+		</dependency>
+
 		<!-- OTHER DEPENDENCIES -->
 		<dependency>
 			<groupId>com.h2database</groupId>
