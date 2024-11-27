@@ -85,7 +85,7 @@ modules:
         url: ~{srv-url}
         forwardAuthToken: true
         strictSSL: true
-        timeout: 600000
+        timeout: 600000  # required for long running HTTP requests, e.g. large attachment uploads
     - name: bookshop-mt-uaa
     provides:
       - name: app-api
