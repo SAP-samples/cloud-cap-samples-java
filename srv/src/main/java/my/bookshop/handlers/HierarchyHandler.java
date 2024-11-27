@@ -231,8 +231,8 @@ public class HierarchyHandler implements EventHandler {
             int res = 0;
 
             while (!path1.isEmpty() && !path2.isEmpty()) {
-                String last1 = path1.removeFirst();
-                String last2 = path2.removeFirst();
+                String last1 = path1.pop();
+                String last2 = path2.pop();
                 res = last1.compareTo(last2);
                 if (res != 0) {
                     return res;
@@ -244,7 +244,7 @@ public class HierarchyHandler implements EventHandler {
         Deque<String> getPath(GenreHierarchy gh){
             Deque<String> path = new ArrayDeque<>();
             do {
-                path.addFirst(gh.getName());
+                path.push(gh.getName());
                 gh = gh.getParent();
             }  while (gh != null);
 
