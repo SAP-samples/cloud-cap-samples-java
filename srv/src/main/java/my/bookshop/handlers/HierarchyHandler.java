@@ -169,11 +169,13 @@ public class HierarchyHandler implements EventHandler {
     } 
 
     private List<GenreHierarchy> topLevels(CqnTopLevelsTransformation topLevels, CqnPredicate filter) {
-        return topLevels.levels() < 0 || !(topLevels.expandLevels().isEmpty()) ? topLevelsAll(filter) : topLevelsLimit(topLevels.levels(), filter);
+        return topLevels.levels() < 0 ? topLevelsAll(filter) : topLevelsLimit(topLevels, filter);
     }
 
-    private List<GenreHierarchy> topLevelsLimit(long limit, CqnPredicate filter) {
+    private List<GenreHierarchy> topLevelsLimit(CqnTopLevelsTransformation topLevels, CqnPredicate filter) {
+        long limit = topLevels.levels();
         Map <Integer, GenreHierarchy> lookup = new HashMap<>();
+        Map<Object, Long> expandLevels = topLevels.expandLevels();
 
         CqnSelect getRoots = Select.from(AdminService_.GENRE_HIERARCHY).where(gh -> gh.parent_id().eq(0).and(filter));
         List<GenreHierarchy> roots = db.run(getRoots).listOf(GenreHierarchy.class);
@@ -196,6 +198,23 @@ public class HierarchyHandler implements EventHandler {
                 }).map(GenreHierarchy::getNodeId).toList();
             }
         });
+
+        if (!expandLevels.isEmpty()) {
+            List<Integer> expandedIds = expandLevels.keySet().stream().map(key -> (Integer) key).toList();
+            CqnSelect expandedCQN = Select.from(AdminService_.GENRE_HIERARCHY).where(gh -> 
+                    CQL.and(filter,
+                    CQL.or(gh.node_id().in(expandedIds), gh.parent_id().in(expandedIds))));
+            
+            List<GenreHierarchy> expanded = db.run(expandedCQN).listOf(GenreHierarchy.class);
+            expanded.forEach(gh -> {
+                if (!lookup.keySet().contains(gh.getNodeId())) {
+                    gh.setParent(lookup.get(gh.getParentId()));
+                    gh.setDistanceFromRoot(distanceFromRoot(gh));
+                    lookup.put(gh.getNodeId(), gh);
+                }
+            });
+
+        }
 
         return lookup.values().stream().sorted(new Sorter()).toList();
     }
