@@ -197,12 +197,13 @@ public class HierarchyHandler implements EventHandler {
     }
 
     private List<GenreHierarchy> topLevels(CqnTopLevelsTransformation topLevels, CqnPredicate filter) {
-        return topLevels.levels() < 0 || !(topLevels.expandLevels().isEmpty()) ? topLevelsAll(filter)
-                : topLevelsLimit(topLevels.levels(), filter);
+        return topLevels.levels() < 0 ? topLevelsAll(filter) : topLevelsLimit(topLevels, filter);
     }
 
-    private List<GenreHierarchy> topLevelsLimit(long limit, CqnPredicate filter) {
-        Map<Integer, GenreHierarchy> lookup = new HashMap<>();
+    private List<GenreHierarchy> topLevelsLimit(CqnTopLevelsTransformation topLevels, CqnPredicate filter) {
+        long limit = topLevels.levels();
+        Map <Integer, GenreHierarchy> lookup = new HashMap<>();
+        Map<Object, Long> expandLevels = topLevels.expandLevels();
 
         CqnSelect getRoots = Select.from(GENRE_HIERARCHY).where(gh -> gh.parnt_ID().isNull().and(filter));
         List<GenreHierarchy> roots = db.run(getRoots).listOf(GenreHierarchy.class);
@@ -226,6 +227,23 @@ public class HierarchyHandler implements EventHandler {
                 }).map(GenreHierarchy::getId).toList();
             }
         });
+
+        if (!expandLevels.isEmpty()) {
+            List<Integer> expandedIds = expandLevels.keySet().stream().map(key -> (Integer) key).toList();
+            CqnSelect expandedCQN = Select.from(AdminService_.GENRE_HIERARCHY).where(gh -> 
+                    CQL.and(filter,
+                    CQL.or(gh.ID().in(expandedIds), gh.parnt_ID().in(expandedIds))));
+            
+            List<GenreHierarchy> expanded = db.run(expandedCQN).listOf(GenreHierarchy.class);
+            expanded.forEach(gh -> {
+                if (!lookup.keySet().contains(gh.getId())) {
+                    gh.setParnt(lookup.get(gh.getParntId()));
+                    gh.setDistanceFromRoot(distanceFromRoot(gh));
+                    lookup.put(gh.getId(), gh);
+                }
+            });
+
+        }
 
         return lookup.values().stream().sorted(new Sorter()).toList();
     }
