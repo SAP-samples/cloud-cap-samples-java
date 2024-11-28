@@ -201,14 +201,13 @@ public class HierarchyHandler implements EventHandler {
 
         if (!expandLevels.isEmpty()) {
             List<Integer> expandedIds = expandLevels.keySet().stream().map(key -> (Integer) key).toList();
-            List<Integer> lookupKeys = lookup.keySet().stream().toList();
             CqnSelect expandedCQN = Select.from(AdminService_.GENRE_HIERARCHY).where(gh -> 
                     CQL.and(filter,
                     CQL.or(gh.node_id().in(expandedIds), gh.parent_id().in(expandedIds))));
             
             List<GenreHierarchy> expanded = db.run(expandedCQN).listOf(GenreHierarchy.class);
             expanded.forEach(gh -> {
-                if (!lookupKeys.contains(gh.getNodeId())) {
+                if (!lookup.keySet().contains(gh.getNodeId())) {
                     gh.setParent(lookup.get(gh.getParentId()));
                     gh.setDistanceFromRoot(distanceFromRoot(gh));
                     lookup.put(gh.getNodeId(), gh);
