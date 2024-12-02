@@ -1,6 +1,7 @@
 using {sap.common.Languages as CommonLanguages} from '@sap/cds/common';
 using {my.bookshop as my} from '../db/index';
 using {sap.changelog as changelog} from 'com.sap.cds/change-tracking';
+using {sap.attachments.Attachments} from `com.sap.cds/cds-feature-attachments`;
 
 extend my.Orders with changelog.changeTracked;
 
@@ -63,3 +64,8 @@ annotate AdminService.OrderItems with @changelog: [
     parent.OrderNo,
     book.title,
   ];
+
+// Extends the Books entity with the Attachments composition
+extend my.Books with {
+    covers : Composition of many Attachments;
+};

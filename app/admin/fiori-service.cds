@@ -27,10 +27,15 @@ annotate AdminService.Books with @(UI : {
             Target : '@UI.FieldGroup#Details'
         },
         {
+            $Type  : 'UI.ReferenceFacet',
+            ID     : 'AttachmentsFacet',
+            Target : 'covers/@UI.LineItem'
+        },
+        {
             $Type : 'UI.ReferenceFacet',
             Label : '{i18n>Admin}',
             Target : '@UI.FieldGroup#Admin'
-        },
+        }
     ],
     FieldGroup #General : {Data : [
         {Value : title},
@@ -131,3 +136,6 @@ annotate AdminService.Books actions {
     quantity @title : '{i18n>Quantity}'
     )
 }
+
+// Hides technical field up__ID in View Setitings dialog for Books.covers
+annotate AdminService.Books.covers:up_ with @UI.Hidden;
