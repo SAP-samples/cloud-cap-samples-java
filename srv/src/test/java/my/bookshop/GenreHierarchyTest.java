@@ -14,7 +14,6 @@ import org.springframework.test.web.servlet.MockMvc;
 
 @SpringBootTest
 @AutoConfigureMockMvc
-//@ActiveProfiles({"hybrid"})
 public class GenreHierarchyTest {
 
 	@Autowired
