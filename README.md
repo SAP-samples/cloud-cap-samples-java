@@ -90,6 +90,7 @@ User Interface related Features:
 - [Model Localization](https://cap.cloud.sap/docs/guides/i18n) for [English](app/_i18n/i18n.properties) and [German](app/_i18n/i18n_de.properties) language for static texts
 - [Custom File Upload extension](app/admin/webapp/extension/Upload.js) which provides a button for uploading `CSV` files
 - A simple Swagger UI for the CatalogService API at <http://localhost:8080/swagger/index.html>
+- UI5 Tree Table
 
 CDS Maven Plugin Features:
 
@@ -137,6 +138,14 @@ Two mock users in addition to the [default mock users](https://cap.cloud.sap/doc
 are defined for local development:
 - User: `user`, password: `user` to browse books
 - User: `admin`, password: `admin` to manage books and orders
+
+### Testing in hybrid mode
+
+You can test the `GenreHierarchyTest` on H2 using the profile `default` as well as on HANA using the profile `hybrid`
+
+```
+cds bind --exec -- mvn clean install -Dspring.profiles.active=hybrid
+```
 
 ## Using VS Code
 
