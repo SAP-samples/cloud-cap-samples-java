@@ -161,9 +161,9 @@
 						<configuration>
 							<commands>
 								<command>build --for java</command>
-								<command>deploy --profile pg --dry --delta-from srv/src/main/resources/db/changelog/v2/model.csn > 
-									srv/src/main/resources/db/changelog/dev/model.sql</command>
-								<command>deploy --model-only --dry > srv/src/main/resources/db/changelog/dev/model.csn</command>
+								<command>deploy --profile pg --dry --delta-from srv/src/main/resources/db/changelog/v2/model.csn
+									--out srv/src/main/resources/db/changelog/dev/model.sql</command>
+								<command>deploy --model-only --dry --out srv/src/main/resources/db/changelog/dev/model.csn</command>
 							</commands>
 						</configuration>
 					</execution>
