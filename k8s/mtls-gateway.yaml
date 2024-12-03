@@ -16,4 +16,4 @@ spec:
         minProtocolVersion: TLSV1_2
         credentialName: kyma-mtls-gateway-certs
       hosts:
-        - "*.{{ .Values.global.domain }}" # {{ .Values.global.domain }} to replaced with actual domain
+        - "*.{{ .Values.global.domain }}" # {{ .Values.global.domain }} to be replaced with actual domain
