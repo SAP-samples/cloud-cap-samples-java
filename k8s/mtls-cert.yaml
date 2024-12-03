@@ -1,0 +1,12 @@
+apiVersion: cert.gardener.cloud/v1alpha1
+kind: Certificate
+metadata:
+  name: kyma-mtls-cert
+  namespace: istio-system
+spec:
+  commonName: 'cert.{{ .Values.global.domain }}' # {{ .Values.global.domain }} to replaced with actual domain
+  dnsNames:
+    - '*.cert.{{ .Values.global.domain }}' # {{ .Values.global.domain }} to replaced with actual domain
+  secretRef:
+    name: kyma-mtls-gateway-certs
+    namespace: istio-system

@@ -1,0 +1,20 @@
+apiVersion: networking.istio.io/v1
+kind: Gateway
+metadata:
+  name: kyma-mtls-gateway
+  namespace: ams
+spec:
+  selector:
+    app: istio-ingressgateway
+    istio: ingressgateway
+  servers:
+    - port:
+        number: 443
+        name: mtls
+        protocol: HTTPS
+      tls:
+        mode: MUTUAL
+        minProtocolVersion: TLSV1_2
+        credentialName: kyma-mtls-gateway-certs
+      hosts:
+        - "*.{{ .Values.global.domain }}" # {{ .Values.global.domain }} to replaced with actual domain

@@ -8,6 +8,7 @@
          <root level="${LOG_ROOT_LEVEL:-INFO}">
             <appender-ref ref="STDOUT-JSON" />
          </root>
+        <logger name="com.sap.hcp.cf.logging.servlet.filter.RequestLogger" level="WARN" />
     </springProfile>
     <springProfile name="!cloud">
         <include resource="org/springframework/boot/logging/logback/base.xml" />
