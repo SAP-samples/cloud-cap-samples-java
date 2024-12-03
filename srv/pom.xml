@@ -58,6 +58,13 @@
 			<scope>runtime</scope>
 		</dependency>
 
+		<dependency>
+			<groupId>com.sap.cds</groupId>
+			<artifactId>cds-feature-attachments</artifactId>
+			<version>${cds-feature-attachments.version}</version>
+			<scope>runtime</scope>
+		</dependency>
+
 		<!-- CLOUD SDK dependencies -->
 		<dependency>
 			<groupId>com.sap.cloud.sdk.cloudplatform</groupId>
@@ -213,10 +220,8 @@
 						<configuration>
 							<commands>
 								<command>build --for java</command>
-								<command>deploy --to h2 --with-mocks --dry &gt;
-									"${project.basedir}/src/main/resources/schema.sql"</command>
-								<command>deploy --to h2 --dry &gt;
-									"${project.basedir}/src/main/resources/schema-nomocks.sql"</command>
+								<command>deploy --to h2 --with-mocks --dry --out "${project.basedir}/src/main/resources/schema.sql"</command>
+								<command>deploy --to h2 --dry --out "${project.basedir}/src/main/resources/schema-nomocks.sql"</command>
 								<command>compile srv/cat-service.cds -2 openapi --openapi:url /api/browse &gt;
 									"${project.basedir}/src/main/resources/swagger/openapi.json"</command>
 							</commands>

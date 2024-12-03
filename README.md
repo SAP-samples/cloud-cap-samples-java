@@ -15,7 +15,7 @@ Welcome to the bookshop-java project. It demonstrates how to build business appl
   - [Demonstrated Features](#demonstrated-features)
 - [Getting Started](#getting-started)
   - [Prerequisites](#prerequisites)
-  - [Clone Build & Run](#clone-build--run)
+  - [Clone Build & Run](#clone-build-run)
   - [Using VS Code](#using-vs-code)
   - [Using Eclipse](#using-eclipse)
     - [Building and Running](#building-and-running)
