@@ -1,0 +1,153 @@
+global:
+  domain: # set domain
+  imagePullSecret:
+    name: # set image-pull-secret
+  image:
+    registry: # set container image registry
+    tag: # set tag
+srv:
+  bindings:
+    identity:
+      serviceInstanceName: ias
+      parameters:
+        credential-type: "X509_GENERATED"
+        key-length: 2048
+        validity: 30
+        validity-type: "DAYS"
+        app-identifier: "bookshop-mt-ias-ams"
+    service-manager:
+      serviceInstanceName: service-manager
+    subscription-manager:
+      serviceInstanceName: subscription-manager
+  image:
+    repository: bookshop-srv
+  env:
+    SPRING_PROFILES_ACTIVE: cloud,sandbox
+    CDS_MULTITENANCY_APPUI_TENANTSEPARATOR: "-"
+    CDS_MULTITENANCY_APPUI_URL: https://{{ .Release.Name }}-approuter-{{ .Release.Namespace }}.{{ .Values.global.domain }}
+    CDS_MULTITENANCY_MTXS_ENABLED: "true"
+    CDS_MULTITENANCY_SIDECAR_URL: https://{{ .Release.Name }}-sidecar-{{ .Release.Namespace }}.{{ .Values.global.domain }}
+    LOGGING_LEVEL_COM_SAP_CDS_SERVICES_UTILS_CERT: DEBUG
+    LOGGING_LEVEL_COM_SAP_HCP_CF_LOGGING_SERVLET_FILTER: WARN
+    LOGGING_LEVEL_COM_SAP_CLOUD_SECURITY_X_509: DEBUG
+    SAP_SPRING_SECURITY_IDENTITY_PROOFTOKEN: "false"
+  resources:
+    limits:
+      ephemeral-storage: 1G
+      memory: 1G
+    requests:
+      ephemeral-storage: 1G
+      cpu: 1000m
+      memory: 1G
+  health:
+    liveness:
+      path: /actuator/health
+    readiness:
+      path: /actuator/health
+  expose:
+    gateway: "{{ .Release.Namespace }}/kyma-mtls-gateway"
+    host: "{{ .Release.Name }}-srv-{{ .Release.Namespace }}.cert.{{ .Values.global.domain }}"
+approuter:
+  bindings:
+    identity:
+      serviceInstanceName: ias
+      parameters:
+        credential-type: "X509_GENERATED"
+        key-length: 2048
+        validity: 30
+        validity-type: "DAYS"
+        app-identifier: "bookshop-mt-ias-ams"
+  image:
+    repository: bookshop-approuter # <image_path> e.g. bookshop/bookshop-approuter
+    tag: 0.0.5
+  env:
+    TENANT_HOST_PATTERN: ^(.*)-{{ .Release.Name }}-approuter-{{ .Release.Namespace }}.{{ .Values.global.domain }}
+    destinations: '[{"name":"backend","url":"https://{{ .Release.Name }}-srv-{{ .Release.Namespace }}.cert.{{ .Values.global.domain }}","forwardAuthToken":true,"forwardAuthCertificates":true,"strictSSL":true}]'
+  resources:
+    limits:
+      ephemeral-storage: 1G
+      memory: 500M
+    requests:
+      ephemeral-storage: 1G
+      cpu: 500m
+      memory: 500M
+  health:
+    liveness:
+      path: ""
+    readiness:
+      path: ""
+sidecar:
+  bindings:
+    identity:
+      serviceInstanceName: ias
+      parameters:
+        credential-type: "X509_GENERATED"
+        key-length: 2048
+        validity: 30
+        validity-type: "DAYS"
+        app-identifier: "bookshop-mt-ias-ams"
+    service-manager:
+      serviceInstanceName: service-manager
+  image:
+    repository: bookshop-sidecar
+  resources:
+    limits:
+      ephemeral-storage: 1G
+      memory: 500M
+    requests:
+      ephemeral-storage: 1G
+      cpu: 500m
+      memory: 500M
+  health:
+    liveness:
+      path: /health
+    readiness:
+      path: /health
+  startupTimeoutSeconds: 120
+ias:
+  serviceOfferingName: identity
+  servicePlanName: application
+  externalName: bookshop-mt-ias-ams
+  parameters:
+    authorization:
+      enabled: true
+      value_help_url: "https://vhp-srv-develop.cert.cfapps.sap.hana.ondemand.com/odata/v4/ExampleValueHelpService/"
+    oauth2-configuration:
+      redirect-uris:
+        - "https://*-{{ .Release.Name }}-approuter-{{ .Release.Namespace }}.{{ .Values.global.domain }}/**"
+        - "http://localhost:5000/login/callback?authType=ias"
+    xsuaa-cross-consumption: true
+    display-name: bookshop-mt-ias-ams
+    multi-tenant: true
+service-manager:
+  serviceOfferingName: service-manager
+  servicePlanName: container
+  externalName: bookshop-mt-sm
+subscription-manager:
+  serviceOfferingName: subscription-manager
+  servicePlanName: provider
+  externalName: bookshop-mt-sms
+  parameters:
+    iasServiceInstanceName: "{{ .Release.Name }}-mt-ias-ams"
+    applicationType: application
+    appName: bookshop-mt-ias-ams
+    appCallbacks:
+      dependenciesCallbacks:
+        url: "https://{{ .Release.Name }}-srv-{{ .Release.Namespace }}.cert.{{ .Values.global.domain }}/mt/sms/subscriptions/tenants/{app_tid}/dependencies"
+      subscriptionCallbacks:
+        url: "https://{{ .Release.Name }}-srv-{{ .Release.Namespace }}.cert.{{ .Values.global.domain }}/mt/sms/subscriptions/tenants/{app_tid}"
+    subscribeEnable: true
+    unsubscribeEnable: true
+    timeoutInMillis: 60000
+    displayName: bookshop-mt-ias-ams
+    description: "MT bookshop using IAS and AMS"
+    category: "Application Development and Automation"
+ams-policies-deployer:
+  image:
+    repository: ams-policies-deployer
+  bindings:
+    identity:
+      serviceInstanceName: ias
+      parameters:
+        credential-type: X509_GENERATED
+        app-identifier: policy-deployer
