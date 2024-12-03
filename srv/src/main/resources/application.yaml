@@ -29,6 +29,7 @@ management:
     health:
       show-components: always
       show-details: always
+      probes.enabled: true
   endpoints:
     web:
       exposure:

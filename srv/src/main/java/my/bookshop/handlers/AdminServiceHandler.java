@@ -94,14 +94,6 @@ class AdminServiceHandler implements EventHandler {
 				order.getItems().forEach(orderItem -> {
 					// validation of the Order creation request
 					Integer quantity = orderItem.getQuantity();
-					if (quantity == null || quantity <= 0) {
-						// errors with localized messages from property files
-						// exceptions abort the request and set an error http status code
-						// messages in contrast allow to collect multiple errors
-						messages.error(MessageKeys.QUANTITY_REQUIRE_MINIMUM)
-								.target("in", ORDERS, o -> o.Items(i -> i.ID().eq(orderItem.getId()).and(i.IsActiveEntity().eq(orderItem.getIsActiveEntity()))).quantity());
-					}
-
 					String bookId = orderItem.getBookId();
 
 					if(quantity == null || quantity <= 0 || bookId == null) {
