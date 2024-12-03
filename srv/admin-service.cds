@@ -32,12 +32,6 @@ annotate AdminService.Books with @cds.search : {
   title
 };
 
-annotate AdminService.OrderItems with  {
-  @mandatory
-  @assert.range: [(0), _]
-  quantity
-};
-
 // Enable Fiori Draft for Orders
 annotate AdminService.Orders with @odata.draft.enabled;
 annotate AdminService.Books with @odata.draft.enabled;
