@@ -20,6 +20,8 @@ entity Orders : cuid, managed {
 entity OrderItems : cuid {
     parent    : Association to Orders;
     book      : Association to Books @mandatory @assert.target;
+    @mandatory
+    @assert.range: [(0), _]
     quantity    : Integer;
     amount : Decimal(9, 2);
 }
