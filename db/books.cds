@@ -46,10 +46,11 @@ annotate Authors with
  * Hierarchically organized Code List for Genres
  */
 entity Genres {
-    key ID      : Integer;
-    name        : localized String(255);
-    descr       : localized String(1000);
-    parnt    : Association to Genres;
-    children : Composition of many Genres
-                    on children.parnt = $self;    
+    key ID       : Integer;
+        name     : localized String(255);
+        descr    : localized String(1000);
+        parnt    : Association to Genres;
+
+        children : Composition of many Genres
+                       on children.parnt = $self;
 }
