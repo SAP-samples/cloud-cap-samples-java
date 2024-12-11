@@ -267,7 +267,7 @@ public class HierarchyHandler implements EventHandler {
         return dfr;
     }
 
-    private class Sorter implements Comparator<GenreHierarchy> {
+    static class Sorter implements Comparator<GenreHierarchy> {
 
         @Override
         public int compare(GenreHierarchy gh1, GenreHierarchy gh2) {
