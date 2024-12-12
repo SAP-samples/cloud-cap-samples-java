@@ -3,13 +3,16 @@ ID;parnt_ID;name
 101;100;Action
 102;100;Adventure
 103;100;Drama
-104;100;Dystopian
 105;100;Poetry
-110;100;Fantasy
-111;110;Epic fantasy
-112;110;High fantasy
+106;100;Science Fiction
+107;106;Utopian and Dystopian
+108;107;Dystopia
+109;108;Cyberpunk
+110;109;Steampunk
+104;100;Fantasy
+111;104;Epic fantasy
+112;104;High fantasy
 113;100;Graphic Novel
-114;100;Science Fiction
 115;100;Short Story
 116;100;Romance
 117;100;Mystery
@@ -20,9 +23,6 @@ ID;parnt_ID;name
 120;100;Contemporary Fiction
 121;100;Magical Realism
 122;100;Literary Fiction
-125;100;Dystopia
-126;125;Sci-fi dystopia
-127;125;Dystopic satire
 128;100;Fairy Tale
 200;;Non-Fiction
 201;200;Biography

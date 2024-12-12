@@ -4,7 +4,6 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -18,7 +17,7 @@ public class GenreHierarchyTest {
 
 	@Autowired
 	private MockMvc client;
-	
+
 	private static final String genresURI = "/api/admin/GenreHierarchy";
 
 	@Test
@@ -39,7 +38,7 @@ public class GenreHierarchyTest {
 	@WithMockUser(username = "admin")
 	void testStartOneLevel() throws Exception {
 		client.perform(get(genresURI
-		        + "?$select=DrillState,ID,name,DistanceFromRoot"
+				+ "?$select=DrillState,ID,name,DistanceFromRoot"
 				+ "&$apply=orderby(name)/"
 				+ "com.sap.vocabularies.Hierarchy.v1.TopLevels(HierarchyNodes=$root/GenreHierarchy,HierarchyQualifier='GenreHierarchy',NodeProperty='ID',Levels=1)"
 				+ "&$count=true"))
@@ -53,7 +52,6 @@ public class GenreHierarchyTest {
 				.andExpect(jsonPath("$.value[1].DistanceFromRoot").value(0))
 				.andExpect(jsonPath("$.value[1].DrillState").value("collapsed"))
 				.andExpect(jsonPath("$.value[2]").doesNotExist());
-
 	}
 
 	@Test
@@ -64,7 +62,7 @@ public class GenreHierarchyTest {
 				+ "&$apply=descendants($root/GenreHierarchy,GenreHierarchy,ID,filter(ID eq 20),1)"
 				+ "/orderby(ID)"))
 				.andExpect(status().isOk())
- 				.andExpect(jsonPath("$.value[0].ID").value(21))
+				.andExpect(jsonPath("$.value[0].ID").value(21))
 				.andExpect(jsonPath("$.value[0].name").value("Biography"))
 				.andExpect(jsonPath("$.value[0].DrillState").value("collapsed"))
 				.andExpect(jsonPath("$.value[1].ID").value(23))
