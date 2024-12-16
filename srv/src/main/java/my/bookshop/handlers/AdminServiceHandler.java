@@ -39,10 +39,10 @@ import com.sap.cds.services.handler.annotations.ServiceName;
 import com.sap.cds.services.messages.Messages;
 import com.sap.cds.services.persistence.PersistenceService;
 
-import cds.gen.adminservice.BooksAddToOrderContext;
 import cds.gen.adminservice.AdminService;
 import cds.gen.adminservice.AdminService_;
 import cds.gen.adminservice.Books;
+import cds.gen.adminservice.BooksAddToOrderContext;
 import cds.gen.adminservice.Books_;
 import cds.gen.adminservice.OrderItems;
 import cds.gen.adminservice.OrderItems_;
@@ -196,7 +196,7 @@ class AdminServiceHandler implements EventHandler {
 		if(includeWarnings && quantity <= 0) {
 			// Tip: add additional messages with localized messages from property files
 			// these messages are transported in sap-messages and do not abort the request
-			messages.warn(MessageKeys.QUANTITY_REQUIRE_MINIMUM);
+			messages.warn(MessageKeys.QUANTITY_REQUIRE_MINIMUM).target(ORDER_ITEMS, i -> i.quantity());
 		}
 
 		// get the price of the updated book ID
