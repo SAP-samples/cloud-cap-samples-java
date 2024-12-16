@@ -10,12 +10,13 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.security.test.context.support.WithMockUser;
-import static org.assertj.core.api.Assumptions.assumeThat;
 import org.springframework.core.env.Environment;
 import org.springframework.core.env.Profiles;
+import org.springframework.security.test.context.support.WithMockUser;
+import static org.assertj.core.api.Assumptions.assumeThat;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.web.util.UriComponentsBuilder;
+import org.springframework.test.web.servlet.ResultActions;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -132,20 +133,7 @@ public class GenreHierarchyTest {
 		+ "&$apply=com.sap.vocabularies.Hierarchy.v1.TopLevels(HierarchyNodes=$root/GenreHierarchy,HierarchyQualifier='GenreHierarchy',NodeProperty='ID')"
 		+ "&$count=true&$skip=0&$top=238";
 
-		if (env.acceptsProfiles(Profiles.of("hybrid"))) {
-			client.perform(get(url))
-			.andExpect(status().isOk())
-			.andExpect(jsonPath("$.value[0].ID").value(10))
-			.andExpect(jsonPath("$.value[0].name").value("Fiction"))
-			.andExpect(jsonPath("$.value[0].DrillState").value("expanded"))
-			.andExpect(jsonPath("$.value[0].DistanceFromRoot").value(0))
-			.andExpect(jsonPath("$.value[0].LimitedDescendantCount").value(9))
-			.andExpect(jsonPath("$.value[14].name").value("Speech"))
-			.andExpect(jsonPath("$.value[14].DrillState").value("leaf"))
-			.andExpect(jsonPath("$.value[15]").doesNotExist());
-
-		} else {
-			client.perform(get(url))
+		ResultActions expectations = client.perform(get(url))
 			.andExpect(status().isOk())
 			.andExpect(jsonPath("$.value[0].ID").value(10))
 			.andExpect(jsonPath("$.value[0].name").value("Fiction"))
@@ -154,7 +142,9 @@ public class GenreHierarchyTest {
 			.andExpect(jsonPath("$.value[14].name").value("Speech"))
 			.andExpect(jsonPath("$.value[14].DrillState").value("leaf"))
   			.andExpect(jsonPath("$.value[15]").doesNotExist());
-		}
+		if (env.acceptsProfiles(Profiles.of("hybrid"))) {
+			expectations.andExpect(jsonPath("$.value[0].LimitedDescendantCount").value(9));
+		}	
 	}
 
 	@Test

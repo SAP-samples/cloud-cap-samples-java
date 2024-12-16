@@ -55,7 +55,7 @@ public class HierarchyHandlerSorterTest {
 		GenreHierarchy genre = GenreHierarchy.create();
 		genre.setName(name);
 		if (parent != null) {
-			genre.setParnt(parent);
+			genre.setParent(parent);
 		}
 		return genre;
 	}
