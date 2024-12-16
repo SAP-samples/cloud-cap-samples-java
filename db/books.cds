@@ -49,7 +49,7 @@ entity Genres {
     key ID      : Integer;
     name        : localized String(255);
     descr       : localized String(1000);
-    parnt    : Association to Genres;
+    parent    : Association to Genres;
     children : Composition of many Genres
-                    on children.parnt = $self;    
+                    on children.parent = $self;    
 }

@@ -9,8 +9,11 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.core.env.Environment;
+import org.springframework.core.env.Profiles;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.ResultActions;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -18,6 +21,9 @@ public class GenreHierarchyTest {
 
 	@Autowired
 	private MockMvc client;
+
+	@Autowired
+	Environment env;
 	
 	private static final String genresURI = "/api/admin/GenreHierarchy";
 
@@ -94,7 +100,8 @@ public class GenreHierarchyTest {
 	@Test
 	@WithMockUser(username = "admin")
 	void testExpandAll() throws Exception {
-		client.perform(get(genresURI
+		ResultActions expectactions =
+			client.perform(get(genresURI
 				+ "?$select=DistanceFromRoot,DrillState,ID,LimitedDescendantCount,name"
 				+ "&$apply=com.sap.vocabularies.Hierarchy.v1.TopLevels(HierarchyNodes=$root/GenreHierarchy,HierarchyQualifier='GenreHierarchy',NodeProperty='ID')"
 				+ "&$count=true&$skip=0&$top=238"))
@@ -103,9 +110,11 @@ public class GenreHierarchyTest {
 				.andExpect(jsonPath("$.value[0].name").value("Fiction"))
 				.andExpect(jsonPath("$.value[0].DrillState").value("expanded"))
 				.andExpect(jsonPath("$.value[0].DistanceFromRoot").value(0))
-				.andExpect(jsonPath("$.value[0].LimitedDescendantCount").value(9))
 				.andExpect(jsonPath("$.value[14].name").value("Speech"))
 				.andExpect(jsonPath("$.value[14].DrillState").value("leaf"))
 				.andExpect(jsonPath("$.value[15]").doesNotExist());
+		if (env.acceptsProfiles(Profiles.of("hybrid"))) {
+			expectactions.andExpect(jsonPath("$.value[0].LimitedDescendantCount").value(9));
+		}	
 	}
 }
