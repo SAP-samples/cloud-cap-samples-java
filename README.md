@@ -73,8 +73,6 @@ Domain Model related Features:
 Service Model related Features:
 
 - [Custom event handlers](https://cap.cloud.sap/docs/java/provisioning-api) such as the [Custom business logic for the Admin Service](srv/src/main/java/my/bookshop/handlers/AdminServiceHandler.java)
-- [Custom event handlers](https://cap.cloud.sap/docs/java/provisioning-api) for Tree Table such as the [Custom business logic for GenreHierarchy](srv/src/main/java/my/bookshop/handlers/HierarchyHandler.java).
-  Please note, that Tree Tables must be used with HANA. Custom event handler in this case provides a limited support ment for local testing. 
 - [Custom actions](https://cap.cloud.sap/docs/cds/cdl#actions) such as `addToOrder` in the [Admin Service](srv/admin-service.cds). The Action implementation is in the [Admin Service Event Handler](srv/src/main/java/my/bookshop/handlers/AdminServiceHandler.java)
 - Add annotations for [searchable elements](https://github.wdf.sap.corp/pages/cap/java/query-api#select) in the [Admin Service](srv/admin-service.cds)
 - [Localized Messages](https://cap.cloud.sap/docs/java/indicating-errors) in the [Admin Service Event Handler](srv/src/main/java/my/bookshop/handlers/AdminServiceHandler.java)
@@ -93,6 +91,8 @@ User Interface related Features:
 - [Custom File Upload extension](app/admin/webapp/extension/Upload.js) which provides a button for uploading `CSV` files
 - A simple Swagger UI for the CatalogService API at <http://localhost:8080/swagger/index.html>
 - UI5 [Tree Table](app/genres/webapp/manifest.json) with Value Help for [GenreHierarchy](app/admin/fiori-service.cds)
+- [Custom event handlers](https://cap.cloud.sap/docs/java/provisioning-api) for Tree Table such as the [Custom business logic for GenreHierarchy](srv/src/main/java/my/bookshop/handlers/HierarchyHandler.java).
+  Please note, that Tree Tables must be used with HANA. Custom event handler in this case provides a limited support ment for local testing.
 
 CDS Maven Plugin Features:
 
