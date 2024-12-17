@@ -1,16 +1,31 @@
 ID;parent_ID;name
-10;;Fiction
-11;10;Drama
-12;10;Poetry
-13;10;Fantasy
-14;10;Science Fiction
-15;10;Romance
-16;10;Mystery
-17;10;Thriller
-18;10;Dystopia
-19;10;Fairy Tale
-20;;Non-Fiction
-21;20;Biography
-22;21;Autobiography
-23;20;Essay
-24;20;Speech
+100;;Fiction
+101;100;Action
+102;100;Adventure
+103;100;Drama
+105;100;Poetry
+106;100;Science Fiction
+107;106;Utopian and Dystopian
+108;107;Dystopia
+109;108;Cyberpunk
+110;109;Steampunk
+104;100;Fantasy
+111;104;Epic fantasy
+112;104;High fantasy
+113;100;Graphic Novel
+115;100;Short Story
+116;100;Romance
+117;100;Mystery
+123;117;Thriller
+124;117;Suspense
+118;100;Horror
+119;100;Historical Fiction
+120;100;Contemporary Fiction
+121;100;Magical Realism
+122;100;Literary Fiction
+128;100;Fairy Tale
+200;;Non-Fiction
+201;200;Biography
+202;201;Autobiography
+203;200;Essay
+204;200;Speech
