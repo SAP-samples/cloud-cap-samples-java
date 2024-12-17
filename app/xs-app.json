@@ -62,7 +62,7 @@
 	  {
 		"source": "^/api/review/(.*)",
 		"authenticationType": "xsuaa",
-		"destination": "backend"
+		"destination": "reviews"
 	  },
 	  {
 		"source": "^/api/notes/(.*)",
