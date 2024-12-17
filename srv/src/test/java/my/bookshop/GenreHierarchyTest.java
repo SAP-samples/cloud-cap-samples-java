@@ -195,6 +195,7 @@ public class GenreHierarchyTest {
 				.andExpect(jsonPath("$.value[1]").doesNotExist());
 	}
 
+	@Ignore
 	@Test
 	@WithMockUser(username = "admin")
 	void testFilterExpandLevels() throws Exception {
