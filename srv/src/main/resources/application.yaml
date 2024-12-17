@@ -2,6 +2,7 @@
 logging:
   level:
     '[com.sap.cds.auditlog]': DEBUG
+    '[com.sap.cds.remote.wire]': DEBUG
 spring:
   jmx:
     enabled: true
@@ -48,15 +49,33 @@ cds:
       serve:
         ignore: true
   remote.services:
-    review:
-      model: ReviewService
+    ReviewService:
       http:
         suffix: "/api"
+        service: "review"
+
+---
+spring:
+  config.activate.on-profile: remote-reviews & default
+cds:
+  remote.services:
+    ReviewService:
       destination:
         properties:
           url: "http://localhost:4006"
           user: admin
           password: admin
+
+---
+spring:
+  config.activate.on-profile: remote-reviews & cloud
+cds:
+  remote.services:
+    ReviewService:
+      destination:
+        name: "reviews-service"
+        properties:
+          forwardAuthToken: true
 
 ---
 spring:
@@ -72,6 +91,10 @@ cds:
     NotesService:
       serve:
         ignore: true
+
+---
+spring:
+  config.activate.on-profile: reviews-service & default
 server:
   port: 4006
 

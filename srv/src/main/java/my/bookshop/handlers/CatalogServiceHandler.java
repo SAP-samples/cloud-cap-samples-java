@@ -3,9 +3,11 @@ package my.bookshop.handlers;
 import static cds.gen.catalogservice.CatalogService_.BOOKS;
 import static cds.gen.catalogservice.CatalogService_.REVIEWS;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -13,11 +15,15 @@ import org.springframework.stereotype.Component;
 
 import com.sap.cds.Result;
 import com.sap.cds.Struct;
+import com.sap.cds.ql.CQL;
 import com.sap.cds.ql.Insert;
 import com.sap.cds.ql.Select;
 import com.sap.cds.ql.Update;
 import com.sap.cds.ql.cqn.CqnAnalyzer;
+import com.sap.cds.ql.cqn.CqnExpand;
 import com.sap.cds.ql.cqn.CqnSelect;
+import com.sap.cds.ql.cqn.CqnSelectListItem;
+import com.sap.cds.ql.cqn.Modifier;
 import com.sap.cds.reflect.CdsModel;
 import com.sap.cds.services.ErrorStatuses;
 import com.sap.cds.services.ServiceException;
@@ -40,6 +46,7 @@ import cds.gen.catalogservice.Reviews;
 import cds.gen.catalogservice.SubmitOrderContext;
 import cds.gen.reviewservice.ReviewService;
 import cds.gen.reviewservice.ReviewService_;
+import cds.gen.reviewservice.Reviews_;
 import my.bookshop.MessageKeys;
 import my.bookshop.RatingCalculator;
 
@@ -74,6 +81,11 @@ class CatalogServiceHandler implements EventHandler {
 		this.analyzer = CqnAnalyzer.create(model);
 	}
 
+	@On(entity = Reviews_.CDS_NAME)
+	void readReviews(CdsReadEventContext context) {
+		context.setResult(reviewService.run(context.getCqn()));
+	}
+
 	/**
 	 * Invokes some validations before creating a review.
 	 *
@@ -84,7 +96,7 @@ class CatalogServiceHandler implements EventHandler {
 		String user = context.getUserInfo().getName();
 		String bookId = (String) analyzer.analyze(context.getCqn()).targetKeys().get(Books.ID);
 
-		Result result = db.run(Select.from(REVIEWS)
+		Result result = reviewService.run(Select.from(ReviewService_.REVIEWS)
 				.where(review -> review.book_ID().eq(bookId).and(review.createdBy().eq(user))));
 
 		if (result.first().isPresent()) {
@@ -106,6 +118,7 @@ class CatalogServiceHandler implements EventHandler {
 		review.setRating(context.getRating());
 		review.setTitle(context.getTitle());
 		review.setText(context.getText());
+		review.setIsActiveEntity(true);
 
 		Result res = reviewService.run(Insert.into(ReviewService_.REVIEWS).entry(review));
 		cds.gen.reviewservice.Reviews inserted = res.single(cds.gen.reviewservice.Reviews.class);
@@ -142,6 +155,8 @@ class CatalogServiceHandler implements EventHandler {
 			return;
 		}
 
+		
+
 		CqnSelect query = Select.from(BOOKS, b -> b.filter(b.ID().in(bookIds)).reviews())
 				.where(r -> r.createdBy().eq(user));
 
@@ -153,7 +168,55 @@ class CatalogServiceHandler implements EventHandler {
 				book.setIsReviewable(false);
 			}
 		}
+
+
+
+		AtomicReference<CqnExpand> reviewExpandHolder = new AtomicReference<>();
+		CqnSelect noReviewExpand = CQL.copy(context.getCqn(), new Modifier() {
+
+			public List<CqnSelectListItem> items(List<CqnSelectListItem> items) {
+				reviewExpandHolder.set(removeIfExpanded(items, Books.REVIEWS));
+				return items;
+			}
+
+		});
+
+		CqnExpand reviewExpand = reviewExpandHolder.get();
+		if(reviewExpand != null) {
+			// Result books = context.getService().run(noSupplierExpand);
+			Select<?> reviewSelect = Select.from(cds.gen.reviewservice.Reviews_.class)
+					// .columns(ensureSelected(reviewExpand.items(), cds.gen.reviewservice.Reviews.BOOK_ID))
+					.orderBy(reviewExpand.orderBy())
+					.where(n -> n.book_ID().in(bookIds).and(n.IsActiveEntity().eq(true)));
+
+			Result reviews = reviewService.run(reviewSelect);
+			for(Books book : books) {
+				book.setReviews(reviews.streamOf(Reviews.class).filter(s -> s.getBookId().equals(book.getId())).collect(Collectors.toList()));
+			}
+			context.setResult(books);
+			return;
+		}
+
 	}
+
+	private CqnExpand removeIfExpanded(List<CqnSelectListItem> items, String association) {
+		CqnExpand expanded = items.stream().filter(i -> i.isExpand()).map(i -> i.asExpand())
+			.filter(i -> i.ref().firstSegment().equals(association)).findFirst().orElse(null);
+		if(expanded != null) {
+			items.remove(expanded);
+		}
+		return expanded;
+	}
+
+	private List<CqnSelectListItem> ensureSelected(List<CqnSelectListItem> items, String element) {
+		if(items.stream().anyMatch(i -> i.isStar() || i.isValue() && i.asValue().displayName().equals(element))) {
+			return items;
+		}
+		List<CqnSelectListItem> newItems = new ArrayList<>(items);
+		newItems.add(CQL.get(element));
+		return newItems;
+	}
+
 
 	@On
 	public void onSubmitOrder(SubmitOrderContext context) {
