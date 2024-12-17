@@ -41,6 +41,42 @@ management:
 
 ---
 spring:
+  config.activate.on-profile: remote-reviews
+cds:
+  application.services:
+    ReviewService:
+      serve:
+        ignore: true
+  remote.services:
+    review:
+      model: ReviewService
+      http:
+        suffix: "/api"
+      destination:
+        properties:
+          url: "http://localhost:4006"
+          user: admin
+          password: admin
+
+---
+spring:
+  config.activate.on-profile: reviews-service
+cds:
+  application.services:
+    AdminService:
+      serve:
+        ignore: true
+    CatalogService:
+      serve:
+        ignore: true
+    NotesService:
+      serve:
+        ignore: true
+server:
+  port: 4006
+
+---
+spring:
   config.activate.on-profile: cloud
   sql.init.schema-locations: "classpath:schema-nomocks.sql"
 cds:
