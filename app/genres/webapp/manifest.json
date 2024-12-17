@@ -91,13 +91,13 @@
 								}
 							},
 							"controlConfiguration": {
-								"@com.sap.vocabularies.UI.v1.LineItem": {
-									"tableSettings": {
-										"hierarchyQualifier": "GenreHierarchy",
-										"type": "TreeTable"
-									}
-								}
-							}
+                                "@com.sap.vocabularies.UI.v1.LineItem": {
+                                    "tableSettings": {
+                                        "hierarchyQualifier": "GenreHierarchy",
+                                        "type": "TreeTable"
+                                    }
+                                }
+                            }
 						}
 					}
 				},
