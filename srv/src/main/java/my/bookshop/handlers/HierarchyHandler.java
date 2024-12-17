@@ -96,10 +96,10 @@ public class HierarchyHandler implements EventHandler {
 
     private void addDrillState(List<GenreHierarchy> ghs) {
         List<Integer> ids = ghs.stream().map(gh -> gh.getId()).toList();
-        Set<Integer> parents = ghs.stream().map(gh -> gh.getParntId()).filter(p -> p != null)
+        Set<Integer> parents = ghs.stream().map(gh -> gh.getParentId()).filter(p -> p != null)
                 .collect(Collectors.toSet());
-        CqnSelect q = Select.from(GENRE_HIERARCHY).columns(gh -> gh.parnt_ID().as("id"))
-                .where(gh -> gh.parnt_ID().in(ids));
+        CqnSelect q = Select.from(GENRE_HIERARCHY).columns(gh -> gh.parent_ID().as("id"))
+                .where(gh -> gh.parent_ID().in(ids));
         Set<Object> nonLeafs = db
                 .run(q)
                 .stream().map(r -> r.get("id")).collect(Collectors.toSet());
@@ -128,7 +128,7 @@ public class HierarchyHandler implements EventHandler {
         CqnPredicate children = CQL.copy(start, new Modifier() {
             @Override
             public CqnValue ref(CqnElementRef ref) {
-                return CQL.get(GenreHierarchy.PARNT_ID);
+                return CQL.get(GenreHierarchy.PARENT_ID);
             }
         });
         result = CQL.or(result, children);
@@ -147,10 +147,10 @@ public class HierarchyHandler implements EventHandler {
 
         Select<GenreHierarchy_> outer = Select.from(GENRE_HIERARCHY)
                 .columns(gh -> gh.ID().as("i0"),
-                        gh -> gh.parnt().ID().as("i1"),
-                        gh -> gh.parnt().parnt().ID().as("i2"),
-                        gh -> gh.parnt().parnt().parnt().ID().as("i3"),
-                        gh -> gh.parnt().parnt().parnt().parnt().ID().as("i4"))
+                        gh -> gh.parent().ID().as("i1"),
+                        gh -> gh.parent().parent().ID().as("i2"),
+                        gh -> gh.parent().parent().parent().ID().as("i3"),
+                        gh -> gh.parent().parent().parent().parent().ID().as("i4"))
                 .where(gh -> gh.ID().in(inner));
 
         Set<Integer> ancestorIds = new HashSet<>();
@@ -178,7 +178,7 @@ public class HierarchyHandler implements EventHandler {
     private static void connect(List<GenreHierarchy> nodes) {
         Map<Integer, GenreHierarchy> lookup = new HashMap<>();
         nodes.forEach(gh -> lookup.put(gh.getId(), gh));
-        nodes.forEach(gh -> gh.setParnt(lookup.get(gh.getParntId())));
+        nodes.forEach(gh -> gh.setParent(lookup.get(gh.getParentId())));
         nodes.forEach(gh -> gh.setDistanceFromRoot(distanceFromRoot(gh)));
     }
 
@@ -205,7 +205,7 @@ public class HierarchyHandler implements EventHandler {
         Map <Integer, GenreHierarchy> lookup = new HashMap<>();
         Map<Object, Long> expandLevels = topLevels.expandLevels();
 
-        CqnSelect getRoots = Select.from(GENRE_HIERARCHY).where(gh -> gh.parnt_ID().isNull().and(filter));
+        CqnSelect getRoots = Select.from(GENRE_HIERARCHY).where(gh -> gh.parent_ID().isNull().and(filter));
         List<GenreHierarchy> roots = db.run(getRoots).listOf(GenreHierarchy.class);
         roots.forEach(root -> {
             root.setDistanceFromRoot(0l);
@@ -214,14 +214,14 @@ public class HierarchyHandler implements EventHandler {
             for (long i = 1; i < limit; i++) {
                 List<Integer> ps = parents;
                 CqnSelect getChildren = Select.from(GENRE_HIERARCHY)
-                        .where(gh -> gh.parnt_ID().in(ps).and(filter));
+                        .where(gh -> gh.parent_ID().in(ps).and(filter));
                 List<GenreHierarchy> children = db.run(getChildren).listOf(GenreHierarchy.class);
                 if (children.isEmpty()) {
                     break;
                 }
                 long dfr = i;
                 parents = children.stream().peek(gh -> {
-                    gh.setParnt(lookup.get(gh.getParntId()));
+                    gh.setParent(lookup.get(gh.getParentId()));
                     gh.setDistanceFromRoot(dfr);
                     lookup.put(gh.getId(), gh);
                 }).map(GenreHierarchy::getId).toList();
@@ -232,12 +232,12 @@ public class HierarchyHandler implements EventHandler {
             List<Integer> expandedIds = expandLevels.keySet().stream().map(key -> (Integer) key).toList();
             CqnSelect expandedCQN = Select.from(AdminService_.GENRE_HIERARCHY).where(gh -> 
                     CQL.and(filter,
-                    CQL.or(gh.ID().in(expandedIds), gh.parnt_ID().in(expandedIds))));
+                    CQL.or(gh.ID().in(expandedIds), gh.parent_ID().in(expandedIds))));
             
             List<GenreHierarchy> expanded = db.run(expandedCQN).listOf(GenreHierarchy.class);
             expanded.forEach(gh -> {
                 if (!lookup.keySet().contains(gh.getId())) {
-                    gh.setParnt(lookup.get(gh.getParntId()));
+                    gh.setParent(lookup.get(gh.getParentId()));
                     gh.setDistanceFromRoot(distanceFromRoot(gh));
                     lookup.put(gh.getId(), gh);
                 }
@@ -259,15 +259,15 @@ public class HierarchyHandler implements EventHandler {
 
     private static long distanceFromRoot(GenreHierarchy gh) {
         long dfr = 0;
-        while (gh.getParnt() != null) {
+        while (gh.getParent() != null) {
             dfr++;
-            gh = gh.getParnt();
+            gh = gh.getParent();
         }
 
         return dfr;
     }
 
-    private class Sorter implements Comparator<GenreHierarchy> {
+    static class Sorter implements Comparator<GenreHierarchy> {
 
         @Override
         public int compare(GenreHierarchy gh1, GenreHierarchy gh2) {
@@ -295,7 +295,7 @@ public class HierarchyHandler implements EventHandler {
             Deque<String> path = new ArrayDeque<>();
             do {
                 path.push(gh.getName());
-                gh = gh.getParnt();
+                gh = gh.getParent();
             } while (gh != null);
 
             return path;

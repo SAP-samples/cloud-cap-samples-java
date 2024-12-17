@@ -1,4 +1,4 @@
-ID;parnt_ID;name
+ID;parent_ID;name
 100;;Fiction
 101;100;Action
 102;100;Adventure
