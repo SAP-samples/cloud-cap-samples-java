@@ -7,7 +7,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import java.net.URI;
 
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -197,12 +196,11 @@ public class GenreHierarchyTest {
 				.andExpect(jsonPath("$.value[1]").doesNotExist());
 	}
 
-	@Disabled
 	@Test
 	@WithMockUser(username = "admin")
 	void testFilterExpandLevels() throws Exception {
 		String expandLevelsJson = """
-				[{"NodeID":10,"Levels":1},{"NodeID":20,"Levels":1}]\
+				[{"NodeID":100,"Levels":1},{"NodeID":200,"Levels":1}]\
 				""";
 		String unencoded = genresURI + "?$select=DistanceFromRoot,DrillState,ID,LimitedDescendantCount,name"
 				+ "&$apply=ancestors($root/GenreHierarchy,GenreHierarchy,ID,filter(name eq 'Autobiography'),keep start)/orderby(name)"
@@ -212,7 +210,7 @@ public class GenreHierarchyTest {
 		URI uri = URI.create(uriString);
 		client.perform(get(uri))
 				.andExpect(status().isOk())
-				.andExpect(jsonPath("$.value[0].ID").value(20))
+				.andExpect(jsonPath("$.value[0].ID").value(200))
 				.andExpect(jsonPath("$.value[0].name").value("Non-Fiction"))
 				.andExpect(jsonPath("$.value[0].DrillState").value("expanded"))
 				.andExpect(jsonPath("$.value[0].DistanceFromRoot").value(0))
