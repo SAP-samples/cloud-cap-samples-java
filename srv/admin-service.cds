@@ -2,7 +2,7 @@ using {sap.common.Languages as CommonLanguages} from '@sap/cds/common';
 using {my.bookshop as my} from '../db/index';
 using {sap.changelog as changelog} from 'com.sap.cds/change-tracking';
 using {my.common.Hierarchy as Hierarchy} from './hierarchy';
-using {sap.attachments.Attachments} from`com.sap.cds/cds-feature-attachments`;
+using {sap.attachments.Attachments} from 'com.sap.cds/cds-feature-attachments';
 
 extend my.Orders with changelog.changeTracked;
 
