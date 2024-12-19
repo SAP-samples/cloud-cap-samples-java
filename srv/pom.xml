@@ -193,20 +193,15 @@
 						<goals>
 							<goal>install-node</goal>
 						</goals>
-						<configuration>
-							<skip>${cdsdk-global}</skip>
-						</configuration>
 					</execution>
 
-					<!-- required for cds build -->
 					<execution>
-						<id>cds.install-mtx-dependencies</id>
+						<id>cds.npm-ci</id>
 						<goals>
 							<goal>npm</goal>
 						</goals>
 						<configuration>
 							<arguments>ci</arguments>
-							<workingDirectory>../mtx/sidecar</workingDirectory>
 						</configuration>
 					</execution>
 
