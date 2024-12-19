@@ -15,9 +15,6 @@ service ReviewService {
     @readonly
     entity Authors as projection on my.Authors;
 
-    @readonly
-    entity Genres  as projection on my.Genres;
-
     // access control restrictions
     annotate Reviews with @restrict: [
         {
