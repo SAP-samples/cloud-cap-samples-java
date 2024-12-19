@@ -43,7 +43,7 @@
 			<artifactId>cds-adapter-odata-v4</artifactId>
 			<scope>runtime</scope>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>com.sap.cds</groupId>
 			<artifactId>cds-feature-postgresql</artifactId>
@@ -144,12 +144,12 @@
 					</execution>
 
 					<execution>
-						<id>cds.install-dependencies</id>
+						<id>cds.npm-ci</id>
 						<goals>
 							<goal>npm</goal>
 						</goals>
 						<configuration>
-							<arguments>install</arguments>
+							<arguments>ci</arguments>
 						</configuration>
 					</execution>
 
@@ -161,7 +161,7 @@
 						<configuration>
 							<commands>
 								<command>build --for java</command>
-								<command>deploy --profile pg --dry --delta-from srv/src/main/resources/db/changelog/v2/model.csn > 
+								<command>deploy --profile pg --dry --delta-from srv/src/main/resources/db/changelog/v2/model.csn >
 									srv/src/main/resources/db/changelog/dev/model.sql</command>
 								<command>deploy --model-only --dry > srv/src/main/resources/db/changelog/dev/model.csn</command>
 							</commands>
