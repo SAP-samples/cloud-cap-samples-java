@@ -21,6 +21,7 @@ service AdminService @(requires: 'admin') {
   entity Authors        as projection on my.Authors;
   entity Orders         as select from my.Orders;
   extend my.Genres with Hierarchy;
+  @cds.odata.valuelist: false
   entity GenreHierarchy as projection on my.Genres;
 
   @cds.persistence.skip
