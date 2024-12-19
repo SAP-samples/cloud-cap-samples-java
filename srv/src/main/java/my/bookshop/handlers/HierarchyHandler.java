@@ -42,8 +42,18 @@ import cds.gen.adminservice.GenreHierarchy_;
 import static cds.gen.adminservice.AdminService_.GENRE_HIERARCHY;
 
 @Component
-@Profile("default")
+@Profile("default") // non-HANA
 @ServiceName(AdminService_.CDS_NAME)
+/**
+ * On HANA, requests for GenreHierarchy are handled generically.
+ * 
+ * This handler is only in effect when running with the `default` profile on
+ * H2. It is a stand-in for non-HANA until the CAP Java runtime can also handle
+ * requests for hierarchies on non-HANA databases.
+ * 
+ * The handler is neither functionally complete nor correct for all requests. It
+ * is not intended as a blue-print for custom code.
+ */
 public class HierarchyHandler implements EventHandler {
 
     private final PersistenceService db;
@@ -202,7 +212,7 @@ public class HierarchyHandler implements EventHandler {
 
     private List<GenreHierarchy> topLevelsLimit(CqnTopLevelsTransformation topLevels, CqnPredicate filter) {
         long limit = topLevels.levels();
-        Map <Integer, GenreHierarchy> lookup = new HashMap<>();
+        Map<Integer, GenreHierarchy> lookup = new HashMap<>();
         Map<Object, Long> expandLevels = topLevels.expandLevels();
 
         CqnSelect getRoots = Select.from(GENRE_HIERARCHY).where(gh -> gh.parent_ID().isNull().and(filter));
@@ -230,10 +240,9 @@ public class HierarchyHandler implements EventHandler {
 
         if (!expandLevels.isEmpty()) {
             List<Integer> expandedIds = expandLevels.keySet().stream().map(key -> (Integer) key).toList();
-            CqnSelect expandedCQN = Select.from(AdminService_.GENRE_HIERARCHY).where(gh -> 
-                    CQL.and(filter,
+            CqnSelect expandedCQN = Select.from(AdminService_.GENRE_HIERARCHY).where(gh -> CQL.and(filter,
                     CQL.or(gh.ID().in(expandedIds), gh.parent_ID().in(expandedIds))));
-            
+
             List<GenreHierarchy> expanded = db.run(expandedCQN).listOf(GenreHierarchy.class);
             expanded.forEach(gh -> {
                 if (!lookup.keySet().contains(gh.getId())) {
