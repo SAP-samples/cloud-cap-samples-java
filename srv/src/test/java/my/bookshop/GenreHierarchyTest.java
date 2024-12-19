@@ -220,7 +220,7 @@ public class GenreHierarchyTest {
 	@Test
 	@WithMockUser(username = "admin")
 	void testStartTwoLevelsOrderByDescHANA() throws Exception {
-		assumeThat(env.getActiveProfiles()).contains("hybrid");
+		assumeThat(env.getActiveProfiles()).contains("cloud");
 		client.perform(get(genresURI
 				+ "?$select=DrillState,ID,name,DistanceFromRoot"
 				+ "&$apply=orderby(name desc)/"
@@ -234,6 +234,6 @@ public class GenreHierarchyTest {
 	}
 
 	private boolean isOnHana() {
-		return env.acceptsProfiles(Profiles.of("hybrid"));
+		return env.acceptsProfiles(Profiles.of("cloud"));
 	}
 }
