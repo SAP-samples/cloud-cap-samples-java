@@ -9,17 +9,17 @@ using my.bookshop.Books from './books';
 
 entity Reviews : cuid, managed {
     @cds.odata.ValueList
-    book     : Association to Books;
-    rating   : Rating;
-    title    : String(111);
-    text     : String(1111);
+    book   : Association to Books;
+    rating : Rating;
+    title  : String(111);
+    text   : String(1111);
 }
 
 // input validation
 annotate Reviews with {
     title @mandatory;
     rating @assert.range;
-    book @mandatory @assert.target;
+    book  @mandatory  @assert.target;
 }
 
 type Rating : Integer enum {

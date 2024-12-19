@@ -25,7 +25,7 @@ entity Books : cuid, managed {
 }
 
 entity Authors : cuid, managed {
-    @assert.format : '^\p{Lu}.*' // assert that name starts with a capital letter
+    @assert.format: '^\p{Lu}.*' // assert that name starts with a capital letter
     name         : String(111);
     dateOfBirth  : Date;
     dateOfDeath  : Date;
@@ -37,10 +37,12 @@ entity Authors : cuid, managed {
 
 // annotations for Data Privacy
 annotate Authors with
-@PersonalData : { DataSubjectRole : 'Author', EntitySemantics : 'DataSubject' }
-{
-  ID    @PersonalData.FieldSemantics : 'DataSubjectID';
-  name  @PersonalData.IsPotentiallySensitive;
+@PersonalData: {
+    DataSubjectRole: 'Author',
+    EntitySemantics: 'DataSubject'
+} {
+    ID @PersonalData.FieldSemantics: 'DataSubjectID';
+    name @PersonalData.IsPotentiallySensitive;
 }
 
 /**
