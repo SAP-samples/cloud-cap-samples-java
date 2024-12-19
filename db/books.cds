@@ -2,6 +2,7 @@ namespace my.bookshop;
 
 using {
     Currency,
+    sap,
     managed,
     cuid
 } from '@sap/cds/common';
@@ -47,10 +48,8 @@ annotate Authors with
 /**
  * Hierarchically organized Code List for Genres
  */
-entity Genres {
+entity Genres : sap.common.CodeList {
     key ID       : Integer;
-        name     : localized String(255);
-        descr    : localized String(1000);
         parent   : Association to Genres;
         children : Composition of many Genres
                        on children.parent = $self;
