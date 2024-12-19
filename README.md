@@ -143,10 +143,10 @@ are defined for local development:
 
 ### Testing in hybrid mode
 
-You can test the `GenreHierarchyTest` on H2 using the profile `default` as well as on HANA using the profile `hybrid`
+You can test the `GenreHierarchyTest` on H2 using the profile `default` as well as on HANA using the profile `cloud`
 
 ```
-cds bind --exec -- mvn clean install -Dspring.profiles.active=hybrid
+cds bind --exec -- mvn clean install -Dspring.profiles.active=cloud
 ```
 
 ## Using VS Code
