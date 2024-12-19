@@ -2,7 +2,6 @@ namespace my.bookshop;
 
 using {
     Currency,
-    sap,
     managed,
     cuid
 } from '@sap/cds/common';
@@ -25,7 +24,7 @@ entity Books : cuid, managed {
 }
 
 entity Authors : cuid, managed {
-    @assert.format : '^\p{Lu}.*' // assert that name starts with a capital letter
+    @assert.format: '^\p{Lu}.*' // assert that name starts with a capital letter
     name         : String(111);
     dateOfBirth  : Date;
     dateOfDeath  : Date;
@@ -37,17 +36,21 @@ entity Authors : cuid, managed {
 
 // annotations for Data Privacy
 annotate Authors with
-@PersonalData : { DataSubjectRole : 'Author', EntitySemantics : 'DataSubject' }
-{
-  ID    @PersonalData.FieldSemantics : 'DataSubjectID';
-  name  @PersonalData.IsPotentiallySensitive;
+@PersonalData: {
+    DataSubjectRole: 'Author',
+    EntitySemantics: 'DataSubject'
+} {
+    ID @PersonalData.FieldSemantics: 'DataSubjectID';
+    name @PersonalData.IsPotentiallySensitive;
 }
 
 /**
  * Hierarchically organized Code List for Genres
  */
-entity Genres : sap.common.CodeList {
+entity Genres {
     key ID       : Integer;
+        name     : localized String(255);
+        descr    : localized String(1000);
         parent   : Association to Genres;
         children : Composition of many Genres
                        on children.parent = $self;

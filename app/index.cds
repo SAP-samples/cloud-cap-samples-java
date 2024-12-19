@@ -8,4 +8,5 @@ using from './orders/fiori-service';
 using from './reviews/fiori-service';
 using from './notes/fiori-service';
 using from './addresses/fiori-service';
+using from './genres/fiori-service';
 using from './common';

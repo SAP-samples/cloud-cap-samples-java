@@ -90,6 +90,9 @@ User Interface related Features:
 - [Model Localization](https://cap.cloud.sap/docs/guides/i18n) for [English](app/_i18n/i18n.properties) and [German](app/_i18n/i18n_de.properties) language for static texts
 - [Custom File Upload extension](app/admin/webapp/extension/Upload.js) which provides a button for uploading `CSV` files
 - A simple Swagger UI for the CatalogService API at <http://localhost:8080/swagger/index.html>
+- UI5 [Tree Table](app/genres/webapp/manifest.json) with Value Help for [GenreHierarchy](app/admin/fiori-service.cds)
+- [Custom event handlers](https://cap.cloud.sap/docs/java/provisioning-api) for Tree Table such as the [Custom business logic for GenreHierarchy](srv/src/main/java/my/bookshop/handlers/HierarchyHandler.java).
+  Please note, that Tree Tables must be used with HANA. Custom event handler in this case provides a limited support ment for local testing.
 
 CDS Maven Plugin Features:
 
@@ -137,6 +140,14 @@ Two mock users in addition to the [default mock users](https://cap.cloud.sap/doc
 are defined for local development:
 - User: `user`, password: `user` to browse books
 - User: `admin`, password: `admin` to manage books and orders
+
+### Testing in hybrid mode
+
+You can test the `GenreHierarchyTest` on H2 using the profile `default` as well as on HANA using the profile `hybrid`
+
+```
+cds bind --exec -- mvn clean install -Dspring.profiles.active=hybrid
+```
 
 ## Using VS Code
 
