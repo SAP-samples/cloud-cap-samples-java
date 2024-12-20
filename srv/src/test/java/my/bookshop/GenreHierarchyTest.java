@@ -220,17 +220,18 @@ public class GenreHierarchyTest {
 	@Test
 	@WithMockUser(username = "admin")
 	void testStartTwoLevelsOrderByDescHANA() throws Exception {
-		assumeThat(env.getActiveProfiles()).contains("cloud");
-		client.perform(get(genresURI
-				+ "?$select=DrillState,ID,name,DistanceFromRoot"
-				+ "&$apply=orderby(name desc)/"
-				+ "com.sap.vocabularies.Hierarchy.v1.TopLevels(HierarchyNodes=$root/GenreHierarchy,HierarchyQualifier='GenreHierarchy',NodeProperty='ID',Levels=2)"
-				+ "&$count=true"))
-				.andExpect(status().isOk())
-				.andExpect(jsonPath("$.value[0].ID").value(200))
-				.andExpect(jsonPath("$.value[1].ID").value(204))
-				.andExpect(jsonPath("$.value[20].ID").value(101))
-				.andExpect(jsonPath("$.value[21]").doesNotExist());
+		if (isOnHana()) {
+			client.perform(get(genresURI
+					+ "?$select=DrillState,ID,name,DistanceFromRoot"
+					+ "&$apply=orderby(name desc)/"
+					+ "com.sap.vocabularies.Hierarchy.v1.TopLevels(HierarchyNodes=$root/GenreHierarchy,HierarchyQualifier='GenreHierarchy',NodeProperty='ID',Levels=2)"
+					+ "&$count=true"))
+					.andExpect(status().isOk())
+					.andExpect(jsonPath("$.value[0].ID").value(200))
+					.andExpect(jsonPath("$.value[1].ID").value(204))
+					.andExpect(jsonPath("$.value[20].ID").value(101))
+					.andExpect(jsonPath("$.value[21]").doesNotExist());
+		}
 	}
 
 	private boolean isOnHana() {
