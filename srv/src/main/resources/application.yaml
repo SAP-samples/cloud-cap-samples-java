@@ -141,6 +141,9 @@ cds:
     mq-messaging:
       binding: bookshop-mt-messaging-mq
       enabled: false
+    eh-messaging:
+      binding: bookshop-mt-messaging-eh
+      enabled: false
 
 ---
 spring:
@@ -162,6 +165,9 @@ cds:
     mq-messaging:
       binding: bookshop-mt-messaging-mq
       enabled: false
+    eh-messaging:
+      binding: bookshop-mt-messaging-eh
+      enabled: false
 
 ---
 spring:
@@ -177,6 +183,30 @@ cds:
     bupa-messaging:
       binding: bookshop-mt-messaging-mq
       enabled: true
+      outbox:
+        enabled: false
+        persistent:
+          enabled: false
+    eh-messaging:
+      binding: bookshop-mt-messaging-eh
+      enabled: false
+
+---
+spring:
+  config.activate.on-profile: eh-messaging-cloud
+cds:
+  messaging.services:
+    kafka-messaging:
+      binding: bookshop-mt-messaging-kafka
+      enabled: false
+    em-messaging:
+      binding: bookshop-mt-messaging-em
+      enabled: false
+    bupa-messaging:
+      binding: bookshop-mt-messaging-mq
+      enabled: false
+    eh-messaging:
+      binding: bookshop-mt-messaging-eh
       outbox:
         enabled: false
         persistent:
@@ -223,3 +253,7 @@ cds:
     mq-messaging:
       binding: bookshop-mt-messaging-mq
       enabled: false
+    eh-messaging:
+      binding: bookshop-mt-messaging-eh
+      enabled: false
+

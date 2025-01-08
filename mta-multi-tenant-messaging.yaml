@@ -13,7 +13,10 @@ modules:
     parameters:
       memory: 1024M
       disk-quota: 512M
-      buildpack: sap_java_buildpack
+      buildpack: sap_java_buildpack_jakarta
+      routes:
+        - route: '${default-url}'
+        - route: '${default-host}.cert.${default-domain}'
     properties:
       CDS_MULTITENANCY_APPUI_TENANTSEPARATOR: "-"
       JBP_CONFIG_COMPONENTS: "jres: ['com.sap.xs.java.buildpack.jre.SAPMachineJRE']"
@@ -27,6 +30,8 @@ modules:
       - name: bookshop-mt-messaging-kafka
       - name: bookshop-mt-messaging-em
       - name: bookshop-mt-messaging-mq
+      - name: bookshop-mt-messaging-eh
+      - name: bookshop-mt-messaging-identity
       - name: bookshop-mt-messaging-service-manager
       - name: bookshop-mt-messaging-uaa
       - name: bookshop-mt-messaging-saas-registry
@@ -41,6 +46,7 @@ modules:
       - name: srv-api
         properties:
           srv-url: '${default-url}'
+          srv-cert-url: '${protocol}://${default-host}.cert.${default-domain}'
 # --------------------- SIDECAR MODULE -----------------------
   - name: bookshop-mt-messaging-sidecar
 # ------------------------------------------------------------
@@ -111,6 +117,29 @@ resources:
       service: message-queuing
       service-plan: standard
       path: bookshop-mt-messaging-mq.json
+  - name: bookshop-mt-messaging-eh
+    type: org.cloudfoundry.managed-service
+    parameters:
+      service: event-hub
+      service-plan: standard
+      path: bookshop-mt-messaging-eh.json
+  - name: bookshop-mt-messaging-identity
+    type: org.cloudfoundry.managed-service
+    parameters:
+      service: identity
+      service-plan: application
+      config:
+        multi-tenant: false
+        oauth2-configuration:
+          redirect-uris:
+            - "https://*.${default-domain}/**"
+            - "https://*.internal.${default-domain}/node/signin-oidc/*"
+        consumed-services:
+          - service-instance-name: bookshop-mt-messaging-eh
+    requires:
+      - name: bookshop-mt-messaging-eh
+    processed-after:
+      - bookshop-mt-messaging-eh
   - name: bookshop-mt-messaging-uaa
     type: org.cloudfoundry.managed-service
     parameters:
@@ -144,8 +173,13 @@ resources:
           onUnSubscriptionAsync: true
           onUpdateDependenciesAsync: true
           callbackTimeoutMillis: 3600000
-        displayName: bookshop-java
-        description: A simple CAP Java project.
+        managedService:
+          applicationResourceType:
+            group: bookshop-integration-test.java-runtime.dev.cap.sap
+            type: BookshopIntegrationTestTenant
+            version: v1
+        displayName: bookshop-mt-messaging-${org}-${space} # this is used as name in the subscription dashboard
+        description: CAP Multi-Tenant Bookshop for Messaging BTP Integration Test.
         category: 'Category'
     requires:
       - name: srv-api
