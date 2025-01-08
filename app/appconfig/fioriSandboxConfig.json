@@ -20,6 +20,14 @@
                     "title": "Browse Books",
                     "description": "Find your favorite book"
                   }
+                },                {
+                  "id": "browse-genres",
+                  "tileType": "sap.ushell.ui.tile.StaticTile",
+                  "properties": {
+                    "targetURL": "#Genres-display",
+                    "title": "Browse Genres",
+                    "description": "Find your favorite genre" 
+                  }
                 }
               ]
             },
@@ -110,6 +118,19 @@
                 "applicationType": "SAPUI5",
                 "additionalInformation": "SAPUI5.Component=bookshop",
                 "url": "/browse/webapp"
+              }
+            },
+            "browse-genres": {
+              "semanticObject": "Genres",
+              "action": "display",
+              "signature": {
+                "parameters": {},
+                "additionalParameters": "allowed"
+              },
+              "resolutionResult": {
+                "applicationType": "SAPUI5",
+                "additionalInformation": "SAPUI5.Component=genres",
+                "url": "/genres/webapp"
               }
             },
             "manage-books": {

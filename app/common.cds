@@ -177,10 +177,8 @@ annotate my.Genres with
     UI : {
         SelectionFields : [name],
         LineItem : [
-            {Value : name},
-            {
-                Value : parent.name,
-                Label : 'Main Genre'
+            {Value : name,
+            Label : '{i18n>Name}',
             },
         ],
     }
@@ -199,12 +197,7 @@ annotate my.Genres with
         TypeNamePlural : '{i18n>Genres}',
         Title : {Value : name},
         Description : {Value : ID}
-    },
-    Facets : [{
-        $Type : 'UI.ReferenceFacet',
-        Label : '{i18n>SubGenres}',
-        Target : 'children/@UI.LineItem'
-    }, ],
+    }
 });
 
 

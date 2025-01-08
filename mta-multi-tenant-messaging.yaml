@@ -20,7 +20,7 @@ modules:
     properties:
       CDS_MULTITENANCY_APPUI_TENANTSEPARATOR: "-"
       JBP_CONFIG_COMPONENTS: "jres: ['com.sap.xs.java.buildpack.jre.SAPMachineJRE']"
-      JBP_CONFIG_SAP_MACHINE_JRE: '{ version: 17.+ }'
+      JBP_CONFIG_SAP_MACHINE_JRE: '{ version: 21.+ }'
     build-parameters:
       builder: custom
       commands:
