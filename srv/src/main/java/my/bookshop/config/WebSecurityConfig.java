@@ -18,7 +18,7 @@ public class WebSecurityConfig {
 
 	@Bean
 	public SecurityFilterChain configure(HttpSecurity http) throws Exception {
-		return http.securityMatchers(s -> s.requestMatchers(antMatcher("/actuator/health"), antMatcher("/swagger/**"))) //
+		return http.securityMatchers(s -> s.requestMatchers(antMatcher("/swagger/**"))) //
 				.csrf(c -> c.disable()).authorizeHttpRequests(a -> a.anyRequest().permitAll())
 				.build();
 	}
