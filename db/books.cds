@@ -51,6 +51,4 @@ annotate Authors with
 entity Genres : sap.common.CodeList {
     key ID       : Integer;
         parent   : Association to Genres;
-        children : Composition of many Genres
-                       on children.parent = $self;
 }
