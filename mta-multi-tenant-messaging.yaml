@@ -46,7 +46,7 @@ modules:
       - name: srv-api
         properties:
           srv-url: '${default-url}'
-          srv-cert-url: '${protocol}://${default-host}.cert.${default-domain}'
+          srv-cert-url: 'https://${default-host}.cert.${default-domain}'
 # --------------------- SIDECAR MODULE -----------------------
   - name: bookshop-mt-messaging-sidecar
 # ------------------------------------------------------------
