@@ -1,0 +1,8 @@
+{
+  "ceSource": [
+    "/cf-eu10-canary/sap.cdsjavait"
+  ],
+  "deploymentRegion": "cf-eu10-canary",
+  "displayName": "CAP Multi-Tenant Bookshop for Messaging BTP Integration Test",
+  "webhookUrl": "https://localhost/messaging/v1.0/eb"
+}
