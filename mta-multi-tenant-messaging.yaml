@@ -31,7 +31,14 @@ modules:
       - name: bookshop-mt-messaging-em
       - name: bookshop-mt-messaging-mq
       - name: bookshop-mt-messaging-eh
+        parameters:
+          config:
+            authentication-type: X509_IAS
       - name: bookshop-mt-messaging-identity
+        parameters:
+          config:
+            credential-type: "X509_GENERATED"
+            app-identifier: "bs-mt-messaging-srv" # max 20 characters is allowed
       - name: bookshop-mt-messaging-service-manager
       - name: bookshop-mt-messaging-uaa
       - name: bookshop-mt-messaging-saas-registry
@@ -123,7 +130,7 @@ resources:
       service: eventmesh-sap2sap-internal
       service-plan: event-mesh-multi-tenant
       path: bookshop-mt-messaging-eh.json
-      config: # override webhook url as we need to replace placeholders
+      config: # webhookUrl needs to be overwritten build url with placeholders
         webhookUrl: "~{srv-api/srv-cert-url}/messaging/v1.0/eb"
     requires:
       - name: srv-api
