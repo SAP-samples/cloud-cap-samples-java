@@ -120,7 +120,7 @@ resources:
   - name: bookshop-mt-messaging-eh
     type: org.cloudfoundry.managed-service
     parameters:
-      service: event-hub
+      service: eventmesh-sap2sap-internal
       service-plan: event-mesh-multi-tenant
       path: bookshop-mt-messaging-eh.json
   - name: bookshop-mt-messaging-identity
