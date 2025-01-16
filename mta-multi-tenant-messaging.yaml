@@ -121,7 +121,7 @@ resources:
     type: org.cloudfoundry.managed-service
     parameters:
       service: event-hub
-      service-plan: standard
+      service-plan: event-mesh-multi-tenant
       path: bookshop-mt-messaging-eh.json
   - name: bookshop-mt-messaging-identity
     type: org.cloudfoundry.managed-service
