@@ -80,7 +80,7 @@ public class CatalogServiceTest {
 
 		String nonExistingBookId = "non-existing";
 		String exMessage1 = "You have to specify the book to review";
-		String exMessage2 = String.format("A book with the specified ID '%s' does not exist", nonExistingBookId);
+		String exMessage2 = "A book with the specified ID '%s' does not exist".formatted(nonExistingBookId);
 
 		Stream<BookReviewTestFixture> testCases = Stream.of(
 				// no book provided

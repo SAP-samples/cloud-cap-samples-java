@@ -7,8 +7,7 @@
     "express": "^4"
   },
   "devDependencies": {
-    "@cap-js/sqlite": "^1",
-    "@sap/cds-dk": "^8"
+    "@cap-js/sqlite": "^1"
   },
   "engines": {
     "node": "^20"
@@ -21,6 +20,6 @@
   },
   "scripts": {
     "start": "cds-serve",
-    "build": "npm ci && cds build ../.. --for mtx-sidecar --production && npm ci --prefix gen"
+    "build": "cds build ../.. --for mtx-sidecar --production && npm ci --prefix gen"
   }
 }

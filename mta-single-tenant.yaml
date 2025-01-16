@@ -14,10 +14,14 @@ modules:
       memory: 1024M
       disk-quota: 512M
       buildpack: sap_java_buildpack_jakarta
+      health-check-type: http
+      health-check-http-endpoint: /actuator/health/liveness
+      readiness-health-check-type: http
+      readiness-health-check-http-endpoint: /actuator/health/readiness
     properties:
         SPRING_PROFILES_ACTIVE: cloud,sandbox
         JBP_CONFIG_COMPONENTS: "jres: ['com.sap.xs.java.buildpack.jre.SAPMachineJRE']"
-        JBP_CONFIG_SAP_MACHINE_JRE: '{ version: 17.+ }'
+        JBP_CONFIG_SAP_MACHINE_JRE: '{ version: 21.+ }'
     build-parameters:
       builder: custom
       commands:
