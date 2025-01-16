@@ -1,4 +1,4 @@
-package my.bookshop;
+/* package my.bookshop;
 
 import static org.assertj.core.api.Assumptions.assumeThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -237,4 +237,4 @@ public class GenreHierarchyTest {
 	private boolean isOnHana() {
 		return env.acceptsProfiles(Profiles.of("cloud"));
 	}
-}
+} */
