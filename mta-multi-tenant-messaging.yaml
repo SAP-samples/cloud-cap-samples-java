@@ -173,11 +173,13 @@ resources:
           onUnSubscriptionAsync: true
           onUpdateDependenciesAsync: true
           callbackTimeoutMillis: 3600000
-        managedService:
-          applicationResourceType:
-            group: bookshop-integration-test.java-runtime.dev.cap.sap
-            type: BookshopIntegrationTestTenant
-            version: v1
+# use 'managedService' only if onboarded to UCL happened using Unified Service (ie. MAP)
+# BTP integration tests use external systems in UCL at the moment
+#        managedService:
+#          applicationResourceType:
+#            group: bookshop-integration-test.java-runtime.dev.cap.sap
+#            type: BookshopIntegrationTestTenant
+#            version: v1
         displayName: bookshop-mt-messaging-${org}-${space} # this is used as name in the subscription dashboard
         description: CAP Multi-Tenant Bookshop for Messaging BTP Integration Test.
         category: 'Category'
