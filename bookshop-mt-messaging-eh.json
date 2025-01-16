@@ -4,5 +4,5 @@
   ],
   "deploymentRegion": "cf-eu10-canary",
   "displayName": "CAP Multi-Tenant Bookshop for Messaging BTP Integration Test",
-  "webhookUrl": "~{srv-api/srv-cert-url}/messaging/v1.0/eb"
+  "webhookUrl": "https://localhost/messaging/v1.0/eb"
 }
