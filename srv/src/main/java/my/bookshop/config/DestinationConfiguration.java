@@ -1,7 +1,16 @@
 package my.bookshop.config;
 
-import java.util.Map;
-
+import com.sap.cds.services.runtime.CdsRuntime;
+import com.sap.cloud.environment.servicebinding.api.ServiceBinding;
+import com.sap.cloud.sdk.cloudplatform.connectivity.BtpServiceOptions;
+import com.sap.cloud.sdk.cloudplatform.connectivity.DefaultDestinationLoader;
+import com.sap.cloud.sdk.cloudplatform.connectivity.DefaultHttpDestination;
+import com.sap.cloud.sdk.cloudplatform.connectivity.DestinationAccessor;
+import com.sap.cloud.sdk.cloudplatform.connectivity.HttpDestination;
+import com.sap.cloud.sdk.cloudplatform.connectivity.OnBehalfOf;
+import com.sap.cloud.sdk.cloudplatform.connectivity.ServiceBindingDestinationLoader;
+import com.sap.cloud.sdk.cloudplatform.connectivity.ServiceBindingDestinationOptions;
+import com.sap.cloud.sdk.cloudplatform.security.BasicCredentials;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,19 +20,10 @@ import org.springframework.context.event.EventListener;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 
-import com.sap.cds.services.runtime.CdsRuntime;
-import com.sap.cloud.environment.servicebinding.api.ServiceBinding;
-import com.sap.cloud.sdk.cloudplatform.connectivity.DefaultDestinationLoader;
-import com.sap.cloud.sdk.cloudplatform.connectivity.DefaultHttpDestination;
-import com.sap.cloud.sdk.cloudplatform.connectivity.DestinationAccessor;
-import com.sap.cloud.sdk.cloudplatform.connectivity.OAuth2DestinationBuilder;
-import com.sap.cloud.sdk.cloudplatform.connectivity.OnBehalfOf;
-import com.sap.cloud.sdk.cloudplatform.security.BasicCredentials;
-import com.sap.cloud.security.config.ClientCredentials;
-import com.sap.cloud.security.config.ClientIdentity;
+import java.util.Optional;
 
 @Component
-@Profile({"mocked", "mocked-api-business-partner"})
+@Profile({ "mocked", "mocked-api-business-partner" })
 public class DestinationConfiguration {
 
 	private final static Logger logger = LoggerFactory.getLogger(DestinationConfiguration.class);
@@ -36,44 +36,37 @@ public class DestinationConfiguration {
 
 	@EventListener
 	void applicationReady(ApplicationReadyEvent ready) {
-		String applicationUrl = runtime.getEnvironment().getApplicationInfo().getUrl();
+		Optional<ServiceBinding> binding = runtime.getEnvironment().getServiceBindings()
+				.filter(b -> b.getServiceName().get().equals("xsuaa")).findFirst();
 
-		if (applicationUrl != null) {
-			// it seems we're running in the cloud
-			registerCloudDestination(applicationUrl);
-		} else {
-			registerLocalDestination();
-		}
+		binding.ifPresentOrElse(this::registerCloudDestination, this::registerLocalDestination);
 	}
 
-	private void registerCloudDestination(String applicationUrl) {
-		String destinationName = environment.getProperty("cds.remote.services.'[API_BUSINESS_PARTNER]'.destination.name");
+	private void registerCloudDestination(ServiceBinding xsuaaBinding) {
+		String destinationName = environment
+				.getProperty("cds.remote.services.'[API_BUSINESS_PARTNER]'.destination.name");
 
 		logger.info("Destination name for mocked API_BUSINESS_PARTNER: {}", destinationName);
+		logger.info("UAA Service Binding: {} / {}", xsuaaBinding.getName().get(), xsuaaBinding.getServiceName().get());
 
-		ServiceBinding uaaBinding = runtime.getEnvironment().getServiceBindings().filter(b -> b.getServiceName().get().equals("xsuaa")).findFirst().get();
-		logger.info("UAA Service Binding: {} / {}", uaaBinding.getName().get(), uaaBinding.getServiceName().get());
+		ServiceBindingDestinationOptions options = ServiceBindingDestinationOptions.forService(xsuaaBinding)
+				.withOption(BtpServiceOptions.AuthenticationServiceOptions.withTargetUri("http://localhost"))
+				.onBehalfOf(OnBehalfOf.TECHNICAL_USER_CURRENT_TENANT)
+				.build();
 
-		Map<String, Object> credentials = uaaBinding.getCredentials();
-		Object client = new ClientCredentials((String)credentials.get("clientid"), (String)credentials.get("clientsecret"));
-		String tokenUrl = (String)credentials.get("url") + "/oauth/token";
+		HttpDestination destination = ServiceBindingDestinationLoader.defaultLoaderChain().getDestination(options);
 
 		DestinationAccessor.prependDestinationLoader(
 				new DefaultDestinationLoader()
-						.registerDestination(
-								OAuth2DestinationBuilder
-										.forTargetUrl("https://" + applicationUrl + "/")
-										.withTokenEndpoint(tokenUrl)
-										.withClient((ClientIdentity)client, OnBehalfOf.TECHNICAL_USER_CURRENT_TENANT)
-										.name(destinationName)
-										.build()));
+						.registerDestination(DefaultHttpDestination.fromDestination(destination).name(destinationName).build()));
 	}
 
 	private void registerLocalDestination() {
 		Integer port = environment.getProperty("local.server.port", Integer.class);
-		String destinationName = environment.getProperty("cds.remote.services.'[API_BUSINESS_PARTNER]'.destination.name");
+		String destinationName = environment
+				.getProperty("cds.remote.services.'[API_BUSINESS_PARTNER]'.destination.name");
 
-		if(port != null && destinationName != null) {
+		if (port != null && destinationName != null) {
 			DefaultHttpDestination httpDestination = DefaultHttpDestination
 					.builder("http://localhost:" + port)
 					.basicCredentials(new BasicCredentials("authenticated", ""))
