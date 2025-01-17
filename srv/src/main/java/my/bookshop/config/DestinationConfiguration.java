@@ -43,14 +43,16 @@ public class DestinationConfiguration {
 	}
 
 	private void registerCloudDestination(ServiceBinding xsuaaBinding) {
+		Integer port = environment.getProperty("local.server.port", Integer.class);
 		String destinationName = environment
 				.getProperty("cds.remote.services.'[API_BUSINESS_PARTNER]'.destination.name");
 
 		logger.info("Destination name for mocked API_BUSINESS_PARTNER: {}", destinationName);
 		logger.info("UAA Service Binding: {} / {}", xsuaaBinding.getName().get(), xsuaaBinding.getServiceName().get());
 
+		// if we run in the cloud, "localhost" will also work to call ourselves
 		ServiceBindingDestinationOptions options = ServiceBindingDestinationOptions.forService(xsuaaBinding)
-				.withOption(BtpServiceOptions.AuthenticationServiceOptions.withTargetUri("http://localhost"))
+				.withOption(BtpServiceOptions.AuthenticationServiceOptions.withTargetUri("http://localhost:" + port))
 				.onBehalfOf(OnBehalfOf.TECHNICAL_USER_CURRENT_TENANT)
 				.build();
 
@@ -58,7 +60,8 @@ public class DestinationConfiguration {
 
 		DestinationAccessor.prependDestinationLoader(
 				new DefaultDestinationLoader()
-						.registerDestination(DefaultHttpDestination.fromDestination(destination).name(destinationName).build()));
+						.registerDestination(
+								DefaultHttpDestination.fromDestination(destination).name(destinationName).build()));
 	}
 
 	private void registerLocalDestination() {
