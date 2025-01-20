@@ -6,6 +6,7 @@ logging:
     '[com.sap.cds.persistence.sql-tx]': DEBUG
     '[com.sap.cds.messaging]': DEBUG
     '[com.sap.cds.services]': DEBUG
+    '[org.apache.http.wire]': DEBUG
 spring:
   jmx:
     enabled: true
