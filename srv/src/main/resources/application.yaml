@@ -117,10 +117,11 @@ cds:
         path: API_BUSINESS_PARTNER
   remote.services:
     '[API_BUSINESS_PARTNER]':
+      http:
+        suffix: "/api"
       destination:
         name: "myself"
-        suffix: "/api"
-
+      
 ---
 spring:
   config.activate.on-profile: kafka-messaging-cloud
