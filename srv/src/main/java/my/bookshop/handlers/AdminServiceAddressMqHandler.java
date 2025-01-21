@@ -21,7 +21,6 @@ import cds.gen.api_business_partner.BusinessPartnerChangedContext;
  */
 @Profile("mq-messaging-cloud")
 @Component
-@ServiceName(AdminService_.CDS_NAME)
 public class AdminServiceAddressMqHandler implements EventHandler {
 
     @On(service = ApiBusinessPartner_.CDS_NAME)
