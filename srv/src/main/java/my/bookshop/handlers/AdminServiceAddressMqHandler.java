@@ -3,9 +3,12 @@ package my.bookshop.handlers;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
+import com.sap.cds.services.handler.EventHandler;
 import com.sap.cds.services.handler.annotations.HandlerOrder;
 import com.sap.cds.services.handler.annotations.On;
+import com.sap.cds.services.handler.annotations.ServiceName;
 
+import cds.gen.adminservice.AdminService_;
 import cds.gen.api_business_partner.ApiBusinessPartner_;
 import cds.gen.api_business_partner.BusinessPartnerChangedContext;
 
@@ -16,9 +19,10 @@ import cds.gen.api_business_partner.BusinessPartnerChangedContext;
  * and wraps the event processing with a provider tenant level request context
  * so that the message will be consumed by the provider tenant.
  */
-@Component
 @Profile("mq-messaging-cloud")
-public class AdminServiceAddressMqHandler {
+@Component
+@ServiceName(AdminService_.CDS_NAME)
+public class AdminServiceAddressMqHandler implements EventHandler {
 
     @On(service = ApiBusinessPartner_.CDS_NAME)
     @HandlerOrder(HandlerOrder.EARLY)
