@@ -22,13 +22,20 @@
 			]
 		},
 		{
+			"name": "$XSAPPNAME.emcallback",
+			"description": "Event Mesh Callback Access",
+			"grant-as-authority-to-apps": [
+				"$XSSERVICENAME(bookshop-mt-messaging-em)"
+			]
+		},
+		{
 			"name": "$XSAPPNAME.mtdeployment",
 			"description": "Scope to trigger a re-deployment of the database artifacts"
 		},
-    		{
-      			"name": "$XSAPPNAME.cds.ExtensionDeveloper",
-      			"description": "Extend CAP applications via extension projects"
-    		}
+		{
+			"name": "$XSAPPNAME.cds.ExtensionDeveloper",
+			"description": "Extend CAP applications via extension projects"
+		}
 	],
 	"authorities-inheritance": false,
 	"authorities": [
