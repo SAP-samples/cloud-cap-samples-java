@@ -6,9 +6,7 @@ import org.springframework.stereotype.Component;
 import com.sap.cds.services.handler.EventHandler;
 import com.sap.cds.services.handler.annotations.HandlerOrder;
 import com.sap.cds.services.handler.annotations.On;
-import com.sap.cds.services.handler.annotations.ServiceName;
 
-import cds.gen.adminservice.AdminService_;
 import cds.gen.api_business_partner.ApiBusinessPartner_;
 import cds.gen.api_business_partner.BusinessPartnerChangedContext;
 
