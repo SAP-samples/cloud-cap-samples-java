@@ -19,7 +19,7 @@ modules:
         - route: '${default-host}.cert.${default-domain}'
     properties:
       CDS_MULTITENANCY_APPUI_TENANTSEPARATOR: "-"
-      CDS_MESSAGING_WEBHOOKS_URL: ${default-url}
+      CDS_MESSAGING_WEBHOOKS_URL: '${default-host}.${default-domain}' # without 'https://' prefix
       JBP_CONFIG_COMPONENTS: "jres: ['com.sap.xs.java.buildpack.jre.SAPMachineJRE']"
       JBP_CONFIG_SAP_MACHINE_JRE: '{ version: 21.+ }'
     build-parameters:
