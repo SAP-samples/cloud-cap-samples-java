@@ -187,6 +187,8 @@ cds:
       enabled: false
     bupa-messaging:
       binding: bookshop-mt-messaging-mq
+      queue:
+        name: "bookshop-mt-messaging-em-queue"
       enabled: true
       outbox:
         enabled: false
@@ -207,10 +209,10 @@ cds:
     em-messaging:
       binding: bookshop-mt-messaging-em
       enabled: false
-    bupa-messaging:
+    mq-messaging:
       binding: bookshop-mt-messaging-mq
       enabled: false
-    eh-messaging:
+    bupa-messaging:
       binding: bookshop-mt-messaging-eh
       outbox:
         enabled: false
