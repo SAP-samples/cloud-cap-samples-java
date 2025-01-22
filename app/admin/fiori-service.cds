@@ -35,6 +35,11 @@ annotate AdminService.Books with @(UI : {
             $Type : 'UI.ReferenceFacet',
             Label : '{i18n>Admin}',
             Target : '@UI.FieldGroup#Admin'
+        },
+        {
+            $Type  : 'UI.ReferenceFacet',
+            Label  : '{i18n>Contents}',
+            Target : 'contents/@UI.PresentationVariant'
         }
     ],
     FieldGroup #General : {Data : [
@@ -59,7 +64,11 @@ annotate AdminService.Books with @(UI : {
     ]}
 });
 
-// Add Value Help for Tree Table
+
+////////////////////////////////////////////////////////////////////////////
+//
+//	Value Help for Tree Table
+//
 annotate AdminService.Books with {
     genre @(Common: {
         Label    : 'Genre',
@@ -96,6 +105,44 @@ annotate AdminService.GenreHierarchy with @UI: {
         $Type: 'UI.DataField',
         Value: name,
     }]
+};
+
+annotate AdminService.ContentsHierarchy with @UI: {
+    PresentationVariant  : {
+        $Type         : 'UI.PresentationVariantType',
+        RequestAtLeast: [name],
+        Visualizations: ['@UI.LineItem', ],
+    },
+    LineItem             : [{
+        $Type: 'UI.DataField',
+        Value: name,
+        },
+        {
+      $Type: 'UI.DataField',
+      Value: page,
+    }],
+    HeaderInfo            : {
+        $Type         : 'UI.HeaderInfoType',
+        TypeName      : 'Organization Level',
+        TypeNamePlural: 'Organization Levels',
+        Title         : {
+            $Type: 'UI.DataField',
+            Value: name,
+        }
+    },
+    FieldGroup : {
+        $Type: 'UI.FieldGroupType',
+        Data : [{
+            $Type: 'UI.DataField',
+            Value: page,
+            Label : 'Page Number'
+        }],
+    },
+    Facets                 : [{
+        $Type : 'UI.ReferenceFacet',
+        Target: '@UI.FieldGroup',
+        Label : 'Informations',
+    }],
 };
 
 ////////////////////////////////////////////////////////////
@@ -136,6 +183,26 @@ annotate AdminService.Books.texts {
         type : #fixed
     }
 }
+
+////////////////////////////////////////////////////////////
+//
+//  Annotations for hierarchy ContentsHierarchy
+//
+annotate AdminService.ContentsHierarchy with @Aggregation.RecursiveHierarchy#ContentsHierarchy: {
+    $Type: 'Aggregation.RecursiveHierarchyType',
+    NodeProperty: ID, // identifies a node
+    ParentNavigationProperty: parent // navigates to a node's parent
+  };
+
+  annotate AdminService.ContentsHierarchy with @Hierarchy.RecursiveHierarchy#ContentsHierarchy: {
+  $Type: 'Hierarchy.RecursiveHierarchyType',
+  LimitedDescendantCount: LimitedDescendantCount,
+  DistanceFromRoot: DistanceFromRoot,
+  DrillState: DrillState,
+  Matched: Matched,
+  MatchedDescendantCount: MatchedDescendantCount,
+  LimitedRank: LimitedRank
+};
 
 annotate AdminService.Books actions {
     @(

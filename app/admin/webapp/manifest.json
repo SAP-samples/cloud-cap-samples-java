@@ -51,7 +51,7 @@
                 "settings": {
                     "synchronizationMode": "None",
                     "operationMode": "Server",
-                    "autoExpandSelect" : true,
+                    "autoExpandSelect": true,
                     "earlyRequests": true,
                     "groupProperties": {
                         "default": {
@@ -74,9 +74,9 @@
                     "target": "BooksDetails"
                 },
                 {
-                    "pattern": "Books({key}/author({key2}):?query:",
-                    "name": "AuthorsDetails",
-                    "target": "AuthorsDetails"
+                    "pattern": "Books({key}/contents({key2}):?query:",
+                    "name": "ContentsDetails",
+                    "target": "ContentsDetails"
                 }
             ],
             "targets": {
@@ -85,12 +85,12 @@
                     "id": "BooksList",
                     "name": "sap.fe.templates.ListReport",
                     "options": {
-                        "settings" : {
-                            "entitySet" : "Books",
-                            "navigation" : {
-                                "Books" : {
-                                    "detail" : {
-                                        "route" : "BooksDetails"
+                        "settings": {
+                            "entitySet": "Books",
+                            "navigation": {
+                                "Books": {
+                                    "detail": {
+                                        "route": "BooksDetails"
                                     }
                                 }
                             },
@@ -112,25 +112,33 @@
                     "id": "BooksDetailsList",
                     "name": "sap.fe.templates.ObjectPage",
                     "options": {
-                        "settings" : {
-                            "entitySet" : "Books",
-                            "navigation" : {
-                                "Authors" : {
-                                    "detail" : {
-                                        "route" : "AuthorsDetails"
+                        "settings": {
+                            "entitySet": "Books",
+                            "navigation": {
+                                "contents": {
+                                    "detail": {
+                                        "route": "ContentsDetails"
+                                    }
+                                }
+                            },
+                            "controlConfiguration": {
+                                "contents/@com.sap.vocabularies.UI.v1.LineItem": {
+                                    "tableSettings": {
+                                        "hierarchyQualifier": "ContentsHierarchy",
+                                        "type": "TreeTable"
                                     }
                                 }
                             }
                         }
                     }
                 },
-                "AuthorsDetails": {
+                "ContentsDetails": {
                     "type": "Component",
-                    "id": "AuthorsDetailsList",
+                    "id": "ContentsDetails",
                     "name": "sap.fe.templates.ObjectPage",
                     "options": {
-                        "settings" : {
-                            "entitySet" : "Authors"
+                        "settings": {
+                            "entitySet": "ContentsHierarchy"
                         }
                     }
                 }

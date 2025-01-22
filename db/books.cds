@@ -22,6 +22,7 @@ entity Books : cuid, managed {
     reviews      : Association to many Reviews
                        on reviews.book = $self;
     isReviewable : TechnicalBooleanFlag not null default true;
+    contents     : Composition of many Contents on contents.book = $self;
 }
 
 entity Authors : cuid, managed {
@@ -51,4 +52,17 @@ annotate Authors with
 entity Genres : sap.common.CodeList {
     key ID       : UUID;
         parent   : Association to Genres;
+        children : Composition of many Genres on children.parent = $self;
 }
+
+/**
+ * Hierarchically organized entity for Contents
+ */
+entity Contents {
+    key ID     : UUID;
+        name   : String;
+        page   : Integer;
+        parent : Association to Contents @odata.draft.enclosed;
+        book   : Association to Books @odata.draft.enclosed;
+}
+
