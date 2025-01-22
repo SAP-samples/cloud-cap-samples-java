@@ -73,6 +73,11 @@
 			<artifactId>cds-feature-message-queuing</artifactId>
 			<scope>runtime</scope>
 		</dependency>
+		<dependency>
+			<groupId>com.sap.cds</groupId>
+			<artifactId>cds-feature-event-hub</artifactId>
+			<scope>runtime</scope>
+		</dependency>		
 
 		<dependency>
 			<groupId>com.sap.cds</groupId>
