@@ -1,5 +1,7 @@
 package my.bookshop.handlers;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
@@ -20,12 +22,15 @@ import cds.gen.api_business_partner.BusinessPartnerChangedContext;
 @Profile("mq-messaging-cloud")
 @Component
 public class AdminServiceAddressMqHandler implements EventHandler {
+    Logger logger = LoggerFactory.getLogger(AdminServiceAddressMqHandler.class);
 
     @On(service = ApiBusinessPartner_.CDS_NAME)
     @HandlerOrder(HandlerOrder.EARLY)
     public void updateBusinessPartnerAddresses(BusinessPartnerChangedContext context) {
         context.getCdsRuntime().requestContext().systemUserProvider().run(req -> {
+            logger.info("Current tenant " + req.getUserInfo().getTenant());
             context.proceed();
         });
+        context.setCompleted();
     }
 }
