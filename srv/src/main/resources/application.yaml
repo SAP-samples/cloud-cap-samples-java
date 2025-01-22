@@ -214,6 +214,7 @@ cds:
       enabled: false
     bupa-messaging:
       binding: bookshop-mt-messaging-eh
+      enabled: true
       outbox:
         enabled: false
         persistent:
