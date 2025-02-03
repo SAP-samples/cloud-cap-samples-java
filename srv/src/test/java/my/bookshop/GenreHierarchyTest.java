@@ -1,6 +1,5 @@
 package my.bookshop;
 
-import static org.assertj.core.api.Assumptions.assumeThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
