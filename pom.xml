@@ -47,6 +47,8 @@
 				<scope>import</scope>
 			</dependency>
 
+			<!-- Liquibase brings an old version of commons-io as transitive dependency, which is not compatible with
+			latest version of CAP Java. -->
 			<dependency>
 				<groupId>commons-io</groupId>
 				<artifactId>commons-io</artifactId>
