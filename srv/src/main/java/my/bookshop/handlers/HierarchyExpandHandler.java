@@ -1,5 +1,4 @@
 package my.bookshop.handlers;
-
 import java.util.List;
 
 import org.springframework.context.annotation.Profile;
@@ -21,10 +20,12 @@ import cds.gen.adminservice.AdminService_;
 import cds.gen.adminservice.GenreHierarchy_;
 
 
+
 @Component
 @ServiceName(AdminService_.CDS_NAME)
 /**
  *  For testing purposes of modifying requests for hierarchies
+ *  Remove when generic solution for $apply and $expand is available
  */
 @Profile("hybrid")
 public class HierarchyExpandHandler implements EventHandler {
@@ -37,12 +38,15 @@ public class HierarchyExpandHandler implements EventHandler {
         }
         if (trafos.get(0) instanceof CqnAncestorsTransformation) {
             CqnSelect original = event.getCqn();
-            CqnSelect copy = CQL.copy(original, new Modifier() {
-                public List<CqnSelectListItem> items(List<CqnSelectListItem> items) {
-                    return items.stream().filter(i -> !i.isExpand()).toList();
-                }
-            });
+            Boolean isExpand = original.items().stream().filter(CqnSelectListItem::isExpand).findAny().isPresent();
+            if (isExpand) {   
+                CqnSelect copy = CQL.copy(original, new Modifier() {
+                    public List<CqnSelectListItem> items(List<CqnSelectListItem> items) {
+                        return items.stream().filter(i -> !i.isExpand()).toList();
+                    }
+                });
             event.setCqn(copy);
+            }
         }
         event.proceed(); 
     }

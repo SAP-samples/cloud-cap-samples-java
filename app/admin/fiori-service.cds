@@ -104,7 +104,8 @@ annotate AdminService.GenreHierarchy with @UI: {
     LineItem               : [{
         $Type: 'UI.DataField',
         Value: name,
-    }]
+        Label : 'Genre'
+    }],
 };
 
 annotate AdminService.ContentsHierarchy with @UI: {
@@ -123,8 +124,8 @@ annotate AdminService.ContentsHierarchy with @UI: {
     }],
     HeaderInfo            : {
         $Type         : 'UI.HeaderInfoType',
-        TypeName      : 'Organization Level',
-        TypeNamePlural: 'Organization Levels',
+        TypeName      : 'Contents Level',
+        TypeNamePlural: 'Contents Levels',
         Title         : {
             $Type: 'UI.DataField',
             Value: name,
