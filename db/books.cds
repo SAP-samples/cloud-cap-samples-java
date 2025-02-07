@@ -50,9 +50,10 @@ annotate Authors with
  * Hierarchically organized Code List for Genres
  */
 entity Genres : sap.common.CodeList {
-    key ID       : UUID;
-        parent   : Association to Genres;
-        children : Composition of many Genres on children.parent = $self;
+    key ID          : UUID;
+        siblingRank : Integer; 
+        parent      : Association to Genres;
+        children    : Composition of many Genres on children.parent = $self;
 }
 
 /**

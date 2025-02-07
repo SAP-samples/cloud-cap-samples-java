@@ -21,7 +21,16 @@ service AdminService @(requires: 'admin') {
   entity Authors        as projection on my.Authors;
   entity Orders         as select from my.Orders;
   extend my.Genres with Hierarchy;
-  entity GenreHierarchy as projection on my.Genres excluding {children};
+
+  type NextSibling {
+    ID : UUID; 
+  }
+  entity GenreHierarchy as projection on my.Genres
+    excluding {children} order by siblingRank
+    actions {
+      action moveSiblingAction(NextSibling : NextSibling) returns GenreHierarchy;
+    };
+
   extend my.Contents with Hierarchy;
   entity ContentsHierarchy as projection on my.Contents;
 
