@@ -29,6 +29,7 @@ annotate AdminService.Books with @(UI : {
         {
             $Type  : 'UI.ReferenceFacet',
             ID     : 'AttachmentsFacet',
+            Label  : '{i18n>attachments}',
             Target : 'covers/@UI.LineItem'
         },
         {
