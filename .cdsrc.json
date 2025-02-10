@@ -9,6 +9,6 @@
         "newParser": true
     },
     "sql": {
-        "native_hana_associations" : false
+        "native_hana_associations": false
     }
 }
