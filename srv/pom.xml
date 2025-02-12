@@ -179,7 +179,6 @@
 			<plugin>
 				<groupId>com.sap.cds</groupId>
 				<artifactId>cds-maven-plugin</artifactId>
-				<version>${cds.services.version}</version>
 				<executions>
 					<execution>
 						<id>cds.clean</id>
