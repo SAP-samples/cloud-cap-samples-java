@@ -11,7 +11,6 @@ import java.util.stream.Stream;
 
 import org.springframework.stereotype.Component;
 
-import com.sap.cds.CdsData;
 import com.sap.cds.Result;
 import com.sap.cds.Struct;
 import com.sap.cds.ql.CQL;
