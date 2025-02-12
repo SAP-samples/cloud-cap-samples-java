@@ -67,6 +67,17 @@
 	</dependencyManagement>
 
 	<build>
+		<pluginManagement>
+			<plugins>
+				<!-- MAKE CDS PLUGIN RUNNABLE FROM ROOT -->
+				<plugin>
+					<groupId>com.sap.cds</groupId>
+					<artifactId>cds-maven-plugin</artifactId>
+					<version>${cds.services.version}</version>
+				</plugin>
+			</plugins>
+		</pluginManagement>
+
 		<plugins>
 			<!-- JAVA VERSION -->
 			<plugin>
