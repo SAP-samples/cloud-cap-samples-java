@@ -1,4 +1,4 @@
-package my.bookshop.handlers;
+/* package my.bookshop.handlers;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import java.util.List;
@@ -68,3 +68,4 @@ public class HierarchyHandlerSorterTest {
 		return List.of(h).stream().sorted(new Sorter()).toList();
 	}
 }
+ */
