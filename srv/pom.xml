@@ -220,8 +220,7 @@
 						<configuration>
 							<commands>
 								<command>build --for java</command>
-								<command>deploy --to h2 --with-mocks --dry --out "${project.basedir}/src/main/resources/schema.sql"</command>
-								<command>deploy --to h2 --dry --out "${project.basedir}/src/main/resources/schema-nomocks.sql"</command>
+								<command>deploy --to h2 --with-mocks --dry --out "${project.basedir}/src/main/resources/schema-h2.sql"</command>
 								<command>compile srv/cat-service.cds -2 openapi --openapi:url /api/browse &gt;
 									"${project.basedir}/src/main/resources/swagger/openapi.json"</command>
 							</commands>
