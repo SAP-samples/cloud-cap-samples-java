@@ -11,13 +11,17 @@ import java.util.stream.Stream;
 
 import org.springframework.stereotype.Component;
 
+import com.sap.cds.CdsData;
 import com.sap.cds.Result;
 import com.sap.cds.Struct;
+import com.sap.cds.ql.CQL;
 import com.sap.cds.ql.Insert;
 import com.sap.cds.ql.Select;
 import com.sap.cds.ql.Update;
 import com.sap.cds.ql.cqn.CqnAnalyzer;
 import com.sap.cds.ql.cqn.CqnSelect;
+import com.sap.cds.ql.cqn.CqnSelectListItem;
+import com.sap.cds.ql.cqn.Modifier;
 import com.sap.cds.reflect.CdsModel;
 import com.sap.cds.services.ErrorStatuses;
 import com.sap.cds.services.ServiceException;
@@ -72,6 +76,18 @@ class CatalogServiceHandler implements EventHandler {
 		this.featureToggles = featureToggles;
 		this.ratingCalculator = ratingCalculator;
 		this.analyzer = CqnAnalyzer.create(model);
+	}
+
+	@Before(entity = Books_.CDS_NAME)
+	public void beforeReadBooks(CdsReadEventContext context) {
+		CqnSelect copy = CQL.copy(context.getCqn(), new Modifier() {
+			@Override
+			public List<CqnSelectListItem> items(List<CqnSelectListItem> items) {
+				items.add(CQL.get("details"));
+				return items;
+			}
+		});
+		context.setCqn(copy);
 	}
 
 	/**
@@ -132,6 +148,16 @@ class CatalogServiceHandler implements EventHandler {
 		});
 	}
 
+	@After(event = CqnService.EVENT_READ)
+	public void bigBooks(Stream<Books> books) {
+		books.filter(b -> b.getDetails() != null).forEach(b -> {
+			int pages = (int) b.getDetails().get("pages");
+			if (pages > 400) {
+				b.setTitle("%s -- Big Book".formatted(b.getTitle()));
+			}
+		});
+	}
+
 	@After
 	public void setIsReviewable(CdsReadEventContext context, List<Books> books) {
 		String user = context.getUserInfo().getName();
@@ -187,7 +213,8 @@ class CatalogServiceHandler implements EventHandler {
 
 	private void loadStockIfNotSet(Books b) {
 		if (b.getId() != null && b.getStock() == null) {
-			b.setStock(db.run(Select.from(BOOKS).byId(b.getId()).columns(Books_::stock)).single(Books.class).getStock());
+			b.setStock(
+					db.run(Select.from(BOOKS).byId(b.getId()).columns(Books_::stock)).single(Books.class).getStock());
 		}
 	}
 
