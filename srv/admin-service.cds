@@ -28,7 +28,7 @@ service AdminService @(requires: 'admin') {
   entity GenreHierarchy as projection on my.Genres
     excluding {children} order by siblingRank
     actions {
-      action moveSiblingAction(NextSibling : NextSibling) returns GenreHierarchy;
+      action moveSiblingAction(NextSibling : NextSibling);
     };
 
   extend my.Contents with Hierarchy;
