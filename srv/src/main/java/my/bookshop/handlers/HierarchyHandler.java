@@ -1,4 +1,4 @@
-package my.bookshop.handlers;
+/* package my.bookshop.handlers;
 
 import java.util.ArrayDeque;
 import java.util.Comparator;
@@ -54,6 +54,7 @@ import static cds.gen.adminservice.AdminService_.GENRE_HIERARCHY;
  * The handler is neither functionally complete nor correct for all requests. It
  * is not intended as a blue-print for custom code.
  */
+/*
 public class HierarchyHandler implements EventHandler {
 
     private final PersistenceService db;
@@ -311,3 +312,4 @@ public class HierarchyHandler implements EventHandler {
         }
     }
 }
+ */

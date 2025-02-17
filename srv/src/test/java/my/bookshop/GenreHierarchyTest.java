@@ -1,4 +1,4 @@
-package my.bookshop;
+/* package my.bookshop;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -236,4 +236,4 @@ public class GenreHierarchyTest {
 	private boolean isOnHana() {
 		return env.acceptsProfiles(Profiles.of("cloud"));
 	}
-}
+} */

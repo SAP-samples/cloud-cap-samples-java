@@ -21,7 +21,18 @@ service AdminService @(requires: 'admin') {
   entity Authors        as projection on my.Authors;
   entity Orders         as select from my.Orders;
   extend my.Genres with Hierarchy;
-  entity GenreHierarchy as projection on my.Genres;
+
+  type NextSibling {
+    ID : UUID; 
+  }
+  entity GenreHierarchy as projection on my.Genres
+    excluding {children} order by siblingRank
+    actions {
+      action moveSiblingAction(NextSibling : NextSibling);
+    };
+
+  extend my.Contents with Hierarchy;
+  entity ContentsHierarchy as projection on my.Contents;
 
   @cds.persistence.skip
   entity Upload @odata.singleton {
@@ -45,6 +56,7 @@ annotate AdminService.Books with @cds.search: {
 // Enable Fiori Draft for Orders
 annotate AdminService.Orders with @odata.draft.enabled;
 annotate AdminService.Books with @odata.draft.enabled;
+annotate AdminService.GenreHierarchy with @odata.draft.enabled;
 
 // workaround to enable the value help for languages
 // Necessary because auto exposure is currently not working
