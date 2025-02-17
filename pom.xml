@@ -27,7 +27,7 @@
 		<cloud.sdk.version>5.15.0</cloud.sdk.version>
 		<xsuaa.version>3.5.7</xsuaa.version>
 		<cf-java-logging-support.version>3.8.4</cf-java-logging-support.version>
-		<cds-feature-attachments.version>1.0.6-SNAPSHOT</cds-feature-attachments.version>
+		<cds-feature-attachments.version>1.0.6</cds-feature-attachments.version>
 	</properties>
 
 	<modules>
