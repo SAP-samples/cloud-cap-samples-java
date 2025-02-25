@@ -30,7 +30,7 @@ import cds.gen.adminservice.GenreHierarchy_;
 @Profile("hybrid")
 public class HierarchyExpandHandler implements EventHandler {
 
-    @On(entity = GenreHierarchy_.CDS_NAME)
+//    @On(entity = GenreHierarchy_.CDS_NAME)
     void removeExpand(CdsReadEventContext event) {
         List<CqnTransformation> trafos = event.getCqn().transformations();
         if (trafos.size() < 1) {
