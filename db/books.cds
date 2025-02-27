@@ -64,6 +64,6 @@ entity Contents {
         name   : String;
         page   : Integer;
         parent : Association to Contents @odata.draft.enclosed;
-        book   : Association to Books @odata.draft.enclosed;
+        book   : Association to Books;
 }
 

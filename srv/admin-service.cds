@@ -1,4 +1,4 @@
-using {sap.common.Languages as CommonLanguages} from '@sap/cds/common';
+using {sap.common.Languages as CommonLanguages, cuid} from '@sap/cds/common';
 using {my.bookshop as my} from '../db/index';
 using {sap.changelog as changelog} from 'com.sap.cds/change-tracking';
 using {my.common.Hierarchy as Hierarchy} from './hierarchy';
@@ -22,12 +22,12 @@ service AdminService @(requires: 'admin') {
   entity Orders         as select from my.Orders;
   extend my.Genres with Hierarchy;
 
-  type NextSibling {
-    ID : UUID; 
-  }
+  type NextSibling : cuid { };
   entity GenreHierarchy as projection on my.Genres
     excluding {children} order by siblingRank
     actions {
+      // Experimental UI feature, see:
+      // https://github.com/SAP/odata-vocabularies/blob/main/vocabularies/Hierarchy.md#template_changenextsiblingaction-experimental
       action moveSiblingAction(NextSibling : NextSibling);
     };
 

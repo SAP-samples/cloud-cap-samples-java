@@ -206,8 +206,6 @@ annotate my.Genres with
 //	Genres Elements
 //
 annotate my.Genres with {
-    ID
-    @title : '{i18n>ID}';
     name
     @title : '{i18n>Genre}';
 }
