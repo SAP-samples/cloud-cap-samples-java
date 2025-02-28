@@ -82,8 +82,14 @@ class CatalogServiceHandler implements EventHandler {
 		CqnSelect copy = CQL.copy(context.getCqn(), new Modifier() {
 			@Override
 			public List<CqnSelectListItem> items(List<CqnSelectListItem> items) {
-				items.add(CQL.get("details"));
-				items.add(CQL.get("stock"));
+				CqnSelectListItem details = CQL.get("details");
+				if (!items.contains(details)) {
+					items.add(details);
+				}
+				CqnSelectListItem stock = CQL.get("stock");
+				if (!items.contains(stock)) {
+					items.add(stock);
+				}
 				return items;
 			}
 		});
