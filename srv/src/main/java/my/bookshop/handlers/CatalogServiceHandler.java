@@ -82,8 +82,10 @@ class CatalogServiceHandler implements EventHandler {
 		CqnSelect copy = CQL.copy(context.getCqn(), new Modifier() {
 			@Override
 			public List<CqnSelectListItem> items(List<CqnSelectListItem> items) {
-				items.add(CQL.get("details"));
-				items.add(CQL.get("stock"));
+				CqnSelectListItem stock = CQL.get("stock");
+				if (!items.contains(stock)) {
+					items.add(stock);
+				}
 				return items;
 			}
 		});
@@ -144,16 +146,6 @@ class CatalogServiceHandler implements EventHandler {
 	public void discountBooks(Stream<Books> books) {
 		books.filter(b -> b.getTitle() != null).forEach(b -> {
 			discountBooksWithMoreThan111Stock(b, featureToggles.isEnabled("discount"));
-		});
-	}
-
-	@After(event = CqnService.EVENT_READ)
-	public void bigBooks(Stream<Books> books) {
-		books.filter(b -> b.getDetails() != null).forEach(b -> {
-			int pages = (int) b.getDetails().get("pages");
-			if (pages > 400) {
-				b.setTitle("%s -- Big Book".formatted(b.getTitle()));
-			}
 		});
 	}
 
