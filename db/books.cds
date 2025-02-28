@@ -22,7 +22,6 @@ entity Books : cuid, managed {
     reviews      : Association to many Reviews
                        on reviews.book = $self;
     isReviewable : TechnicalBooleanFlag not null default true;
-    details      : Map;
 }
 
 entity Authors : cuid, managed {
