@@ -150,7 +150,7 @@ class CatalogServiceHandler implements EventHandler {
 	@After(event = CqnService.EVENT_READ)
 	public void bigBooks(Stream<Books> books) {
 		books.filter(b -> b.getDetails() != null).forEach(b -> {
-			int pages = (int) b.getDetails().get("pages");
+			int pages = (int) b.getDetails().getOrDefault("pages", 0);
 			if (pages > 400) {
 				b.setTitle("%s -- Big Book".formatted(b.getTitle()));
 			}
