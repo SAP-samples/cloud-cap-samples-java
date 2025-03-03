@@ -34,6 +34,7 @@ entity Authors : cuid, managed {
     placeOfDeath : String;
     books        : Association to many Books
                        on books.author = $self;
+    details      : Map;
 }
 
 // annotations for Data Privacy

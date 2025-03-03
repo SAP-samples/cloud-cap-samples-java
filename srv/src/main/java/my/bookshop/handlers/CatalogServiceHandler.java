@@ -13,11 +13,14 @@ import org.springframework.stereotype.Component;
 
 import com.sap.cds.Result;
 import com.sap.cds.Struct;
+import com.sap.cds.ql.CQL;
 import com.sap.cds.ql.Insert;
 import com.sap.cds.ql.Select;
 import com.sap.cds.ql.Update;
 import com.sap.cds.ql.cqn.CqnAnalyzer;
 import com.sap.cds.ql.cqn.CqnSelect;
+import com.sap.cds.ql.cqn.CqnSelectListItem;
+import com.sap.cds.ql.cqn.Modifier;
 import com.sap.cds.reflect.CdsModel;
 import com.sap.cds.services.ErrorStatuses;
 import com.sap.cds.services.ServiceException;
@@ -74,6 +77,21 @@ class CatalogServiceHandler implements EventHandler {
 		this.analyzer = CqnAnalyzer.create(model);
 	}
 
+	@Before(entity = Books_.CDS_NAME)
+	public void beforeReadBooks(CdsReadEventContext context) {
+		CqnSelect copy = CQL.copy(context.getCqn(), new Modifier() {
+			@Override
+			public List<CqnSelectListItem> items(List<CqnSelectListItem> items) {
+				CqnSelectListItem stock = CQL.get("stock");
+				if (!items.contains(stock)) {
+					items.add(stock);
+				}
+				return items;
+			}
+		});
+		context.setCqn(copy);
+	}
+
 	/**
 	 * Invokes some validations before creating a review.
 	 *
@@ -127,7 +145,6 @@ class CatalogServiceHandler implements EventHandler {
 	@After(event = CqnService.EVENT_READ)
 	public void discountBooks(Stream<Books> books) {
 		books.filter(b -> b.getTitle() != null).forEach(b -> {
-			loadStockIfNotSet(b);
 			discountBooksWithMoreThan111Stock(b, featureToggles.isEnabled("discount"));
 		});
 	}
@@ -182,12 +199,6 @@ class CatalogServiceHandler implements EventHandler {
 	private void discountBooksWithMoreThan111Stock(Books b, boolean premium) {
 		if (b.getStock() != null && b.getStock() > 111) {
 			b.setTitle("%s -- %s%% discount".formatted(b.getTitle(), premium ? 14 : 11));
-		}
-	}
-
-	private void loadStockIfNotSet(Books b) {
-		if (b.getId() != null && b.getStock() == null) {
-			b.setStock(db.run(Select.from(BOOKS).byId(b.getId()).columns(Books_::stock)).single(Books.class).getStock());
 		}
 	}
 
