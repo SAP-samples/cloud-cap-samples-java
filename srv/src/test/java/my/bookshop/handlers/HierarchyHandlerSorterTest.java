@@ -1,10 +1,10 @@
-/* package my.bookshop.handlers;
+package my.bookshop.handlers;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import java.util.List;
 import org.junit.jupiter.api.Test;
 
-import cds.gen.adminservice.GenreHierarchy;
+import cds.gen.catalogservice.GenreHierarchy;
 import my.bookshop.handlers.HierarchyHandler.Sorter;
 
 public class HierarchyHandlerSorterTest {
@@ -68,4 +68,3 @@ public class HierarchyHandlerSorterTest {
 		return List.of(h).stream().sorted(new Sorter()).toList();
 	}
 }
- */
