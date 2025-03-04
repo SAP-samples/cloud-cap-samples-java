@@ -56,7 +56,7 @@ public class NotesServiceHandler implements EventHandler {
 	Result readAddresses(CdsReadEventContext context) {
 		List<? extends Segment> segments = context.getCqn().ref().segments();
 		// via note
-		if(segments.size() == 2 && segments.getFirst().id().equals(Notes_.CDS_NAME)) {
+		if(segments.size() == 2 && segments.get(0).id().equals(Notes_.CDS_NAME)) {
 			Map<String, Object> noteKeys = analyzer.analyze(context.getCqn()).rootKeys();
 			Notes note = context.getService().run(Select.from(NOTES).columns(n -> n.address_businessPartner(), n -> n.address_ID()).matching(noteKeys)).single(Notes.class);
 			CqnSelect addressOfNote = CQL.copy(context.getCqn(), new Modifier() {
@@ -77,6 +77,7 @@ public class NotesServiceHandler implements EventHandler {
 		AtomicReference<CqnExpand> notesExpandHolder = new AtomicReference<>();
 		CqnSelect noNotesExpand = CQL.copy(context.getCqn(), new Modifier() {
 
+			@Override
 			public List<CqnSelectListItem> items(List<CqnSelectListItem> items) {
 				notesExpandHolder.set(removeIfExpanded(items, Addresses.NOTES));
 				return ensureSelected(items, Addresses.BUSINESS_PARTNER, Addresses.ID);
@@ -115,7 +116,7 @@ public class NotesServiceHandler implements EventHandler {
 	void readNotes(CdsReadEventContext context) {
 		List<? extends Segment> segments = context.getCqn().ref().segments();
 		// via addresses
-		if(segments.size() == 2 && segments.getFirst().id().equals(Addresses_.CDS_NAME)) {
+		if(segments.size() == 2 && segments.get(0).id().equals(Addresses_.CDS_NAME)) {
 			Map<String, Object> addressKeys = analyzer.analyze(context.getCqn()).rootKeys();
 			CqnSelect notesOfAddress = CQL.copy(context.getCqn(), new Modifier() {
 
@@ -143,6 +144,7 @@ public class NotesServiceHandler implements EventHandler {
 		AtomicReference<CqnExpand> addressExpandHolder = new AtomicReference<>();
 		CqnSelect noAddressExpand = CQL.copy(context.getCqn(), new Modifier() {
 
+			@Override
 			public List<CqnSelectListItem> items(List<CqnSelectListItem> items) {
 				addressExpandHolder.set(removeIfExpanded(items, Notes.ADDRESS));
 				return ensureSelected(items, Notes.ADDRESS_BUSINESS_PARTNER, Notes.ADDRESS_ID);
