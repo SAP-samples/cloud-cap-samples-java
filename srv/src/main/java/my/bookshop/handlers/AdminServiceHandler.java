@@ -111,7 +111,7 @@ class AdminServiceHandler implements EventHandler {
 						if (book.getStock() < diffQuantity) {
 							// Tip: you can have localized messages and use parameters in your messages
 							messages.error(MessageKeys.BOOK_REQUIRE_STOCK, book.getStock())
-								.target("in", ORDERS, o -> o.Items(i -> i.ID().eq(orderItem.getId()).and(i.IsActiveEntity().eq(orderItem.getIsActiveEntity()))).quantity());
+								.target(ORDERS, o -> o.Items(i -> i.ID().eq(orderItem.getId()).and(i.IsActiveEntity().eq(orderItem.getIsActiveEntity()))).quantity());
 							return; // no need to update follow-up values with invalid quantity / stock
 						}
 
@@ -143,7 +143,7 @@ class AdminServiceHandler implements EventHandler {
 		Integer quantity = orderItem.getQuantity();
 		String bookId = orderItem.getBookId();
 		String orderItemId = orderItem.getId();
-		BigDecimal amount = calculateAmountInDraft(orderItemId, quantity, bookId, true);
+		BigDecimal amount = calculateAmountInDraft(orderItemId, quantity, bookId);
 		if (amount != null) {
 			orderItem.setAmount(amount);
 		}
@@ -158,11 +158,11 @@ class AdminServiceHandler implements EventHandler {
 	public void cancelOrderItems(DraftCancelEventContext context) {
 		String orderItemId = (String) analyzer.analyze(context.getCqn()).targetKeys().get(OrderItems.ID);
 		if(orderItemId != null) {
-			calculateAmountInDraft(orderItemId, 0, null, false);
+			calculateAmountInDraft(orderItemId, 0, null);
 		}
 	}
 
-	private BigDecimal calculateAmountInDraft(String orderItemId, Integer newQuantity, String newBookId, boolean includeWarnings) {
+	private BigDecimal calculateAmountInDraft(String orderItemId, Integer newQuantity, String newBookId) {
 		Integer quantity = newQuantity;
 		String bookId = newBookId;
 		if (quantity == null && bookId == null) {
@@ -190,13 +190,6 @@ class AdminServiceHandler implements EventHandler {
 
 		if(quantity == null || bookId == null) {
 			return null; // not enough data available
-		}
-
-		// only warn about invalid values as we are in draft mode
-		if(includeWarnings && quantity <= 0) {
-			// Tip: add additional messages with localized messages from property files
-			// these messages are transported in sap-messages and do not abort the request
-			messages.warn(MessageKeys.QUANTITY_REQUIRE_MINIMUM).target(ORDER_ITEMS, i -> i.quantity());
 		}
 
 		// get the price of the updated book ID

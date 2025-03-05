@@ -82,7 +82,7 @@
 					"name": "sap.fe.templates.ListReport",
 					"options": {
 						"settings" : {
-							"entitySet" : "GenreHierarchy",
+							"contextPath" : "/GenreHierarchy",
 							"navigation" : {
 								"GenreHierarchy" : {
 									"detail" : {
@@ -107,7 +107,7 @@
 					"name": "sap.fe.templates.ObjectPage",
 					"options": {
 						"settings" : {
-							"entitySet": "GenreHierarchy"
+							"contextPath": "/GenreHierarchy"
 						}
 					}
 				}
