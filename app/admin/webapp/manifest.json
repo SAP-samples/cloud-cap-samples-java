@@ -85,12 +85,12 @@
                     "id": "BooksList",
                     "name": "sap.fe.templates.ListReport",
                     "options": {
-                        "settings": {
-                            "entitySet": "Books",
-                            "navigation": {
-                                "Books": {
-                                    "detail": {
-                                        "route": "BooksDetails"
+                        "settings" : {
+                            "contextPath" : "/Books",
+                            "navigation" : {
+                                "Books" : {
+                                    "detail" : {
+                                        "route" : "BooksDetails"
                                     }
                                 }
                             },
@@ -112,9 +112,14 @@
                     "id": "BooksDetailsList",
                     "name": "sap.fe.templates.ObjectPage",
                     "options": {
-                        "settings": {
-                            "entitySet": "Books",
-                            "navigation": {
+                        "settings" : {
+                            "contextPath" : "/Books",
+                            "navigation" : {
+                                "Authors" : {
+                                    "detail" : {
+                                        "route" : "AuthorsDetails"
+                                    }
+                                },
                                 "contents": {
                                     "detail": {
                                         "route": "ContentsDetails"
@@ -139,6 +144,16 @@
                     "options": {
                         "settings": {
                             "contextPath": "/Books/contents"
+                        }
+                    }
+                },
+                "AuthorsDetails": {
+                    "type": "Component",
+                    "id": "AuthorsDetailsList",
+                    "name": "sap.fe.templates.ObjectPage",
+                    "options": {
+                        "settings" : {
+                            "contextPath" : "/Authors"
                         }
                     }
                 }

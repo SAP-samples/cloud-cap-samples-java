@@ -91,7 +91,7 @@
 					"name": "sap.fe.templates.ListReport",
 					"options": {
 						"settings" : {
-							"entitySet" : "Orders",
+							"contextPath" : "/Orders",
 							"navigation" : {
 								"Orders" : {
 									"detail" : {
@@ -108,7 +108,7 @@
 					"name": "sap.fe.templates.ObjectPage",
 					"options": {
 						"settings" : {
-							"entitySet": "Orders",
+							"contextPath": "/Orders",
 							"navigation" : {
 								"Items": {
 									"detail": {
@@ -135,7 +135,7 @@
 					"name": "sap.fe.templates.ObjectPage",
 					"options": {
 						"settings" : {
-							"entitySet": "OrderItems"
+							"contextPath": "/Orders/Items"
 						}
 					}
 				},
@@ -145,7 +145,7 @@
 					"name": "sap.fe.templates.ObjectPage",
 					"options": {
 						"settings" : {
-							"entitySet": "Books",
+							"contextPath": "/Books",
 							"navigation": {
 								"author": {
 									"detail": {
@@ -162,7 +162,7 @@
 					"name": "sap.fe.templates.ObjectPage",
 					"options": {
 						"settings" : {
-							"entitySet": "Authors"
+							"contextPath": "/Authors"
 						}
 					}
 				}

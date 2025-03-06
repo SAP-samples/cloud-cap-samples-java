@@ -5,8 +5,14 @@
         "toggles": true
     },
     "profile": "with-mtx-sidecar",
+    "odata": {
+        "containment": true
+    },
     "cdsc": {
-        "newParser": true
+        "newParser": true,
+        "beta": {
+            "draftMessages": true
+        }
     },
     "sql": {
         "native_hana_associations": false
