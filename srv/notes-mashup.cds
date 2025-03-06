@@ -14,7 +14,7 @@ entity my.bookshop.NoteableAddresses as select from API_BUSINESS_PARTNER.A_Busin
   @readonly PostalCode as postalCode,
   @readonly StreetName as street,
   @readonly HouseNumber as houseNumber,
-  notes
+  notes @(odata.contained: false)
 };
 
 /*
