@@ -18,7 +18,7 @@ import com.sap.cds.services.persistence.PersistenceService;
 
 import cds.gen.adminservice.AdminService_;
 import cds.gen.adminservice.GenreHierarchy;
-import cds.gen.adminservice.GenreHierarchyMoveSiblingActionContext;
+import cds.gen.adminservice.GenreHierarchyMoveSiblingContext;
 import cds.gen.adminservice.GenreHierarchy_;
 
 @Component
@@ -36,7 +36,7 @@ public class HierarchySiblingActionHandler implements EventHandler {
     }
 
     @On(entity = GenreHierarchy_.CDS_NAME)
-    void onMoveSiblingAction(GenreHierarchyMoveSiblingActionContext event) {
+    void onMoveSiblingAction(GenreHierarchyMoveSiblingContext event) {
         CqnSelect select = event.getCqn();
         // Get ID of the entry that is being moved
         String idToMove = (String) CqnAnalyzer.create(event.getModel()).analyze(select).targetKeys()
