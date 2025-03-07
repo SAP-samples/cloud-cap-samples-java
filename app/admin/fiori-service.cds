@@ -37,7 +37,9 @@ annotate AdminService.Books with @(UI : {
             Label : '{i18n>Admin}',
             Target : '@UI.FieldGroup#Admin'
         },
-        {
+        {   
+            // TODO: should work dynamically
+            @UI.Hidden,
             $Type  : 'UI.ReferenceFacet',
             Label  : '{i18n>Contents}',
             Target : 'contents/@UI.PresentationVariant'
@@ -72,7 +74,7 @@ annotate AdminService.Books with @(UI : {
 //
 annotate AdminService.Books with {
     genre @(Common: {
-        Label    : 'Genre',
+        Label    : '{i18n>Genre}',
         ValueList: {
             CollectionPath              : 'GenreHierarchy',
             Parameters                  : [
@@ -99,7 +101,7 @@ annotate AdminService.GenreHierarchy with {
 @Hierarchy.RecursiveHierarchyActions #GenreHierarchy: {
   $Type                  : 'Hierarchy.RecursiveHierarchyActionsType',
   // any name can be the action name with namespace/no bound action name
-  ChangeNextSiblingAction: 'AdminService.moveSiblingAction',
+  ChangeNextSiblingAction: 'AdminService.moveSibling',
 }
 
 annotate AdminService.GenreHierarchy with @UI: {
@@ -111,7 +113,7 @@ annotate AdminService.GenreHierarchy with @UI: {
     LineItem               : [{
         $Type: 'UI.DataField',
         Value: name,
-        Label : 'Genre'
+        Label : '{i18n>Genre}'
     }],
 };
 
@@ -119,20 +121,22 @@ annotate AdminService.ContentsHierarchy with @UI: {
     PresentationVariant  : {
         $Type         : 'UI.PresentationVariantType',
         RequestAtLeast: [name],
-        Visualizations: ['@UI.LineItem', ],
+        Visualizations: ['@UI.LineItem'],
     },
     LineItem             : [{
         $Type: 'UI.DataField',
         Value: name,
+        Label : '{i18n>Name}'
         },
         {
-      $Type: 'UI.DataField',
-      Value: page,
+        $Type: 'UI.DataField',
+        Value: page,
+        Label : '{i18n>Page}'
     }],
     HeaderInfo            : {
         $Type         : 'UI.HeaderInfoType',
-        TypeName      : 'Contents Level',
-        TypeNamePlural: 'Contents Levels',
+        TypeName      : '{i18n>ContentsLevel}',
+        TypeNamePlural: '{i18n>ContentsLevels}',
         Title         : {
             $Type: 'UI.DataField',
             Value: name,
@@ -143,13 +147,13 @@ annotate AdminService.ContentsHierarchy with @UI: {
         Data : [{
             $Type: 'UI.DataField',
             Value: page,
-            Label : 'Page Number'
+            Label : '{i18n>PageNumber}'
         }],
     },
     Facets                 : [{
         $Type : 'UI.ReferenceFacet',
         Target: '@UI.FieldGroup',
-        Label : 'Informations',
+        Label : '{i18n>Informations}',
     }],
 };
 

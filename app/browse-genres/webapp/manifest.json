@@ -17,11 +17,6 @@
 				}
 			}
 		},
-		"-sourceTemplate": {
-			"id": "ui5template.basicSAPUI5ApplicationProject",
-			"-id": "ui5template.smartTemplate",
-			"-version": "1.40.12"
-		},
 		"crossNavigation": {
 			"inbounds": {
 				"Genres-show": {
@@ -82,12 +77,12 @@
 					"name": "sap.fe.templates.ListReport",
 					"options": {
 						"settings" : {
-							"entitySet" : "GenreHierarchy",
+							"contextPath" : "/GenreHierarchy",
 							"navigation" : {
 								"GenreHierarchy" : {
 									"detail" : {
 										"route" : "GenreHierarchyDetails"
-										}
+									}
 								}
 							},
 							"controlConfiguration": {
@@ -107,7 +102,7 @@
 					"name": "sap.fe.templates.ObjectPage",
 					"options": {
 						"settings" : {
-							"entitySet": "GenreHierarchy"
+							"contextPath" : "/GenreHierarchy"
 						}
 					}
 				}

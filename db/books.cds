@@ -22,7 +22,7 @@ entity Books : cuid, managed {
     reviews      : Association to many Reviews
                        on reviews.book = $self;
     isReviewable : TechnicalBooleanFlag not null default true;
-    contents     : Composition of many Contents on contents.book = $self;
+    contents     : Composition of many Contents on contents.book = $self @odata.contained:false;
 }
 
 entity Authors : cuid, managed {

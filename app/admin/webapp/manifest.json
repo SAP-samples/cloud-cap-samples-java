@@ -115,11 +115,6 @@
                         "settings" : {
                             "contextPath" : "/Books",
                             "navigation" : {
-                                "Authors" : {
-                                    "detail" : {
-                                        "route" : "AuthorsDetails"
-                                    }
-                                },
                                 "contents": {
                                     "detail": {
                                         "route": "ContentsDetails"
@@ -144,16 +139,6 @@
                     "options": {
                         "settings": {
                             "contextPath": "/Books/contents"
-                        }
-                    }
-                },
-                "AuthorsDetails": {
-                    "type": "Component",
-                    "id": "AuthorsDetailsList",
-                    "name": "sap.fe.templates.ObjectPage",
-                    "options": {
-                        "settings" : {
-                            "contextPath" : "/Authors"
                         }
                     }
                 }

@@ -28,7 +28,7 @@ service AdminService @(requires: 'admin') {
     actions {
       // Experimental UI feature, see:
       // https://github.com/SAP/odata-vocabularies/blob/main/vocabularies/Hierarchy.md#template_changenextsiblingaction-experimental
-      action moveSiblingAction(NextSibling : NextSibling);
+      action moveSibling(NextSibling : NextSibling);
     };
 
   extend my.Contents with Hierarchy;
