@@ -206,7 +206,7 @@ annotate AdminService.ContentsHierarchy with @Aggregation.RecursiveHierarchy#Con
     ParentNavigationProperty: parent // navigates to a node's parent
   };
 
-  annotate AdminService.ContentsHierarchy with @Hierarchy.RecursiveHierarchy#ContentsHierarchy: {
+annotate AdminService.ContentsHierarchy with @Hierarchy.RecursiveHierarchy#ContentsHierarchy: {
   $Type: 'Hierarchy.RecursiveHierarchyType',
   LimitedDescendantCount: LimitedDescendantCount,
   DistanceFromRoot: DistanceFromRoot,
