@@ -27,7 +27,7 @@ public class GenreHierarchyTest {
 	@Autowired
 	Environment env;
 
-	private static final String genresURI = "/api/admin/GenreHierarchy";
+	private static final String genresURI = "/api/browse/GenreHierarchy";
 
 	@Test
 	@WithMockUser(username = "admin")
@@ -40,7 +40,7 @@ public class GenreHierarchyTest {
 	void testCountAll() throws Exception {
 		client.perform(get(genresURI + "/$count"))
 				.andExpect(status().isOk())
-				.andExpect(jsonPath("$").value(30));
+				.andExpect(jsonPath("$").value(33));
 	}
 
 	@Test
@@ -52,11 +52,11 @@ public class GenreHierarchyTest {
 				+ "com.sap.vocabularies.Hierarchy.v1.TopLevels(HierarchyNodes=$root/GenreHierarchy,HierarchyQualifier='GenreHierarchy',NodeProperty='ID',Levels=1)"
 				+ "&$count=true"))
 				.andExpect(status().isOk())
-				.andExpect(jsonPath("$.value[0].ID").value(100))
+				.andExpect(jsonPath("$.value[0].ID").value("8bbf14c6-b378-4e35-9b4f-5a9c8b8762da"))
 				.andExpect(jsonPath("$.value[0].name").value("Fiction"))
 				.andExpect(jsonPath("$.value[0].DistanceFromRoot").value(0))
 				.andExpect(jsonPath("$.value[0].DrillState").value("collapsed"))
-				.andExpect(jsonPath("$.value[1].ID").value(200))
+				.andExpect(jsonPath("$.value[1].ID").value("85b5a640-7e9a-468e-80e2-e9268486031b"))
 				.andExpect(jsonPath("$.value[1].name").value("Non-Fiction"))
 				.andExpect(jsonPath("$.value[1].DistanceFromRoot").value(0))
 				.andExpect(jsonPath("$.value[1].DrillState").value("collapsed"))
@@ -72,19 +72,16 @@ public class GenreHierarchyTest {
 				+ "com.sap.vocabularies.Hierarchy.v1.TopLevels(HierarchyNodes=$root/GenreHierarchy,HierarchyQualifier='GenreHierarchy',NodeProperty='ID',Levels=2)"
 				+ "&$count=true"))
 				.andExpect(status().isOk())
-				.andExpect(jsonPath("$.value[0].ID").value(100))
 				.andExpect(jsonPath("$.value[0].name").value("Fiction"))
 				.andExpect(jsonPath("$.value[0].DrillState").value("expanded"))
 				.andExpect(jsonPath("$.value[0].DistanceFromRoot").value(0))
-				.andExpect(jsonPath("$.value[1].ID").value(101))
 				.andExpect(jsonPath("$.value[1].name").value("Action"))
 				.andExpect(jsonPath("$.value[1].DrillState").value("leaf"))
 				.andExpect(jsonPath("$.value[1].DistanceFromRoot").value(1))
-				.andExpect(jsonPath("$.value[20].ID").value(204))
-				.andExpect(jsonPath("$.value[20].name").value("Speech"))
-				.andExpect(jsonPath("$.value[20].DrillState").value("leaf"))
-				.andExpect(jsonPath("$.value[20].DistanceFromRoot").value(1))
-				.andExpect(jsonPath("$.value[21]").doesNotExist());
+				.andExpect(jsonPath("$.value[21].name").value("Speech"))
+				.andExpect(jsonPath("$.value[21].DrillState").value("leaf"))
+				.andExpect(jsonPath("$.value[21].DistanceFromRoot").value(1))
+				.andExpect(jsonPath("$.value[22]").doesNotExist());
 	}
 
 	@Test
@@ -92,16 +89,13 @@ public class GenreHierarchyTest {
 	void testExpandNonFiction() throws Exception {
 		client.perform(get(genresURI
 				+ "?$select=DrillState,ID,name"
-				+ "&$apply=descendants($root/GenreHierarchy,GenreHierarchy,ID,filter(ID eq 200),1)"
+				+ "&$apply=descendants($root/GenreHierarchy,GenreHierarchy,ID,filter(ID eq 85b5a640-7e9a-468e-80e2-e9268486031b),1)"
 				+ "/orderby(ID)"))
 				.andExpect(status().isOk())
-				.andExpect(jsonPath("$.value[0].ID").value(201))
 				.andExpect(jsonPath("$.value[0].name").value("Biography"))
 				.andExpect(jsonPath("$.value[0].DrillState").value("collapsed"))
-				.andExpect(jsonPath("$.value[1].ID").value(203))
 				.andExpect(jsonPath("$.value[1].name").value("Essay"))
 				.andExpect(jsonPath("$.value[1].DrillState").value("leaf"))
-				.andExpect(jsonPath("$.value[2].ID").value(204))
 				.andExpect(jsonPath("$.value[2].name").value("Speech"))
 				.andExpect(jsonPath("$.value[2].DrillState").value("leaf"))
 				.andExpect(jsonPath("$.value[3]").doesNotExist());
@@ -132,13 +126,12 @@ public class GenreHierarchyTest {
 
 		ResultActions expectations = client.perform(get(url))
 				.andExpect(status().isOk())
-				.andExpect(jsonPath("$.value[0].ID").value(100))
 				.andExpect(jsonPath("$.value[0].name").value("Fiction"))
 				.andExpect(jsonPath("$.value[0].DrillState").value("expanded"))
 				.andExpect(jsonPath("$.value[0].DistanceFromRoot").value(0))
-				.andExpect(jsonPath("$.value[29].name").value("Speech"))
-				.andExpect(jsonPath("$.value[29].DrillState").value("leaf"))
-				.andExpect(jsonPath("$.value[30]").doesNotExist());
+				.andExpect(jsonPath("$.value[32].name").value("Speech"))
+				.andExpect(jsonPath("$.value[32].DrillState").value("leaf"))
+				.andExpect(jsonPath("$.value[33]").doesNotExist());
 		if (isOnHana()) {
 			expectations.andExpect(jsonPath("$.value[0].LimitedDescendantCount").value(24));
 		}
@@ -154,19 +147,21 @@ public class GenreHierarchyTest {
 				+ "/com.sap.vocabularies.Hierarchy.v1.TopLevels(HierarchyNodes=$root/GenreHierarchy,HierarchyQualifier='GenreHierarchy',NodeProperty='ID')"
 				+ "&$count=true"))
 				.andExpect(status().isOk())
-				.andExpect(jsonPath("$.value[0].ID").value(100))
 				.andExpect(jsonPath("$.value[0].name").value("Fiction"))
 				.andExpect(jsonPath("$.value[0].DrillState").value("expanded"))
 				.andExpect(jsonPath("$.value[0].DistanceFromRoot").value(0))
-				.andExpect(jsonPath("$.value[1].ID").value(120))
 				.andExpect(jsonPath("$.value[1].name").value("Contemporary Fiction"))
 				.andExpect(jsonPath("$.value[1].DrillState").value("leaf"))
 				.andExpect(jsonPath("$.value[1].DistanceFromRoot").value(1))
-				.andExpect(jsonPath("$.value[2].ID").value(128))
 				.andExpect(jsonPath("$.value[2].name").value("Fairy Tale"))
 				.andExpect(jsonPath("$.value[2].DrillState").value("leaf"))
 				.andExpect(jsonPath("$.value[2].DistanceFromRoot").value(1))
-				.andExpect(jsonPath("$.value[3].ID").value(122))
+				.andExpect(jsonPath("$.value[3].name").value("Literary Fiction"))
+				.andExpect(jsonPath("$.value[3].DrillState").value("leaf"))
+				.andExpect(jsonPath("$.value[4].name").value("Mystery"))
+				.andExpect(jsonPath("$.value[4].DrillState").value("leaf"))
+				.andExpect(jsonPath("$.value[5].name").value("Poetry"))
+				.andExpect(jsonPath("$.value[5].DrillState").value("leaf"))
 				.andExpect(jsonPath("$.value[6].name").value("Short Story"))
 				.andExpect(jsonPath("$.value[6].DrillState").value("leaf"))
 				.andExpect(jsonPath("$.value[6].DistanceFromRoot").value(1))
@@ -188,7 +183,6 @@ public class GenreHierarchyTest {
 				+ "&$apply=ancestors($root/GenreHierarchy,GenreHierarchy,ID,filter(name eq 'Autobiography'),keep start)/orderby(name)"
 				+ "/com.sap.vocabularies.Hierarchy.v1.TopLevels(HierarchyNodes=$root/GenreHierarchy,HierarchyQualifier='GenreHierarchy',NodeProperty='ID',Levels=1)"))
 				.andExpect(status().isOk())
-				.andExpect(jsonPath("$.value[0].ID").value(200))
 				.andExpect(jsonPath("$.value[0].name").value("Non-Fiction"))
 				.andExpect(jsonPath("$.value[0].DrillState").value("collapsed"))
 				.andExpect(jsonPath("$.value[0].DistanceFromRoot").value(0))
@@ -199,7 +193,7 @@ public class GenreHierarchyTest {
 	@WithMockUser(username = "admin")
 	void testFilterExpandLevels() throws Exception {
 		String expandLevelsJson = """
-				[{"NodeID":100,"Levels":1},{"NodeID":200,"Levels":1}]\
+				[{"NodeID":"8bbf14c6-b378-4e35-9b4f-5a9c8b8762da","Levels":1},{"NodeID":"85b5a640-7e9a-468e-80e2-e9268486031b","Levels":1}]\
 				""";
 		String unencoded = genresURI + "?$select=DistanceFromRoot,DrillState,ID,LimitedDescendantCount,name"
 				+ "&$apply=ancestors($root/GenreHierarchy,GenreHierarchy,ID,filter(name eq 'Autobiography'),keep start)/orderby(name)"
@@ -209,7 +203,6 @@ public class GenreHierarchyTest {
 		URI uri = URI.create(uriString);
 		client.perform(get(uri))
 				.andExpect(status().isOk())
-				.andExpect(jsonPath("$.value[0].ID").value(200))
 				.andExpect(jsonPath("$.value[0].name").value("Non-Fiction"))
 				.andExpect(jsonPath("$.value[0].DrillState").value("expanded"))
 				.andExpect(jsonPath("$.value[0].DistanceFromRoot").value(0))
@@ -226,10 +219,10 @@ public class GenreHierarchyTest {
 					+ "com.sap.vocabularies.Hierarchy.v1.TopLevels(HierarchyNodes=$root/GenreHierarchy,HierarchyQualifier='GenreHierarchy',NodeProperty='ID',Levels=2)"
 					+ "&$count=true"))
 					.andExpect(status().isOk())
-					.andExpect(jsonPath("$.value[0].ID").value(200))
-					.andExpect(jsonPath("$.value[1].ID").value(204))
-					.andExpect(jsonPath("$.value[20].ID").value(101))
-					.andExpect(jsonPath("$.value[21]").doesNotExist());
+					.andExpect(jsonPath("$.value[0].name").value("Non-Fiction"))
+					.andExpect(jsonPath("$.value[1].name").value("Speech"))
+					.andExpect(jsonPath("$.value[21].name").value("Action"))
+					.andExpect(jsonPath("$.value[22]").doesNotExist());
 		}
 	}
 

@@ -9,4 +9,5 @@ using from './reviews/fiori-service';
 using from './notes/fiori-service';
 using from './addresses/fiori-service';
 using from './genres/fiori-service';
+using from './browse-genres/fiori-service';
 using from './common';

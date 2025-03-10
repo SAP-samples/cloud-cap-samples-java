@@ -35,15 +35,15 @@ import com.sap.cds.services.handler.annotations.Before;
 import com.sap.cds.services.handler.annotations.ServiceName;
 import com.sap.cds.services.persistence.PersistenceService;
 
-import cds.gen.adminservice.AdminService_;
-import cds.gen.adminservice.GenreHierarchy;
-import cds.gen.adminservice.GenreHierarchy_;
+import cds.gen.catalogservice.CatalogService_;
+import cds.gen.catalogservice.GenreHierarchy;
+import cds.gen.catalogservice.GenreHierarchy_;
 
-import static cds.gen.adminservice.AdminService_.GENRE_HIERARCHY;
+import static cds.gen.catalogservice.CatalogService_.GENRE_HIERARCHY;
 
 @Component
 @Profile("default") // non-HANA
-@ServiceName(AdminService_.CDS_NAME)
+@ServiceName(CatalogService_.CDS_NAME)
 /**
  * On HANA, requests for GenreHierarchy are handled generically.
  * 
@@ -105,8 +105,8 @@ public class HierarchyHandler implements EventHandler {
     }
 
     private void addDrillState(List<GenreHierarchy> ghs) {
-        List<Integer> ids = ghs.stream().map(gh -> gh.getId()).toList();
-        Set<Integer> parents = ghs.stream().map(gh -> gh.getParentId()).filter(p -> p != null)
+        List<String> ids = ghs.stream().map(gh -> gh.getId()).toList();
+        Set<String> parents = ghs.stream().map(gh -> gh.getParentId()).filter(p -> p != null)
                 .collect(Collectors.toSet());
         CqnSelect q = Select.from(GENRE_HIERARCHY).columns(gh -> gh.parent_ID().as("id"))
                 .where(gh -> gh.parent_ID().in(ids));
@@ -115,7 +115,7 @@ public class HierarchyHandler implements EventHandler {
                 .stream().map(r -> r.get("id")).collect(Collectors.toSet());
 
         for (GenreHierarchy gh : ghs) {
-            Integer id = gh.getId();
+            String id = gh.getId();
             if (nonLeafs.contains(id)) {
                 if (parents.contains(id)) {
                     gh.setDrillState("expanded");
@@ -163,7 +163,7 @@ public class HierarchyHandler implements EventHandler {
                         gh -> gh.parent().parent().parent().parent().ID().as("i4"))
                 .where(gh -> gh.ID().in(inner));
 
-        Set<Integer> ancestorIds = new HashSet<>();
+        Set<String> ancestorIds = new HashSet<>();
         db.run(outer).stream().forEach(r -> {
             addIfNotNull(ancestorIds, r, "i0");
             addIfNotNull(ancestorIds, r, "i1");
@@ -186,7 +186,7 @@ public class HierarchyHandler implements EventHandler {
     }
 
     private static void connect(List<GenreHierarchy> nodes) {
-        Map<Integer, GenreHierarchy> lookup = new HashMap<>();
+        Map<String, GenreHierarchy> lookup = new HashMap<>();
         nodes.forEach(gh -> lookup.put(gh.getId(), gh));
         nodes.forEach(gh -> gh.setParent(lookup.get(gh.getParentId())));
         nodes.forEach(gh -> gh.setDistanceFromRoot(distanceFromRoot(gh)));
@@ -199,8 +199,8 @@ public class HierarchyHandler implements EventHandler {
         return topLevels(topLevels, filter);
     }
 
-    private void addIfNotNull(Set<Integer> ancestorIds, Row r, String key) {
-        Integer id = (Integer) r.get(key);
+    private void addIfNotNull(Set<String> ancestorIds, Row r, String key) {
+        String id = (String) r.get(key);
         if (id != null) {
             ancestorIds.add(id);
         }
@@ -212,7 +212,7 @@ public class HierarchyHandler implements EventHandler {
 
     private List<GenreHierarchy> topLevelsLimit(CqnTopLevelsTransformation topLevels, CqnPredicate filter) {
         long limit = topLevels.levels();
-        Map<Integer, GenreHierarchy> lookup = new HashMap<>();
+        Map<String, GenreHierarchy> lookup = new HashMap<>();
         Map<Object, Long> expandLevels = topLevels.expandLevels();
 
         CqnSelect getRoots = Select.from(GENRE_HIERARCHY).where(gh -> gh.parent_ID().isNull().and(filter));
@@ -220,9 +220,9 @@ public class HierarchyHandler implements EventHandler {
         roots.forEach(root -> {
             root.setDistanceFromRoot(0l);
             lookup.put(root.getId(), root);
-            List<Integer> parents = List.of(root.getId());
+            List<String> parents = List.of(root.getId());
             for (long i = 1; i < limit; i++) {
-                List<Integer> ps = parents;
+                List<String> ps = parents;
                 CqnSelect getChildren = Select.from(GENRE_HIERARCHY)
                         .where(gh -> gh.parent_ID().in(ps).and(filter));
                 List<GenreHierarchy> children = db.run(getChildren).listOf(GenreHierarchy.class);
@@ -239,8 +239,8 @@ public class HierarchyHandler implements EventHandler {
         });
 
         if (!expandLevels.isEmpty()) {
-            List<Integer> expandedIds = expandLevels.keySet().stream().map(key -> (Integer) key).toList();
-            CqnSelect expandedCQN = Select.from(AdminService_.GENRE_HIERARCHY).where(gh -> CQL.and(filter,
+            List<String> expandedIds = expandLevels.keySet().stream().map(key -> (String) key).toList();
+            CqnSelect expandedCQN = Select.from(CatalogService_.GENRE_HIERARCHY).where(gh -> CQL.and(filter,
                     CQL.or(gh.ID().in(expandedIds), gh.parent_ID().in(expandedIds))));
 
             List<GenreHierarchy> expanded = db.run(expandedCQN).listOf(GenreHierarchy.class);

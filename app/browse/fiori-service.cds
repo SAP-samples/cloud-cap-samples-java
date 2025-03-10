@@ -161,6 +161,19 @@ annotate CatalogService.Reviews with @(UI : {
     ]}
 });
 
+annotate CatalogService.GenreHierarchy with @UI: {
+    PresentationVariant  : {
+        $Type         : 'UI.PresentationVariantType',
+        RequestAtLeast: [name],
+        Visualizations: ['@UI.LineItem'],
+    },
+    LineItem               : [{
+        $Type: 'UI.DataField',
+        Value: name,
+        Label : '{i18n>Genre}'
+    }],
+};
+
 annotate CatalogService.Books actions {
     @(
         Common.SideEffects : {

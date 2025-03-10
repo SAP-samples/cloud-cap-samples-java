@@ -36,6 +36,13 @@ annotate AdminService.Books with @(UI : {
             $Type : 'UI.ReferenceFacet',
             Label : '{i18n>Admin}',
             Target : '@UI.FieldGroup#Admin'
+        },
+        {   
+            // TODO: should work dynamically
+            @UI.Hidden,
+            $Type  : 'UI.ReferenceFacet',
+            Label  : '{i18n>Contents}',
+            Target : 'contents/@UI.PresentationVariant'
         }
     ],
     FieldGroup #General : {Data : [
@@ -60,10 +67,14 @@ annotate AdminService.Books with @(UI : {
     ]}
 });
 
-// Add Value Help for Tree Table
+
+////////////////////////////////////////////////////////////////////////////
+//
+//	Value Help for Tree Table
+//
 annotate AdminService.Books with {
     genre @(Common: {
-        Label    : 'Genre',
+        Label    : '{i18n>Genre}',
         ValueList: {
             CollectionPath              : 'GenreHierarchy',
             Parameters                  : [
@@ -87,6 +98,12 @@ annotate AdminService.GenreHierarchy with {
   ID @UI.Hidden;
 };
 
+@Hierarchy.RecursiveHierarchyActions #GenreHierarchy: {
+  $Type                  : 'Hierarchy.RecursiveHierarchyActionsType',
+  // any name can be the action name with namespace/no bound action name
+  ChangeNextSiblingAction: 'AdminService.moveSibling',
+}
+
 annotate AdminService.GenreHierarchy with @UI: {
     PresentationVariant #VH: {
         $Type                      : 'UI.PresentationVariantType',
@@ -96,7 +113,48 @@ annotate AdminService.GenreHierarchy with @UI: {
     LineItem               : [{
         $Type: 'UI.DataField',
         Value: name,
-    }]
+        Label : '{i18n>Genre}'
+    }],
+};
+
+annotate AdminService.ContentsHierarchy with @UI: {
+    PresentationVariant  : {
+        $Type         : 'UI.PresentationVariantType',
+        RequestAtLeast: [name],
+        Visualizations: ['@UI.LineItem'],
+    },
+    LineItem             : [{
+        $Type: 'UI.DataField',
+        Value: name,
+        Label : '{i18n>Name}'
+        },
+        {
+        $Type: 'UI.DataField',
+        Value: page,
+        Label : '{i18n>Page}'
+    }],
+    HeaderInfo            : {
+        $Type         : 'UI.HeaderInfoType',
+        TypeName      : '{i18n>ContentsLevel}',
+        TypeNamePlural: '{i18n>ContentsLevels}',
+        Title         : {
+            $Type: 'UI.DataField',
+            Value: name,
+        }
+    },
+    FieldGroup : {
+        $Type: 'UI.FieldGroupType',
+        Data : [{
+            $Type: 'UI.DataField',
+            Value: page,
+            Label : '{i18n>PageNumber}'
+        }],
+    },
+    Facets                 : [{
+        $Type : 'UI.ReferenceFacet',
+        Target: '@UI.FieldGroup',
+        Label : '{i18n>Informations}',
+    }],
 };
 
 ////////////////////////////////////////////////////////////
@@ -137,6 +195,26 @@ annotate AdminService.Books.texts {
         type : #fixed
     }
 }
+
+////////////////////////////////////////////////////////////
+//
+//  Annotations for hierarchy ContentsHierarchy
+//
+annotate AdminService.ContentsHierarchy with @Aggregation.RecursiveHierarchy#ContentsHierarchy: {
+    $Type: 'Aggregation.RecursiveHierarchyType',
+    NodeProperty: ID, // identifies a node
+    ParentNavigationProperty: parent // navigates to a node's parent
+  };
+
+annotate AdminService.ContentsHierarchy with @Hierarchy.RecursiveHierarchy#ContentsHierarchy: {
+  $Type: 'Hierarchy.RecursiveHierarchyType',
+  LimitedDescendantCount: LimitedDescendantCount,
+  DistanceFromRoot: DistanceFromRoot,
+  DrillState: DrillState,
+  Matched: Matched,
+  MatchedDescendantCount: MatchedDescendantCount,
+  LimitedRank: LimitedRank
+};
 
 annotate AdminService.Books actions {
     @(
