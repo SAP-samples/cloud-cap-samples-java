@@ -1,16 +1,16 @@
 package my.bookshop.handlers;
 
+import static cds.gen.adminservice.AdminService_.GENRE_HIERARCHY;
+
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
+import com.sap.cds.ql.CQL;
 import com.sap.cds.ql.Select;
 import com.sap.cds.ql.Update;
-import com.sap.cds.ql.cqn.CqnAnalyzer;
-import com.sap.cds.ql.cqn.CqnSelect;
-
+import com.sap.cds.ql.cqn.CqnStructuredTypeRef;
 import com.sap.cds.services.handler.EventHandler;
 import com.sap.cds.services.handler.annotations.On;
 import com.sap.cds.services.handler.annotations.ServiceName;
@@ -36,39 +36,40 @@ public class HierarchySiblingActionHandler implements EventHandler {
     }
 
     @On(entity = GenreHierarchy_.CDS_NAME)
-    void onMoveSiblingAction(GenreHierarchyMoveSiblingContext event) {
-        CqnSelect select = event.getCqn();
-        // Get ID of the entry that is being moved
-        String idToMove = (String) CqnAnalyzer.create(event.getModel()).analyze(select).targetKeys()
-                .get(GenreHierarchy_.ID);
-        // Find its' parent
-        String parentId = db.run(Select.from(GenreHierarchy_.class)
-                .columns(c -> c.parent_ID()).where(c -> c.ID().eq(idToMove)))
-                .single(GenreHierarchy.class).getParentId();
+    void onMoveSiblingAction(CqnStructuredTypeRef ref, GenreHierarchyMoveSiblingContext context) {
+        // Find current node and its parent
+        GenreHierarchy toMove = db.run(Select.from(CQL.entity(GENRE_HIERARCHY, ref))
+                .columns(c -> c.ID(), c -> c.parent_ID()))
+                .single(GenreHierarchy.class);
+
         // Find all children of the parent, which are siblings of the entry being moved
-        List<GenreHierarchy> siblingNodes = db.run(Select.from(GenreHierarchy_.class)
+        List<GenreHierarchy> siblingNodes = db.run(Select.from(GENRE_HIERARCHY)
                 .columns(c -> c.ID(), c -> c.siblingRank())
-                .where(c -> c.parent_ID().eq(parentId)))
+                .where(c -> c.parent_ID().eq(toMove.getParentId())))
                 .listOf(GenreHierarchy.class);
 
-        String nextSiblingId = event.getNextSibling() == null ? null : event.getNextSibling().getId();
-        Optional<GenreHierarchy> nextSibling = siblingNodes.stream().filter(el -> el.getId().equals(nextSiblingId))
-                .findFirst();
+        int oldPosition = 0;
+        int newPosition = siblingNodes.size();
+        for (int i = 0; i < siblingNodes.size(); ++i) {
+            GenreHierarchy sibling = siblingNodes.get(i);
+            if (sibling.getId().equals(toMove.getId())) {
+                oldPosition = i;
+            }
+            if (context.getNextSibling() != null && sibling.getId().equals(context.getNextSibling().getId())) {
+                newPosition = i;
+            }
+        }
 
-        GenreHierarchy nodeToMove = siblingNodes.stream().filter(el -> idToMove.equals(el.getId())).findFirst().get();
-        GenreHierarchy moved = siblingNodes.remove(siblingNodes.indexOf(nodeToMove));
-        // Exchange siblings
-        nextSibling.ifPresentOrElse(n -> siblingNodes.add(siblingNodes.indexOf(n), moved),
-                () -> siblingNodes.addLast(moved));
-        
-        // Apply ranks
-        int i = 0;
-        for(GenreHierarchy sibling : siblingNodes) {
-            sibling.setSiblingRank(i++);
+        // Move siblings
+        siblingNodes.add(oldPosition < newPosition ? newPosition - 1 : newPosition, siblingNodes.remove(oldPosition));
+
+        // Recalculate ranks
+        for (int i = 0; i < siblingNodes.size(); ++i) {
+            siblingNodes.get(i).setSiblingRank(i);
         }
 
         // Update DB
-        db.run(Update.entity(GenreHierarchy_.class).entries(siblingNodes));
-        event.setCompleted();
+        db.run(Update.entity(GENRE_HIERARCHY).entries(siblingNodes));
+        context.setCompleted();
     }
 }
