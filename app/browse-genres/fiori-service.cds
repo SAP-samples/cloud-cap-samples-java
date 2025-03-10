@@ -11,7 +11,7 @@ annotate CatalogService.GenreHierarchy with @Aggregation.RecursiveHierarchy#Genr
     ParentNavigationProperty: parent // navigates to a node's parent
   };
 
-  annotate CatalogService.GenreHierarchy with @Hierarchy.RecursiveHierarchy#GenreHierarchy: {
+annotate CatalogService.GenreHierarchy with @Hierarchy.RecursiveHierarchy#GenreHierarchy: {
   $Type: 'Hierarchy.RecursiveHierarchyType',
   LimitedDescendantCount: LimitedDescendantCount,
   DistanceFromRoot: DistanceFromRoot,
