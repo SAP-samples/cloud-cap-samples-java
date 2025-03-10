@@ -51,9 +51,6 @@ public class HierarchySiblingActionHandler implements EventHandler {
                 .where(c -> c.parent_ID().eq(parentId)))
                 .listOf(GenreHierarchy.class);
 
-        // Shift the sibling ranks to reflect the sort order
-        List<Integer> siblingRanksCopy = siblingNodes.stream().map(ch -> ch.getSiblingRank()).toList();
-
         String nextSiblingId = event.getNextSibling() == null ? null : event.getNextSibling().getId();
         Optional<GenreHierarchy> nextSibling = siblingNodes.stream().filter(el -> el.getId().equals(nextSiblingId))
                 .findFirst();
@@ -63,9 +60,11 @@ public class HierarchySiblingActionHandler implements EventHandler {
         // Exchange siblings
         nextSibling.ifPresentOrElse(n -> siblingNodes.add(siblingNodes.indexOf(n), moved),
                 () -> siblingNodes.addLast(moved));
+        
         // Apply ranks
-        for (int i = 0; i < siblingRanksCopy.size(); i++) {
-            siblingNodes.get(i).setSiblingRank(siblingRanksCopy.get(i));
+        int i = 0;
+        for(GenreHierarchy sibling : siblingNodes) {
+            sibling.setSiblingRank(i++);
         }
 
         // Update DB
