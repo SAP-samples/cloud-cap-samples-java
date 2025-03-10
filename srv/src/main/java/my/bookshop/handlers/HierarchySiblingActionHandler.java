@@ -61,7 +61,7 @@ public class HierarchySiblingActionHandler implements EventHandler {
         }
 
         // Move siblings
-        siblingNodes.add(newPosition, siblingNodes.remove(oldPosition));
+        siblingNodes.add(oldPosition < newPosition ? newPosition - 1 : newPosition, siblingNodes.remove(oldPosition));
 
         // Recalculate ranks
         for (int i = 0; i < siblingNodes.size(); ++i) {
