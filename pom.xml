@@ -24,7 +24,7 @@
 		<!-- DEPENDENCIES VERSION -->
 		<jdk.version>21</jdk.version>
 		<cds.services.version>3.8.0</cds.services.version>
-		<cds-feature-event-hub.version>${cds.services.version}</cds-feature-event-hub.version>
+		<cds-feature-event-hub.version>4.0.0-SNAPSHOT</cds-feature-event-hub.version>
 		<cloud.sdk.version>5.14.0</cloud.sdk.version>
 		<xsuaa.version>3.5.3</xsuaa.version>
 		<cf-java-logging-support.version>3.8.4</cf-java-logging-support.version>
@@ -160,4 +160,15 @@
 			</plugin>
 		</plugins>
 	</build>
+
+	<repositories>
+		<repository>
+			<id>proxy-cap-java</id>
+			<name>Proxy for cap-java</name>
+			<url>https://int.repositories.cloud.sap/artifactory/proxy-cap-java/</url>
+			<snapshots>
+				<enabled>true</enabled>
+			</snapshots>
+		</repository>
+	</repositories>
 </project>
