@@ -76,6 +76,7 @@
 		<dependency>
 			<groupId>com.sap.cds</groupId>
 			<artifactId>cds-feature-event-hub</artifactId>
+			<version>${cds-feature-event-hub.version}</version> <!-- allow to overwrite the event hub feature to switch to the OSS variant -->
 			<scope>runtime</scope>
 		</dependency>		
 
