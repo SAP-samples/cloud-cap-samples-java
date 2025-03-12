@@ -5,6 +5,7 @@ using {my.common.Hierarchy as Hierarchy} from './hierarchy';
 using {sap.attachments.Attachments} from 'com.sap.cds/cds-feature-attachments';
 
 extend my.Orders with changelog.changeTracked;
+extend my.Genres with Hierarchy;
 
 @path: 'admin'
 @odata.apply.transformations
@@ -20,7 +21,6 @@ service AdminService @(requires: 'admin') {
 
   entity Authors        as projection on my.Authors;
   entity Orders         as select from my.Orders;
-  extend my.Genres with Hierarchy;
 
   type NextSibling : cuid { };
   entity GenreHierarchy as projection on my.Genres
