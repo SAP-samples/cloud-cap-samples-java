@@ -1,5 +1,4 @@
 using {my.bookshop as my} from '../db/index';
-using {my.common.Hierarchy as Hierarchy} from './hierarchy';
 
 @path : 'browse'
 @odata.apply.transformations
@@ -17,8 +16,6 @@ service CatalogService @(requires: 'any') {
 
     @readonly
     entity Reviews     as projection on my.Reviews;
-
-    extend my.Genres with Hierarchy;
     @readonly
     entity GenreHierarchy as projection on my.Genres;
 
