@@ -39,10 +39,11 @@ annotate AdminService.Books with @(UI : {
         },
         {   
             // TODO: should work dynamically
-            @UI.Hidden,
             $Type  : 'UI.ReferenceFacet',
             Label  : '{i18n>Contents}',
-            Target : 'contents/@UI.PresentationVariant'
+            Target : 'contents/@UI.PresentationVariant',
+            ![@UI.Hidden] : contentsHidden 
+
         }
     ],
     FieldGroup #General : {Data : [
