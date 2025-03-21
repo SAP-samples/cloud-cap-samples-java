@@ -23,6 +23,7 @@ entity Books : cuid, managed {
                        on reviews.book = $self;
     isReviewable : TechnicalBooleanFlag not null default true;
     contents     : Composition of many Contents on contents.book = $self @odata.contained:false;
+    virtual contentsHidden : Boolean default false;
 }
 
 entity Authors : cuid, managed {
