@@ -41,7 +41,7 @@ service AdminService @(requires: 'admin') {
 
   @cds.persistence.skip
   @readonly entity Info @odata.singleton {
-    treeTableSupport: Boolean;
+    hideTreeTable: Boolean;
   }
 }
 

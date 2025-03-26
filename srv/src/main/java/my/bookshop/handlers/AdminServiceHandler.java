@@ -307,7 +307,7 @@ class AdminServiceHandler implements EventHandler {
 	@On(event = CqnService.EVENT_READ, entity = Info_.CDS_NAME)
 	public Info readInfo(CdsReadEventContext context) {
 		Info info = Info.create();
-		info.setTreeTableSupport(env.matchesProfiles("cloud"));
+		info.setHideTreeTable(!env.matchesProfiles("cloud"));
 		return info;
 	}
 

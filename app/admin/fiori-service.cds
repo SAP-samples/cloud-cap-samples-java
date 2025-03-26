@@ -41,7 +41,7 @@ annotate AdminService.Books with @(UI : {
             $Type  : 'UI.ReferenceFacet',
             Label  : '{i18n>Contents}',
             Target : 'contents/@UI.PresentationVariant',
-            @UI.Hidden: {$edmJson: { $Not: { $Path: '/Info/treeTableSupport' }}}
+            @UI.Hidden: { $edmJson: { $Path: '/Info/hideTreeTable' } }
         }
     ],
     FieldGroup #General : {Data : [
