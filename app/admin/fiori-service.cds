@@ -37,12 +37,11 @@ annotate AdminService.Books with @(UI : {
             Label : '{i18n>Admin}',
             Target : '@UI.FieldGroup#Admin'
         },
-        {   
-            // TODO: should work dynamically
-            @UI.Hidden,
+        {
             $Type  : 'UI.ReferenceFacet',
             Label  : '{i18n>Contents}',
-            Target : 'contents/@UI.PresentationVariant'
+            Target : 'contents/@UI.PresentationVariant',
+            @UI.Hidden: {$edmJson: { $Not: { $Path: '/Info/treeTableSupport' }}}
         }
     ],
     FieldGroup #General : {Data : [
