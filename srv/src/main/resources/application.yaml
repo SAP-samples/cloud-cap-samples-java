@@ -54,6 +54,7 @@ cds:
       format: cloudevents
       subscribe-prefix: sap/S4HANAOD/java/ce/
 logging.level.org.apache.http.wire: DEBUG
+logging.level.com.sap.cds.feature.mt.lib.subscription: DEBUG
 
 ---
 spring:
