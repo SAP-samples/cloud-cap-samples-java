@@ -38,6 +38,11 @@ service AdminService @(requires: 'admin') {
   entity Upload @odata.singleton {
     csv : LargeBinary @Core.MediaType: 'text/csv';
   }
+
+  @cds.persistence.skip
+  @readonly entity Info @odata.singleton {
+    hideTreeTable: Boolean;
+  }
 }
 
 // Deep Search Items

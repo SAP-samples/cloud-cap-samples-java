@@ -16,6 +16,7 @@ import java.util.UUID;
 import java.util.function.Supplier;
 import java.util.stream.Stream;
 
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 
 import com.sap.cds.Result;
@@ -28,6 +29,7 @@ import com.sap.cds.reflect.CdsModel;
 import com.sap.cds.services.ErrorStatuses;
 import com.sap.cds.services.EventContext;
 import com.sap.cds.services.ServiceException;
+import com.sap.cds.services.cds.CdsReadEventContext;
 import com.sap.cds.services.cds.CdsUpdateEventContext;
 import com.sap.cds.services.cds.CqnService;
 import com.sap.cds.services.draft.DraftCancelEventContext;
@@ -46,6 +48,8 @@ import cds.gen.adminservice.Books;
 import cds.gen.adminservice.BooksAddToOrderContext;
 import cds.gen.adminservice.BooksCovers;
 import cds.gen.adminservice.Books_;
+import cds.gen.adminservice.Info;
+import cds.gen.adminservice.Info_;
 import cds.gen.adminservice.OrderItems;
 import cds.gen.adminservice.OrderItems_;
 import cds.gen.adminservice.Orders;
@@ -64,17 +68,16 @@ import my.bookshop.MessageKeys;
 class AdminServiceHandler implements EventHandler {
 
 	private final AdminService.Draft adminService;
-
 	private final PersistenceService db;
-
 	private final Messages messages;
-
 	private final CqnAnalyzer analyzer;
+	private final Environment env;
 
-	AdminServiceHandler(AdminService.Draft adminService, PersistenceService db, Messages messages, CdsModel model) {
+	AdminServiceHandler(AdminService.Draft adminService, PersistenceService db, Messages messages, CdsModel model, Environment env) {
 		this.adminService = adminService;
 		this.db = db;
 		this.messages = messages;
+		this.env = env;
 
 		// model is a tenant-dependant model proxy
 		this.analyzer = CqnAnalyzer.create(model);
@@ -299,6 +302,13 @@ class AdminServiceHandler implements EventHandler {
 	public void restoreCoversUpId(CqnStructuredTypeRef ref, BooksCovers cover) {
 		// restore up__ID, which is not provided via OData due to containment
 		cover.setUpId((String) analyzer.analyze(ref).rootKeys().get(Books.ID));
+	}
+
+	@On(event = CqnService.EVENT_READ, entity = Info_.CDS_NAME)
+	public Info readInfo(CdsReadEventContext context) {
+		Info info = Info.create();
+		info.setHideTreeTable(!env.matchesProfiles("cloud"));
+		return info;
 	}
 
 	private Supplier<ServiceException> notFound(String message) {
