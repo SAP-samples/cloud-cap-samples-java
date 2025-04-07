@@ -5,31 +5,25 @@
 
 version: 2
 updates:
-  - package-ecosystem: "maven" # See documentation for possible values
-    directory: "/" # Location of package manifests
-    schedule:
-      interval: "weekly"
-  - package-ecosystem: "npm"
-    directory: "/"
-    schedule:
-      interval: "weekly"
-    groups:
-      dev-dependencies:
-        patterns: 
-          - "*"
-  - package-ecosystem: "npm"
-    directory: "/app"
+  - package-ecosystem: "maven"
+    directories: 
+    - "/"
+    - "/srv"
     schedule:
       interval: "weekly"
     groups:
-      dev-dependencies:
+      all-maven-dependencies:
         patterns: 
-          - "*"
+        - "*"
   - package-ecosystem: "npm"
-    directory: "/db"
+    directories: 
+    - "/"
+    - "/mtx/sidecar"
+    - "/db"
+    - "/app"
     schedule:
       interval: "weekly"
     groups:
-      dev-dependencies:
+      all-npm-dependencies:
         patterns: 
-          - "*"
+        - "*"
