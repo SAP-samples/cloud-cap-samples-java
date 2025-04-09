@@ -3,10 +3,7 @@ using { API_BUSINESS_PARTNER } from './external/API_BUSINESS_PARTNER';
 /**
  * Simplified view on external addresses, which is used as an association target in Notes.
  */
-entity my.bookshop.NoteableAddresses as select from API_BUSINESS_PARTNER.A_BusinessPartnerAddress mixin {
-  // bi-directional association
-  notes : Composition of many bookshop.Notes on notes.address.businessPartner = $projection.businessPartner and notes.address.ID = $projection.ID
-} into {
+entity my.bookshop.NoteableAddresses as projection on API_BUSINESS_PARTNER.A_BusinessPartnerAddress {
   key AddressID as ID,
   key BusinessPartner as businessPartner,
   @readonly Country as country,
@@ -14,7 +11,8 @@ entity my.bookshop.NoteableAddresses as select from API_BUSINESS_PARTNER.A_Busin
   @readonly PostalCode as postalCode,
   @readonly StreetName as street,
   @readonly HouseNumber as houseNumber,
-  notes @(odata.contained: false)
+  @odata.contained: false notes : Composition of many bookshop.Notes
+      on notes.address.businessPartner = $self.businessPartner and notes.address.ID = $self.ID
 };
 
 /*
