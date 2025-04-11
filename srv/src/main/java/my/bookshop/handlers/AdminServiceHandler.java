@@ -29,7 +29,6 @@ import com.sap.cds.reflect.CdsModel;
 import com.sap.cds.services.ErrorStatuses;
 import com.sap.cds.services.EventContext;
 import com.sap.cds.services.ServiceException;
-import com.sap.cds.services.cds.CdsReadEventContext;
 import com.sap.cds.services.cds.CdsUpdateEventContext;
 import com.sap.cds.services.cds.CqnService;
 import com.sap.cds.services.draft.DraftCancelEventContext;
@@ -307,7 +306,7 @@ class AdminServiceHandler implements EventHandler {
 	@On(event = CqnService.EVENT_READ, entity = Info_.CDS_NAME)
 	public Info readInfo() {
 		Info info = Info.create();
-		info.setHideTreeTable(!env.matchesProfiles("cloud"));
+		info.setHideTreeTable(!env.matchesProfiles("hybrid"));
 		return info;
 	}
 

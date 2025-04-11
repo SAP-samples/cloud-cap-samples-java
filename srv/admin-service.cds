@@ -1,11 +1,9 @@
 using {sap.common.Languages as CommonLanguages, cuid} from '@sap/cds/common';
 using {my.bookshop as my} from '../db/index';
 using {sap.changelog as changelog} from 'com.sap.cds/change-tracking';
-using {my.common.Hierarchy as Hierarchy} from './hierarchy';
 using {sap.attachments.Attachments} from 'com.sap.cds/cds-feature-attachments';
 
 extend my.Orders with changelog.changeTracked;
-extend my.Genres with Hierarchy;
 
 @path: 'admin'
 @odata.apply.transformations
@@ -26,12 +24,10 @@ service AdminService @(requires: 'admin') {
   entity GenreHierarchy as projection on my.Genres
     excluding {children} order by siblingRank
     actions {
-      // Experimental UI feature, see:
-      // https://github.com/SAP/odata-vocabularies/blob/main/vocabularies/Hierarchy.md#template_changenextsiblingaction-experimental
-      action moveSibling(NextSibling : NextSibling);
+      // HierarchySiblingActionHandler.java
+      action moveSibling(NextSibling : NextSibling); // to be implemented in custom handler 
     };
 
-  extend my.Contents with Hierarchy;
   entity ContentsHierarchy as projection on my.Contents;
 
   @cds.persistence.skip

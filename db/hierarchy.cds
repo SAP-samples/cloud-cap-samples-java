@@ -4,8 +4,8 @@ aspect Hierarchy {
   virtual LimitedDescendantCount : Integer64;
   virtual DistanceFromRoot       : Integer64;
   virtual DrillState             : String;
-  virtual Matched                : Boolean;
-  virtual MatchedDescendantCount : Integer64;
+  virtual Matched                : Boolean; // not used
+  virtual MatchedDescendantCount : Integer64; // not used
   virtual LimitedRank            : Integer64;
 }
 

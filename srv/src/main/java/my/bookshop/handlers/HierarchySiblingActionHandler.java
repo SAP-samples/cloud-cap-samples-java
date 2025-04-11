@@ -26,7 +26,7 @@ import cds.gen.adminservice.GenreHierarchy_;
 /**
  * Example of a custom handler for nextSiblingAction
  */
-@Profile("cloud")
+@Profile("hybrid")
 public class HierarchySiblingActionHandler implements EventHandler {
 
     private final PersistenceService db;
