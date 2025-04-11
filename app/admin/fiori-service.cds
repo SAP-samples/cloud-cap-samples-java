@@ -97,11 +97,11 @@ annotate AdminService.GenreHierarchy with {
   ID @UI.Hidden;
 };
 
-@Hierarchy.RecursiveHierarchyActions #GenreHierarchy: {
+annotate AdminService.GenreHierarchy with @Hierarchy.RecursiveHierarchyActions #GenreHierarchy: {
   $Type                  : 'Hierarchy.RecursiveHierarchyActionsType',
   // any name can be the action name with namespace/no bound action name
   ChangeNextSiblingAction: 'AdminService.moveSibling',
-}
+};
 
 annotate AdminService.GenreHierarchy with @UI: {
     PresentationVariant #VH: {
@@ -210,8 +210,6 @@ annotate AdminService.ContentsHierarchy with @Hierarchy.RecursiveHierarchy#Conte
   LimitedDescendantCount: LimitedDescendantCount,
   DistanceFromRoot: DistanceFromRoot,
   DrillState: DrillState,
-  Matched: Matched,
-  MatchedDescendantCount: MatchedDescendantCount,
   LimitedRank: LimitedRank
 };
 
