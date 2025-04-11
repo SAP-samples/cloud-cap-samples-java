@@ -210,8 +210,6 @@ annotate AdminService.ContentsHierarchy with @Hierarchy.RecursiveHierarchy#Conte
   LimitedDescendantCount: LimitedDescendantCount,
   DistanceFromRoot: DistanceFromRoot,
   DrillState: DrillState,
-  Matched: Matched,
-  MatchedDescendantCount: MatchedDescendantCount,
   LimitedRank: LimitedRank
 };
 

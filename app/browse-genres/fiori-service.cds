@@ -16,7 +16,5 @@ annotate CatalogService.GenreHierarchy with @Hierarchy.RecursiveHierarchy#GenreH
   LimitedDescendantCount: LimitedDescendantCount,
   DistanceFromRoot: DistanceFromRoot,
   DrillState: DrillState,
-  Matched: Matched,
-  MatchedDescendantCount: MatchedDescendantCount,
   LimitedRank: LimitedRank
 };

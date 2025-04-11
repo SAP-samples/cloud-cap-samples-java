@@ -24,8 +24,10 @@ service AdminService @(requires: 'admin') {
   entity GenreHierarchy as projection on my.Genres
     excluding {children} order by siblingRank
     actions {
-      // HierarchySiblingActionHandler.java
-      action moveSibling(NextSibling : NextSibling); // to be implemented in custom handler 
+      // Custom Handler -> HierarchySiblingActionHandler.java
+      // Experimental UI feature, see:
+      // https://github.com/SAP/odata-vocabularies/blob/main/vocabularies/Hierarchy.md#template_changenextsiblingaction-experimental
+      action moveSibling(NextSibling : NextSibling);
     };
 
   entity ContentsHierarchy as projection on my.Contents;
