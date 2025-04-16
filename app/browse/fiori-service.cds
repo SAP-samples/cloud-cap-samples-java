@@ -13,7 +13,7 @@ annotate CatalogService.Books with @(UI : {
         TypeName : '{i18n>Book}',
         TypeNamePlural : '{i18n>Books}',
         Title : {Value : title},
-        Description : {Value : author.name}
+        Description : {Value : author_ID}
     },
     Identification : [
         {Value : title},

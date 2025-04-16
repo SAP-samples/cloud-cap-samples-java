@@ -45,8 +45,6 @@ annotate AdminService.Books with @(UI : {
         }
     ],
     FieldGroup #General : {Data : [
-        {Value : title},
-        {Value : author_ID},
         {Value : genre_ID},
         {Value : descr},
     ]},
