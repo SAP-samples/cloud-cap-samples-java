@@ -81,7 +81,7 @@
                     "name": "sap.fe.templates.ListReport",
                     "options": {
                         "settings" : {
-                            "entitySet" : "Notes",
+                            "contextPath" : "/Notes",
                             "navigation" : {
                                 "Notes" : {
                                     "detail" : {
@@ -98,7 +98,7 @@
                     "name": "sap.fe.templates.ObjectPage",
                     "options": {
                         "settings" : {
-                            "entitySet" : "Notes"
+                            "contextPath" : "/Notes"
                         }
                     }
                 }

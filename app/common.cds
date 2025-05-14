@@ -23,10 +23,7 @@ annotate my.Books with
         LineItem : [
             {Value : ID},
             {Value : title},
-            {
-                Value : author.name,
-                Label : '{i18n>Author}'
-            },
+            {Value : author_ID},
             {Value : genre.name},
             {Value : stock},
             {Value : price},
@@ -57,7 +54,7 @@ annotate my.Books with
     TypeNamePlural : '{i18n>Books}',
     TypeImageUrl : 'sap-icon://course-book',
     Title : {Value : title},
-    Description : {Value : author.name}
+    Description : {Value : author_ID}
 }, });
 
 
@@ -206,8 +203,6 @@ annotate my.Genres with
 //	Genres Elements
 //
 annotate my.Genres with {
-    ID
-    @title : '{i18n>ID}';
     name
     @title : '{i18n>Genre}';
 }

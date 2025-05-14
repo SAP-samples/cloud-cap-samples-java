@@ -4,5 +4,17 @@
         "extensibility": true,
         "toggles": true
     },
-    "profile": "with-mtx-sidecar"
+    "profile": "with-mtx-sidecar",
+    "odata": {
+        "containment": true
+    },
+    "cdsc": {
+        "newParser": true,
+        "beta": {
+            "draftMessages": true
+        }
+    },
+    "sql": {
+        "native_hana_associations": false
+    }
 }

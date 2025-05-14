@@ -1,7 +1,7 @@
 {
 	"_version": "1.8.0",
 	"sap.app": {
-		"id": "genres",
+		"id": "browse-genres",
 		"type": "application",
 		"title": "{{appTitle}}",
 		"description": "{{appDescription}}",
@@ -9,18 +9,13 @@
 			"version": "1.0.0"
 		},
 		"dataSources": {
-			"AdminService": {
-				"uri": "/api/admin/",
+			"CatalogService": {
+				"uri": "/api/browse/",
 				"type": "OData",
 				"settings": {
 					"odataVersion": "4.0"
 				}
 			}
-		},
-		"-sourceTemplate": {
-			"id": "ui5template.basicSAPUI5ApplicationProject",
-			"-id": "ui5template.smartTemplate",
-			"-version": "1.40.12"
 		},
 		"crossNavigation": {
 			"inbounds": {
@@ -48,7 +43,7 @@
 				"uri": "i18n/i18n.properties"
 			},
 			"": {
-				"dataSource": "AdminService",
+				"dataSource": "CatalogService",
 				"settings": {
 					"synchronizationMode": "None",
 					"operationMode": "Server",
@@ -87,7 +82,7 @@
 								"GenreHierarchy" : {
 									"detail" : {
 										"route" : "GenreHierarchyDetails"
-										}
+									}
 								}
 							},
 							"controlConfiguration": {
@@ -107,7 +102,7 @@
 					"name": "sap.fe.templates.ObjectPage",
 					"options": {
 						"settings" : {
-							"contextPath": "/GenreHierarchy"
+							"contextPath" : "/GenreHierarchy"
 						}
 					}
 				}

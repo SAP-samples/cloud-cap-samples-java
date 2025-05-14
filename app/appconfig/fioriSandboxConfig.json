@@ -20,7 +20,8 @@
                     "title": "Browse Books",
                     "description": "Find your favorite book"
                   }
-                },                {
+                },                
+                {
                   "id": "browse-genres",
                   "tileType": "sap.ushell.ui.tile.StaticTile",
                   "properties": {
@@ -63,6 +64,15 @@
                     "targetURL": "#Reviews-manage",
                     "title": "Manage Reviews",
                     "description": "Add/edit/delete reviews"
+                  }
+                },
+                {
+                  "id": "manage-genres",
+                  "tileType": "sap.ushell.ui.tile.StaticTile",
+                  "properties": {
+                    "targetURL": "#Genres-manage",
+                    "title": "Manage Genres",
+                    "description": "Add/edit/delete genres" 
                   }
                 }
               ]
@@ -129,8 +139,8 @@
               },
               "resolutionResult": {
                 "applicationType": "SAPUI5",
-                "additionalInformation": "SAPUI5.Component=genres",
-                "url": "/genres/webapp"
+                "additionalInformation": "SAPUI5.Component=browse-genres",
+                "url": "/browse-genres/webapp"
               }
             },
             "manage-books": {
@@ -144,6 +154,19 @@
                 "applicationType": "SAPUI5",
                 "additionalInformation": "SAPUI5.Component=admin",
                 "url": "/admin/webapp"
+              }
+            },
+            "manage-genres": {
+              "semanticObject": "Genres",
+              "action": "manage",
+              "signature": {
+                "parameters": {},
+                "additionalParameters": "allowed"
+              },
+              "resolutionResult": {
+                "applicationType": "SAPUI5",
+                "additionalInformation": "SAPUI5.Component=genres",
+                "url": "/genres/webapp"
               }
             },
             "manage-orders": {

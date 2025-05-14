@@ -6,7 +6,7 @@
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>3.4.0</version>
+		<version>3.4.5</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 
@@ -23,12 +23,12 @@
 
 		<!-- DEPENDENCIES VERSION -->
 		<jdk.version>21</jdk.version>
-		<cds.services.version>3.8.0</cds.services.version>
+		<cds.services.version>3.10.0</cds.services.version>
 		<cds-feature-event-hub.version>4.0.0</cds-feature-event-hub.version>
-		<cloud.sdk.version>5.14.0</cloud.sdk.version>
-		<xsuaa.version>3.5.3</xsuaa.version>
+		<cloud.sdk.version>5.18.0</cloud.sdk.version>
+		<xsuaa.version>3.6.0</xsuaa.version>
 		<cf-java-logging-support.version>3.8.4</cf-java-logging-support.version>
-		<cds-feature-attachments.version>1.0.5</cds-feature-attachments.version>
+		<cds-feature-attachments.version>1.0.7</cds-feature-attachments.version>
 	</properties>
 
 	<modules>
@@ -68,12 +68,23 @@
 	</dependencyManagement>
 
 	<build>
+		<pluginManagement>
+			<plugins>
+				<!-- MAKE CDS PLUGIN RUNNABLE FROM ROOT -->
+				<plugin>
+					<groupId>com.sap.cds</groupId>
+					<artifactId>cds-maven-plugin</artifactId>
+					<version>${cds.services.version}</version>
+				</plugin>
+			</plugins>
+		</pluginManagement>
+
 		<plugins>
 			<!-- JAVA VERSION -->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
-				<version>3.13.0</version>
+				<version>3.14.0</version>
 				<configuration>
 					<release>${jdk.version}</release>
 					<encoding>UTF-8</encoding>
@@ -93,7 +104,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-surefire-plugin</artifactId>
-				<version>3.5.2</version>
+				<version>3.5.3</version>
 				<configuration>
 					<failIfNoTests>true</failIfNoTests>
 				</configuration>
@@ -102,14 +113,14 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-failsafe-plugin</artifactId>
-				<version>3.5.2</version>
+				<version>3.5.3</version>
 			</plugin>
 
 			<!-- POM FLATTENING FOR CI FRIENDLY VERSIONS -->
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>flatten-maven-plugin</artifactId>
-				<version>1.6.0</version>
+				<version>1.7.0</version>
 				<configuration>
 					<updatePomFile>true</updatePomFile>
 					<flattenMode>resolveCiFriendliesOnly</flattenMode>

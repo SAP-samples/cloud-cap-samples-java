@@ -1,7 +1,6 @@
-using {sap.common.Languages as CommonLanguages} from '@sap/cds/common';
+using {sap.common.Languages as CommonLanguages, cuid} from '@sap/cds/common';
 using {my.bookshop as my} from '../db/index';
 using {sap.changelog as changelog} from 'com.sap.cds/change-tracking';
-using {my.common.Hierarchy as Hierarchy} from './hierarchy';
 using {sap.attachments.Attachments} from 'com.sap.cds/cds-feature-attachments';
 
 extend my.Orders with changelog.changeTracked;
@@ -20,12 +19,27 @@ service AdminService @(requires: 'admin') {
 
   entity Authors        as projection on my.Authors;
   entity Orders         as select from my.Orders;
-  extend my.Genres with Hierarchy;
-  entity GenreHierarchy as projection on my.Genres;
+
+  type NextSibling : cuid { };
+  entity GenreHierarchy as projection on my.Genres
+    excluding {children} order by siblingRank
+    actions {
+      // Custom Handler -> HierarchySiblingActionHandler.java
+      // Experimental UI feature, see:
+      // https://github.com/SAP/odata-vocabularies/blob/main/vocabularies/Hierarchy.md#template_changenextsiblingaction-experimental
+      action moveSibling(NextSibling : NextSibling);
+    };
+
+  entity ContentsHierarchy as projection on my.Contents;
 
   @cds.persistence.skip
   entity Upload @odata.singleton {
     csv : LargeBinary @Core.MediaType: 'text/csv';
+  }
+
+  @cds.persistence.skip
+  @readonly entity Info @odata.singleton {
+    hideTreeTable: Boolean;
   }
 }
 
@@ -45,6 +59,7 @@ annotate AdminService.Books with @cds.search: {
 // Enable Fiori Draft for Orders
 annotate AdminService.Orders with @odata.draft.enabled;
 annotate AdminService.Books with @odata.draft.enabled;
+annotate AdminService.GenreHierarchy with @odata.draft.enabled;
 
 // workaround to enable the value help for languages
 // Necessary because auto exposure is currently not working

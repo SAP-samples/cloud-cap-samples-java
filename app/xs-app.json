@@ -35,6 +35,11 @@
 			"authenticationType": "xsuaa"
 		},
 		{
+			"source": "^/browse-genres/webapp/(.*)$",
+			"localDir": "./",
+			"authenticationType": "xsuaa"
+		},
+		{
 			"source": "^/reviews/webapp/(.*)$",
 			"localDir": "./",
 			"authenticationType": "xsuaa"
