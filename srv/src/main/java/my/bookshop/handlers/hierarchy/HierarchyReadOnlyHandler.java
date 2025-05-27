@@ -1,4 +1,4 @@
-package my.bookshop.handlers;
+package my.bookshop.handlers.hierarchy;
 
 import static cds.gen.catalogservice.CatalogService_.GENRE_HIERARCHY;
 
@@ -37,14 +37,13 @@ import com.sap.cds.services.handler.annotations.Before;
 import com.sap.cds.services.handler.annotations.ServiceName;
 import com.sap.cds.services.persistence.PersistenceService;
 
-import cds.gen.adminservice.AdminService_;
 import cds.gen.catalogservice.CatalogService_;
 import cds.gen.catalogservice.GenreHierarchy;
 import cds.gen.catalogservice.GenreHierarchy_;
 
 @Component
 @Profile("default") // non-HANA
-@ServiceName({ CatalogService_.CDS_NAME, AdminService_.CDS_NAME })
+@ServiceName(CatalogService_.CDS_NAME)
 /**
  * On HANA, requests for GenreHierarchy are handled generically.
  * 
@@ -55,26 +54,20 @@ import cds.gen.catalogservice.GenreHierarchy_;
  * The handler is neither functionally complete nor correct for all requests. It
  * is not intended as a blue-print for custom code.
  */
-public class HierarchyHandler implements EventHandler {
+public class HierarchyReadOnlyHandler implements EventHandler {
 
     private final PersistenceService db;
 
-    HierarchyHandler(PersistenceService db) {
+    HierarchyReadOnlyHandler(PersistenceService db) {
         this.db = db;
     }
 
-    @Before(event = CqnService.EVENT_READ)
+    @Before(event = CqnService.EVENT_READ, entity = GenreHierarchy_.CDS_NAME)
     public void readGenreHierarchy(CdsReadEventContext event) {
         List<CqnTransformation> trafos = event.getCqn().transformations();
         List<GenreHierarchy> result = null;
 
         if (trafos.size() < 1) {
-            return;
-        }
-
-        // Fallback for draft-enabled scenario: plain table
-        if (cds.gen.adminservice.GenreHierarchy_.CDS_NAME.equals(event.getTarget().getQualifiedName())) {
-            event.setResult(db.run(Select.from(cds.gen.adminservice.GenreHierarchy_.class)));
             return;
         }
 
