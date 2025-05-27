@@ -33,7 +33,7 @@ public class HierarchyFallbackHandler implements EventHandler {
         if (event.getCqn().transformations().size() < 1) {
             return;
         }
-        event.setResult(db.run(Select.from(cds.gen.adminservice.GenreHierarchy_.class)));
+        event.setResult(db.run(Select.from(GenreHierarchy_.class)));
     }
 
 }
