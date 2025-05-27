@@ -1,5 +1,7 @@
 package my.bookshop.handlers;
 
+import static cds.gen.catalogservice.CatalogService_.GENRE_HIERARCHY;
+
 import java.util.ArrayDeque;
 import java.util.Comparator;
 import java.util.Deque;
@@ -21,12 +23,12 @@ import com.sap.cds.ql.cqn.CqnPredicate;
 import com.sap.cds.ql.cqn.CqnSelect;
 import com.sap.cds.ql.cqn.CqnValue;
 import com.sap.cds.ql.cqn.Modifier;
-import com.sap.cds.ql.cqn.transformation.CqnTopLevelsTransformation;
 import com.sap.cds.ql.cqn.transformation.CqnAncestorsTransformation;
 import com.sap.cds.ql.cqn.transformation.CqnDescendantsTransformation;
 import com.sap.cds.ql.cqn.transformation.CqnFilterTransformation;
-import com.sap.cds.ql.cqn.transformation.CqnSearchTransformation;
 import com.sap.cds.ql.cqn.transformation.CqnOrderByTransformation;
+import com.sap.cds.ql.cqn.transformation.CqnSearchTransformation;
+import com.sap.cds.ql.cqn.transformation.CqnTopLevelsTransformation;
 import com.sap.cds.ql.cqn.transformation.CqnTransformation;
 import com.sap.cds.services.cds.CdsReadEventContext;
 import com.sap.cds.services.cds.CqnService;
@@ -35,15 +37,14 @@ import com.sap.cds.services.handler.annotations.Before;
 import com.sap.cds.services.handler.annotations.ServiceName;
 import com.sap.cds.services.persistence.PersistenceService;
 
+import cds.gen.adminservice.AdminService_;
 import cds.gen.catalogservice.CatalogService_;
 import cds.gen.catalogservice.GenreHierarchy;
 import cds.gen.catalogservice.GenreHierarchy_;
 
-import static cds.gen.catalogservice.CatalogService_.GENRE_HIERARCHY;
-
 @Component
 @Profile("default") // non-HANA
-@ServiceName(CatalogService_.CDS_NAME)
+@ServiceName({ CatalogService_.CDS_NAME, AdminService_.CDS_NAME })
 /**
  * On HANA, requests for GenreHierarchy are handled generically.
  * 
@@ -62,12 +63,18 @@ public class HierarchyHandler implements EventHandler {
         this.db = db;
     }
 
-    @Before(event = CqnService.EVENT_READ, entity = GenreHierarchy_.CDS_NAME)
+    @Before(event = CqnService.EVENT_READ)
     public void readGenreHierarchy(CdsReadEventContext event) {
         List<CqnTransformation> trafos = event.getCqn().transformations();
         List<GenreHierarchy> result = null;
 
         if (trafos.size() < 1) {
+            return;
+        }
+
+        // Fallback for draft-enabled scenario: plain table
+        if (cds.gen.adminservice.GenreHierarchy_.CDS_NAME.equals(event.getTarget().getQualifiedName())) {
+            event.setResult(db.run(Select.from(cds.gen.adminservice.GenreHierarchy_.class)));
             return;
         }
 
