@@ -13,10 +13,7 @@
     "node": "^22"
   },
   "cds": {
-    "profiles": ["mtx-sidecar", "java"],
-    "[development]": {
-      "requires": { "auth": "dummy" }
-    }
+    "profiles": ["mtx-sidecar", "java"]
   },
   "scripts": {
     "start": "cds-serve",
