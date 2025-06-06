@@ -1,11 +1,11 @@
-package my.bookshop.handlers;
+package my.bookshop.handlers.hierarchy;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import java.util.List;
 import org.junit.jupiter.api.Test;
 
 import cds.gen.catalogservice.GenreHierarchy;
-import my.bookshop.handlers.HierarchyHandler.Sorter;
+import my.bookshop.handlers.hierarchy.HierarchyReadOnlyHandler.Sorter;
 
 public class HierarchyHandlerSorterTest {
 
