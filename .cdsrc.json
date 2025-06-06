@@ -9,7 +9,6 @@
         "containment": true
     },
     "cdsc": {
-        "newParser": true,
         "beta": {
             "draftMessages": true
         }
