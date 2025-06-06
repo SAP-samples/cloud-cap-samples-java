@@ -6,8 +6,6 @@ spring:
   jmx:
     enabled: true
 cds:
-  errors:
-    default-translations.enabled: true
   odata-v4:
     endpoint.path: "/api"
   security:

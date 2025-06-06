@@ -9,12 +9,8 @@
         "containment": true
     },
     "cdsc": {
-        "newParser": true,
         "beta": {
             "draftMessages": true
         }
-    },
-    "sql": {
-        "native_hana_associations": false
     }
 }
