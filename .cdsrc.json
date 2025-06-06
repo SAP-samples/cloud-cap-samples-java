@@ -13,8 +13,5 @@
         "beta": {
             "draftMessages": true
         }
-    },
-    "sql": {
-        "native_hana_associations": false
     }
 }
