@@ -1,4 +1,6 @@
-package my.bookshop.handlers;
+package my.bookshop.handlers.hierarchy;
+
+import static cds.gen.catalogservice.CatalogService_.GENRE_HIERARCHY;
 
 import java.util.ArrayDeque;
 import java.util.Comparator;
@@ -21,12 +23,12 @@ import com.sap.cds.ql.cqn.CqnPredicate;
 import com.sap.cds.ql.cqn.CqnSelect;
 import com.sap.cds.ql.cqn.CqnValue;
 import com.sap.cds.ql.cqn.Modifier;
-import com.sap.cds.ql.cqn.transformation.CqnTopLevelsTransformation;
 import com.sap.cds.ql.cqn.transformation.CqnAncestorsTransformation;
 import com.sap.cds.ql.cqn.transformation.CqnDescendantsTransformation;
 import com.sap.cds.ql.cqn.transformation.CqnFilterTransformation;
-import com.sap.cds.ql.cqn.transformation.CqnSearchTransformation;
 import com.sap.cds.ql.cqn.transformation.CqnOrderByTransformation;
+import com.sap.cds.ql.cqn.transformation.CqnSearchTransformation;
+import com.sap.cds.ql.cqn.transformation.CqnTopLevelsTransformation;
 import com.sap.cds.ql.cqn.transformation.CqnTransformation;
 import com.sap.cds.services.cds.CdsReadEventContext;
 import com.sap.cds.services.cds.CqnService;
@@ -38,8 +40,6 @@ import com.sap.cds.services.persistence.PersistenceService;
 import cds.gen.catalogservice.CatalogService_;
 import cds.gen.catalogservice.GenreHierarchy;
 import cds.gen.catalogservice.GenreHierarchy_;
-
-import static cds.gen.catalogservice.CatalogService_.GENRE_HIERARCHY;
 
 @Component
 @Profile("default") // non-HANA
@@ -54,11 +54,11 @@ import static cds.gen.catalogservice.CatalogService_.GENRE_HIERARCHY;
  * The handler is neither functionally complete nor correct for all requests. It
  * is not intended as a blue-print for custom code.
  */
-public class HierarchyHandler implements EventHandler {
+public class HierarchyReadOnlyHandler implements EventHandler {
 
     private final PersistenceService db;
 
-    HierarchyHandler(PersistenceService db) {
+    HierarchyReadOnlyHandler(PersistenceService db) {
         this.db = db;
     }
 
