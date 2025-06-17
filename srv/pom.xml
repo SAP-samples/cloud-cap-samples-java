@@ -81,7 +81,20 @@
 			<artifactId>connectivity-apache-httpclient4</artifactId>
 		</dependency>
 
+		<dependency>
+			<groupId>org.springframework.security</groupId>
+			<artifactId>spring-security-oauth2-resource-server</artifactId>
+		</dependency>
+
 		<!-- OTHER DEPENDENCIES -->
+
+		<!-- add the following dependency to test with a custom OpenTelemetry API version -->
+		<!--dependency>
+			<groupId>io.opentelemetry</groupId>
+			<artifactId>opentelemetry-api</artifactId>
+			<version>1.51.0</version>
+		</dependency-->
+
 		<dependency>
 			<groupId>com.h2database</groupId>
 			<artifactId>h2</artifactId>
@@ -97,6 +110,12 @@
 		<dependency>
 			<groupId>com.sap.hcp.cf.logging</groupId>
 			<artifactId>cf-java-logging-support-servlet-jakarta</artifactId>
+			<version>${cf-java-logging-support.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>com.sap.hcp.cf.logging</groupId>
+			<artifactId>cf-java-logging-support-opentelemetry-agent-extension</artifactId>
 			<version>${cf-java-logging-support.version}</version>
 		</dependency>
 
