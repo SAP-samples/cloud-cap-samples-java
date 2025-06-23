@@ -6,7 +6,7 @@
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>3.5.0</version>
+		<version>3.5.3</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 
@@ -24,7 +24,7 @@
 		<!-- DEPENDENCIES VERSION -->
 		<jdk.version>21</jdk.version>
 		<cds.services.version>4.0.2</cds.services.version>
-		<cloud.sdk.version>5.19.0</cloud.sdk.version>
+		<cloud.sdk.version>5.20.0</cloud.sdk.version>
 		<xsuaa.version>3.6.0</xsuaa.version>
 		<cf-java-logging-support.version>3.8.5</cf-java-logging-support.version>
 		<cds-feature-attachments.version>1.0.9</cds-feature-attachments.version>
@@ -119,7 +119,7 @@
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>flatten-maven-plugin</artifactId>
-				<version>1.7.0</version>
+				<version>1.7.1</version>
 				<configuration>
 					<updatePomFile>true</updatePomFile>
 					<flattenMode>resolveCiFriendliesOnly</flattenMode>
