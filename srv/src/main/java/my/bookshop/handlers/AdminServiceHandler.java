@@ -303,13 +303,6 @@ class AdminServiceHandler implements EventHandler {
 		cover.setUpId((String) analyzer.analyze(ref).rootKeys().get(Books.ID));
 	}
 
-	@On(event = CqnService.EVENT_READ, entity = Info_.CDS_NAME)
-	public Info readInfo() {
-		Info info = Info.create();
-		info.setHideTreeTable(!env.matchesProfiles("cloud"));
-		return info;
-	}
-
 	private Supplier<ServiceException> notFound(String message) {
 		return () -> new ServiceException(ErrorStatuses.NOT_FOUND, message);
 	}
