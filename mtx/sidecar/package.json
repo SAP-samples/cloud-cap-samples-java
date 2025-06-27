@@ -15,6 +15,9 @@
   "cds": {
     "profiles": ["mtx-sidecar", "java"]
   },
+  "requires": {
+    "auth": "ias"
+  },
   "scripts": {
     "start": "cds-serve",
     "build": "cds build ../.. --for mtx-sidecar --production && npm ci --prefix gen"
