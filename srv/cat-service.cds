@@ -1,6 +1,7 @@
 using {my.bookshop as my} from '../db/index';
 
 @path : 'browse'
+@odata.apply.transformations
 service CatalogService @(requires: 'any') {
     @readonly
     entity Books       as projection on my.Books excluding {
@@ -15,6 +16,8 @@ service CatalogService @(requires: 'any') {
 
     @readonly
     entity Reviews     as projection on my.Reviews;
+    @readonly
+    entity GenreHierarchy as projection on my.Genres;
 
     action submitOrder(book : Books : ID, quantity : Integer) returns {
         stock : Integer

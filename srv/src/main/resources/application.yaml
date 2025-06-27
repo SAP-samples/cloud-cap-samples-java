@@ -28,6 +28,7 @@ management:
     health:
       show-components: always
       show-details: always
+      probes.enabled: true
   endpoints:
     web:
       exposure:
@@ -41,7 +42,6 @@ management:
 ---
 spring:
   config.activate.on-profile: cloud
-  sql.init.schema-locations: "classpath:schema-nomocks.sql"
 cds:
   sql.hana.search:
     fuzzy: true
@@ -126,6 +126,7 @@ cds:
 ---
 spring:
   config.activate.on-profile: default
+  sql.init.platform: h2
 cds:
   data-source:
     auto-config.enabled: false

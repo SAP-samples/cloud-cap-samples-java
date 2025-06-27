@@ -16,6 +16,7 @@ import java.util.UUID;
 import java.util.function.Supplier;
 import java.util.stream.Stream;
 
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 
 import com.sap.cds.Result;
@@ -23,6 +24,7 @@ import com.sap.cds.ql.Select;
 import com.sap.cds.ql.Update;
 import com.sap.cds.ql.Upsert;
 import com.sap.cds.ql.cqn.CqnAnalyzer;
+import com.sap.cds.ql.cqn.CqnStructuredTypeRef;
 import com.sap.cds.reflect.CdsModel;
 import com.sap.cds.services.ErrorStatuses;
 import com.sap.cds.services.EventContext;
@@ -39,11 +41,14 @@ import com.sap.cds.services.handler.annotations.ServiceName;
 import com.sap.cds.services.messages.Messages;
 import com.sap.cds.services.persistence.PersistenceService;
 
-import cds.gen.adminservice.BooksAddToOrderContext;
 import cds.gen.adminservice.AdminService;
 import cds.gen.adminservice.AdminService_;
 import cds.gen.adminservice.Books;
+import cds.gen.adminservice.BooksAddToOrderContext;
+import cds.gen.adminservice.BooksCovers;
 import cds.gen.adminservice.Books_;
+import cds.gen.adminservice.Info;
+import cds.gen.adminservice.Info_;
 import cds.gen.adminservice.OrderItems;
 import cds.gen.adminservice.OrderItems_;
 import cds.gen.adminservice.Orders;
@@ -62,17 +67,16 @@ import my.bookshop.MessageKeys;
 class AdminServiceHandler implements EventHandler {
 
 	private final AdminService.Draft adminService;
-
 	private final PersistenceService db;
-
 	private final Messages messages;
-
 	private final CqnAnalyzer analyzer;
+	private final Environment env;
 
-	AdminServiceHandler(AdminService.Draft adminService, PersistenceService db, Messages messages, CdsModel model) {
+	AdminServiceHandler(AdminService.Draft adminService, PersistenceService db, Messages messages, CdsModel model, Environment env) {
 		this.adminService = adminService;
 		this.db = db;
 		this.messages = messages;
+		this.env = env;
 
 		// model is a tenant-dependant model proxy
 		this.analyzer = CqnAnalyzer.create(model);
@@ -94,14 +98,6 @@ class AdminServiceHandler implements EventHandler {
 				order.getItems().forEach(orderItem -> {
 					// validation of the Order creation request
 					Integer quantity = orderItem.getQuantity();
-					if (quantity == null || quantity <= 0) {
-						// errors with localized messages from property files
-						// exceptions abort the request and set an error http status code
-						// messages in contrast allow to collect multiple errors
-						messages.error(MessageKeys.QUANTITY_REQUIRE_MINIMUM)
-								.target("in", ORDERS, o -> o.Items(i -> i.ID().eq(orderItem.getId()).and(i.IsActiveEntity().eq(orderItem.getIsActiveEntity()))).quantity());
-					}
-
 					String bookId = orderItem.getBookId();
 
 					if(quantity == null || quantity <= 0 || bookId == null) {
@@ -119,7 +115,7 @@ class AdminServiceHandler implements EventHandler {
 						if (book.getStock() < diffQuantity) {
 							// Tip: you can have localized messages and use parameters in your messages
 							messages.error(MessageKeys.BOOK_REQUIRE_STOCK, book.getStock())
-								.target("in", ORDERS, o -> o.Items(i -> i.ID().eq(orderItem.getId()).and(i.IsActiveEntity().eq(orderItem.getIsActiveEntity()))).quantity());
+								.target(ORDERS, o -> o.Items(i -> i.ID().eq(orderItem.getId()).and(i.IsActiveEntity().eq(orderItem.getIsActiveEntity()))).quantity());
 							return; // no need to update follow-up values with invalid quantity / stock
 						}
 
@@ -151,7 +147,7 @@ class AdminServiceHandler implements EventHandler {
 		Integer quantity = orderItem.getQuantity();
 		String bookId = orderItem.getBookId();
 		String orderItemId = orderItem.getId();
-		BigDecimal amount = calculateAmountInDraft(orderItemId, quantity, bookId, true);
+		BigDecimal amount = calculateAmountInDraft(orderItemId, quantity, bookId);
 		if (amount != null) {
 			orderItem.setAmount(amount);
 		}
@@ -166,11 +162,11 @@ class AdminServiceHandler implements EventHandler {
 	public void cancelOrderItems(DraftCancelEventContext context) {
 		String orderItemId = (String) analyzer.analyze(context.getCqn()).targetKeys().get(OrderItems.ID);
 		if(orderItemId != null) {
-			calculateAmountInDraft(orderItemId, 0, null, false);
+			calculateAmountInDraft(orderItemId, 0, null);
 		}
 	}
 
-	private BigDecimal calculateAmountInDraft(String orderItemId, Integer newQuantity, String newBookId, boolean includeWarnings) {
+	private BigDecimal calculateAmountInDraft(String orderItemId, Integer newQuantity, String newBookId) {
 		Integer quantity = newQuantity;
 		String bookId = newBookId;
 		if (quantity == null && bookId == null) {
@@ -198,13 +194,6 @@ class AdminServiceHandler implements EventHandler {
 
 		if(quantity == null || bookId == null) {
 			return null; // not enough data available
-		}
-
-		// only warn about invalid values as we are in draft mode
-		if(includeWarnings && quantity <= 0) {
-			// Tip: add additional messages with localized messages from property files
-			// these messages are transported in sap-messages and do not abort the request
-			messages.warn(MessageKeys.QUANTITY_REQUIRE_MINIMUM);
 		}
 
 		// get the price of the updated book ID
@@ -292,7 +281,7 @@ class AdminServiceHandler implements EventHandler {
 					book.setStock(Integer.valueOf(p[4]).intValue());
 					book.setPrice(BigDecimal.valueOf(Double.valueOf(p[5])));
 					book.setCurrencyCode(p[6]);
-					book.setGenreId(Integer.valueOf(p[7]));
+					book.setGenreId(String.valueOf(p[7]));
 
 					// separate transaction per line
 					context.getCdsRuntime().changeSetContext().run(ctx -> {
@@ -306,6 +295,19 @@ class AdminServiceHandler implements EventHandler {
 			}
 		}
 		context.setResult(Arrays.asList(upload));
+	}
+
+	@Before(event = {CqnService.EVENT_CREATE, CqnService.EVENT_UPDATE, DraftService.EVENT_DRAFT_NEW, DraftService.EVENT_DRAFT_PATCH})
+	public void restoreCoversUpId(CqnStructuredTypeRef ref, BooksCovers cover) {
+		// restore up__ID, which is not provided via OData due to containment
+		cover.setUpId((String) analyzer.analyze(ref).rootKeys().get(Books.ID));
+	}
+
+	@On(event = CqnService.EVENT_READ, entity = Info_.CDS_NAME)
+	public Info readInfo() {
+		Info info = Info.create();
+		info.setHideTreeTable(!env.matchesProfiles("cloud"));
+		return info;
 	}
 
 	private Supplier<ServiceException> notFound(String message) {

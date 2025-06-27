@@ -5,7 +5,12 @@
         "toggles": true
     },
     "profile": "with-mtx-sidecar",
+    "odata": {
+        "containment": true
+    },
     "cdsc": {
-        "moduleLookupDirectories": [ "node_modules/", "target/cds/", "mtx/sidecar/node_modules/" ]
+        "beta": {
+            "draftMessages": true
+        }
     }
 }

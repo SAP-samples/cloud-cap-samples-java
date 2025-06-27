@@ -58,6 +58,13 @@
 			<scope>runtime</scope>
 		</dependency>
 
+		<dependency>
+			<groupId>com.sap.cds</groupId>
+			<artifactId>cds-feature-attachments</artifactId>
+			<version>${cds-feature-attachments.version}</version>
+			<scope>runtime</scope>
+		</dependency>
+
 		<!-- CLOUD SDK dependencies -->
 		<dependency>
 			<groupId>com.sap.cloud.sdk.cloudplatform</groupId>
@@ -172,13 +179,17 @@
 			<plugin>
 				<groupId>org.graalvm.buildtools</groupId>
 				<artifactId>native-maven-plugin</artifactId>
+				<configuration>
+					<metadataRepository>
+						<version>0.3.14</version>
+					</metadataRepository>
+				</configuration>
 			</plugin>
 
 			<!-- STEPS TO BUILD CDS MODEL AND GENERATE POJOs -->
 			<plugin>
 				<groupId>com.sap.cds</groupId>
 				<artifactId>cds-maven-plugin</artifactId>
-				<version>${cds.services.version}</version>
 				<executions>
 					<execution>
 						<id>cds.clean</id>
@@ -192,20 +203,15 @@
 						<goals>
 							<goal>install-node</goal>
 						</goals>
-						<configuration>
-							<skip>${cdsdk-global}</skip>
-						</configuration>
 					</execution>
 
-					<!-- required for cds build -->
 					<execution>
-						<id>cds.install-mtx-dependencies</id>
+						<id>cds.npm-ci</id>
 						<goals>
 							<goal>npm</goal>
 						</goals>
 						<configuration>
 							<arguments>ci</arguments>
-							<workingDirectory>../mtx/sidecar</workingDirectory>
 						</configuration>
 					</execution>
 
@@ -224,10 +230,7 @@
 						<configuration>
 							<commands>
 								<command>build --for java</command>
-								<command>deploy --to h2 --with-mocks --dry &gt;
-									"${project.basedir}/src/main/resources/schema.sql"</command>
-								<command>deploy --to h2 --dry &gt;
-									"${project.basedir}/src/main/resources/schema-nomocks.sql"</command>
+								<command>deploy --to h2 --with-mocks --dry --out "${project.basedir}/src/main/resources/schema-h2.sql"</command>
 								<command>compile srv/cat-service.cds -2 openapi --openapi:url /api/browse &gt;
 									"${project.basedir}/src/main/resources/swagger/openapi.json"</command>
 							</commands>
@@ -242,6 +245,7 @@
 						<configuration>
 							<basePackage>cds.gen</basePackage>
 							<strictSetters>true</strictSetters>
+							<interfacesForAspects>true</interfacesForAspects>
 						</configuration>
 					</execution>
 				</executions>

@@ -13,7 +13,7 @@ annotate CatalogService.Books with @(UI : {
         TypeName : '{i18n>Book}',
         TypeNamePlural : '{i18n>Books}',
         Title : {Value : title},
-        Description : {Value : author.name}
+        Description : {Value : author_ID}
     },
     Identification : [
         {Value : title},
@@ -160,6 +160,19 @@ annotate CatalogService.Reviews with @(UI : {
         {Value : modifiedAt}
     ]}
 });
+
+annotate CatalogService.GenreHierarchy with @UI: {
+    PresentationVariant  : {
+        $Type         : 'UI.PresentationVariantType',
+        RequestAtLeast: [name],
+        Visualizations: ['@UI.LineItem'],
+    },
+    LineItem               : [{
+        $Type: 'UI.DataField',
+        Value: name,
+        Label : '{i18n>Genre}'
+    }],
+};
 
 annotate CatalogService.Books actions {
     @(
