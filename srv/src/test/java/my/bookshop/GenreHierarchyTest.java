@@ -106,7 +106,7 @@ public class GenreHierarchyTest {
 	void testCollapseAll() throws Exception {
 		client.perform(get(genresURI
 				+ "?$select=DrillState,ID,name"
-				+ "&$apply=com.sap.vocabularies.Hierarchy.v1.TopLevels(HierarchyNodes=$root/GenreHierarchy,HierarchyQualifier='GenreHierarchy',NodeProperty='ID',Levels=1)"
+				+ "&$apply=orderby(name)/com.sap.vocabularies.Hierarchy.v1.TopLevels(HierarchyNodes=$root/GenreHierarchy,HierarchyQualifier='GenreHierarchy',NodeProperty='ID',Levels=1)"
 				+ "&$count=true&$skip=0&$top=238"))
 				.andExpect(status().isOk())
 				.andExpect(jsonPath("$.value[0].name").value("Fiction"))
@@ -121,7 +121,7 @@ public class GenreHierarchyTest {
 	void testExpandAll() throws Exception {
 		String url = genresURI
 				+ "?$select=DistanceFromRoot,DrillState,ID,LimitedDescendantCount,name"
-				+ "&$apply=com.sap.vocabularies.Hierarchy.v1.TopLevels(HierarchyNodes=$root/GenreHierarchy,HierarchyQualifier='GenreHierarchy',NodeProperty='ID')"
+				+ "&$apply=orderby(name)/com.sap.vocabularies.Hierarchy.v1.TopLevels(HierarchyNodes=$root/GenreHierarchy,HierarchyQualifier='GenreHierarchy',NodeProperty='ID')"
 				+ "&$count=true&$skip=0&$top=238";
 
 		ResultActions expectations = client.perform(get(url))

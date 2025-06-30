@@ -47,8 +47,6 @@ import cds.gen.adminservice.Books;
 import cds.gen.adminservice.BooksAddToOrderContext;
 import cds.gen.adminservice.BooksCovers;
 import cds.gen.adminservice.Books_;
-import cds.gen.adminservice.Info;
-import cds.gen.adminservice.Info_;
 import cds.gen.adminservice.OrderItems;
 import cds.gen.adminservice.OrderItems_;
 import cds.gen.adminservice.Orders;
@@ -70,13 +68,11 @@ class AdminServiceHandler implements EventHandler {
 	private final PersistenceService db;
 	private final Messages messages;
 	private final CqnAnalyzer analyzer;
-	private final Environment env;
 
-	AdminServiceHandler(AdminService.Draft adminService, PersistenceService db, Messages messages, CdsModel model, Environment env) {
+	AdminServiceHandler(AdminService.Draft adminService, PersistenceService db, Messages messages, CdsModel model) {
 		this.adminService = adminService;
 		this.db = db;
 		this.messages = messages;
-		this.env = env;
 
 		// model is a tenant-dependant model proxy
 		this.analyzer = CqnAnalyzer.create(model);
