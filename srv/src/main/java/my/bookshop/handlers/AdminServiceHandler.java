@@ -15,10 +15,7 @@ import java.util.List;
 import java.util.UUID;
 import java.util.function.Supplier;
 import java.util.stream.Stream;
-
-import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
-
 import com.sap.cds.Result;
 import com.sap.cds.ql.Select;
 import com.sap.cds.ql.Update;
