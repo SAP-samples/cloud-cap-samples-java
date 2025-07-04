@@ -4,7 +4,6 @@ import static cds.gen.adminservice.AdminService_.GENRE_HIERARCHY;
 
 import java.util.List;
 
-import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
 import com.sap.cds.ql.CQL;
@@ -26,7 +25,6 @@ import cds.gen.adminservice.GenreHierarchy_;
 /**
  * Example of a custom handler for nextSiblingAction
  */
-@Profile("cloud")
 public class HierarchySiblingActionHandler implements EventHandler {
 
     private final PersistenceService db;

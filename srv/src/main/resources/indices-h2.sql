@@ -1,0 +1,1 @@
+CREATE INDEX genres_parent_id ON my_bookshop_Genres(parent_ID);
