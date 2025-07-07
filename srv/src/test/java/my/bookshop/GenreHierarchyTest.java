@@ -34,7 +34,7 @@ public class GenreHierarchyTest {
 	void testCountAll() throws Exception {
 		client.perform(get(genresURI + "/$count"))
 				.andExpect(status().isOk())
-				.andExpect(jsonPath("$").value(274));
+				.andExpect(jsonPath("$").value(269));
 	}
 
 	@Test
@@ -72,10 +72,10 @@ public class GenreHierarchyTest {
 				.andExpect(jsonPath("$.value[1].name").value("Action & Adventure"))
 				.andExpect(jsonPath("$.value[1].DrillState").value("leaf"))
 				.andExpect(jsonPath("$.value[1].DistanceFromRoot").value(1))
-				.andExpect(jsonPath("$.value[184].name").value("True Crime"))
-				.andExpect(jsonPath("$.value[184].DrillState").value("leaf"))
-				.andExpect(jsonPath("$.value[184].DistanceFromRoot").value(1))
-				.andExpect(jsonPath("$.value[185]").doesNotExist());
+				.andExpect(jsonPath("$.value[182].name").value("True Crime"))
+				.andExpect(jsonPath("$.value[182].DrillState").value("leaf"))
+				.andExpect(jsonPath("$.value[182].DistanceFromRoot").value(1))
+				.andExpect(jsonPath("$.value[183]").doesNotExist());
 	}
 
 	@Test
@@ -119,7 +119,7 @@ public class GenreHierarchyTest {
 				.andExpect(jsonPath("$.value[0].name").value("Fiction"))
 				.andExpect(jsonPath("$.value[0].DrillState").value("expanded"))
 				.andExpect(jsonPath("$.value[0].DistanceFromRoot").value(0))
-				.andExpect(jsonPath("$.value[99].name").value("New Adult"))
+				.andExpect(jsonPath("$.value[99].name").value("New Weird"))
 				.andExpect(jsonPath("$.value[99].DrillState").value("leaf"))
 				.andExpect(jsonPath("$.value[100]").doesNotExist());
 	}
@@ -197,7 +197,7 @@ public class GenreHierarchyTest {
 				.andExpect(status().isOk())
 				.andExpect(jsonPath("$.value[0].name").value("Non-Fiction"))
 				.andExpect(jsonPath("$.value[1].name").value("True Crime"))
-				.andExpect(jsonPath("$.value[184].name").value("Action & Adventure"))
-				.andExpect(jsonPath("$.value[185]").doesNotExist());
+				.andExpect(jsonPath("$.value[182].name").value("Action & Adventure"))
+				.andExpect(jsonPath("$.value[183]").doesNotExist());
 	}
 }
