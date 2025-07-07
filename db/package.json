@@ -1,7 +1,7 @@
 {
   "name": "deploy",
   "dependencies": {
-    "hdb": "^0",
+    "hdb": "^2",
     "@sap/hdi-deploy": "^5"
   },
   "engines": {
