@@ -15,10 +15,7 @@ import java.util.List;
 import java.util.UUID;
 import java.util.function.Supplier;
 import java.util.stream.Stream;
-
-import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
-
 import com.sap.cds.Result;
 import com.sap.cds.ql.Select;
 import com.sap.cds.ql.Update;
@@ -47,8 +44,6 @@ import cds.gen.adminservice.Books;
 import cds.gen.adminservice.BooksAddToOrderContext;
 import cds.gen.adminservice.BooksCovers;
 import cds.gen.adminservice.Books_;
-import cds.gen.adminservice.Info;
-import cds.gen.adminservice.Info_;
 import cds.gen.adminservice.OrderItems;
 import cds.gen.adminservice.OrderItems_;
 import cds.gen.adminservice.Orders;
@@ -70,13 +65,11 @@ class AdminServiceHandler implements EventHandler {
 	private final PersistenceService db;
 	private final Messages messages;
 	private final CqnAnalyzer analyzer;
-	private final Environment env;
 
-	AdminServiceHandler(AdminService.Draft adminService, PersistenceService db, Messages messages, CdsModel model, Environment env) {
+	AdminServiceHandler(AdminService.Draft adminService, PersistenceService db, Messages messages, CdsModel model) {
 		this.adminService = adminService;
 		this.db = db;
 		this.messages = messages;
-		this.env = env;
 
 		// model is a tenant-dependant model proxy
 		this.analyzer = CqnAnalyzer.create(model);
@@ -301,13 +294,6 @@ class AdminServiceHandler implements EventHandler {
 	public void restoreCoversUpId(CqnStructuredTypeRef ref, BooksCovers cover) {
 		// restore up__ID, which is not provided via OData due to containment
 		cover.setUpId((String) analyzer.analyze(ref).rootKeys().get(Books.ID));
-	}
-
-	@On(event = CqnService.EVENT_READ, entity = Info_.CDS_NAME)
-	public Info readInfo() {
-		Info info = Info.create();
-		info.setHideTreeTable(!env.matchesProfiles("cloud"));
-		return info;
 	}
 
 	private Supplier<ServiceException> notFound(String message) {
