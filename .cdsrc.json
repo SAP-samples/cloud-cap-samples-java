@@ -6,11 +6,9 @@
     },
     "profile": "with-mtx-sidecar",
     "odata": {
-        "containment": true
+        "containment": false
     },
     "cdsc": {
-        "beta": {
-            "draftMessages": true
-        }
+        "draftMessages": true
     }
 }

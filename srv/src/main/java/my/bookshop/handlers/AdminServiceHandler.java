@@ -290,11 +290,11 @@ class AdminServiceHandler implements EventHandler {
 		context.setResult(Arrays.asList(upload));
 	}
 
-	@Before(event = {CqnService.EVENT_CREATE, CqnService.EVENT_UPDATE, DraftService.EVENT_DRAFT_NEW, DraftService.EVENT_DRAFT_PATCH})
-	public void restoreCoversUpId(CqnStructuredTypeRef ref, BooksCovers cover) {
-		// restore up__ID, which is not provided via OData due to containment
-		cover.setUpId((String) analyzer.analyze(ref).rootKeys().get(Books.ID));
-	}
+//	@Before(event = {CqnService.EVENT_CREATE, CqnService.EVENT_UPDATE, DraftService.EVENT_DRAFT_NEW, DraftService.EVENT_DRAFT_PATCH})
+//	public void restoreCoversUpId(CqnStructuredTypeRef ref, BooksCovers cover) {
+//		// restore up__ID, which is not provided via OData due to containment
+//		cover.setUpId((String) analyzer.analyze(ref).rootKeys().get(Books.ID));
+//	}
 
 	private Supplier<ServiceException> notFound(String message) {
 		return () -> new ServiceException(ErrorStatuses.NOT_FOUND, message);
