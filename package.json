@@ -5,7 +5,7 @@
     "license": "Apache License Version 2.0",
     "repository": "https://github.com/SAP-samples/cloud-cap-samples-java.git",
     "devDependencies": {
-        "@sap/cds-dk": "^8",
-        "@cap-js/postgres": "^1"
+        "@sap/cds-dk": "^9",
+        "@cap-js/postgres": "^2"
     }
 }
