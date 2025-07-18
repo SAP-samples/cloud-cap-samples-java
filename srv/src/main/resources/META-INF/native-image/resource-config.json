@@ -2,10 +2,7 @@
 	"resources": {
 		"includes": [
 			{
-				"pattern": "\\Qmessages.properties\\E"
-			},
-			{
-				"pattern": "\\Qmessages_de.properties\\E"
+				"pattern": "\\Qindices-h2.sql\\E"
 			}
 		]
 	}
