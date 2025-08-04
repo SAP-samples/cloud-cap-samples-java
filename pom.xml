@@ -6,7 +6,7 @@
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>3.5.3</version>
+		<version>3.5.4</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 
@@ -23,11 +23,11 @@
 
 		<!-- DEPENDENCIES VERSION -->
 		<jdk.version>21</jdk.version>
-		<cds.services.version>4.1.1</cds.services.version>
+		<cds.services.version>4.2.0</cds.services.version>
 		<cloud.sdk.version>5.20.0</cloud.sdk.version>
-		<xsuaa.version>3.6.0</xsuaa.version>
+		<xsuaa.version>3.6.1</xsuaa.version>
 		<cf-java-logging-support.version>3.8.5</cf-java-logging-support.version>
-		<cds-feature-attachments.version>1.0.9</cds-feature-attachments.version>
+		<cds-feature-attachments.version>1.1.0</cds-feature-attachments.version>
 	</properties>
 
 	<modules>
@@ -119,7 +119,7 @@
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>flatten-maven-plugin</artifactId>
-				<version>1.7.1</version>
+				<version>1.7.2</version>
 				<configuration>
 					<updatePomFile>true</updatePomFile>
 					<flattenMode>resolveCiFriendliesOnly</flattenMode>
@@ -146,7 +146,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-enforcer-plugin</artifactId>
-				<version>3.6.0</version>
+				<version>3.6.1</version>
 				<executions>
 					<execution>
 						<id>Project Structure Checks</id>
