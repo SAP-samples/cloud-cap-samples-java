@@ -86,7 +86,7 @@
                     "name": "sap.fe.templates.ListReport",
                     "options": {
                         "settings" : {
-                            "entitySet" : "Books",
+                            "contextPath" : "/Books",
                             "navigation" : {
                                 "Books" : {
                                     "detail" : {
@@ -113,7 +113,8 @@
                     "name": "sap.fe.templates.ObjectPage",
                     "options": {
                         "settings" : {
-                            "entitySet" : "Books",
+                            "contextPath" : "/Books",
+                            "editableHeaderContent": false,
                             "navigation" : {
                                 "Authors" : {
                                     "detail" : {
@@ -130,7 +131,7 @@
                     "name": "sap.fe.templates.ObjectPage",
                     "options": {
                         "settings" : {
-                            "entitySet" : "Authors"
+                            "contextPath" : "/Authors"
                         }
                     }
                 }
