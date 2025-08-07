@@ -52,7 +52,7 @@ annotate my.Books with
     TypeImageUrl : 'sap-icon://course-book',
     Title : {Value : title},
     Description : {Value : author.name}
-}, });
+}});
 
 
 ////////////////////////////////////////////////////////////////////////////
