@@ -114,6 +114,7 @@
                     "options": {
                         "settings" : {
                             "contextPath" : "/Books",
+                            "editableHeaderContent": false,
                             "navigation" : {
                                 "Authors" : {
                                     "detail" : {
