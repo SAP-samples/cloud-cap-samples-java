@@ -2,23 +2,18 @@ package my.bookshop.handlers;
 
 import static cds.gen.adminservice.AdminService_.GENRE_HIERARCHY;
 
-import java.util.List;
-
-import org.springframework.stereotype.Component;
-
-import com.sap.cds.ql.CQL;
-import com.sap.cds.ql.Select;
-import com.sap.cds.ql.Update;
-import com.sap.cds.ql.cqn.CqnStructuredTypeRef;
-import com.sap.cds.services.handler.EventHandler;
-import com.sap.cds.services.handler.annotations.On;
-import com.sap.cds.services.handler.annotations.ServiceName;
-import com.sap.cds.services.persistence.PersistenceService;
-
 import cds.gen.adminservice.AdminService_;
 import cds.gen.adminservice.GenreHierarchy;
 import cds.gen.adminservice.GenreHierarchyMoveSiblingContext;
 import cds.gen.adminservice.GenreHierarchy_;
+import com.sap.cds.ql.Select;
+import com.sap.cds.ql.Update;
+import com.sap.cds.services.handler.EventHandler;
+import com.sap.cds.services.handler.annotations.On;
+import com.sap.cds.services.handler.annotations.ServiceName;
+import com.sap.cds.services.persistence.PersistenceService;
+import java.util.List;
+import org.springframework.stereotype.Component;
 
 @Component
 @ServiceName(AdminService_.CDS_NAME)
@@ -33,18 +28,18 @@ public class HierarchySiblingActionHandler implements EventHandler {
         this.db = db;
     }
 
-    @On(entity = GenreHierarchy_.CDS_NAME)
-    void onMoveSiblingAction(CqnStructuredTypeRef ref, GenreHierarchyMoveSiblingContext context) {
+    @On
+    void onMoveSiblingAction(GenreHierarchy_ ref, GenreHierarchyMoveSiblingContext context) {
         // Find current node and its parent
-        GenreHierarchy toMove = db.run(Select.from(CQL.entity(GENRE_HIERARCHY, ref))
+        GenreHierarchy toMove = db.run(Select.from(ref)
                 .columns(c -> c.ID(), c -> c.parent_ID()))
-                .single(GenreHierarchy.class);
+                .single();
 
         // Find all children of the parent, which are siblings of the entry being moved
         List<GenreHierarchy> siblingNodes = db.run(Select.from(GENRE_HIERARCHY)
                 .columns(c -> c.ID(), c -> c.siblingRank())
                 .where(c -> c.parent_ID().eq(toMove.getParentId())))
-                .listOf(GenreHierarchy.class);
+                .list();
 
         int oldPosition = 0;
         int newPosition = siblingNodes.size();

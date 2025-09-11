@@ -3,18 +3,14 @@ package my.bookshop.handlers;
 import static cds.gen.notesservice.NotesService_.ADDRESSES;
 import static cds.gen.notesservice.NotesService_.NOTES;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.concurrent.atomic.AtomicReference;
-import java.util.stream.Collectors;
-
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.stereotype.Component;
-
-import com.sap.cds.Result;
+import cds.gen.api_business_partner.ApiBusinessPartner;
+import cds.gen.api_business_partner.ApiBusinessPartner_;
+import cds.gen.notesservice.Addresses;
+import cds.gen.notesservice.Addresses_;
+import cds.gen.notesservice.Notes;
+import cds.gen.notesservice.NotesService_;
+import cds.gen.notesservice.Notes_;
+import com.sap.cds.CdsResult;
 import com.sap.cds.ql.CQL;
 import com.sap.cds.ql.Predicate;
 import com.sap.cds.ql.Select;
@@ -31,14 +27,15 @@ import com.sap.cds.services.cds.CdsReadEventContext;
 import com.sap.cds.services.handler.EventHandler;
 import com.sap.cds.services.handler.annotations.On;
 import com.sap.cds.services.handler.annotations.ServiceName;
-
-import cds.gen.api_business_partner.ApiBusinessPartner;
-import cds.gen.api_business_partner.ApiBusinessPartner_;
-import cds.gen.notesservice.Addresses;
-import cds.gen.notesservice.Addresses_;
-import cds.gen.notesservice.Notes;
-import cds.gen.notesservice.NotesService_;
-import cds.gen.notesservice.Notes_;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.atomic.AtomicReference;
+import java.util.stream.Collectors;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Component;
 
 @Component
 @ServiceName(NotesService_.CDS_NAME)
@@ -53,24 +50,25 @@ public class NotesServiceHandler implements EventHandler {
 	}
 
 	@On(entity = Addresses_.CDS_NAME)
-	Result readAddresses(CdsReadEventContext context) {
+	void readAddresses(CdsReadEventContext context) {
 		List<? extends Segment> segments = context.getCqn().ref().segments();
 		// via note
 		if(segments.size() == 2 && segments.getFirst().id().equals(Notes_.CDS_NAME)) {
 			Map<String, Object> noteKeys = analyzer.analyze(context.getCqn()).rootKeys();
-			Notes note = context.getService().run(Select.from(NOTES).columns(n -> n.address_businessPartner(), n -> n.address_ID()).matching(noteKeys)).single(Notes.class);
+			Notes note = context.getService().run(Select.from(NOTES).columns(n -> n.address_businessPartner(), n -> n.address_ID()).matching(noteKeys)).single();
 			CqnSelect addressOfNote = CQL.copy(context.getCqn(), new Modifier() {
 
 				@Override
 				public CqnStructuredTypeRef ref(CqnStructuredTypeRef ref) {
-					return CQL.entity(Addresses_.CDS_NAME)
-							.filter(p -> p.get(Addresses.BUSINESS_PARTNER).eq(note.getAddressBusinessPartner())
-									.and(p.get(Addresses.ID).eq(note.getAddressId())))
+					return CQL.entity(ADDRESSES)
+							.filter(p -> p.businessPartner().eq(note.getAddressBusinessPartner())
+									.and(p.ID().eq(note.getAddressId())))
 							.asRef();
 				}
 
 			});
-			return context.getService().run(addressOfNote);
+			context.setResult(context.getService().run(addressOfNote));
+			return;
 		}
 
 		// notes expanded?
@@ -85,30 +83,30 @@ public class NotesServiceHandler implements EventHandler {
 		});
 
 		// read addresses
-		Result addresses = bupa.run(noNotesExpand);
+		var addresses = CdsResult.of(bupa.run(noNotesExpand), Addresses.class);
 
 		// add expanded notes?
 		CqnExpand notesExpand = notesExpandHolder.get();
 		if(notesExpand != null) {
-			Select<?> notesSelect = Select.from(NOTES)
+			var notesSelect = Select.from(NOTES)
 					.columns(ensureSelected(notesExpand.items(), Notes.ADDRESS_BUSINESS_PARTNER, Notes.ADDRESS_ID))
 					.orderBy(notesExpand.orderBy())
-					.where(n -> CQL.or(addresses.streamOf(Addresses.class)
+					.where(n -> CQL.or(addresses.stream()
 							.map(address -> n.address_businessPartner().eq(address.getBusinessPartner()).and(n.address_ID().eq(address.getId())))
 							.collect(Collectors.toList()))
 							.and(predicate(notesExpand.ref().rootSegment())));
 
-			Result notes = context.getService().run(notesSelect);
-			for(Addresses address : addresses.listOf(Addresses.class)) {
+			var notes = context.getService().run(notesSelect);
+			for(Addresses address : addresses) {
 				address.setNotes(
-						notes.streamOf(Notes.class)
+						notes.stream()
 						.filter(n -> n.getAddressBusinessPartner().equals(address.getBusinessPartner())
 								&& n.getAddressId().equals(address.getId()))
 						.collect(Collectors.toList()));
 			}
 		}
 
-		return addresses;
+		context.setResult(addresses);
 	}
 
 	@On(entity = Notes_.CDS_NAME)
@@ -121,7 +119,7 @@ public class NotesServiceHandler implements EventHandler {
 
 				@Override
 				public CqnStructuredTypeRef ref(CqnStructuredTypeRef ref) {
-					return CQL.entity(Notes_.CDS_NAME).filter(predicate(segments.get(1))).asRef();
+					return CQL.entity(NOTES).filter(predicate(segments.get(1))).asRef();
 				}
 
 				@Override
@@ -153,10 +151,10 @@ public class NotesServiceHandler implements EventHandler {
 		CqnExpand addressExpand = addressExpandHolder.get();
 		if(addressExpand != null) {
 			// read notes and join with addresses
-			Result notes = context.getService().run(noAddressExpand);
-			List<Notes> notesWithAddresses = notes.streamOf(Notes.class).filter(n -> n.getAddressBusinessPartner() != null && n.getAddressId() != null).collect(Collectors.toList());
+			var notes = CdsResult.of(context.getService().run(noAddressExpand), Notes.class);
+			List<Notes> notesWithAddresses = notes.stream().filter(n -> n.getAddressBusinessPartner() != null && n.getAddressId() != null).collect(Collectors.toList());
 			if (notesWithAddresses.size() > 0) {
-				Select<?> addressSelect = Select.from(ADDRESSES)
+				var addressSelect = Select.from(ADDRESSES)
 						.columns(ensureSelected(addressExpand.items(), Addresses.BUSINESS_PARTNER, Addresses.ID))
 						.orderBy(addressExpand.orderBy())
 						.where(a -> CQL.or(notesWithAddresses.stream()
@@ -164,9 +162,9 @@ public class NotesServiceHandler implements EventHandler {
 								.collect(Collectors.toList()))
 								.and(predicate(addressExpand.ref().rootSegment())));
 
-				Result addresses = context.getService().run(addressSelect);
-				for(Notes note : notes.listOf(Notes.class)) {
-					note.setAddress(addresses.streamOf(Addresses.class)
+				var addresses = context.getService().run(addressSelect);
+				for(Notes note : notes) {
+					note.setAddress(addresses.stream()
 							.filter(a -> a.getBusinessPartner().equals(note.getAddressBusinessPartner())
 									&& a.getId().equals(note.getAddressId()))
 							.findFirst().orElse(null));

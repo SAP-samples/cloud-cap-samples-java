@@ -2,20 +2,17 @@ package my.bookshop;
 
 import static cds.gen.my.bookshop.Bookshop_.BOOKS;
 
-import java.math.BigDecimal;
-import java.math.RoundingMode;
-import java.util.OptionalDouble;
-import java.util.stream.Stream;
-
-import org.springframework.stereotype.Component;
-
+import cds.gen.my.bookshop.Books;
+import cds.gen.my.bookshop.Reviews;
 import com.sap.cds.Result;
 import com.sap.cds.ql.Select;
 import com.sap.cds.ql.Update;
 import com.sap.cds.services.persistence.PersistenceService;
-
-import cds.gen.my.bookshop.Books;
-import cds.gen.my.bookshop.Reviews;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.util.OptionalDouble;
+import java.util.stream.Stream;
+import org.springframework.stereotype.Component;
 
 /**
  * Takes care of calculating the average rating of a book based on its review
@@ -34,8 +31,8 @@ public class RatingCalculator {
 	 * Initializes the ratings for all existing books based on their reviews.
 	 */
 	public void initBookRatings() {
-		Result result = db.run(Select.from(BOOKS).columns(b -> b.ID()));
-		for (Books book : result.listOf(Books.class)) {
+		var result = db.run(Select.from(BOOKS).columns(b -> b.ID()));
+		for (Books book : result) {
 			setBookRating(book.getId());
 		}
 	}
