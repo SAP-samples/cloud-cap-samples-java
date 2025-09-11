@@ -6,6 +6,8 @@ spring:
   jmx:
     enabled: true
 cds:
+  errors:
+    prefer-service-exception: true
   odata-v4:
     endpoint.path: "/api"
   security:
