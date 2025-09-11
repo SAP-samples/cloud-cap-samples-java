@@ -30,8 +30,29 @@ modules:
       build-result: target/*-exec.jar
     requires:
       - name: bookshop-mt-service-manager
+        parameters:
+          config:
+            credential-type: x509
+            x509:
+              key-length: 2048
+              validity: 90
+              validity-type: DAYS
       - name: bookshop-mt-uaa
+        parameters:
+          config:
+            credential-type: x509
+            x509:
+              key-length: 2048
+              validity: 90
+              validity-type: DAYS
       - name: bookshop-mt-saas-registry
+        parameters:
+          config:
+            credential-type: x509
+            x509:
+              key-length: 2048
+              validity: 90
+              validity-type: DAYS
       - name: mtx-api
         properties:
           CDS_MULTITENANCY_SIDECAR_URL: ~{mtx-url}
@@ -60,7 +81,21 @@ modules:
         - name: bookshop-mt-srv
     requires:
       - name: bookshop-mt-service-manager
+        parameters:
+          config:
+            credential-type: x509
+            x509:
+              key-length: 2048
+              validity: 90
+              validity-type: DAYS
       - name: bookshop-mt-uaa
+        parameters:
+          config:
+            credential-type: x509
+            x509:
+              key-length: 2048
+              validity: 90
+              validity-type: DAYS
       - name: cf-logging
     provides:
       - name: mtx-api
@@ -86,6 +121,13 @@ modules:
         forwardAuthToken: true
         strictSSL: true
     - name: bookshop-mt-uaa
+      parameters:
+        config:
+          credential-type: x509
+          x509:
+            key-length: 2048
+            validity: 90
+            validity-type: DAYS
     provides:
       - name: app-api
         properties:
