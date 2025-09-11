@@ -2,13 +2,9 @@ package my.bookshop.handlers;
 
 import static cds.gen.adminservice.AdminService_.ORDERS;
 
-import java.util.Arrays;
-import java.util.Optional;
-import java.util.stream.Stream;
-
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.stereotype.Component;
-
+import cds.gen.adminservice.AdminService_;
+import cds.gen.adminservice.Orders;
+import cds.gen.adminservice.Orders_;
 import com.sap.cds.ql.Select;
 import com.sap.cds.ql.cqn.CqnDelete;
 import com.sap.cds.services.EventContext;
@@ -24,10 +20,11 @@ import com.sap.cds.services.handler.EventHandler;
 import com.sap.cds.services.handler.annotations.Before;
 import com.sap.cds.services.handler.annotations.ServiceName;
 import com.sap.cds.services.persistence.PersistenceService;
-
-import cds.gen.adminservice.AdminService_;
-import cds.gen.adminservice.Orders;
-import cds.gen.adminservice.Orders_;
+import java.util.Arrays;
+import java.util.Optional;
+import java.util.stream.Stream;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.stereotype.Component;
 
 /**
  * A custom handler that creates AuditLog messages.
@@ -74,7 +71,7 @@ class AdminServiceAuditHandler implements EventHandler {
 		});
 	}
 
-	@Before(event = { CqnService.EVENT_DELETE }, entity = { Orders_.CDS_NAME })
+	@Before(entity = { Orders_.CDS_NAME })
 	public void beforeDelete(CdsDeleteEventContext context) {
 		// prepare a select statement to read old currency code
 		Select<?> ordersSelect = toSelect(context.getCqn());
@@ -95,11 +92,11 @@ class AdminServiceAuditHandler implements EventHandler {
 
 	private Optional<Orders> readOldOrders(String ordersId) {
 		// prepare a select statement to read old order number
-		Select<Orders_> ordersSelect = Select.from(ORDERS).columns(Orders_::OrderNo)
+		var ordersSelect = Select.from(ORDERS).columns(Orders_::OrderNo)
 				.where(o -> o.ID().eq(ordersId).and(o.IsActiveEntity().eq(true)));
 
 		// read old orders from DB
-		return this.db.run(ordersSelect).first(Orders.class);
+		return this.db.run(ordersSelect).first();
 	}
 
 	private static ConfigChange createConfigChange(Orders orders, Orders oldOrders) {
