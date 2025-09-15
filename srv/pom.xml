@@ -65,6 +65,12 @@
 			<scope>runtime</scope>
 		</dependency>
 
+		<dependency>
+			<groupId>com.sap.cds</groupId>
+			<artifactId>cds-feature-auditlog-v2</artifactId>
+			<scope>runtime</scope>
+		</dependency>
+
 		<!-- CLOUD SDK dependencies -->
 		<dependency>
 			<groupId>com.sap.cloud.sdk.cloudplatform</groupId>
@@ -79,6 +85,12 @@
 		<dependency>
 			<groupId>com.sap.cloud.sdk.cloudplatform</groupId>
 			<artifactId>connectivity-apache-httpclient4</artifactId>
+		</dependency>
+
+		<dependency>
+			<!-- required for mtxs sidecar communication -->
+			<groupId>com.sap.cloud.sdk.cloudplatform</groupId>
+			<artifactId>connectivity-ztis</artifactId>
 		</dependency>
 
 		<!-- OTHER DEPENDENCIES -->
