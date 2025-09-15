@@ -13,7 +13,9 @@ modules:
     parameters:
       memory: 1024M
       disk-quota: 512M
-      buildpack: sap_java_buildpack_jakarta
+      buildpacks:
+      - zero_trust_sidecar_buildpack
+      - sap_java_buildpack_jakarta
       health-check-type: http
       health-check-http-endpoint: /actuator/health/liveness
       readiness-health-check-type: http
@@ -40,11 +42,14 @@ modules:
       - name: bookshop-mt-uaa
         parameters:
           config:
-            credential-type: x509
+            credential-type: X509_ATTESTED
             x509:
-              key-length: 2048
-              validity: 90
-              validity-type: DAYS
+              app-identifier: bookshop-mt-srv
+            #credential-type: x509
+            #x509:
+            #  key-length: 2048
+            #  validity: 90
+            #  validity-type: DAYS
       - name: bookshop-mt-saas-registry
         parameters:
           config:
@@ -60,6 +65,14 @@ modules:
         properties:
           CDS_MULTITENANCY_APPUI_URL: ~{app-url}
       - name: cf-logging
+      - name: bookshop-mt-auditlog
+        parameters:
+          config:
+            credential-type: x509
+            x509:
+              key-length: 2048
+              validity: 90
+              validity-type: DAYS
     provides:
       - name: srv-api
         properties:
@@ -179,3 +192,8 @@ resources:
     parameters:
       service: application-logs
       service-plan: lite
+  - name: bookshop-mt-auditlog
+    type: org.cloudfoundry.managed-service
+    parameters:
+      service: auditlog
+      service-plan: oauth2
