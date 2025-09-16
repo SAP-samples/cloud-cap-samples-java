@@ -1,12 +1,10 @@
 {
   "dependencies": {
+    "@cap-js/hana": "1.8.1",
     "@sap/cds": "^9",
     "@sap/cds-mtxs": "^3",
     "@sap/xssec": "^4",
-    "express": "^4",
-    "hdb": "^0",
-    "passport": "^0",
-    "@sap/hdi-deploy": "4.8.2"
+    "express": "^4"
   },
   "devDependencies": {
     "sqlite3": "^5"
