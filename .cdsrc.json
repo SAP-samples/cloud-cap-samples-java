@@ -7,10 +7,5 @@
     "profile": "with-mtx-sidecar",
     "odata": {
         "containment": true
-    },
-    "cdsc": {
-        "beta": {
-            "draftMessages": true
-        }
     }
 }

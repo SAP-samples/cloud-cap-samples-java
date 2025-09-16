@@ -2,16 +2,13 @@ package my.bookshop.handlers;
 
 import static cds.gen.adminservice.AdminService_.ADDRESSES;
 
-import java.time.Duration;
-import java.util.Optional;
-import java.util.stream.Stream;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.stereotype.Component;
-
-import com.sap.cds.Result;
+import cds.gen.adminservice.Addresses;
+import cds.gen.adminservice.Addresses_;
+import cds.gen.adminservice.AdminService_;
+import cds.gen.adminservice.Orders;
+import cds.gen.api_business_partner.ApiBusinessPartner;
+import cds.gen.api_business_partner.ApiBusinessPartner_;
+import cds.gen.api_business_partner.BusinessPartnerChangedContext;
 import com.sap.cds.ql.CQL;
 import com.sap.cds.ql.Insert;
 import com.sap.cds.ql.Predicate;
@@ -33,15 +30,14 @@ import com.sap.cds.services.persistence.PersistenceService;
 import com.sap.cloud.sdk.cloudplatform.resilience.ResilienceConfiguration;
 import com.sap.cloud.sdk.cloudplatform.resilience.ResilienceConfiguration.TimeLimiterConfiguration;
 import com.sap.cloud.sdk.cloudplatform.resilience.ResilienceDecorator;
-
-import cds.gen.adminservice.Addresses;
-import cds.gen.adminservice.Addresses_;
-import cds.gen.adminservice.AdminService_;
-import cds.gen.adminservice.Orders;
-import cds.gen.api_business_partner.ApiBusinessPartner;
-import cds.gen.api_business_partner.ApiBusinessPartner_;
-import cds.gen.api_business_partner.BusinessPartnerChangedContext;
+import java.time.Duration;
+import java.util.Optional;
+import java.util.stream.Stream;
 import my.bookshop.MessageKeys;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Component;
 
 /**
  * Custom handler for the Admin Service Addresses, which come from a remote S/4 System
@@ -107,13 +103,13 @@ public class AdminServiceAddressHandler implements EventHandler {
 
 		orders.filter(o -> o.getShippingAddressId() != null).forEach(order -> {
 			String addressId = order.getShippingAddressId();
-			Result replica = db.run(Select.from(ADDRESSES).where(a -> a.businessPartner().eq(businessPartner).and(a.ID().eq(addressId))));
+			var replica = db.run(Select.from(ADDRESSES).where(a -> a.businessPartner().eq(businessPartner).and(a.ID().eq(addressId))));
 			// check if the address was not yet replicated
 			if(replica.rowCount() < 1) {
 				logger.info("Replicating Address '{}' from S/4 service", addressId);
 				Addresses remoteAddress = bupa.run(Select.from(ADDRESSES)
 						.where(a -> a.businessPartner().eq(businessPartner).and(a.ID().eq(addressId))))
-						.single(Addresses.class);
+						.single();
 
 				remoteAddress.setTombstone(false);
 				db.run(Insert.into(ADDRESSES).entry(remoteAddress));
@@ -128,15 +124,15 @@ public class AdminServiceAddressHandler implements EventHandler {
 		String businessPartner = context.getData().getBusinessPartner();
 
 		// fetch affected entries from local replicas
-		Result replicas = db.run(Select.from(ADDRESSES).where(a -> a.businessPartner().eq(businessPartner)));
+		var replicas = db.run(Select.from(ADDRESSES).where(a -> a.businessPartner().eq(businessPartner)));
 		if(replicas.rowCount() > 0) {
 			logger.info("Updating Addresses for BusinessPartner '{}'", businessPartner);
 			// fetch changed data from S/4 -> might be less than local due to deletes
-			Result remoteAddresses = bupa.run(Select.from(ADDRESSES).where(a -> a.businessPartner().eq(businessPartner)));
+			var remoteAddresses = bupa.run(Select.from(ADDRESSES).where(a -> a.businessPartner().eq(businessPartner)));
 			// update replicas or add tombstone if external address was deleted
-			replicas.streamOf(Addresses.class).forEach(rep -> {
+			replicas.stream().forEach(rep -> {
 				Optional<Addresses> matching = remoteAddresses
-					.streamOf(Addresses.class)
+					.stream()
 					.filter(ext -> ext.getId().equals(rep.getId()))
 					.findFirst();
 
