@@ -35,7 +35,7 @@
 <dependency>
     <groupId>com.sap.cds</groupId>
     <artifactId>cds-feature-mt</artifactId>
-    <version>4.1.1</version>
+    <version>4.3.0</version>
 </dependency>
 <dependency>
     <groupId>com.sap.cds</groupId>
@@ -226,7 +226,7 @@
 							<goal>npm</goal>
 						</goals>
 						<configuration>
-							<arguments>install @sap/cds-dk@${cds.install-cdsdk.version} @sap/cds-mtxs@^1 --no-save</arguments>
+							<arguments>install @sap/cds-dk@${cds.install-cdsdk.version} @sap/cds-mtxs@^3 --no-save</arguments>
 						</configuration>
 					</execution>
 

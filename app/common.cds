@@ -60,38 +60,6 @@ annotate my.Books with
     Description : {Value : author.name}
 }, });
 
-
-////////////////////////////////////////////////////////////////////////////
-//
-//	Books Elements
-//
-annotate my.Books with {
-    ID
-    @title : '{i18n>ID}'
-    @UI.HiddenFilter;
-    title
-    @title : '{i18n>Title}';
-    genre
-    @title : '{i18n>Genre}'
-    @Common : {
-        Text : genre.name,
-        TextArrangement : #TextOnly
-    };
-    author
-    @title : '{i18n>Author}'
-    @Common : {
-        Text : author.name,
-        TextArrangement : #TextOnly
-    };
-    price
-    @title : '{i18n>Price}';
-    stock
-    @title : '{i18n>Stock}';
-    descr
-    @title : '{i18n>Description}'
-    @UI.MultiLineText;
-}
-
 ////////////////////////////////////////////////////////////////////////////
 //
 //	Attachments Details
@@ -127,6 +95,28 @@ annotate my.Books.attachments with @UI: {
           Action: 'AdminService.createLink',
         }
       ]
+    },
+    {
+      @UI.Hidden: {$edmJson: {
+          $If: [
+            { $Eq: [ { $Path: 'IsActiveEntity' }, true ] },
+            true,
+            {
+              $If: [
+                { $Ne: [ { $Path: 'mimeType' }, 'application/internet-shortcut' ] },
+                true,
+                false
+              ]
+            }
+          ]
+        }
+      },
+      $Type : 'UI.DataFieldForAction',
+      Label : 'Edit Link',
+      Action: 'AdminService.editLink',
+      Inline: true,
+      IconUrl: 'sap-icon://edit',
+      @HTML5.CssDefaults: {width: '4%'}         
     }
   ],
 } 
@@ -181,6 +171,28 @@ annotate my.Books.references with @UI: {
           Action: 'AdminService.createLink',
         }
       ]
+    },
+    {
+      @UI.Hidden: {$edmJson: {
+          $If: [
+            { $Eq: [ { $Path: 'IsActiveEntity' }, true ] },
+            true,
+            {
+              $If: [
+                { $Ne: [ { $Path: 'mimeType' }, 'application/internet-shortcut' ] },
+                true,
+                false
+              ]
+            }
+          ]
+        }
+      },
+      $Type : 'UI.DataFieldForAction',
+      Label : 'Edit Link',
+      Action: 'AdminService.editLink',
+      Inline: true,
+      IconUrl: 'sap-icon://edit',
+      @HTML5.CssDefaults: {width: '4%'}         
     }
   ],
 } {
@@ -229,6 +241,28 @@ annotate my.Books.footnotes with @UI: {
           Action: 'AdminService.createLink',
         }
       ]
+    },
+    {
+      @UI.Hidden: {$edmJson: {
+          $If: [
+            { $Eq: [ { $Path: 'IsActiveEntity' }, true ] },
+            true,
+            {
+              $If: [
+                { $Ne: [ { $Path: 'mimeType' }, 'application/internet-shortcut' ] },
+                true,
+                false
+              ]
+            }
+          ]
+        }
+      },
+      $Type : 'UI.DataFieldForAction',
+      Label : 'Edit Link',
+      Action: 'AdminService.editLink',
+      Inline: true,
+      IconUrl: 'sap-icon://edit',
+      @HTML5.CssDefaults: {width: '4%'}         
     }
   ],
 } {
@@ -246,6 +280,39 @@ annotate my.Books.footnotes with @UI: {
     mimeType @UI.Hidden;
     status @UI.Hidden;
 }
+
+
+////////////////////////////////////////////////////////////////////////////
+//
+//	Books Elements
+//
+annotate my.Books with {
+    ID
+    @title : '{i18n>ID}'
+    @UI.HiddenFilter;
+    title
+    @title : '{i18n>Title}';
+    genre
+    @title : '{i18n>Genre}'
+    @Common : {
+        Text : genre.name,
+        TextArrangement : #TextOnly
+    };
+    author
+    @title : '{i18n>Author}'
+    @Common : {
+        Text : author.name,
+        TextArrangement : #TextOnly
+    };
+    price
+    @title : '{i18n>Price}';
+    stock
+    @title : '{i18n>Stock}';
+    descr
+    @title : '{i18n>Description}'
+    @UI.MultiLineText;
+}
+
 
 ////////////////////////////////////////////////////////////////////////////
 //

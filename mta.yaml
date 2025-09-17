@@ -68,6 +68,17 @@ modules:
       - name: mtx-api
         properties:
           mtx-url: ${default-url}
+    hooks:
+      - name: upgrade-all
+        type: task
+        phases:
+          - blue-green.application.before-start.idle
+          - deploy.application.before-start
+        parameters:
+          name: upgrade
+          memory: 512M
+          disk-quota: 768M
+          command: npx -p @sap/cds-mtx cds-mtx upgrade "*"
 # --------------------- APPROUTER MODULE ---------------------
   - name: bookshop-mt-app
 # ------------------------------------------------------------
