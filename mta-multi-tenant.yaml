@@ -68,6 +68,9 @@ modules:
       - name: bookshop-mt-auditlog
         parameters:
           config:
+            #credential-type: X509_ATTESTED
+            #x509:
+            #  app-identifier: bookshop-mt-srv
             credential-type: x509
             x509:
               key-length: 2048
