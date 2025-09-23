@@ -71,7 +71,7 @@ RepositoryParams repositoryParam = new RepositoryParams();
       JsonObject fileExtensionsValue = new JsonObject();
       fileExtensionsValue.addProperty("type", "block");
       fileExtensionsValue.add(
-          "list", new Gson().toJsonTree(new String[] {"docx","pptx"}));
+          "list", new Gson().toJsonTree(new String[] {"docx","pptx","rtf"}));
 
       // Convert the nested JSON object to a JSON string
       String jsonParamValue = fileExtensionsValue.toString();
