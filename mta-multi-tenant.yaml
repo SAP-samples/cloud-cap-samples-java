@@ -29,7 +29,7 @@ modules:
         - mvn clean package -DskipTests=true
       build-result: target/*-exec.jar
     requires:
-      - name: bookshop-mt-service-manager
+      - name: bookshop-mt-hana-tms
       - name: bookshop-mt-uaa
       - name: bookshop-mt-saas-registry
       - name: mtx-api
@@ -59,7 +59,7 @@ modules:
       requires:
         - name: bookshop-mt-srv
     requires:
-      - name: bookshop-mt-service-manager
+      - name: bookshop-mt-hana-tms
       - name: bookshop-mt-uaa
       - name: cf-logging
     provides:
@@ -107,11 +107,11 @@ resources:
           - https://*.~{app-api/app-domain}/**
     requires:
       - name: app-api
-  - name: bookshop-mt-service-manager
+  - name: bookshop-mt-hana-tms
     type: org.cloudfoundry.managed-service
     parameters:
-      service: service-manager
-      service-plan: container
+      service: hana-cloud
+      service-plan: hana-multitenancy
   - name: bookshop-mt-saas-registry
     type: org.cloudfoundry.managed-service
     parameters:
