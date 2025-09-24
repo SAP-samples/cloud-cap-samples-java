@@ -13,10 +13,20 @@
     "node": "^22"
   },
   "cds": {
-    "profiles": ["mtx-sidecar", "java"]
-  },
-  "scripts": {
-    "start": "cds-serve",
-    "build": "cds build ../.. --for mtx-sidecar --production && npm ci --prefix gen"
+    "profiles": [
+      "mtx-sidecar",
+      "java"
+    ],
+    "requires": {
+      "multitenancy": true,
+      "db": {
+        "pool": {
+          "builtin": true
+        }
+      }
+    },
+    "scripts": {
+      "start": "cds-serve",
+      "build": "cds build ../.. --for mtx-sidecar --production && npm ci --prefix gen"
+    }
   }
-}
