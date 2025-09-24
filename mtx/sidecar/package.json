@@ -24,9 +24,10 @@
           "builtin": true
         }
       }
-    },
-    "scripts": {
-      "start": "cds-serve",
-      "build": "cds build ../.. --for mtx-sidecar --production && npm ci --prefix gen"
     }
+  },
+  "scripts": {
+    "start": "cds-serve",
+    "build": "cds build ../.. --for mtx-sidecar --production && npm ci --prefix gen"
   }
+}
