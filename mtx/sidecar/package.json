@@ -24,6 +24,14 @@
           "builtin": true
         }
       }
+    },
+    "cds.xt.DeploymentService": {
+      "hdi": {
+        "create": {
+          "database_id": "496f75d5-446b-4aff-ab51-540aae380d54",
+          "hana_tenant_prefix": "bookshop-tms"
+        }
+      }
     }
   },
   "scripts": {
