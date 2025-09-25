@@ -235,6 +235,7 @@
 							<basePackage>cds.gen</basePackage>
 							<strictSetters>true</strictSetters>
 							<interfacesForAspects>true</interfacesForAspects>
+							<linkedInterfaces>true</linkedInterfaces>
 						</configuration>
 					</execution>
 				</executions>

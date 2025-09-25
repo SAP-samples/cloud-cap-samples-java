@@ -1,22 +1,20 @@
 package my.bookshop.handlers;
 
 import static cds.gen.adminservice.AdminService_.ORDERS;
-import static cds.gen.adminservice.AdminService_.ORDER_ITEMS;
 import static cds.gen.my.bookshop.Bookshop_.BOOKS;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.UUID;
-import java.util.function.Supplier;
-import java.util.stream.Stream;
-import org.springframework.stereotype.Component;
-import com.sap.cds.Result;
+import cds.gen.adminservice.AdminService;
+import cds.gen.adminservice.AdminService_;
+import cds.gen.adminservice.Books;
+import cds.gen.adminservice.BooksAddToOrderContext;
+import cds.gen.adminservice.BooksCovers;
+import cds.gen.adminservice.Books_;
+import cds.gen.adminservice.OrderItems;
+import cds.gen.adminservice.OrderItems_;
+import cds.gen.adminservice.Orders;
+import cds.gen.adminservice.Upload;
+import cds.gen.adminservice.Upload_;
+import cds.gen.my.bookshop.Bookshop_;
 import com.sap.cds.ql.Select;
 import com.sap.cds.ql.Update;
 import com.sap.cds.ql.Upsert;
@@ -37,20 +35,18 @@ import com.sap.cds.services.handler.annotations.On;
 import com.sap.cds.services.handler.annotations.ServiceName;
 import com.sap.cds.services.messages.Messages;
 import com.sap.cds.services.persistence.PersistenceService;
-
-import cds.gen.adminservice.AdminService;
-import cds.gen.adminservice.AdminService_;
-import cds.gen.adminservice.Books;
-import cds.gen.adminservice.BooksAddToOrderContext;
-import cds.gen.adminservice.BooksCovers;
-import cds.gen.adminservice.Books_;
-import cds.gen.adminservice.OrderItems;
-import cds.gen.adminservice.OrderItems_;
-import cds.gen.adminservice.Orders;
-import cds.gen.adminservice.Upload;
-import cds.gen.adminservice.Upload_;
-import cds.gen.my.bookshop.Bookshop_;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.UUID;
+import java.util.stream.Stream;
 import my.bookshop.MessageKeys;
+import org.springframework.stereotype.Component;
 
 /**
  * Custom business logic for the "Admin Service" (see admin-service.cds)
@@ -100,11 +96,11 @@ class AdminServiceHandler implements EventHandler {
 					// calculate the actual quantity difference
 					// FIXME this should handle book changes, currently only quantity changes are handled
 					int diffQuantity = quantity - db.run(Select.from(Bookshop_.ORDER_ITEMS).columns(i -> i.quantity()).byId(orderItem.getId()))
-												.first(OrderItems.class).map(i -> i.getQuantity()).orElse(0);
+												.first().map(i -> i.getQuantity()).orElse(0);
 
 					// check if enough books are available
-					Result result = db.run(Select.from(BOOKS).columns(b -> b.ID(), b -> b.stock(), b -> b.price()).byId(bookId));
-					result.first(Books.class).ifPresent(book -> {
+					var result = db.run(Select.from(BOOKS).columns(b -> b.ID(), b -> b.stock(), b -> b.price()).byId(bookId));
+					result.first().ifPresent(book -> {
 						if (book.getStock() < diffQuantity) {
 							// Tip: you can have localized messages and use parameters in your messages
 							messages.error(MessageKeys.BOOK_REQUIRE_STOCK, book.getStock())
@@ -128,38 +124,31 @@ class AdminServiceHandler implements EventHandler {
 		});
 	}
 
-	/**
+	/*
 	 * Calculate the total order value preview when editing an order item
-	 *
-	 * @param context
-	 * @param orderItem
 	 */
-	@Before(event = DraftService.EVENT_DRAFT_PATCH)
-	public void patchOrderItems(DraftPatchEventContext context, OrderItems orderItem) {
+	@Before
+	public void patchOrderItems(DraftPatchEventContext context, OrderItems_ ref, OrderItems orderItem) {
 		// check if quantity or book was updated
 		Integer quantity = orderItem.getQuantity();
 		String bookId = orderItem.getBookId();
-		String orderItemId = orderItem.getId();
-		BigDecimal amount = calculateAmountInDraft(orderItemId, quantity, bookId);
+		BigDecimal amount = calculateAmountInDraft(ref, quantity, bookId);
 		if (amount != null) {
 			orderItem.setAmount(amount);
 		}
 	}
 
-	/**
+	/*
 	 * Calculate the total order value preview when deleting an order item from the order
-	 *
-	 * @param context
 	 */
-	@Before(event = DraftService.EVENT_DRAFT_CANCEL, entity = OrderItems_.CDS_NAME)
-	public void cancelOrderItems(DraftCancelEventContext context) {
-		String orderItemId = (String) analyzer.analyze(context.getCqn()).targetKeys().get(OrderItems.ID);
-		if(orderItemId != null) {
-			calculateAmountInDraft(orderItemId, 0, null);
+	@Before
+	public void cancelOrderItems(DraftCancelEventContext context, OrderItems_ ref) {
+		if(ref.asRef().targetSegment().filter().isPresent()) {
+			calculateAmountInDraft(ref, 0, null);
 		}
 	}
 
-	private BigDecimal calculateAmountInDraft(String orderItemId, Integer newQuantity, String newBookId) {
+	private BigDecimal calculateAmountInDraft(OrderItems_ ref, Integer newQuantity, String newBookId) {
 		Integer quantity = newQuantity;
 		String bookId = newBookId;
 		if (quantity == null && bookId == null) {
@@ -167,12 +156,11 @@ class AdminServiceHandler implements EventHandler {
 		}
 
 		// get the order item that was updated (to get access to the book price, quantity and order total)
-		Result result = adminService.run(Select.from(ORDER_ITEMS)
+		var result = adminService.run(Select.from(ref)
 				.columns(o -> o.quantity(), o -> o.amount(),
 						o -> o.book().expand(b -> b.ID(), b -> b.price()),
-						o -> o.parent().expand(p -> p.ID(), p -> p.total()))
-				.where(o -> o.ID().eq(orderItemId).and(o.IsActiveEntity().eq(false))));
-		OrderItems itemToPatch = result.first(OrderItems.class).orElseThrow(notFound(MessageKeys.ORDERITEM_MISSING));
+						o -> o.parent().expand(p -> p.ID(), p -> p.total())));
+		OrderItems itemToPatch = result.single();
 		BigDecimal bookPrice = null;
 
 		// fallback to existing values
@@ -191,9 +179,8 @@ class AdminServiceHandler implements EventHandler {
 
 		// get the price of the updated book ID
 		if(bookPrice == null) {
-			result = db.run(Select.from(BOOKS).byId(bookId).columns(b -> b.price()));
-			Books book = result.first(Books.class).orElseThrow(notFound(MessageKeys.BOOK_MISSING));
-			bookPrice = book.getPrice();
+			var bookResult = db.run(Select.from(BOOKS).byId(bookId).columns(b -> b.price()));
+			bookPrice = bookResult.single().getPrice();
 		}
 
 		// update the amount of the order item
@@ -215,9 +202,9 @@ class AdminServiceHandler implements EventHandler {
 	 * @param context
 	 */
 	@On(entity = Books_.CDS_NAME)
-	public void addBookToOrder(BooksAddToOrderContext context) {
+	public Orders addBookToOrder(BooksAddToOrderContext context) {
 		String orderId = context.getOrderId();
-		List<Orders> orders = adminService.run(Select.from(ORDERS).columns(o -> o._all(), o -> o.Items().expand()).where(o -> o.ID().eq(orderId))).listOf(Orders.class);
+		List<Orders> orders = adminService.run(Select.from(ORDERS).columns(o -> o._all(), o -> o.Items().expand()).where(o -> o.ID().eq(orderId))).list();
 		Orders order = orders.stream().filter(p -> p.getIsActiveEntity()).findFirst().orElse(null);
 
 		// check that the order with given ID exists and is not in draft-mode
@@ -241,9 +228,9 @@ class AdminServiceHandler implements EventHandler {
 		newItem.setQuantity(context.getQuantity());
 		order.getItems().add(newItem);
 
-		Orders updatedOrder = adminService.run(Update.entity(ORDERS).data(order)).single(Orders.class);
+		Orders updatedOrder = adminService.run(Update.entity(ORDERS).data(order)).single();
 		messages.success(MessageKeys.BOOK_ADDED_ORDER);
-		context.setResult(updatedOrder);
+		return updatedOrder;
 	}
 
 	/**
@@ -260,7 +247,7 @@ class AdminServiceHandler implements EventHandler {
 	 * @param csv
 	 */
 	@On
-	public void addBooksViaCsv(CdsUpdateEventContext context, Upload upload) {
+	public List<Upload> addBooksViaCsv(CdsUpdateEventContext context, Upload upload) {
 		InputStream is = upload.getCsv();
 		if (is != null) {
 			try (BufferedReader br = new BufferedReader(new InputStreamReader(is))) {
@@ -287,7 +274,7 @@ class AdminServiceHandler implements EventHandler {
 				throw new ServiceException(ErrorStatuses.SERVER_ERROR, MessageKeys.BOOK_IMPORT_INVALID_CSV, e);
 			}
 		}
-		context.setResult(Arrays.asList(upload));
+		return Arrays.asList(upload);
 	}
 
 //	@Before(event = {CqnService.EVENT_CREATE, CqnService.EVENT_UPDATE, DraftService.EVENT_DRAFT_NEW, DraftService.EVENT_DRAFT_PATCH})
@@ -295,10 +282,6 @@ class AdminServiceHandler implements EventHandler {
 //		// restore up__ID, which is not provided via OData due to containment
 //		cover.setUpId((String) analyzer.analyze(ref).rootKeys().get(Books.ID));
 //	}
-
-	private Supplier<ServiceException> notFound(String message) {
-		return () -> new ServiceException(ErrorStatuses.NOT_FOUND, message);
-	}
 
 	private BigDecimal defaultZero(BigDecimal decimal) {
 		return decimal == null ? BigDecimal.valueOf(0) : decimal;
