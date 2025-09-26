@@ -1,5 +1,5 @@
 ---
-my.bookshop.postgresImage: postgres:15
+my.bookshop.postgresImage: postgres:16
 
 cds:
   dataSource.csv:
@@ -26,3 +26,4 @@ spring:
 cds:
   dataSource:
     auto-config.enabled: false
+  
