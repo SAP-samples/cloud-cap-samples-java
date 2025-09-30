@@ -7,8 +7,5 @@
     "profile": "with-mtx-sidecar",
     "odata": {
         "containment": false
-    },
-    "fiori":{
-        "draft_messages": false
     }
 }
