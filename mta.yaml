@@ -78,7 +78,7 @@ modules:
           name: upgrade
           memory: 512M
           disk-quota: 768M
-          command: npx cds deploy --to hana --for all-tenants
+          command: npx -p @sap/cds-mtx cds-mtx upgrade "*"
 # --------------------- APPROUTER MODULE ---------------------
   - name: bookshop-mt-app
 # ------------------------------------------------------------
