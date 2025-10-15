@@ -20,7 +20,7 @@ class NotesServiceITest {
 	private WebTestClient client;
 
 	@Test
-	void testGetNotes() throws Exception {
+	void testGetNotes() {
 		client.get().uri(notesURI).headers(this::authenticatedCredentials).exchange()
 				.expectStatus().isOk()
 				.expectBody()
@@ -40,7 +40,7 @@ class NotesServiceITest {
 	}
 
 	@Test
-	void testGetAddresses() throws Exception {
+	void testGetAddresses() {
 		client.get().uri(addressesURI + "?$filter=businessPartner eq '10401010'").headers(this::authenticatedCredentials).exchange()
 				.expectStatus().isOk()
 				.expectBody()
@@ -54,7 +54,7 @@ class NotesServiceITest {
 	}
 
 	@Test
-	void testGetNoteWithAddress() throws Exception {
+	void testGetNoteWithAddress() {
 		client.get().uri(notesURI + "?$expand=address").headers(this::authenticatedCredentials).exchange()
 				.expectStatus().isOk()
 				.expectBody()
@@ -83,7 +83,7 @@ class NotesServiceITest {
 	}
 
 	@Test
-	void testGetSuppliersWithNotes() throws Exception {
+	void testGetSuppliersWithNotes() {
 		client.get().uri(addressesURI + "?$expand=notes($orderby=ID)&$filter=businessPartner eq '10401010'").headers(this::authenticatedCredentials).exchange()
 				.expectStatus().isOk()
 				.expectBody()
@@ -108,7 +108,7 @@ class NotesServiceITest {
 	}
 
 	@Test
-	void testGetNotesToSupplier() throws Exception {
+	void testGetNotesToSupplier() {
 		client.get().uri(notesURI + "(ID=5efc842c-c70d-4ee2-af1d-81c7d257aff7,IsActiveEntity=true)/address").headers(this::authenticatedCredentials).exchange()
 				.expectStatus().isOk()
 				.expectBody()
@@ -119,7 +119,7 @@ class NotesServiceITest {
 	}
 
 	@Test
-	void testGetSupplierToNotes() throws Exception {
+	void testGetSupplierToNotes() {
 		client.get().uri(addressesURI + "(businessPartner='10401010',ID='100')/notes").headers(this::authenticatedCredentials).exchange()
 				.expectStatus().isOk()
 				.expectBody()
@@ -135,7 +135,7 @@ class NotesServiceITest {
 	}
 
 	@Test
-	void testGetSupplierToSpecificNote() throws Exception {
+	void testGetSupplierToSpecificNote() {
 		client.get().uri(addressesURI + "(businessPartner='10401010',ID='100')/notes(ID=83e2643b-aecc-47d3-9f85-a8ba14eff07d,IsActiveEntity=true)")
 				.headers(this::authenticatedCredentials)
 				.exchange()
@@ -148,7 +148,7 @@ class NotesServiceITest {
 	}
 
 	@Test
-	void testGetNotesWithNestedExpands() throws Exception {
+	void testGetNotesWithNestedExpands() {
 		client.get().uri(notesURI + "?$select=note&$expand=address($select=postalCode;$expand=notes($select=note))&$top=1").headers(this::authenticatedCredentials).exchange()
 				.expectStatus().isOk()
 				.expectBody()
@@ -164,7 +164,7 @@ class NotesServiceITest {
 	}
 
 	@Test
-	void testGetAddressesWithNestedExpands() throws Exception {
+	void testGetAddressesWithNestedExpands() {
 		client.get().uri(addressesURI + "?$select=postalCode&$expand=notes($select=note;$expand=address($select=postalCode))&$filter=businessPartner eq '1000020'")
 				.headers(this::authenticatedCredentials)
 				.exchange()

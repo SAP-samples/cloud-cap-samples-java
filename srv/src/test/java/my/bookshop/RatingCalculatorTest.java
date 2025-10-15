@@ -12,7 +12,7 @@ class RatingCalculatorTest {
 	/*
 	 * Holder class for a book rating calculation test case.
 	 */
-	private class RatingTestFixture {
+	private static class RatingTestFixture {
 		Stream<Double> ratings;
 		double expectedAvg;
 
