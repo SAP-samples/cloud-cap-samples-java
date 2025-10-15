@@ -13,7 +13,7 @@ import cds.gen.catalogservice.Books;
 class CatalogServiceHandlerTest {
 
 	@Test
-	void testDiscountHandler() {
+	void discountHandler() {
 		Books book1 = Books.create();
 		book1.setTitle("Book 1");
 		book1.setStock(10);

@@ -31,7 +31,7 @@ class AdminServiceTest {
 
 	@Test
 	@WithMockUser(username = "user")
-	void testUnauthorizedAccess() {
+	void unauthorizedAccess() {
 		assertThrows(ServiceException.class, () -> {
 			adminService.newDraft(Insert.into(AUTHORS).entry(Collections.emptyMap()));
 		});
@@ -39,7 +39,7 @@ class AdminServiceTest {
 
 	@Test
 	@WithMockUser(username = "admin")
-	void testInvalidAuthorName() {
+	void invalidAuthorName() {
 		assertThrows(ServiceException.class, () -> {
 			Authors author = Authors.create();
 			author.setName("little Joey");
@@ -49,7 +49,7 @@ class AdminServiceTest {
 
 	@Test
 	@WithMockUser(username = "admin")
-	void testValidAuthorName() {
+	void validAuthorName() {
 		Authors author = Authors.create();
 		author.setName("Big Joey");
 		Result result = adminService.run(Insert.into(AUTHORS).entry(author));
@@ -58,7 +58,7 @@ class AdminServiceTest {
 
 	@Test
 	@WithMockUser(username = "admin")
-	void testCreateOrderWithoutBook() {
+	void createOrderWithoutBook() {
 		Orders order = Orders.create();
 		order.setOrderNo("324");
 		order.setShippingAddressId("100");
@@ -75,7 +75,7 @@ class AdminServiceTest {
 
 	@Test
 	@WithMockUser(username = "admin")
-	void testCreateOrderWithNonExistingBook() {
+	void createOrderWithNonExistingBook() {
 		Orders order = Orders.create();
 		order.setOrderNo("324");
 		order.setShippingAddressId("100");

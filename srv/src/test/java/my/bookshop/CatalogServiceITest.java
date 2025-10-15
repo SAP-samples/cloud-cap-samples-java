@@ -44,21 +44,21 @@ class CatalogServiceITest {
 	}
 
 	@Test
-	void testDiscountApplied() throws Exception {
+	void discountApplied() throws Exception {
 		mockMvc.perform(get(booksURI + "?$filter=stock gt 200&top=1"))
 			.andExpect(status().isOk())
 			.andExpect(jsonPath("$.value[0].title").value(containsString("11% discount")));
 	}
 
 	@Test
-	void testDiscountNotApplied() throws Exception {
+	void discountNotApplied() throws Exception {
 		mockMvc.perform(get(booksURI + "?$filter=stock lt 100&top=1"))
 			.andExpect(status().isOk())
 			.andExpect(jsonPath("$.value[0].title").value(not(containsString("11% discount"))));
 	}
 
 	@Test
-	void testCreateReviewNotAuthenticated() throws Exception {
+	void createReviewNotAuthenticated() throws Exception {
 		String payload = createTestReview().toJson();
 		mockMvc.perform(post(addReviewURI).contentType(MediaType.APPLICATION_JSON).content(payload))
 			.andExpect(status().isUnauthorized());
@@ -66,7 +66,7 @@ class CatalogServiceITest {
 
 	@Test
 	@WithMockUser(USER_USER_STRING)
-	void testCreateReviewByUser() throws Exception {
+	void createReviewByUser() throws Exception {
 		String payload = createTestReview().toJson();
 		mockMvc.perform(post(addReviewURI).contentType(MediaType.APPLICATION_JSON).content(payload))
 			.andExpect(status().isOk())
@@ -75,7 +75,7 @@ class CatalogServiceITest {
 
 	@Test
 	@WithMockUser(ADMIN_USER_STRING)
-	void testCreateReviewByAdmin() throws Exception {
+	void createReviewByAdmin() throws Exception {
 		String payload = createTestReview().toJson();
 		mockMvc.perform(post(addReviewURI).contentType(MediaType.APPLICATION_JSON).content(payload))
 			.andExpect(status().isOk())

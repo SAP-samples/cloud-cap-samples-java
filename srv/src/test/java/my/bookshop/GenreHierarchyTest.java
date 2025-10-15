@@ -25,13 +25,13 @@ class GenreHierarchyTest {
 
 	@Test
 	@WithMockUser(username = "admin")
-	void testGetAll() throws Exception {
+	void getAll() throws Exception {
 		client.perform(get(genresURI)).andExpect(status().isOk());
 	}
 
 	@Test
 	@WithMockUser(username = "admin")
-	void testCountAll() throws Exception {
+	void countAll() throws Exception {
 		client.perform(get(genresURI + "/$count"))
 				.andExpect(status().isOk())
 				.andExpect(jsonPath("$").value(269));
@@ -39,7 +39,7 @@ class GenreHierarchyTest {
 
 	@Test
 	@WithMockUser(username = "admin")
-	void testStartOneLevel() throws Exception {
+	void startOneLevel() throws Exception {
 		client.perform(get(genresURI
 				+ "?$select=DrillState,ID,name,DistanceFromRoot"
 				+ "&$apply=orderby(name)/"
@@ -59,7 +59,7 @@ class GenreHierarchyTest {
 
 	@Test
 	@WithMockUser(username = "admin")
-	void testStartTwoLevels() throws Exception {
+	void startTwoLevels() throws Exception {
 		client.perform(get(genresURI
 				+ "?$select=DrillState,ID,name,DistanceFromRoot"
 				+ "&$apply=orderby(name)/"
@@ -80,7 +80,7 @@ class GenreHierarchyTest {
 
 	@Test
 	@WithMockUser(username = "admin")
-	void testExpandNonFiction() throws Exception {
+	void expandNonFiction() throws Exception {
 		client.perform(get(genresURI
 				+ "?$select=DrillState,ID,name"
 				+ "&$apply=descendants($root/GenreHierarchy,GenreHierarchy,ID,filter(ID eq 8bbf14c6-b378-4e35-9b4f-05a9c8878021),1)"
@@ -93,7 +93,7 @@ class GenreHierarchyTest {
 
 	@Test
 	@WithMockUser(username = "admin")
-	void testCollapseAll() throws Exception {
+	void collapseAll() throws Exception {
 		client.perform(get(genresURI
 				+ "?$select=DrillState,ID,name"
 				+ "&$apply=orderby(name)/com.sap.vocabularies.Hierarchy.v1.TopLevels(HierarchyNodes=$root/GenreHierarchy,HierarchyQualifier='GenreHierarchy',NodeProperty='ID',Levels=1)"
@@ -108,7 +108,7 @@ class GenreHierarchyTest {
 
 	@Test
 	@WithMockUser(username = "admin")
-	void testExpandAllTop100() throws Exception {
+	void expandAllTop100() throws Exception {
 		String url = genresURI
 				+ "?$select=DistanceFromRoot,DrillState,ID,LimitedDescendantCount,name"
 				+ "&$apply=orderby(name)/com.sap.vocabularies.Hierarchy.v1.TopLevels(HierarchyNodes=$root/GenreHierarchy,HierarchyQualifier='GenreHierarchy',NodeProperty='ID')"
@@ -126,7 +126,7 @@ class GenreHierarchyTest {
 
 	@Test
 	@WithMockUser(username = "admin")
-	void testSearch() throws Exception {
+	void search() throws Exception {
 		client.perform(get(genresURI
 				+ "?$select=DistanceFromRoot,DrillState,ID,LimitedDescendantCount,name"
 				+ "&$apply=ancestors($root/GenreHierarchy,GenreHierarchy,ID,search(\"true\"),keep start)"
@@ -154,7 +154,7 @@ class GenreHierarchyTest {
 
 	@Test
 	@WithMockUser(username = "admin")
-	void testFilterNotExpanded() throws Exception {
+	void filterNotExpanded() throws Exception {
 		client.perform(get(genresURI
 				+ "?$select=DrillState,ID,name,DistanceFromRoot"
 				+ "&$apply=ancestors($root/GenreHierarchy,GenreHierarchy,ID,filter(name eq 'Autobiography'),keep start)/orderby(name)"
@@ -168,7 +168,7 @@ class GenreHierarchyTest {
 
 	@Test
 	@WithMockUser(username = "admin")
-	void testFilterExpandLevels() throws Exception {
+	void filterExpandLevels() throws Exception {
 		String expandLevelsJson = """
 				[{"NodeID":"8bbf14c6-b378-4e35-9b4f-05a9c8878002","Levels":1},{"NodeID":"8bbf14c6-b378-4e35-9b4f-05a9c8878031","Levels":1}]\
 				""";
@@ -188,7 +188,7 @@ class GenreHierarchyTest {
 
 	@Test
 	@WithMockUser(username = "admin")
-	void testStartTwoLevelsOrderByDesc() throws Exception {
+	void startTwoLevelsOrderByDesc() throws Exception {
 		client.perform(get(genresURI
 				+ "?$select=DrillState,ID,name,DistanceFromRoot"
 				+ "&$apply=orderby(name desc)/"
