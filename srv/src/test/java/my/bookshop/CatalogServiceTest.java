@@ -24,7 +24,7 @@ import cds.gen.catalogservice.CatalogService;
 import cds.gen.catalogservice.Reviews;
 
 @SpringBootTest
-public class CatalogServiceTest {
+class CatalogServiceTest {
 
 	@Autowired
 	private CatalogService catalogService;
@@ -33,13 +33,13 @@ public class CatalogServiceTest {
 	private PersistenceService db;
 
 	@AfterEach
-	public void cleanup() {
+	void cleanup() {
 		db.run(Delete.from(REVIEWS));
 	}
 
 	@Test
 	@WithMockUser(username = "user")
-	public void testCreateReviewHandler() {
+	void createReviewHandler() {
 		Stream<Reviews> bookReviews = Stream.of(
 				createReview("f846b0b9-01d4-4f6d-82a4-d79204f62278", 1, "quite bad", "disappointing..."),
 				createReview("aebdfc8a-0dfa-4468-bd36-48aabd65e663", 5, "great read", "just amazing..."));
@@ -58,7 +58,7 @@ public class CatalogServiceTest {
 
 	@Test
 	@WithMockUser(username = "user")
-	public void testAddReviewWithInvalidRating() {
+	void addReviewWithInvalidRating() {
 		Stream<Reviews> bookReviews = Stream.of(
 				// lt 1 is invalid
 				createReview("f846b0b9-01d4-4f6d-82a4-d79204f62278", 0, "quite bad", "disappointing..."),
@@ -76,7 +76,7 @@ public class CatalogServiceTest {
 
 	@Test
 	@WithMockUser(username = "user")
-	public void testAddReviewForNonExistingBook() {
+	void addReviewForNonExistingBook() {
 
 		String nonExistingBookId = "non-existing";
 		String exMessage1 = "You have to specify the book to review";
@@ -98,7 +98,7 @@ public class CatalogServiceTest {
 
 	@Test
 	@WithMockUser(username = "user")
-	public void testAddReviewSameBookMoreThanOnceBySameUser() {
+	void addReviewSameBookMoreThanOnceBySameUser() {
 
 		String bookId = "4a519e61-3c3a-4bd9-ab12-d7e0c5329933";
 		Books_ ref = CQL.entity(BOOKS).filter(b -> b.ID().eq(bookId));
