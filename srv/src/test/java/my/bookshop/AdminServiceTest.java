@@ -24,14 +24,14 @@ import cds.gen.adminservice.OrderItems;
 import cds.gen.adminservice.Orders;
 
 @SpringBootTest
-public class AdminServiceTest {
+class AdminServiceTest {
 
 	@Autowired
 	private AdminService.Draft adminService;
 
 	@Test
 	@WithMockUser(username = "user")
-	public void testUnauthorizedAccess() {
+	void testUnauthorizedAccess() {
 		assertThrows(ServiceException.class, () -> {
 			adminService.newDraft(Insert.into(AUTHORS).entry(Collections.emptyMap()));
 		});
@@ -39,7 +39,7 @@ public class AdminServiceTest {
 
 	@Test
 	@WithMockUser(username = "admin")
-	public void testInvalidAuthorName() {
+	void testInvalidAuthorName() {
 		assertThrows(ServiceException.class, () -> {
 			Authors author = Authors.create();
 			author.setName("little Joey");
@@ -49,7 +49,7 @@ public class AdminServiceTest {
 
 	@Test
 	@WithMockUser(username = "admin")
-	public void testValidAuthorName() {
+	void testValidAuthorName() {
 		Authors author = Authors.create();
 		author.setName("Big Joey");
 		Result result = adminService.run(Insert.into(AUTHORS).entry(author));

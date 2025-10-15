@@ -10,10 +10,10 @@ import com.sap.cds.services.request.FeatureTogglesInfo;
 
 import cds.gen.catalogservice.Books;
 
-public class CatalogServiceHandlerTest {
+class CatalogServiceHandlerTest {
 
 	@Test
-	public void testDiscountHandler() {
+	void testDiscountHandler() {
 		Books book1 = Books.create();
 		book1.setTitle("Book 1");
 		book1.setStock(10);

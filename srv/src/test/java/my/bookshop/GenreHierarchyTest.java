@@ -16,7 +16,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 @SpringBootTest
 @AutoConfigureMockMvc
-public class GenreHierarchyTest {
+class GenreHierarchyTest {
 
 	@Autowired
 	private MockMvc client;
