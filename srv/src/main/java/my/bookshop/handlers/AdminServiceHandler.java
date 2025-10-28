@@ -277,7 +277,7 @@ class AdminServiceHandler implements EventHandler {
 		return Arrays.asList(upload);
 	}
 
-	@Before(event = {CqnService.EVENT_CREATE, CqnService.EVENT_UPDATE, DraftService.EVENT_DRAFT_NEW, DraftService.EVENT_DRAFT_PATCH})
+	// @Before(event = {CqnService.EVENT_CREATE, CqnService.EVENT_UPDATE, DraftService.EVENT_DRAFT_NEW, DraftService.EVENT_DRAFT_PATCH})
 	public void restoreCoversUpId(CqnStructuredTypeRef ref, BooksCovers cover) {
 		// restore up__ID, which is not provided via OData due to containment
 		cover.setUpId((String) analyzer.analyze(ref).rootKeys().get(Books.ID));

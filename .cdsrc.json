@@ -6,6 +6,6 @@
     },
     "profile": "with-mtx-sidecar",
     "odata": {
-        "containment": true
+        "containment": false
     }
 }
