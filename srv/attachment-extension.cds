@@ -66,12 +66,89 @@ entity WDIRSCodeList : CodeList {
 
 type WDIRS_CodeList_TYPE : Association to one WDIRSCodeList;
 
-annotate Books.attachments with {
+annotate my.Books.attachments with {
     status @(
         Common.Text: {
             $value: ![statusText.text],
             ![@UI.TextArrangement]: #TextOnly
         },
         ValueList: {entity:'Statuses'}
+    );
+}
+
+annotate my.Books.references with {
+    status @(
+        Common.Text: {
+            $value: ![statusText.text],
+            ![@UI.TextArrangement]: #TextOnly
+        },
+        ValueList: { entity: 'Statuses' },
+        sap.value.list: 'fixed-values'
+    );
+}
+
+annotate my.Chapters.attachments with {
+    status @(
+        Common.Text: {
+            $value: ![statusText.text],
+            ![@UI.TextArrangement]: #TextOnly
+        },
+        ValueList: { entity: 'Statuses' },
+        sap.value.list: 'fixed-values'
+    );
+}
+
+annotate my.Chapters.references with {
+    status @(
+        Common.Text: {
+            $value: ![statusText.text],
+            ![@UI.TextArrangement]: #TextOnly
+        },
+        ValueList: { entity: 'Statuses' },
+        sap.value.list: 'fixed-values'
+    );
+}
+
+annotate my.Pages.attachments with {
+    status @(
+        Common.Text: {
+            $value: ![statusText.text],
+            ![@UI.TextArrangement]: #TextOnly
+        },
+        ValueList: { entity: 'Statuses' },
+        sap.value.list: 'fixed-values'
+    );
+}
+
+annotate my.Pages.references with {
+    status @(
+        Common.Text: {
+            $value: ![statusText.text],
+            ![@UI.TextArrangement]: #TextOnly
+        },
+        ValueList: { entity: 'Statuses' },
+        sap.value.list: 'fixed-values'
+    );
+}
+
+annotate my.Chapters.footnotes with {
+    status @(
+        Common.Text: {
+            $value: ![statusText.text],
+            ![@UI.TextArrangement]: #TextOnly
+        },
+        ValueList: { entity: 'Statuses' },
+        sap.value.list: 'fixed-values'
+    );
+}
+
+annotate my.Pages.footnotes with {
+    status @(
+        Common.Text: {
+            $value: ![statusText.text],
+            ![@UI.TextArrangement]: #TextOnly
+        },
+        ValueList: { entity: 'Statuses' },
+        sap.value.list: 'fixed-values'
     );
 }
