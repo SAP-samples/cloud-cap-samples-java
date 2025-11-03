@@ -10,6 +10,17 @@ extend entity my.Books with {
 extend entity my.Notebooks with {
     attachments : Composition of many Attachments @SDM.Attachments:{maxCount: 4, maxCountError:'Only 4 attachments allowed.'};
 }
+extend entity my.Chapters with { 
+  attachments: Composition of many Attachments;
+  references: Composition of many Attachments;
+  footnotes: Composition of many Attachments;
+}
+
+extend entity my.Pages with { 
+  attachments: Composition of many Attachments;
+  references: Composition of many Attachments;
+  footnotes: Composition of many Attachments;
+}
 
 entity Statuses @cds.autoexpose @readonly {
     key code : StatusCode;
