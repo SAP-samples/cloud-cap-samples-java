@@ -139,6 +139,16 @@
                                     "detail" : {
                                         "route" : "AuthorsDetails"
                                     }
+                                },
+                                "Chapters": {
+                                    "detail": {
+                                        "route": "ChaptersObjectPage"
+                                    }
+                                },
+                                "Pages": {
+                                    "detail": {
+                                        "route": "PagesObjectPage"
+                                    }
                                 }
                             },
                             "controlConfiguration": {
