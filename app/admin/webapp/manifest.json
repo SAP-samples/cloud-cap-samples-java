@@ -51,7 +51,7 @@
                 "settings": {
                     "synchronizationMode": "None",
                     "operationMode": "Server",
-                    "autoExpandSelect" : true,
+                    "autoExpandSelect": true,
                     "earlyRequests": true,
                     "groupProperties": {
                         "default": {
@@ -80,12 +80,12 @@
                 },
                 {
                     "pattern": "Books({key})/chapters({key2}):?query:",
-                    "name": "chaptersObjectPage",
+                    "name": "ChaptersObjectPage",
                     "target": "ChaptersObjectPage"
                 },
                 {
                     "pattern": "Books({key})/pages({key2}):?query:",
-                    "name": "pagesObjectPage",
+                    "name": "PagesObjectPage",
                     "target": "PagesObjectPage"
                 }
             ],
@@ -95,12 +95,12 @@
                     "id": "BooksList",
                     "name": "sap.fe.templates.ListReport",
                     "options": {
-                        "settings" : {
-                            "entitySet" : "Books",
-                            "navigation" : {
-                                "Books" : {
-                                    "detail" : {
-                                        "route" : "BooksDetails"
+                        "settings": {
+                            "entitySet": "Books",
+                            "navigation": {
+                                "Books": {
+                                    "detail": {
+                                        "route": "BooksDetails"
                                     }
                                 },
                                 "Chapters": {
@@ -132,12 +132,12 @@
                     "id": "BooksDetailsList",
                     "name": "sap.fe.templates.ObjectPage",
                     "options": {
-                        "settings" : {
-                            "entitySet" : "Books",
-                            "navigation" : {
-                                "Authors" : {
-                                    "detail" : {
-                                        "route" : "AuthorsDetails"
+                        "settings": {
+                            "entitySet": "Books",
+                            "navigation": {
+                                "Authors": {
+                                    "detail": {
+                                        "route": "AuthorsDetails"
                                     }
                                 },
                                 "Chapters": {
@@ -153,25 +153,25 @@
                             },
                             "controlConfiguration": {
                                 "attachments/@com.sap.vocabularies.UI.v1.LineItem": {
-                                  "tableSettings": {
-                                    "type": "ResponsiveTable",
-                                    "selectionMode": "Auto",
-                                    "rowPress": ".extension.admin.controller.custom.onRowPress"
-                                  }
+                                    "tableSettings": {
+                                        "type": "ResponsiveTable",
+                                        "selectionMode": "Auto",
+                                        "rowPress": ".extension.admin.controller.custom.onRowPress"
+                                    }
                                 },
                                 "references/@com.sap.vocabularies.UI.v1.LineItem": {
-                                  "tableSettings": {
-                                    "type": "ResponsiveTable",
-                                    "selectionMode": "Auto",
-                                    "rowPress": ".extension.admin.controller.custom.onRowPress"
-                                  }
+                                    "tableSettings": {
+                                        "type": "ResponsiveTable",
+                                        "selectionMode": "Auto",
+                                        "rowPress": ".extension.admin.controller.custom.onRowPress"
+                                    }
                                 },
                                 "footnotes/@com.sap.vocabularies.UI.v1.LineItem": {
-                                  "tableSettings": {
-                                    "type": "ResponsiveTable",
-                                    "selectionMode": "Auto",
-                                    "rowPress": ".extension.admin.controller.custom.onRowPress"
-                                  }
+                                    "tableSettings": {
+                                        "type": "ResponsiveTable",
+                                        "selectionMode": "Auto",
+                                        "rowPress": ".extension.admin.controller.custom.onRowPress"
+                                    }
                                 }
                             }
                         }
@@ -182,8 +182,8 @@
                     "id": "AuthorsDetailsList",
                     "name": "sap.fe.templates.ObjectPage",
                     "options": {
-                        "settings" : {
-                            "entitySet" : "Authors"
+                        "settings": {
+                            "entitySet": "Authors"
                         }
                     }
                 },
@@ -197,25 +197,25 @@
                             "entitySet": "Chapters",
                             "controlConfiguration": {
                                 "attachments/@com.sap.vocabularies.UI.v1.LineItem": {
-                                "tableSettings": {
-                                    "type": "ResponsiveTable",
-                                    "selectionMode": "Auto",
-                                    "rowPress": ".extension.books.controller.custom.onRowPress"
-                                }
+                                    "tableSettings": {
+                                        "type": "ResponsiveTable",
+                                        "selectionMode": "Auto",
+                                        "rowPress": ".extension.admin.controller.custom.onRowPress"
+                                    }
                                 },
                                 "references/@com.sap.vocabularies.UI.v1.LineItem": {
-                                "tableSettings": {
-                                    "type": "ResponsiveTable",
-                                    "selectionMode": "Auto",
-                                    "rowPress": ".extension.books.controller.custom.onRowPress"
-                                }
+                                    "tableSettings": {
+                                        "type": "ResponsiveTable",
+                                        "selectionMode": "Auto",
+                                        "rowPress": ".extension.admin.controller.custom.onRowPress"
+                                    }
                                 },
                                 "footnotes/@com.sap.vocabularies.UI.v1.LineItem": {
-                                "tableSettings": {
-                                    "type": "ResponsiveTable",
-                                    "selectionMode": "Auto",
-                                    "rowPress": ".extension.books.controller.custom.onRowPress"
-                                }
+                                    "tableSettings": {
+                                        "type": "ResponsiveTable",
+                                        "selectionMode": "Auto",
+                                        "rowPress": ".extension.admin.controller.custom.onRowPress"
+                                    }
                                 }
                             }
                         }
@@ -232,25 +232,25 @@
                             "navigation": {},
                             "controlConfiguration": {
                                 "attachments/@com.sap.vocabularies.UI.v1.LineItem": {
-                                "tableSettings": {
-                                    "type": "ResponsiveTable",
-                                    "selectionMode": "Auto",
-                                    "rowPress": ".extension.books.controller.custom.onRowPress"
-                                }
+                                    "tableSettings": {
+                                        "type": "ResponsiveTable",
+                                        "selectionMode": "Auto",
+                                        "rowPress": ".extension.admin.controller.custom.onRowPress"
+                                    }
                                 },
                                 "references/@com.sap.vocabularies.UI.v1.LineItem": {
-                                "tableSettings": {
-                                    "type": "ResponsiveTable",
-                                    "selectionMode": "Auto",
-                                    "rowPress": ".extension.books.controller.custom.onRowPress"
-                                }
+                                    "tableSettings": {
+                                        "type": "ResponsiveTable",
+                                        "selectionMode": "Auto",
+                                        "rowPress": ".extension.admin.controller.custom.onRowPress"
+                                    }
                                 },
                                 "footnotes/@com.sap.vocabularies.UI.v1.LineItem": {
-                                "tableSettings": {
-                                    "type": "ResponsiveTable",
-                                    "selectionMode": "Auto",
-                                    "rowPress": ".extension.books.controller.custom.onRowPress"
-                                }
+                                    "tableSettings": {
+                                        "type": "ResponsiveTable",
+                                        "selectionMode": "Auto",
+                                        "rowPress": ".extension.admin.controller.custom.onRowPress"
+                                    }
                                 }
                             }
                         }
@@ -259,19 +259,19 @@
             }
         },
         "extends": {
-          "extensions": {
-            "sap.ui.controllerExtensions": {
-              "sap.fe.templates.ObjectPage.ObjectPageController#admin::BooksDetailsList": {
-                  "controllerName": "admin.controller.custom"
-              },
-              "sap.fe.templates.ObjectPage.ObjectPageController#books::ChaptersObjectPage": {
-                  "controllerName": "books.controller.custom"
-              },
-                "sap.fe.templates.ObjectPage.ObjectPageController#books::PagesObjectPage": {
-                  "controllerName": "books.controller.custom"
-              }       
+            "extensions": {
+                "sap.ui.controllerExtensions": {
+                    "sap.fe.templates.ObjectPage.ObjectPageController#admin::BooksDetailsList": {
+                        "controllerName": "admin.controller.custom"
+                    },
+                    "sap.fe.templates.ObjectPage.ObjectPageController#admin::ChaptersObjectPage": {
+                        "controllerName": "admin.controller.custom"
+                    },
+                    "sap.fe.templates.ObjectPage.ObjectPageController#admin::PagesObjectPage": {
+                        "controllerName": "admin.controller.custom"
+                    }
+                }
             }
-          }
         },
         "contentDensities": {
             "compact": true,
