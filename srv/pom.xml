@@ -40,7 +40,7 @@
 <dependency>
     <groupId>com.sap.cds</groupId>
     <artifactId>sdm</artifactId>
-    <version>1.0.0-RC1</version>
+    <version>1.6.1-SNAPSHOT</version>
 </dependency>
 		<dependency>
 			<groupId>com.sap.cds</groupId>
