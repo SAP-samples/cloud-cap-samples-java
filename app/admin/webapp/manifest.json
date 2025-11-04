@@ -264,10 +264,10 @@
               "sap.fe.templates.ObjectPage.ObjectPageController#admin::BooksDetailsList": {
                   "controllerName": "admin.controller.custom"
               },
-              "sap.fe.templates.ObjectPage.ObjectPageController#admin::ChaptersObjectPage": {
+              "sap.fe.templates.ObjectPage.ObjectPageController#books::ChaptersObjectPage": {
                   "controllerName": "books.controller.custom"
               },
-              "sap.fe.templates.ObjectPage.ObjectPageController#admin::PagesObjectPage": {
+                "sap.fe.templates.ObjectPage.ObjectPageController#books::PagesObjectPage": {
                   "controllerName": "books.controller.custom"
               }       
             }
