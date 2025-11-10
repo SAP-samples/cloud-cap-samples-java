@@ -22,6 +22,8 @@ entity Books : cuid, managed {
     reviews      : Association to many Reviews
                        on reviews.book = $self;
     isReviewable : TechnicalBooleanFlag not null default true;
+    chapters : Composition of many Chapters on chapters.book = $self;
+    pages : Composition of many Pages on pages.book = $self;
 }
 
 entity Authors : cuid, managed {
@@ -72,4 +74,20 @@ entity Writers : managed, cuid {
   placeOfDeath    : String;
   notebooks       : Association to many Notebooks
                       on notebooks.writer = $self;
+}
+
+entity Chapters : cuid, managed {
+  book       : Association to Books;
+  title          : String @title: 'Chapter Title';
+  description    : String;
+  url            : String;
+  chapterType  : String @title: 'Chapter Type';
+}
+
+entity Pages : cuid, managed {
+  book       : Association to Books;
+  title          : String @title: 'Page Title';
+  description    : String;
+  url            : String;
+  pageType  : String @title: 'Page Type';
 }

@@ -10,6 +10,17 @@ extend entity my.Books with {
 extend entity my.Notebooks with {
     attachments : Composition of many Attachments @SDM.Attachments:{maxCount: 4, maxCountError:'Only 4 attachments allowed.'};
 }
+extend entity my.Chapters with { 
+  attachments: Composition of many Attachments;
+  references: Composition of many Attachments;
+  footnotes: Composition of many Attachments;
+}
+
+extend entity my.Pages with { 
+  attachments: Composition of many Attachments;
+  references: Composition of many Attachments;
+  footnotes: Composition of many Attachments;
+}
 
 entity Statuses @cds.autoexpose @readonly {
     key code : StatusCode;
@@ -55,12 +66,89 @@ entity WDIRSCodeList : CodeList {
 
 type WDIRS_CodeList_TYPE : Association to one WDIRSCodeList;
 
-annotate Books.attachments with {
+annotate my.Books.attachments with {
     status @(
         Common.Text: {
             $value: ![statusText.text],
             ![@UI.TextArrangement]: #TextOnly
         },
         ValueList: {entity:'Statuses'}
+    );
+}
+
+annotate my.Books.references with {
+    status @(
+        Common.Text: {
+            $value: ![statusText.text],
+            ![@UI.TextArrangement]: #TextOnly
+        },
+        ValueList: { entity: 'Statuses' },
+        sap.value.list: 'fixed-values'
+    );
+}
+
+annotate my.Chapters.attachments with {
+    status @(
+        Common.Text: {
+            $value: ![statusText.text],
+            ![@UI.TextArrangement]: #TextOnly
+        },
+        ValueList: { entity: 'Statuses' },
+        sap.value.list: 'fixed-values'
+    );
+}
+
+annotate my.Chapters.references with {
+    status @(
+        Common.Text: {
+            $value: ![statusText.text],
+            ![@UI.TextArrangement]: #TextOnly
+        },
+        ValueList: { entity: 'Statuses' },
+        sap.value.list: 'fixed-values'
+    );
+}
+
+annotate my.Pages.attachments with {
+    status @(
+        Common.Text: {
+            $value: ![statusText.text],
+            ![@UI.TextArrangement]: #TextOnly
+        },
+        ValueList: { entity: 'Statuses' },
+        sap.value.list: 'fixed-values'
+    );
+}
+
+annotate my.Pages.references with {
+    status @(
+        Common.Text: {
+            $value: ![statusText.text],
+            ![@UI.TextArrangement]: #TextOnly
+        },
+        ValueList: { entity: 'Statuses' },
+        sap.value.list: 'fixed-values'
+    );
+}
+
+annotate my.Chapters.footnotes with {
+    status @(
+        Common.Text: {
+            $value: ![statusText.text],
+            ![@UI.TextArrangement]: #TextOnly
+        },
+        ValueList: { entity: 'Statuses' },
+        sap.value.list: 'fixed-values'
+    );
+}
+
+annotate my.Pages.footnotes with {
+    status @(
+        Common.Text: {
+            $value: ![statusText.text],
+            ![@UI.TextArrangement]: #TextOnly
+        },
+        ValueList: { entity: 'Statuses' },
+        sap.value.list: 'fixed-values'
     );
 }
