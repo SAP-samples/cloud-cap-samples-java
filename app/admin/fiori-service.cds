@@ -48,7 +48,19 @@ annotate AdminService.Books with @(UI : {
             ID     : 'FootNotesFacet',
             Label  : 'FootNotes',
             Target : 'footnotes/@UI.LineItem'
-        }
+        },
+        {
+            $Type : 'UI.ReferenceFacet',
+            Label : '{i18n>Chapters}',
+            ID : 'i18nChapters',
+            Target : 'chapters/@UI.LineItem#i18nChapters',
+        },
+        {
+            $Type : 'UI.ReferenceFacet',
+            Label : '{i18n>Pages}',
+            ID : 'i18nPages',
+            Target : 'pages/@UI.LineItem#i18nPages',
+        },
     ],
     FieldGroup #General : {Data : [
         {Value : title},
@@ -159,3 +171,231 @@ annotate AdminService.Books.references with {
 annotate AdminService.Books.footnotes with {
   customProperty1 @Common.ValueListWithFixedValues;
 }
+
+// Chapters annotations
+annotate AdminService.Chapters with @title : '{i18n>Chapter}';
+
+annotate AdminService.Books.chapters with @(
+    title : '{i18n>Chapters}'
+);
+
+annotate AdminService.Chapters with @(
+    UI.LineItem : [
+        {
+            $Type : 'UI.DataField',
+            Value : title,
+            Label : '{i18n>ChapterTitle}',
+        },
+        {
+            $Type : 'UI.DataField',
+            Value : chapterType,
+            Label : '{i18n>ChapterType}',
+        },
+        {
+            $Type : 'UI.DataField',
+            Value : description,
+            Label : '{i18n>Description}',
+        },
+    ],
+    UI.LineItem #i18nChapters : [
+        {
+            $Type : 'UI.DataField',
+            Value : title,
+            Label : '{i18n>ChapterTitle}',
+        },
+        {
+            $Type : 'UI.DataField',
+            Value : chapterType,
+            Label : '{i18n>ChapterType}',
+        },
+        {
+            $Type : 'UI.DataField',
+            Value : description,
+            Label : '{i18n>Description}',
+        },
+    ]
+);
+
+annotate AdminService.Chapters with @(
+    UI.HeaderInfo : {
+        Title : {
+            $Type : 'UI.DataField',
+            Value : title,
+        },
+        TypeName : '{i18n>Chapter}',
+        TypeNamePlural : '{i18n>Chapters}',
+        Description : {
+            $Type : 'UI.DataField',
+            Value : description,
+        },
+    }
+);
+
+annotate AdminService.Chapters with @(
+    UI.FieldGroup #GeneratedGroup1 : {
+        $Type : 'UI.FieldGroupType',
+        Data : [
+            {
+                $Type : 'UI.DataField',
+                Value : title,
+                Label : '{i18n>ChapterTitle}',
+            },
+            {
+                $Type : 'UI.DataField',
+                Value : chapterType,
+                Label : '{i18n>ChapterType}',
+            },
+            {
+                $Type : 'UI.DataField',
+                Value : description,
+                Label : '{i18n>Description}',
+            },
+            {
+                $Type : 'UI.DataField',
+                Value : url,
+                Label : '{i18n>URL}',
+            },
+        ],
+    },
+  UI.Facets : [
+    {
+      $Type : 'UI.ReferenceFacet',
+      ID : 'GeneratedFacet1',
+      Label : '{i18n>GeneralInformation}',
+      Target : '@UI.FieldGroup#GeneratedGroup1',
+    },
+    {
+      $Type : 'UI.ReferenceFacet',
+      ID : 'AttachmentsFacet',
+      Label : '{i18n>attachments}',
+      Target : 'attachments/@UI.LineItem'
+    },
+    {
+      $Type : 'UI.ReferenceFacet',
+      ID : 'ReferencesFacet',
+      Label : '{i18n>references}',
+      Target : 'references/@UI.LineItem'
+    },
+    {
+      $Type : 'UI.ReferenceFacet',
+      ID : 'FootnotesFacet',
+      Label : '{i18n>Footnotes}',
+      Target : 'footnotes/@UI.LineItem'
+    }
+  ]
+);
+
+//////////
+
+// Pages annotations
+annotate AdminService.Pages with @title : '{i18n>Page}';
+
+annotate AdminService.Books.pages with @(
+    title : '{i18n>Pages}'
+);
+
+annotate AdminService.Pages with @(
+    UI.LineItem : [
+        {
+            $Type : 'UI.DataField',
+            Value : title,
+            Label : '{i18n>PageTitle}',
+        },
+        {
+            $Type : 'UI.DataField',
+            Value : pageType,
+            Label : '{i18n>PageType}',
+        },
+        {
+            $Type : 'UI.DataField',
+            Value : description,
+            Label : '{i18n>Description}',
+        },
+    ],
+    UI.LineItem #i18nPages : [
+        {
+            $Type : 'UI.DataField',
+            Value : title,
+            Label : '{i18n>PageTitle}',
+        },
+        {
+            $Type : 'UI.DataField',
+            Value : pageType,
+            Label : '{i18n>PageType}',
+        },
+        {
+            $Type : 'UI.DataField',
+            Value : description,
+            Label : '{i18n>Description}',
+        },
+    ]
+);
+
+annotate AdminService.Pages with @(
+    UI.HeaderInfo : {
+        Title : {
+            $Type : 'UI.DataField',
+            Value : title,
+        },
+        TypeName : '{i18n>Page}',
+        TypeNamePlural : '{i18n>Pages}',
+        Description : {
+            $Type : 'UI.DataField',
+            Value : description,
+        },
+    }
+);
+
+annotate AdminService.Pages with @(
+    UI.FieldGroup #GeneratedGroup1 : {
+        $Type : 'UI.FieldGroupType',
+        Data : [
+            {
+                $Type : 'UI.DataField',
+                Value : title,
+                Label : '{i18n>PageTitle}',
+            },
+            {
+                $Type : 'UI.DataField',
+                Value : pageType,
+                Label : '{i18n>PageType}',
+            },
+            {
+                $Type : 'UI.DataField',
+                Value : description,
+                Label : '{i18n>Description}',
+            },
+            {
+                $Type : 'UI.DataField',
+                Value : url,
+                Label : '{i18n>URL}',
+            },
+        ],
+    },
+  UI.Facets : [
+    {
+      $Type : 'UI.ReferenceFacet',
+      ID : 'GeneratedFacet1',
+      Label : '{i18n>GeneralInformation}',
+      Target : '@UI.FieldGroup#GeneratedGroup1',
+    },
+    {
+      $Type : 'UI.ReferenceFacet',
+      ID : 'AttachmentsFacet',
+      Label : '{i18n>attachments}',
+      Target : 'attachments/@UI.LineItem'
+    },
+    {
+      $Type : 'UI.ReferenceFacet',
+      ID : 'ReferencesFacet',
+      Label : '{i18n>references}',
+      Target : 'references/@UI.LineItem'
+    },
+    {
+      $Type : 'UI.ReferenceFacet',
+      ID : 'FootnotesFacet',
+      Label : '{i18n>Footnotes}',
+      Target : 'footnotes/@UI.LineItem'
+    }
+  ]
+);
