@@ -2,13 +2,7 @@
 logging:
   level:
     '[com.sap.cds.auditlog]': DEBUG
-    #'[com.sap.cds.persistence.sql]': DEBUG
-    #'[com.sap.cds.persistence.sql-tx]': DEBUG
     '[com.sap.cds.messaging]': DEBUG
-    '[com.sap.cds.security.authentication]': DEBUG
-    '[com.sap.cds.security.authorization]': DEBUG
-    '[com.sap.cloud.security]': DEBUG
-    '[org.apache.http.wire]': DEBUG
 spring:
   jmx:
     enabled: true
