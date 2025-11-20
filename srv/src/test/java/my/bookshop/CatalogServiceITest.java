@@ -24,7 +24,7 @@ import cds.gen.catalogservice.Reviews;
 
 @SpringBootTest
 @AutoConfigureMockMvc
-public class CatalogServiceITest {
+class CatalogServiceITest {
 
 	private static final String booksURI = "/api/browse/Books";
 	private static final String addReviewURI = "%s(ID=%s)/CatalogService.addReview".formatted(booksURI, "f846b0b9-01d4-4f6d-82a4-d79204f62278");
@@ -39,26 +39,26 @@ public class CatalogServiceITest {
 	private PersistenceService db;
 
 	@AfterEach
-	public void cleanup() {
+	void cleanup() {
 		db.run(Delete.from(REVIEWS));
 	}
 
 	@Test
-	public void testDiscountApplied() throws Exception {
+	void discountApplied() throws Exception {
 		mockMvc.perform(get(booksURI + "?$filter=stock gt 200&top=1"))
 			.andExpect(status().isOk())
 			.andExpect(jsonPath("$.value[0].title").value(containsString("11% discount")));
 	}
 
 	@Test
-	public void testDiscountNotApplied() throws Exception {
+	void discountNotApplied() throws Exception {
 		mockMvc.perform(get(booksURI + "?$filter=stock lt 100&top=1"))
 			.andExpect(status().isOk())
 			.andExpect(jsonPath("$.value[0].title").value(not(containsString("11% discount"))));
 	}
 
 	@Test
-	public void testCreateReviewNotAuthenticated() throws Exception {
+	void createReviewNotAuthenticated() throws Exception {
 		String payload = createTestReview().toJson();
 		mockMvc.perform(post(addReviewURI).contentType(MediaType.APPLICATION_JSON).content(payload))
 			.andExpect(status().isUnauthorized());
@@ -66,7 +66,7 @@ public class CatalogServiceITest {
 
 	@Test
 	@WithMockUser(USER_USER_STRING)
-	public void testCreateReviewByUser() throws Exception {
+	void createReviewByUser() throws Exception {
 		String payload = createTestReview().toJson();
 		mockMvc.perform(post(addReviewURI).contentType(MediaType.APPLICATION_JSON).content(payload))
 			.andExpect(status().isOk())
@@ -75,7 +75,7 @@ public class CatalogServiceITest {
 
 	@Test
 	@WithMockUser(ADMIN_USER_STRING)
-	public void testCreateReviewByAdmin() throws Exception {
+	void createReviewByAdmin() throws Exception {
 		String payload = createTestReview().toJson();
 		mockMvc.perform(post(addReviewURI).contentType(MediaType.APPLICATION_JSON).content(payload))
 			.andExpect(status().isOk())

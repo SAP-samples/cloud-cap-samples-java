@@ -12,7 +12,7 @@ import org.springframework.test.context.ActiveProfiles;
  */
 @ActiveProfiles("default")
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
-public class AdminServiceAddress_default_ITest extends AdminServiceAddressITestBase {
+class AdminServiceAddress_default_ITest extends AdminServiceAddressITestBase {
 
 	@Test
 	@Override

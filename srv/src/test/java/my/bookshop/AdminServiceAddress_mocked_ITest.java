@@ -13,7 +13,7 @@ import org.springframework.test.context.ActiveProfiles;
 @ActiveProfiles({"default", "mocked"})
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT,
 		properties = "cds.remote.services.'[API_BUSINESS_PARTNER]'.destination.name=myself-AdminServiceAddressITest")
-public class AdminServiceAddress_mocked_ITest extends AdminServiceAddressITestBase {
+class AdminServiceAddress_mocked_ITest extends AdminServiceAddressITestBase {
 
 	@Test
 	@Override

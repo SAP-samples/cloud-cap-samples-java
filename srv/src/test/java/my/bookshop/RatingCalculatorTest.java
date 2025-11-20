@@ -7,12 +7,12 @@ import java.util.stream.Stream;
 
 import org.junit.jupiter.api.Test;
 
-public class RatingCalculatorTest {
+class RatingCalculatorTest {
 
 	/*
 	 * Holder class for a book rating calculation test case.
 	 */
-	private class RatingTestFixture {
+	private static class RatingTestFixture {
 		Stream<Double> ratings;
 		double expectedAvg;
 
@@ -23,7 +23,7 @@ public class RatingCalculatorTest {
 	}
 
 	@Test
-	public void testGetAvgRating() {
+	void getAvgRating() {
 		RatingTestFixture f1 = new RatingTestFixture(Stream.of(1.0, 2.0, 3.0, 4.0, 5.0), 3.0);
 		RatingTestFixture f2 = new RatingTestFixture(Stream.of(1.3, 2.4, 3.5, 4.9, 5.1), 3.4);
 		RatingTestFixture f3 = new RatingTestFixture(Stream.of(2.1, 4.0, 2.7, 3.8, 4.9), 3.5);
