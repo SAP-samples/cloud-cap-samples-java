@@ -1,0 +1,48 @@
+<core:FragmentDefinition xmlns:core="sap.ui.core"
+                         xmlns:uxap="sap.uxap"
+                         xmlns="sap.m"                  
+>
+<Dialog title="Change Log" id = "changelogDialog" resizable="true" contentWidth="50%"
+contentHeight="50%" draggable="true" class="sapUiSizeCompact" verticalScrolling="false">
+  <content>
+
+   <IconTabBar
+        id="idIconTabBarNoIcons"
+         class="mcmPropertiesSections" isChildPage="true" enableLazyLoading="true" upperCaseAnchorBar="false" stretchContentHeight= "true">
+        <items>
+            <IconTabFilter text="Change Log" key="info">
+                <Table id="idChangeLogTable" items="{path:'changelog>/', templateShareable:false}"
+                    noDataText="{i18n>LoadingData}">
+                 <columns>
+                     <Column demandPopin="true" popinDisplay="Inline" minScreenWidth="Large">
+                         <Text text="Category"/>
+                     </Column>
+                     <Column demandPopin="true" popinDisplay="Inline" minScreenWidth="Large">
+                         <Text text="Changed By"/>
+                     </Column>
+                     <Column demandPopin="true" popinDisplay="Inline" minScreenWidth="Large">
+                         <Text text="Changed On"/>
+                     </Column>
+                 </columns>
+                 <items>
+                     <ColumnListItem>
+                         <cells>
+                             <Text text="{changelog>changeType}"/>
+                             <Text text="{changelog>changedBy}"/>
+                             <Text text="{changelog>changedOn}"/>
+                         </cells>
+                     </ColumnListItem>
+                 </items>
+             </Table>
+            </IconTabFilter>
+        </items>
+    </IconTabBar>
+
+
+    </content>
+
+    <endButton>
+        <Button text="Close" press=".close" />
+    </endButton>
+</Dialog>
+</core:FragmentDefinition>
