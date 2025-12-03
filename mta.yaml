@@ -126,6 +126,9 @@ resources:
       config: # override xsappname as it needs to be unique
         xsappname: bookshop-mt-${org}-${space}
         oauth2-configuration:
+          credential-types:
+            - binding-secret
+            - x509
           redirect-uris:
           - https://*.~{app-api/app-domain}/**
     requires:
