@@ -84,6 +84,11 @@ annotate my.Books.attachments with @UI: {
       Action: 'AdminService.copyAttachments',
     },
     {
+      $Type : 'UI.DataFieldForAction',
+      Label : 'Move Attachments',
+      Action: 'AdminService.moveAttachments',
+    },
+    {
       $Type  : 'UI.DataFieldForActionGroup',
       ID     : 'TableActionGroup',
       Label  : 'Create',
@@ -160,6 +165,11 @@ annotate my.Books.references with @UI: {
       Action: 'AdminService.copyAttachments',
     },
     {
+      $Type : 'UI.DataFieldForAction',
+      Label : 'Move Attachments',
+      Action: 'AdminService.moveAttachments',
+    },
+    {
       $Type  : 'UI.DataFieldForActionGroup',
       ID     : 'TableActionGroup',
       Label  : 'Create',
@@ -228,6 +238,11 @@ annotate my.Books.footnotes with @UI: {
       $Type : 'UI.DataFieldForAction',
       Label : 'Copy Attachments',
       Action: 'AdminService.copyAttachments',
+    },
+    {
+      $Type : 'UI.DataFieldForAction',
+      Label : 'Move Attachments',
+      Action: 'AdminService.moveAttachments',
     },
     {
       $Type  : 'UI.DataFieldForActionGroup',
@@ -300,6 +315,11 @@ annotate my.Chapters.attachments with @UI: {
       Action: 'AdminService.copyAttachments',
     },
     {
+      $Type : 'UI.DataFieldForAction',
+      Label : 'Move Attachments',
+      Action: 'AdminService.moveAttachments',
+    },
+    {
       $Type  : 'UI.DataFieldForActionGroup',
       ID     : 'TableActionGroup',
       Label  : 'Create',
@@ -367,6 +387,11 @@ annotate my.Chapters.references with @UI: {
       $Type : 'UI.DataFieldForAction',
       Label : 'Copy References',
       Action: 'AdminService.copyAttachments',
+    },
+    {
+      $Type : 'UI.DataFieldForAction',
+      Label : 'Move Attachments',
+      Action: 'AdminService.moveAttachments',
     },
     {
       $Type  : 'UI.DataFieldForActionGroup',
@@ -438,6 +463,11 @@ annotate my.Chapters.footnotes with @UI: {
       Action: 'AdminService.copyAttachments',
     },
     {
+      $Type : 'UI.DataFieldForAction',
+      Label : 'Move Attachments',
+      Action: 'AdminService.moveAttachments',
+    },
+    {
       $Type  : 'UI.DataFieldForActionGroup',
       ID     : 'TableActionGroup',
       Label  : 'Create',
@@ -505,6 +535,11 @@ annotate my.Pages.attachments with @UI: {
       $Type : 'UI.DataFieldForAction',
       Label : 'Copy Attachments',
       Action: 'AdminService.copyAttachments',
+    },
+    {
+      $Type : 'UI.DataFieldForAction',
+      Label : 'Move Attachments',
+      Action: 'AdminService.moveAttachments',
     },
     {
       $Type  : 'UI.DataFieldForActionGroup',
@@ -576,6 +611,11 @@ annotate my.Pages.references with @UI: {
       Action: 'AdminService.copyAttachments',
     },
     {
+      $Type : 'UI.DataFieldForAction',
+      Label : 'Move Attachments',
+      Action: 'AdminService.moveAttachments',
+    },
+    {
       $Type  : 'UI.DataFieldForActionGroup',
       ID     : 'TableActionGroup',
       Label  : 'Create',
@@ -643,6 +683,11 @@ annotate my.Pages.footnotes with @UI: {
       $Type : 'UI.DataFieldForAction',
       Label : 'Copy Footnotes',
       Action: 'AdminService.copyAttachments',
+    },
+    {
+      $Type : 'UI.DataFieldForAction',
+      Label : 'Move Attachments',
+      Action: 'AdminService.moveAttachments',
     },
     {
       $Type  : 'UI.DataFieldForActionGroup',
