@@ -72,13 +72,13 @@ class CatalogServiceHandler implements EventHandler {
 	}
 
 	@Before(entity = Books_.CDS_NAME)
-	public void beforeReadBooks(CdsReadEventContext context) {
+	public void alwaysSelectStock(CdsReadEventContext context) {
 		CqnSelect copy = CQL.copy(context.getCqn(), new Modifier() {
 			@Override
 			public List<CqnSelectListItem> items(List<CqnSelectListItem> items) {
-				CqnSelectListItem stock = CQL.get("stock");
-				if (!items.contains(stock)) {
-					items.add(stock);
+				var paths = items.stream().filter(i -> i.isRef()).map(i -> i.asRef().path()).collect(Collectors.toSet());
+				if (paths.contains(Books.TITLE) && !paths.contains(Books.STOCK)) {
+					items.add(CQL.get(Books.STOCK));
 				}
 				return items;
 			}

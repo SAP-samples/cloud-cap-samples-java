@@ -2,7 +2,6 @@ package my.bookshop.health;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
-
 import org.springframework.boot.actuate.endpoint.annotation.Endpoint;
 import org.springframework.boot.actuate.endpoint.annotation.ReadOperation;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
@@ -14,7 +13,7 @@ import org.springframework.stereotype.Component;
  */
 @Component
 @ConditionalOnClass(Endpoint.class)
-@Endpoint(id = "bookshop", enableByDefault = true)
+@Endpoint(id = "bookshop")
 public class AppActuator {
 
 	@ReadOperation
