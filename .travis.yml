@@ -1,0 +1,8 @@
+language: java
+jdk:
+  - openjdk21
+branches:
+  only:
+    - main
+    - postgres
+script: mvn -ntp -B clean install
