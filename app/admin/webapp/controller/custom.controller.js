@@ -8,8 +8,7 @@ sap.ui.define(
         "use strict";
         const ChangeCategoryEnum = {
             created: "Created",
-            updated: "Changed",
-            security: "Access"
+            updated: "Changed"
             // Add more mappings as needed
         };
     
