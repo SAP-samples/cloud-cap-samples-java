@@ -157,6 +157,18 @@
                                         "type": "ResponsiveTable",
                                         "selectionMode": "Auto",
                                         "rowPress": ".extension.admin.controller.custom.onRowPress"
+                                    },
+                                    "actions": {
+                                        "changelog": {
+                                            "enableOnSelect": "single",
+                                            "text": "Change Log",
+                                            "requiresSelection": true,
+                                            "press": ".extension.admin.controller.custom.onChangelogPress",
+                                            "command": "COMMON", "position": { 
+                                                "anchor": "StandardAction::Create", 
+                                                "placement": "After" 
+                                            }
+                                        }
                                     }
                                 },
                                 "references/@com.sap.vocabularies.UI.v1.LineItem": {
@@ -164,6 +176,18 @@
                                         "type": "ResponsiveTable",
                                         "selectionMode": "Auto",
                                         "rowPress": ".extension.admin.controller.custom.onRowPress"
+                                    },
+                                    "actions": {
+                                        "changelog": {
+                                            "enableOnSelect": "single",
+                                            "text": "Change Log",
+                                            "requiresSelection": true,
+                                            "press": ".extension.admin.controller.custom.onChangelogPress",
+                                            "command": "COMMON", "position": { 
+                                                "anchor": "StandardAction::Create", 
+                                                "placement": "After" 
+                                            }
+                                        }
                                     }
                                 },
                                 "footnotes/@com.sap.vocabularies.UI.v1.LineItem": {
@@ -171,6 +195,18 @@
                                         "type": "ResponsiveTable",
                                         "selectionMode": "Auto",
                                         "rowPress": ".extension.admin.controller.custom.onRowPress"
+                                    },
+                                    "actions": {
+                                        "changelog": {
+                                            "enableOnSelect": "single",
+                                            "text": "Change Log",
+                                            "requiresSelection": true,
+                                            "press": ".extension.admin.controller.custom.onChangelogPress",
+                                            "command": "COMMON", "position": { 
+                                                "anchor": "StandardAction::Create", 
+                                                "placement": "After" 
+                                            }
+                                        }
                                     }
                                 }
                             }
@@ -201,6 +237,18 @@
                                         "type": "ResponsiveTable",
                                         "selectionMode": "Auto",
                                         "rowPress": ".extension.admin.controller.custom.onRowPress"
+                                    },
+                                    "actions": {
+                                        "changelog": {
+                                            "enableOnSelect": "single",
+                                            "text": "Change Log",
+                                            "requiresSelection": true,
+                                            "press": ".extension.admin.controller.custom.onChangelogPress",
+                                            "command": "COMMON", "position": { 
+                                                "anchor": "StandardAction::Create", 
+                                                "placement": "After" 
+                                            }
+                                        }
                                     }
                                 },
                                 "references/@com.sap.vocabularies.UI.v1.LineItem": {
@@ -208,6 +256,18 @@
                                         "type": "ResponsiveTable",
                                         "selectionMode": "Auto",
                                         "rowPress": ".extension.admin.controller.custom.onRowPress"
+                                    },
+                                    "actions": {
+                                        "changelog": {
+                                            "enableOnSelect": "single",
+                                            "text": "Change Log",
+                                            "requiresSelection": true,
+                                            "press": ".extension.admin.controller.custom.onChangelogPress",
+                                            "command": "COMMON", "position": { 
+                                                "anchor": "StandardAction::Create", 
+                                                "placement": "After" 
+                                            }
+                                        }
                                     }
                                 },
                                 "footnotes/@com.sap.vocabularies.UI.v1.LineItem": {
@@ -215,6 +275,18 @@
                                         "type": "ResponsiveTable",
                                         "selectionMode": "Auto",
                                         "rowPress": ".extension.admin.controller.custom.onRowPress"
+                                    },
+                                    "actions": {
+                                        "changelog": {
+                                            "enableOnSelect": "single",
+                                            "text": "Change Log",
+                                            "requiresSelection": true,
+                                            "press": ".extension.admin.controller.custom.onChangelogPress",
+                                            "command": "COMMON", "position": { 
+                                                "anchor": "StandardAction::Create", 
+                                                "placement": "After" 
+                                            }
+                                        }
                                     }
                                 }
                             }
@@ -236,6 +308,18 @@
                                         "type": "ResponsiveTable",
                                         "selectionMode": "Auto",
                                         "rowPress": ".extension.admin.controller.custom.onRowPress"
+                                    },
+                                    "actions": {
+                                        "changelog": {
+                                            "enableOnSelect": "single",
+                                            "text": "Change Log",
+                                            "requiresSelection": true,
+                                            "press": ".extension.admin.controller.custom.onChangelogPress",
+                                            "command": "COMMON", "position": { 
+                                                "anchor": "StandardAction::Create", 
+                                                "placement": "After" 
+                                            }
+                                        }
                                     }
                                 },
                                 "references/@com.sap.vocabularies.UI.v1.LineItem": {
@@ -243,6 +327,18 @@
                                         "type": "ResponsiveTable",
                                         "selectionMode": "Auto",
                                         "rowPress": ".extension.admin.controller.custom.onRowPress"
+                                    },
+                                    "actions": {
+                                        "changelog": {
+                                            "enableOnSelect": "single",
+                                            "text": "Change Log",
+                                            "requiresSelection": true,
+                                            "press": ".extension.admin.controller.custom.onChangelogPress",
+                                            "command": "COMMON", "position": { 
+                                                "anchor": "StandardAction::Create", 
+                                                "placement": "After" 
+                                            }
+                                        }
                                     }
                                 },
                                 "footnotes/@com.sap.vocabularies.UI.v1.LineItem": {
@@ -250,6 +346,18 @@
                                         "type": "ResponsiveTable",
                                         "selectionMode": "Auto",
                                         "rowPress": ".extension.admin.controller.custom.onRowPress"
+                                    },
+                                    "actions": {
+                                        "changelog": {
+                                            "enableOnSelect": "single",
+                                            "text": "Change Log",
+                                            "requiresSelection": true,
+                                            "press": ".extension.admin.controller.custom.onChangelogPress",
+                                            "command": "COMMON", "position": { 
+                                                "anchor": "StandardAction::Create", 
+                                                "placement": "After" 
+                                            }
+                                        }
                                     }
                                 }
                             }

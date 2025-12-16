@@ -45,6 +45,7 @@ service AdminService @(requires: [
       @mandatory @assert.format:'^(https?:\/\/)(([a-zA-Z0-9\-]+\.)+[a-zA-Z]{2,}|localhost)(:\d{2,5})?(\/[^\s]*)?$' @Common.Label:'URL' url: String @UI.Placeholder: 'Example: https://www.example.com'
     ); 
     action openAttachment() returns String;
+    action changelog() returns String;
   }
 
   entity Books.references as projection on my.Books.references
@@ -71,6 +72,7 @@ service AdminService @(requires: [
       @mandatory @assert.format:'^(https?:\/\/)(([a-zA-Z0-9\-]+\.)+[a-zA-Z]{2,}|localhost)(:\d{2,5})?(\/[^\s]*)?$' @Common.Label:'URL' url: String @UI.Placeholder: 'Example: https://www.example.com'
     );   
     action openAttachment() returns String;
+    action changelog() returns String;
   }
 
   entity Books.footnotes as projection on my.Books.footnotes
@@ -97,6 +99,7 @@ service AdminService @(requires: [
       @mandatory @assert.format:'^(https?:\/\/)(([a-zA-Z0-9\-]+\.)+[a-zA-Z]{2,}|localhost)(:\d{2,5})?(\/[^\s]*)?$' @Common.Label:'URL' url: String @UI.Placeholder: 'Example: https://www.example.com'
     );  
     action openAttachment() returns String;
+    action changelog() returns String;
   }
 
   entity Pages.attachments as projection on my.Pages.attachments
@@ -123,6 +126,7 @@ service AdminService @(requires: [
       @mandatory @assert.format:'^(https?:\/\/)(([a-zA-Z0-9\-]+\.)+[a-zA-Z]{2,}|localhost)(:\d{2,5})?(\/[^\s]*)?$' @Common.Label:'URL' url: String @UI.Placeholder: 'Example: https://www.example.com'
     ); 
     action openAttachment() returns String;
+    action changelog() returns String;
   };
 
   entity Pages.references as projection on my.Pages.references
@@ -149,6 +153,7 @@ service AdminService @(requires: [
       @mandatory @assert.format:'^(https?:\/\/)(([a-zA-Z0-9\-]+\.)+[a-zA-Z]{2,}|localhost)(:\d{2,5})?(\/[^\s]*)?$' @Common.Label:'URL' url: String @UI.Placeholder: 'Example: https://www.example.com'
     ); 
     action openAttachment() returns String;
+    action changelog() returns String;
   };
 
   // Chapters projections
@@ -176,6 +181,7 @@ service AdminService @(requires: [
       @mandatory @assert.format:'^(https?:\/\/)(([a-zA-Z0-9\-]+\.)+[a-zA-Z]{2,}|localhost)(:\d{2,5})?(\/[^\s]*)?$' @Common.Label:'URL' url: String @UI.Placeholder: 'Example: https://www.example.com'
     ); 
     action openAttachment() returns String;
+    action changelog() returns String;
   };
 
   entity Chapters.references as projection on my.Chapters.references
@@ -202,6 +208,7 @@ service AdminService @(requires: [
       @mandatory @assert.format:'^(https?:\/\/)(([a-zA-Z0-9\-]+\.)+[a-zA-Z]{2,}|localhost)(:\d{2,5})?(\/[^\s]*)?$' @Common.Label:'URL' url: String @UI.Placeholder: 'Example: https://www.example.com'
     ); 
     action openAttachment() returns String;
+    action changelog() returns String;
   };
 
   entity Chapters.footnotes as projection on my.Chapters.footnotes
@@ -228,6 +235,7 @@ service AdminService @(requires: [
       @mandatory @assert.format:'^(https?:\/\/)(([a-zA-Z0-9\-]+\.)+[a-zA-Z]{2,}|localhost)(:\d{2,5})?(\/[^\s]*)?$' @Common.Label:'URL' url: String @UI.Placeholder: 'Example: https://www.example.com'
     ); 
     action openAttachment() returns String;
+    action changelog() returns String;
   };
 
   // Pages footnotes projection
@@ -255,6 +263,7 @@ service AdminService @(requires: [
       @mandatory @assert.format:'^(https?:\/\/)(([a-zA-Z0-9\-]+\.)+[a-zA-Z]{2,}|localhost)(:\d{2,5})?(\/[^\s]*)?$' @Common.Label:'URL' url: String @UI.Placeholder: 'Example: https://www.example.com'
     ); 
     action openAttachment() returns String;
+    action changelog() returns String;
   };
 
   entity Authors as projection on my.Authors;
