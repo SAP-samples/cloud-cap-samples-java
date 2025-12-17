@@ -3,7 +3,7 @@
                          xmlns="sap.m"                  
 >
 <Dialog title="Change Log" id = "changelogDialog" resizable="true" contentWidth="50%"
-contentHeight="50%" draggable="true" class="sapUiSizeCompact" verticalScrolling="false">
+contentHeight="50%" draggable="true" class="sapUiSizeCompact" verticalScrolling="true">
   <content>
 
    <IconTabBar
