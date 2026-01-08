@@ -1,245 +1,244 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-	<modelVersion>4.0.0</modelVersion>
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
 
-	<parent>
-		<artifactId>bookshop-parent</artifactId>
-		<groupId>my</groupId>
-		<version>${revision}</version>
-	</parent>
+  <parent>
+    <groupId>my</groupId>
+    <artifactId>bookshop-parent</artifactId>
+    <version>${revision}</version>
+  </parent>
 
-	<artifactId>bookshop</artifactId>
-	<packaging>jar</packaging>
+  <artifactId>bookshop</artifactId>
+  <packaging>jar</packaging>
 
-	<name>bookshop</name>
+  <name>bookshop</name>
 
-	<!-- ACTUAL DEPENDENCIES -->
-	<dependencies>
-		<!-- CDS DEPENDENCIES -->
-		<dependency>
-			<groupId>com.sap.cds</groupId>
-			<artifactId>cds-starter-spring-boot</artifactId>
-		</dependency>
+  <!-- ACTUAL DEPENDENCIES -->
+  <dependencies>
+    <!-- CDS DEPENDENCIES -->
+    <dependency>
+      <groupId>com.sap.cds</groupId>
+      <artifactId>cds-starter-spring-boot</artifactId>
+    </dependency>
 
-		<dependency>
-			<groupId>com.sap.cds</groupId>
-			<artifactId>cds-adapter-odata-v4</artifactId>
-			<scope>runtime</scope>
-		</dependency>
+    <dependency>
+      <groupId>com.sap.cds</groupId>
+      <artifactId>cds-adapter-odata-v4</artifactId>
+      <scope>runtime</scope>
+    </dependency>
 
-		<dependency>
-			<groupId>com.sap.cds</groupId>
-			<artifactId>cds-starter-cloudfoundry</artifactId>
-			<scope>runtime</scope>
-		</dependency>
+    <dependency>
+      <groupId>com.sap.cds</groupId>
+      <artifactId>cds-starter-cloudfoundry</artifactId>
+      <scope>runtime</scope>
+    </dependency>
 
-		<dependency>
-			<groupId>com.sap.cds</groupId>
-			<artifactId>cds-starter-k8s</artifactId>
-			<scope>runtime</scope>
-		</dependency>
+    <dependency>
+      <groupId>com.sap.cds</groupId>
+      <artifactId>cds-starter-k8s</artifactId>
+      <scope>runtime</scope>
+    </dependency>
 
-		<dependency>
-			<groupId>com.sap.cds</groupId>
-			<artifactId>cds-feature-enterprise-messaging</artifactId>
-			<scope>runtime</scope>
-		</dependency>
+    <dependency>
+      <groupId>com.sap.cds</groupId>
+      <artifactId>cds-feature-enterprise-messaging</artifactId>
+      <scope>runtime</scope>
+    </dependency>
 
-		<dependency>
-			<groupId>com.sap.cds</groupId>
-			<artifactId>cds-feature-remote-odata</artifactId>
-			<scope>runtime</scope>
-		</dependency>
+    <dependency>
+      <groupId>com.sap.cds</groupId>
+      <artifactId>cds-feature-remote-odata</artifactId>
+      <scope>runtime</scope>
+    </dependency>
 
-		<dependency>
-			<groupId>com.sap.cds</groupId>
-			<artifactId>cds-feature-change-tracking</artifactId>
-			<scope>runtime</scope>
-		</dependency>
+    <dependency>
+      <groupId>com.sap.cds</groupId>
+      <artifactId>cds-feature-change-tracking</artifactId>
+      <scope>runtime</scope>
+    </dependency>
 
-		<dependency>
-			<groupId>com.sap.cds</groupId>
-			<artifactId>cds-feature-attachments</artifactId>
-			<version>${cds-feature-attachments.version}</version>
-			<scope>runtime</scope>
-		</dependency>
+    <dependency>
+      <groupId>com.sap.cds</groupId>
+      <artifactId>cds-feature-attachments</artifactId>
+      <version>${cds-feature-attachments.version}</version>
+      <scope>runtime</scope>
+    </dependency>
 
-		<!-- CLOUD SDK dependencies -->
-		<dependency>
-			<groupId>com.sap.cloud.sdk.cloudplatform</groupId>
-			<artifactId>resilience</artifactId>
-		</dependency>
+    <!-- CLOUD SDK dependencies -->
+    <dependency>
+      <groupId>com.sap.cloud.sdk.cloudplatform</groupId>
+      <artifactId>resilience</artifactId>
+    </dependency>
 
-		<dependency>
-			<groupId>com.sap.cloud.sdk</groupId>
-			<artifactId>sdk-core</artifactId>
-		</dependency>
+    <dependency>
+      <groupId>com.sap.cloud.sdk</groupId>
+      <artifactId>sdk-core</artifactId>
+    </dependency>
 
-		<dependency>
-			<groupId>com.sap.cloud.sdk.cloudplatform</groupId>
-			<artifactId>connectivity-apache-httpclient4</artifactId>
-		</dependency>
+    <dependency>
+      <groupId>com.sap.cloud.sdk.cloudplatform</groupId>
+      <artifactId>connectivity-apache-httpclient4</artifactId>
+    </dependency>
 
-		<!-- OTHER DEPENDENCIES -->
-		<dependency>
-			<groupId>com.h2database</groupId>
-			<artifactId>h2</artifactId>
-			<scope>runtime</scope>
-		</dependency>
+    <!-- OTHER DEPENDENCIES -->
+    <dependency>
+      <groupId>com.h2database</groupId>
+      <artifactId>h2</artifactId>
+      <scope>runtime</scope>
+    </dependency>
 
-		<dependency>
-			<groupId>org.xerial</groupId>
-			<artifactId>sqlite-jdbc</artifactId>
-			<scope>runtime</scope>
-		</dependency>
+    <dependency>
+      <groupId>org.xerial</groupId>
+      <artifactId>sqlite-jdbc</artifactId>
+      <scope>runtime</scope>
+    </dependency>
 
-		<dependency>
-			<groupId>com.sap.hcp.cf.logging</groupId>
-			<artifactId>cf-java-logging-support-servlet-jakarta</artifactId>
-			<version>${cf-java-logging-support.version}</version>
-		</dependency>
+    <dependency>
+      <groupId>com.sap.hcp.cf.logging</groupId>
+      <artifactId>cf-java-logging-support-servlet-jakarta</artifactId>
+      <version>${cf-java-logging-support.version}</version>
+    </dependency>
 
-		<dependency>
-			<groupId>com.sap.hcp.cf.logging</groupId>
-			<artifactId>cf-java-logging-support-logback</artifactId>
-			<version>${cf-java-logging-support.version}</version>
-		</dependency>
+    <dependency>
+      <groupId>com.sap.hcp.cf.logging</groupId>
+      <artifactId>cf-java-logging-support-logback</artifactId>
+      <version>${cf-java-logging-support.version}</version>
+    </dependency>
 
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-security</artifactId>
-		</dependency>
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-security</artifactId>
+    </dependency>
 
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-actuator</artifactId>
-		</dependency>
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-actuator</artifactId>
+    </dependency>
 
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-test</artifactId>
-			<scope>test</scope>
-		</dependency>
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-test</artifactId>
+      <scope>test</scope>
+    </dependency>
 
-		<dependency>
-			<groupId>org.springframework.security</groupId>
-			<artifactId>spring-security-test</artifactId>
-			<scope>test</scope>
-		</dependency>
+    <dependency>
+      <groupId>org.springframework.security</groupId>
+      <artifactId>spring-security-test</artifactId>
+      <scope>test</scope>
+    </dependency>
 
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-webflux</artifactId>
-			<scope>test</scope>
-		</dependency>
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-webflux</artifactId>
+      <scope>test</scope>
+    </dependency>
 
-		<!-- DEV TOOLS -->
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-devtools</artifactId>
-			<optional>true</optional>
-		</dependency>
-	</dependencies>
+    <!-- DEV TOOLS -->
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-devtools</artifactId>
+      <optional>true</optional>
+    </dependency>
+  </dependencies>
 
-	<build>
-		<finalName>bookshop</finalName>
-		<plugins>
-			<!-- SPRING BOOT PLUGIN -->
-			<plugin>
-				<groupId>org.springframework.boot</groupId>
-				<artifactId>spring-boot-maven-plugin</artifactId>
-				<configuration>
-					<skip>false</skip>
-				</configuration>
-				<executions>
-					<execution>
-						<id>repackage</id>
-						<goals>
-							<goal>repackage</goal>
-						</goals>
-						<configuration>
-							<classifier>exec</classifier>
-						</configuration>
-					</execution>
-				</executions>
-			</plugin>
+  <build>
+    <finalName>bookshop</finalName>
+    <plugins>
+      <!-- SPRING BOOT PLUGIN -->
+      <plugin>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-maven-plugin</artifactId>
+        <configuration>
+          <skip>false</skip>
+        </configuration>
+        <executions>
+          <execution>
+            <id>repackage</id>
+            <goals>
+              <goal>repackage</goal>
+            </goals>
+            <configuration>
+              <classifier>exec</classifier>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
 
-			<plugin>
-				<groupId>org.graalvm.buildtools</groupId>
-				<artifactId>native-maven-plugin</artifactId>
-				<configuration>
-					<metadataRepository>
-						<version>0.3.14</version>
-					</metadataRepository>
-				</configuration>
-			</plugin>
+      <plugin>
+        <groupId>org.graalvm.buildtools</groupId>
+        <artifactId>native-maven-plugin</artifactId>
+        <configuration>
+          <metadataRepository>
+            <version>0.3.14</version>
+          </metadataRepository>
+        </configuration>
+      </plugin>
 
-			<!-- STEPS TO BUILD CDS MODEL AND GENERATE POJOs -->
-			<plugin>
-				<groupId>com.sap.cds</groupId>
-				<artifactId>cds-maven-plugin</artifactId>
-				<executions>
-					<execution>
-						<id>cds.clean</id>
-						<goals>
-							<goal>clean</goal>
-						</goals>
-					</execution>
+      <!-- STEPS TO BUILD CDS MODEL AND GENERATE POJOs -->
+      <plugin>
+        <groupId>com.sap.cds</groupId>
+        <artifactId>cds-maven-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>cds.clean</id>
+            <goals>
+              <goal>clean</goal>
+            </goals>
+          </execution>
 
-					<execution>
-						<id>cds.install-node</id>
-						<goals>
-							<goal>install-node</goal>
-						</goals>
-					</execution>
+          <execution>
+            <id>cds.install-node</id>
+            <goals>
+              <goal>install-node</goal>
+            </goals>
+          </execution>
 
-					<execution>
-						<id>cds.npm-ci</id>
-						<goals>
-							<goal>npm</goal>
-						</goals>
-						<configuration>
-							<arguments>ci</arguments>
-						</configuration>
-					</execution>
+          <execution>
+            <id>cds.npm-ci</id>
+            <goals>
+              <goal>npm</goal>
+            </goals>
+            <configuration>
+              <arguments>ci</arguments>
+            </configuration>
+          </execution>
 
-					<execution>
-						<id>cds.resolve</id>
-						<goals>
-							<goal>resolve</goal>
-						</goals>
-					</execution>
+          <execution>
+            <id>cds.resolve</id>
+            <goals>
+              <goal>resolve</goal>
+            </goals>
+          </execution>
 
-					<execution>
-						<id>cds.build</id>
-						<goals>
-							<goal>cds</goal>
-						</goals>
-						<configuration>
-							<commands>
-								<command>build --for java</command>
-								<command>deploy --to h2 --with-mocks --dry --out "${project.basedir}/src/main/resources/schema-h2.sql"</command>
-								<command>compile srv/cat-service.cds -2 openapi --openapi:url /api/browse &gt;
+          <execution>
+            <id>cds.build</id>
+            <goals>
+              <goal>cds</goal>
+            </goals>
+            <configuration>
+              <commands>
+                <command>build --for java</command>
+                <command>deploy --to h2 --with-mocks --dry --out "${project.basedir}/src/main/resources/schema-h2.sql"</command>
+                <command>compile srv/cat-service.cds -2 openapi --openapi:url /api/browse &gt;
 									"${project.basedir}/src/main/resources/swagger/openapi.json"</command>
-							</commands>
-						</configuration>
-					</execution>
+              </commands>
+            </configuration>
+          </execution>
 
-					<execution>
-						<id>cds.generate</id>
-						<goals>
-							<goal>generate</goal>
-						</goals>
-						<configuration>
-							<basePackage>cds.gen</basePackage>
-							<strictSetters>true</strictSetters>
-							<interfacesForAspects>true</interfacesForAspects>
-							<linkedInterfaces>true</linkedInterfaces>
-						</configuration>
-					</execution>
-				</executions>
-			</plugin>
-		</plugins>
-	</build>
+          <execution>
+            <id>cds.generate</id>
+            <goals>
+              <goal>generate</goal>
+            </goals>
+            <configuration>
+              <basePackage>cds.gen</basePackage>
+              <strictSetters>true</strictSetters>
+              <interfacesForAspects>true</interfacesForAspects>
+              <linkedInterfaces>true</linkedInterfaces>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
 </project>

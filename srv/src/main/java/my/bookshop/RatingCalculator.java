@@ -14,48 +14,43 @@ import java.util.OptionalDouble;
 import java.util.stream.Stream;
 import org.springframework.stereotype.Component;
 
-/**
- * Takes care of calculating the average rating of a book based on its review
- * ratings.
- */
+/** Takes care of calculating the average rating of a book based on its review ratings. */
 @Component
 public class RatingCalculator {
 
-	private PersistenceService db;
+  private PersistenceService db;
 
-	RatingCalculator(PersistenceService db) {
-		this.db = db;
-	}
+  RatingCalculator(PersistenceService db) {
+    this.db = db;
+  }
 
-	/**
-	 * Initializes the ratings for all existing books based on their reviews.
-	 */
-	public void initBookRatings() {
-		var result = db.run(Select.from(BOOKS).columns(b -> b.ID()));
-		for (Books book : result) {
-			setBookRating(book.getId());
-		}
-	}
+  /** Initializes the ratings for all existing books based on their reviews. */
+  public void initBookRatings() {
+    var result = db.run(Select.from(BOOKS).columns(b -> b.ID()));
+    for (Books book : result) {
+      setBookRating(book.getId());
+    }
+  }
 
-	/**
-	 * Sets the average rating for the given book.
-	 *
-	 * @param bookId
-	 */
-	public void setBookRating(String bookId) {
-		Result run = db.run(Select.from(BOOKS, b -> b.filter(b.ID().eq(bookId)).reviews()));
+  /**
+   * Sets the average rating for the given book.
+   *
+   * @param bookId
+   */
+  public void setBookRating(String bookId) {
+    Result run = db.run(Select.from(BOOKS, b -> b.filter(b.ID().eq(bookId)).reviews()));
 
-		Stream<Double> ratings = run.streamOf(Reviews.class).map(r -> r.getRating().doubleValue());
-		BigDecimal rating = getAvgRating(ratings);
+    Stream<Double> ratings = run.streamOf(Reviews.class).map(r -> r.getRating().doubleValue());
+    BigDecimal rating = getAvgRating(ratings);
 
-		db.run(Update.entity(BOOKS).byId(bookId).data(Books.RATING, rating));
-	}
+    db.run(Update.entity(BOOKS).byId(bookId).data(Books.RATING, rating));
+  }
 
-	static BigDecimal getAvgRating(Stream<Double> ratings) {
-		OptionalDouble avg = ratings.mapToDouble(Double::doubleValue).average();
-		if (!avg.isPresent()) {
-			return BigDecimal.ZERO;
-		}
-		return BigDecimal.valueOf(avg.getAsDouble()).setScale(1, RoundingMode.HALF_UP);
-	}
+  static BigDecimal getAvgRating(Stream<Double> ratings) {
+    OptionalDouble avg = ratings.mapToDouble(Double::doubleValue).average();
+    if (!avg.isPresent()) {
+      return BigDecimal.ZERO;
+    }
+    return BigDecimal.valueOf(avg.getAsDouble()).setScale(1, RoundingMode.HALF_UP);
+  }
 }

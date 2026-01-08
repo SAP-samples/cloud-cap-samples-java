@@ -51,240 +51,306 @@ import org.springframework.stereotype.Component;
 /**
  * Custom business logic for the "Admin Service" (see admin-service.cds)
  *
- * Handles creating and editing orders.
+ * <p>Handles creating and editing orders.
  */
 @Component
 @ServiceName(AdminService_.CDS_NAME)
 class AdminServiceHandler implements EventHandler {
 
-	private final AdminService.Draft adminService;
-	private final PersistenceService db;
-	private final Messages messages;
-	private final CqnAnalyzer analyzer;
+  private final AdminService.Draft adminService;
+  private final PersistenceService db;
+  private final Messages messages;
+  private final CqnAnalyzer analyzer;
 
-	AdminServiceHandler(AdminService.Draft adminService, PersistenceService db, Messages messages, CdsModel model) {
-		this.adminService = adminService;
-		this.db = db;
-		this.messages = messages;
+  AdminServiceHandler(
+      AdminService.Draft adminService, PersistenceService db, Messages messages, CdsModel model) {
+    this.adminService = adminService;
+    this.db = db;
+    this.messages = messages;
 
-		// model is a tenant-dependant model proxy
-		this.analyzer = CqnAnalyzer.create(model);
-	}
+    // model is a tenant-dependant model proxy
+    this.analyzer = CqnAnalyzer.create(model);
+  }
 
-	/**
-	 * Validate correctness of an order before finishing the order proces:
-	 * 1. Check Order quantity for each Item and return a message if quantity is empty or <= 0
-	 * 2. Check Order quantity for each Item is available, return message if the stock is too low
-	 *
-	 * @param orders
-	 */
-	@Before(event = { CqnService.EVENT_CREATE, CqnService.EVENT_UPSERT, CqnService.EVENT_UPDATE })
-	public void beforeCreateOrder(Stream<Orders> orders, EventContext context) {
-		orders.forEach(order -> {
-			// reset total
-			order.setTotal(BigDecimal.valueOf(0));
-			if(order.getItems() != null) {
-				order.getItems().forEach(orderItem -> {
-					// validation of the Order creation request
-					Integer quantity = orderItem.getQuantity();
-					String bookId = orderItem.getBookId();
+  /**
+   * Validate correctness of an order before finishing the order proces: 1. Check Order quantity for
+   * each Item and return a message if quantity is empty or <= 0 2. Check Order quantity for each
+   * Item is available, return message if the stock is too low
+   *
+   * @param orders
+   */
+  @Before(event = {CqnService.EVENT_CREATE, CqnService.EVENT_UPSERT, CqnService.EVENT_UPDATE})
+  public void beforeCreateOrder(Stream<Orders> orders, EventContext context) {
+    orders.forEach(
+        order -> {
+          // reset total
+          order.setTotal(BigDecimal.valueOf(0));
+          if (order.getItems() != null) {
+            order
+                .getItems()
+                .forEach(
+                    orderItem -> {
+                      // validation of the Order creation request
+                      Integer quantity = orderItem.getQuantity();
+                      String bookId = orderItem.getBookId();
 
-					if(quantity == null || quantity <= 0 || bookId == null) {
-						return; // follow up validations rely on these
-					}
+                      if (quantity == null || quantity <= 0 || bookId == null) {
+                        return; // follow up validations rely on these
+                      }
 
-					// calculate the actual quantity difference
-					// FIXME this should handle book changes, currently only quantity changes are handled
-					int diffQuantity = quantity - db.run(Select.from(Bookshop_.ORDER_ITEMS).columns(i -> i.quantity()).byId(orderItem.getId()))
-												.first().map(i -> i.getQuantity()).orElse(0);
+                      // calculate the actual quantity difference
+                      // FIXME this should handle book changes, currently only quantity changes are
+                      // handled
+                      int diffQuantity =
+                          quantity
+                              - db.run(
+                                      Select.from(Bookshop_.ORDER_ITEMS)
+                                          .columns(i -> i.quantity())
+                                          .byId(orderItem.getId()))
+                                  .first()
+                                  .map(i -> i.getQuantity())
+                                  .orElse(0);
 
-					// check if enough books are available
-					var result = db.run(Select.from(BOOKS).columns(b -> b.ID(), b -> b.stock(), b -> b.price()).byId(bookId));
-					result.first().ifPresent(book -> {
-						if (book.getStock() < diffQuantity) {
-							// Tip: you can have localized messages and use parameters in your messages
-							messages.error(MessageKeys.BOOK_REQUIRE_STOCK, book.getStock())
-								.target(ORDERS, o -> o.Items(i -> i.ID().eq(orderItem.getId()).and(i.IsActiveEntity().eq(orderItem.getIsActiveEntity()))).quantity());
-							return; // no need to update follow-up values with invalid quantity / stock
-						}
+                      // check if enough books are available
+                      var result =
+                          db.run(
+                              Select.from(BOOKS)
+                                  .columns(b -> b.ID(), b -> b.stock(), b -> b.price())
+                                  .byId(bookId));
+                      result
+                          .first()
+                          .ifPresent(
+                              book -> {
+                                if (book.getStock() < diffQuantity) {
+                                  // Tip: you can have localized messages and use parameters in your
+                                  // messages
+                                  messages
+                                      .error(MessageKeys.BOOK_REQUIRE_STOCK, book.getStock())
+                                      .target(
+                                          ORDERS,
+                                          o ->
+                                              o.Items(
+                                                      i ->
+                                                          i.ID()
+                                                              .eq(orderItem.getId())
+                                                              .and(
+                                                                  i.IsActiveEntity()
+                                                                      .eq(
+                                                                          orderItem
+                                                                              .getIsActiveEntity())))
+                                                  .quantity());
+                                  return; // no need to update follow-up values with invalid
+                                  // quantity / stock
+                                }
 
-						// update the book with the new stock
-						book.setStock(book.getStock() - diffQuantity);
-						db.run(Update.entity(BOOKS).data(book));
+                                // update the book with the new stock
+                                book.setStock(book.getStock() - diffQuantity);
+                                db.run(Update.entity(BOOKS).data(book));
 
-						// update the amount
-						BigDecimal updatedAmount = book.getPrice().multiply(BigDecimal.valueOf(quantity));
-						orderItem.setAmount(updatedAmount);
+                                // update the amount
+                                BigDecimal updatedAmount =
+                                    book.getPrice().multiply(BigDecimal.valueOf(quantity));
+                                orderItem.setAmount(updatedAmount);
 
-						// update the total
-						order.setTotal(order.getTotal().add(updatedAmount));
-					});
-				});
-			}
-		});
-	}
+                                // update the total
+                                order.setTotal(order.getTotal().add(updatedAmount));
+                              });
+                    });
+          }
+        });
+  }
 
-	/*
-	 * Calculate the total order value preview when editing an order item
-	 */
-	@Before
-	public void patchOrderItems(DraftPatchEventContext context, OrderItems_ ref, OrderItems orderItem) {
-		// check if quantity or book was updated
-		Integer quantity = orderItem.getQuantity();
-		String bookId = orderItem.getBookId();
-		BigDecimal amount = calculateAmountInDraft(ref, quantity, bookId);
-		if (amount != null) {
-			orderItem.setAmount(amount);
-		}
-	}
+  /*
+   * Calculate the total order value preview when editing an order item
+   */
+  @Before
+  public void patchOrderItems(
+      DraftPatchEventContext context, OrderItems_ ref, OrderItems orderItem) {
+    // check if quantity or book was updated
+    Integer quantity = orderItem.getQuantity();
+    String bookId = orderItem.getBookId();
+    BigDecimal amount = calculateAmountInDraft(ref, quantity, bookId);
+    if (amount != null) {
+      orderItem.setAmount(amount);
+    }
+  }
 
-	/*
-	 * Calculate the total order value preview when deleting an order item from the order
-	 */
-	@Before
-	public void cancelOrderItems(DraftCancelEventContext context, OrderItems_ ref) {
-		if(ref.asRef().targetSegment().filter().isPresent()) {
-			calculateAmountInDraft(ref, 0, null);
-		}
-	}
+  /*
+   * Calculate the total order value preview when deleting an order item from the order
+   */
+  @Before
+  public void cancelOrderItems(DraftCancelEventContext context, OrderItems_ ref) {
+    if (ref.asRef().targetSegment().filter().isPresent()) {
+      calculateAmountInDraft(ref, 0, null);
+    }
+  }
 
-	private BigDecimal calculateAmountInDraft(OrderItems_ ref, Integer newQuantity, String newBookId) {
-		Integer quantity = newQuantity;
-		String bookId = newBookId;
-		if (quantity == null && bookId == null) {
-			return null; // nothing changed
-		}
+  private BigDecimal calculateAmountInDraft(
+      OrderItems_ ref, Integer newQuantity, String newBookId) {
+    Integer quantity = newQuantity;
+    String bookId = newBookId;
+    if (quantity == null && bookId == null) {
+      return null; // nothing changed
+    }
 
-		// get the order item that was updated (to get access to the book price, quantity and order total)
-		var result = adminService.run(Select.from(ref)
-				.columns(o -> o.quantity(), o -> o.amount(),
-						o -> o.book().expand(b -> b.ID(), b -> b.price()),
-						o -> o.parent().expand(p -> p.ID(), p -> p.total())));
-		OrderItems itemToPatch = result.single();
-		BigDecimal bookPrice = null;
+    // get the order item that was updated (to get access to the book price, quantity and order
+    // total)
+    var result =
+        adminService.run(
+            Select.from(ref)
+                .columns(
+                    o -> o.quantity(),
+                    o -> o.amount(),
+                    o -> o.book().expand(b -> b.ID(), b -> b.price()),
+                    o -> o.parent().expand(p -> p.ID(), p -> p.total())));
+    OrderItems itemToPatch = result.single();
+    BigDecimal bookPrice = null;
 
-		// fallback to existing values
-		if(quantity == null) {
-			quantity = itemToPatch.getQuantity();
-		}
+    // fallback to existing values
+    if (quantity == null) {
+      quantity = itemToPatch.getQuantity();
+    }
 
-		if(bookId == null && itemToPatch.getBook() != null) {
-			bookId = itemToPatch.getBook().getId();
-			bookPrice = itemToPatch.getBook().getPrice();
-		}
+    if (bookId == null && itemToPatch.getBook() != null) {
+      bookId = itemToPatch.getBook().getId();
+      bookPrice = itemToPatch.getBook().getPrice();
+    }
 
-		if(quantity == null || bookId == null) {
-			return null; // not enough data available
-		}
+    if (quantity == null || bookId == null) {
+      return null; // not enough data available
+    }
 
-		// get the price of the updated book ID
-		if(bookPrice == null) {
-			var bookResult = db.run(Select.from(BOOKS).byId(bookId).columns(b -> b.price()));
-			bookPrice = bookResult.single().getPrice();
-		}
+    // get the price of the updated book ID
+    if (bookPrice == null) {
+      var bookResult = db.run(Select.from(BOOKS).byId(bookId).columns(b -> b.price()));
+      bookPrice = bookResult.single().getPrice();
+    }
 
-		// update the amount of the order item
-		BigDecimal updatedAmount = bookPrice.multiply(BigDecimal.valueOf(quantity));
+    // update the amount of the order item
+    BigDecimal updatedAmount = bookPrice.multiply(BigDecimal.valueOf(quantity));
 
-		// update the order's total
-		BigDecimal previousAmount = defaultZero(itemToPatch.getAmount());
-		BigDecimal currentTotal = defaultZero(itemToPatch.getParent().getTotal());
-		BigDecimal newTotal = currentTotal.subtract(previousAmount).add(updatedAmount);
-		adminService.patchDraft(Update.entity(ORDERS)
-				.where(o -> o.ID().eq(itemToPatch.getParent().getId()).and(o.IsActiveEntity().eq(false)))
-				.data(Orders.TOTAL, newTotal));
+    // update the order's total
+    BigDecimal previousAmount = defaultZero(itemToPatch.getAmount());
+    BigDecimal currentTotal = defaultZero(itemToPatch.getParent().getTotal());
+    BigDecimal newTotal = currentTotal.subtract(previousAmount).add(updatedAmount);
+    adminService.patchDraft(
+        Update.entity(ORDERS)
+            .where(
+                o -> o.ID().eq(itemToPatch.getParent().getId()).and(o.IsActiveEntity().eq(false)))
+            .data(Orders.TOTAL, newTotal));
 
-		return updatedAmount;
-	}
+    return updatedAmount;
+  }
 
-	/**
-	 * Adds a book to an order
-	 * @param context
-	 */
-	@On(entity = Books_.CDS_NAME)
-	public Orders addBookToOrder(BooksAddToOrderContext context) {
-		String orderId = context.getOrderId();
-		List<Orders> orders = adminService.run(Select.from(ORDERS).columns(o -> o._all(), o -> o.Items().expand()).where(o -> o.ID().eq(orderId))).list();
-		Orders order = orders.stream().filter(p -> p.getIsActiveEntity()).findFirst().orElse(null);
+  /**
+   * Adds a book to an order
+   *
+   * @param context
+   */
+  @On(entity = Books_.CDS_NAME)
+  public Orders addBookToOrder(BooksAddToOrderContext context) {
+    String orderId = context.getOrderId();
+    List<Orders> orders =
+        adminService
+            .run(
+                Select.from(ORDERS)
+                    .columns(o -> o._all(), o -> o.Items().expand())
+                    .where(o -> o.ID().eq(orderId)))
+            .list();
+    Orders order = orders.stream().filter(p -> p.getIsActiveEntity()).findFirst().orElse(null);
 
-		// check that the order with given ID exists and is not in draft-mode
-		if((orders.size() > 0 && order == null) || orders.size() > 1) {
-			throw new ServiceException(ErrorStatuses.CONFLICT, MessageKeys.ORDER_INDRAFT);
-		} else if (orders.size() <= 0) {
-			throw new ServiceException(ErrorStatuses.NOT_FOUND, MessageKeys.ORDER_MISSING);
-		}
+    // check that the order with given ID exists and is not in draft-mode
+    if ((orders.size() > 0 && order == null) || orders.size() > 1) {
+      throw new ServiceException(ErrorStatuses.CONFLICT, MessageKeys.ORDER_INDRAFT);
+    } else if (orders.size() <= 0) {
+      throw new ServiceException(ErrorStatuses.NOT_FOUND, MessageKeys.ORDER_MISSING);
+    }
 
-		if(order.getItems() == null) {
-			order.setItems(new ArrayList<>());
-		}
+    if (order.getItems() == null) {
+      order.setItems(new ArrayList<>());
+    }
 
-		// get ID of the book on which the action was called (bound action)
-		String bookId = (String) analyzer.analyze(context.getCqn()).targetKeys().get(Books.ID);
+    // get ID of the book on which the action was called (bound action)
+    String bookId = (String) analyzer.analyze(context.getCqn()).targetKeys().get(Books.ID);
 
-		// create order item
-		OrderItems newItem = OrderItems.create();
-		newItem.setId(UUID.randomUUID().toString());
-		newItem.setBookId(bookId);
-		newItem.setQuantity(context.getQuantity());
-		order.getItems().add(newItem);
+    // create order item
+    OrderItems newItem = OrderItems.create();
+    newItem.setId(UUID.randomUUID().toString());
+    newItem.setBookId(bookId);
+    newItem.setQuantity(context.getQuantity());
+    order.getItems().add(newItem);
 
-		Orders updatedOrder = adminService.run(Update.entity(ORDERS).data(order)).single();
-		messages.success(MessageKeys.BOOK_ADDED_ORDER);
-		return updatedOrder;
-	}
+    Orders updatedOrder = adminService.run(Update.entity(ORDERS).data(order)).single();
+    messages.success(MessageKeys.BOOK_ADDED_ORDER);
+    return updatedOrder;
+  }
 
-	/**
-	 * @return the static CSV singleton upload entity
-	 */
-	@On(entity = Upload_.CDS_NAME, event = CqnService.EVENT_READ)
-	public Upload getUploadSingleton() {
-		return Upload.create();
-	}
+  /**
+   * @return the static CSV singleton upload entity
+   */
+  @On(entity = Upload_.CDS_NAME, event = CqnService.EVENT_READ)
+  public Upload getUploadSingleton() {
+    return Upload.create();
+  }
 
-	/**
-	 * Handles CSV uploads with book data
-	 * @param context
-	 * @param csv
-	 */
-	@On
-	public List<Upload> addBooksViaCsv(CdsUpdateEventContext context, Upload upload) {
-		InputStream is = upload.getCsv();
-		if (is != null) {
-			try (BufferedReader br = new BufferedReader(new InputStreamReader(is))) {
-				br.lines().skip(1).forEach((line) -> {
-					String[] p = line.split(";");
-					Books book = Books.create();
-					book.setId(p[0]);
-					book.setTitle(p[1]);
-					book.setDescr(p[2]);
-					book.setAuthorId(p[3]);
-					book.setStock(Integer.valueOf(p[4]).intValue());
-					book.setPrice(BigDecimal.valueOf(Double.valueOf(p[5])));
-					book.setCurrencyCode(p[6]);
-					book.setGenreId(String.valueOf(p[7]));
+  /**
+   * Handles CSV uploads with book data
+   *
+   * @param context
+   * @param csv
+   */
+  @On
+  public List<Upload> addBooksViaCsv(CdsUpdateEventContext context, Upload upload) {
+    InputStream is = upload.getCsv();
+    if (is != null) {
+      try (BufferedReader br = new BufferedReader(new InputStreamReader(is))) {
+        br.lines()
+            .skip(1)
+            .forEach(
+                (line) -> {
+                  String[] p = line.split(";");
+                  Books book = Books.create();
+                  book.setId(p[0]);
+                  book.setTitle(p[1]);
+                  book.setDescr(p[2]);
+                  book.setAuthorId(p[3]);
+                  book.setStock(Integer.valueOf(p[4]).intValue());
+                  book.setPrice(BigDecimal.valueOf(Double.valueOf(p[5])));
+                  book.setCurrencyCode(p[6]);
+                  book.setGenreId(String.valueOf(p[7]));
 
-					// separate transaction per line
-					context.getCdsRuntime().changeSetContext().run(ctx -> {
-						db.run(Upsert.into(BOOKS).entry(book));
-					});
-				});
-			} catch (IOException e) {
-				throw new ServiceException(ErrorStatuses.SERVER_ERROR, MessageKeys.BOOK_IMPORT_FAILED, e);
-			} catch (IndexOutOfBoundsException e) {
-				throw new ServiceException(ErrorStatuses.SERVER_ERROR, MessageKeys.BOOK_IMPORT_INVALID_CSV, e);
-			}
-		}
-		return Arrays.asList(upload);
-	}
+                  // separate transaction per line
+                  context
+                      .getCdsRuntime()
+                      .changeSetContext()
+                      .run(
+                          ctx -> {
+                            db.run(Upsert.into(BOOKS).entry(book));
+                          });
+                });
+      } catch (IOException e) {
+        throw new ServiceException(ErrorStatuses.SERVER_ERROR, MessageKeys.BOOK_IMPORT_FAILED, e);
+      } catch (IndexOutOfBoundsException e) {
+        throw new ServiceException(
+            ErrorStatuses.SERVER_ERROR, MessageKeys.BOOK_IMPORT_INVALID_CSV, e);
+      }
+    }
+    return Arrays.asList(upload);
+  }
 
-	@Before(event = {CqnService.EVENT_CREATE, CqnService.EVENT_UPDATE, DraftService.EVENT_DRAFT_NEW, DraftService.EVENT_DRAFT_PATCH})
-	public void restoreCoversUpId(CqnStructuredTypeRef ref, BooksCovers cover) {
-		// restore up__ID, which is not provided via OData due to containment
-		cover.setUpId((String) analyzer.analyze(ref).rootKeys().get(Books.ID));
-	}
+  @Before(
+      event = {
+        CqnService.EVENT_CREATE,
+        CqnService.EVENT_UPDATE,
+        DraftService.EVENT_DRAFT_NEW,
+        DraftService.EVENT_DRAFT_PATCH
+      })
+  public void restoreCoversUpId(CqnStructuredTypeRef ref, BooksCovers cover) {
+    // restore up__ID, which is not provided via OData due to containment
+    cover.setUpId((String) analyzer.analyze(ref).rootKeys().get(Books.ID));
+  }
 
-	private BigDecimal defaultZero(BigDecimal decimal) {
-		return decimal == null ? BigDecimal.valueOf(0) : decimal;
-	}
-
+  private BigDecimal defaultZero(BigDecimal decimal) {
+    return decimal == null ? BigDecimal.valueOf(0) : decimal;
+  }
 }
