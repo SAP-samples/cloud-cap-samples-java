@@ -14,11 +14,15 @@ import org.springframework.security.web.servlet.util.matcher.PathPatternRequestM
 @EnableWebSecurity
 public class WebSecurityConfig {
 
-	@Bean
-    @Order(1)
-	public SecurityFilterChain configure(HttpSecurity http) throws Exception {
-		return http.securityMatchers(s -> s.requestMatchers(PathPatternRequestMatcher.withDefaults().matcher("/swagger/**"))) //
-				.csrf(c -> c.disable()).authorizeHttpRequests(a -> a.anyRequest().permitAll())
-				.build();
-	}
+  @Bean
+  @Order(1)
+  public SecurityFilterChain configure(HttpSecurity http) throws Exception {
+    return http.securityMatchers(
+            s ->
+                s.requestMatchers(
+                    PathPatternRequestMatcher.withDefaults().matcher("/swagger/**"))) //
+        .csrf(c -> c.disable())
+        .authorizeHttpRequests(a -> a.anyRequest().permitAll())
+        .build();
+  }
 }

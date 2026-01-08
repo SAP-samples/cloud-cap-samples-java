@@ -19,40 +19,40 @@ import org.springframework.test.web.servlet.MockMvc;
 @SpringBootTest
 class FeatureTogglesIT {
 
-	private static final String ENDPOINT = "/api/browse/Books(aebdfc8a-0dfa-4468-bd36-48aabd65e663)";
+  private static final String ENDPOINT = "/api/browse/Books(aebdfc8a-0dfa-4468-bd36-48aabd65e663)";
 
-	@Autowired
-	private MockMvc client;
+  @Autowired private MockMvc client;
 
-	@Test
-	@WithMockUser("authenticated") // This user has all feature toggles disabled
-	void withoutToggles_basicModelVisible() throws Exception {
-		// Elements are not visible and not changed by the event handler
-		client.perform(get(ENDPOINT))
-			.andExpect(status().isOk())
-			.andExpect(jsonPath("$.isbn").doesNotExist())
-			.andExpect(jsonPath("$.title").value(containsString("11%")));
-	}
+  @Test
+  @WithMockUser("authenticated") // This user has all feature toggles disabled
+  void withoutToggles_basicModelVisible() throws Exception {
+    // Elements are not visible and not changed by the event handler
+    client
+        .perform(get(ENDPOINT))
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.isbn").doesNotExist())
+        .andExpect(jsonPath("$.title").value(containsString("11%")));
+  }
 
-	@Test
-	@WithMockUser("admin") // This user has all feature toggles enabled
-	void togglesOn_extensionsAndChangesAreVisible() throws Exception {
-		// Elements are visible and changed by the event handler
-		client.perform(get(ENDPOINT))
-			.andExpect(status().isOk())
-			.andExpect(jsonPath("$.isbn").value("979-8669820985"))
-			.andExpect(jsonPath("$.title").value(containsString("14%")));
-	}
+  @Test
+  @WithMockUser("admin") // This user has all feature toggles enabled
+  void togglesOn_extensionsAndChangesAreVisible() throws Exception {
+    // Elements are visible and changed by the event handler
+    client
+        .perform(get(ENDPOINT))
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.isbn").value("979-8669820985"))
+        .andExpect(jsonPath("$.title").value(containsString("14%")));
+  }
 
-	@Test
-	@WithMockUser("user") // This user has only 'isbn' toggle enabled
-	void toggleIsbnOn_extensionsAndChangesAreVisible() throws Exception {
-		// Elements are visible
-		client.perform(get(ENDPOINT))
-			.andExpect(status().isOk())
-			.andExpect(jsonPath("$.isbn").value("979-8669820985"))
-			.andExpect(jsonPath("$.title").value(containsString("11%")));
-	}
-
+  @Test
+  @WithMockUser("user") // This user has only 'isbn' toggle enabled
+  void toggleIsbnOn_extensionsAndChangesAreVisible() throws Exception {
+    // Elements are visible
+    client
+        .perform(get(ENDPOINT))
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.isbn").value("979-8669820985"))
+        .andExpect(jsonPath("$.title").value(containsString("11%")));
+  }
 }
-
