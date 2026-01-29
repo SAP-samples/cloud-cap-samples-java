@@ -124,7 +124,7 @@
                             "controlConfiguration": {
                                 "contents/@com.sap.vocabularies.UI.v1.LineItem": {
                                     "tableSettings": {
-                                        "hierarchyQualifier": "ContentsHierarchyHierarchy",
+                                        "hierarchyQualifier": "ContentsHierarchy",
                                         "type": "TreeTable"
                                     }
                                 }

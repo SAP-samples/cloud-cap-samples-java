@@ -93,7 +93,7 @@
 							"controlConfiguration": {
                                 "@com.sap.vocabularies.UI.v1.LineItem": {
                                     "tableSettings": {
-                                        "hierarchyQualifier": "GenreHierarchyHierarchy",
+                                        "hierarchyQualifier": "GenreHierarchy",
                                         "type": "TreeTable"
                                     }
                                 }

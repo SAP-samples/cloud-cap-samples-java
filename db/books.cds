@@ -3,6 +3,7 @@ namespace my.bookshop;
 using {Currency, sap, managed, cuid} from '@sap/cds/common';
 using my.bookshop.Reviews from './reviews';
 using my.bookshop.TechnicalBooleanFlag from './common';
+using {my.common.Hierarchy as Hierarchy} from './hierarchy';
 
 @fiori.draft.enabled
 entity Books : cuid, managed {
@@ -45,7 +46,7 @@ annotate Authors with
 /**
  * Hierarchically organized Code List for Genres
  */
-entity Genres : sap.common.CodeList {
+entity Genres : sap.common.CodeList, Hierarchy {
     key ID          : UUID;
         // move siblings
         siblingRank : Integer;
@@ -58,7 +59,7 @@ entity Genres : sap.common.CodeList {
 /**
  * Hierarchically organized entity for Contents
  */
-entity Contents {
+entity Contents: Hierarchy {
     key ID     : UUID;
         name   : String;
         page   : Integer;
