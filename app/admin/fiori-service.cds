@@ -104,7 +104,7 @@ annotate AdminService.GenreHierarchy with @UI: {
     PresentationVariant #VH: {
         $Type                      : 'UI.PresentationVariantType',
         Visualizations             : ['@UI.LineItem'],
-        RecursiveHierarchyQualifier: 'GenreHierarchy'
+        RecursiveHierarchyQualifier: 'GenreHierarchyHierarchy'
     },
     LineItem               : [{
         $Type: 'UI.DataField',
@@ -196,19 +196,7 @@ annotate AdminService.Books.texts {
 //
 //  Annotations for hierarchy ContentsHierarchy
 //
-annotate AdminService.ContentsHierarchy with @Aggregation.RecursiveHierarchy#ContentsHierarchy: {
-    $Type: 'Aggregation.RecursiveHierarchyType',
-    NodeProperty: ID, // identifies a node
-    ParentNavigationProperty: parent // navigates to a node's parent
-  };
-
-annotate AdminService.ContentsHierarchy with @Hierarchy.RecursiveHierarchy#ContentsHierarchy: {
-  $Type: 'Hierarchy.RecursiveHierarchyType',
-  LimitedDescendantCount: LimitedDescendantCount,
-  DistanceFromRoot: DistanceFromRoot,
-  DrillState: DrillState,
-  LimitedRank: LimitedRank
-};
+annotate AdminService.ContentsHierarchy with @hierarchy;
 
 annotate AdminService.Books actions {
     @(
