@@ -79,7 +79,7 @@
                     "target": "AuthorsDetails"
                 },
                 {
-                    "pattern": "Books({key})/chapters({key2}):?query:",
+                    "pattern": "Books({key})/cHapters({key2}):?query:",
                     "name": "ChaptersObjectPage",
                     "target": "ChaptersObjectPage"
                 },

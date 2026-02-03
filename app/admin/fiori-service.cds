@@ -53,7 +53,7 @@ annotate AdminService.Books with @(UI : {
             $Type : 'UI.ReferenceFacet',
             Label : '{i18n>Chapters}',
             ID : 'i18nChapters',
-            Target : 'chapters/@UI.LineItem#i18nChapters',
+            Target : 'cHapters/@UI.LineItem#i18nChapters',
         },
         {
             $Type : 'UI.ReferenceFacet',
