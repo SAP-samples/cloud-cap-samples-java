@@ -22,7 +22,7 @@ entity Books : cuid, managed {
     reviews      : Association to many Reviews
                        on reviews.book = $self;
     isReviewable : TechnicalBooleanFlag not null default true;
-    chapters : Composition of many Chapters on chapters.book = $self;
+    cHapters : Composition of many Chapters on cHapters.book = $self;
     pages : Composition of many Pages on pages.book = $self;
 }
 
