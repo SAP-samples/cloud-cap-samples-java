@@ -32,6 +32,7 @@ service AdminService @(requires: [
         up__ID: String, 
         sourceFolderId: String,
         objectIds: String,
+        targetFacet: String,
         sourceFacet: String,      // Optional: if not provided, no source cleanup
     ) returns MoveAttachmentsResult;  // Return structured type
 
@@ -60,6 +61,7 @@ service AdminService @(requires: [
         up__ID: String, 
         sourceFolderId: String,
         objectIds: String,
+        targetFacet: String,
         sourceFacet: String,      // Optional: if not provided, no source cleanup
     ) returns MoveAttachmentsResult;  // Return structured type
 
@@ -88,6 +90,7 @@ service AdminService @(requires: [
         up__ID: String, 
         sourceFolderId: String,
         objectIds: String,
+        targetFacet: String,
         sourceFacet: String,      // Optional: if not provided, no source cleanup
     ) returns MoveAttachmentsResult;  // Return structured type
 
@@ -116,6 +119,7 @@ service AdminService @(requires: [
         up__ID: String, 
         sourceFolderId: String,
         objectIds: String,
+        targetFacet: String,
         sourceFacet: String,      // Optional: if not provided, no source cleanup
     ) returns MoveAttachmentsResult;  // Return structured type
 
@@ -144,6 +148,7 @@ service AdminService @(requires: [
         up__ID: String, 
         sourceFolderId: String,
         objectIds: String,
+        targetFacet: String,
         sourceFacet: String,      // Optional: if not provided, no source cleanup
     ) returns MoveAttachmentsResult;  // Return structured type
 
@@ -173,6 +178,7 @@ service AdminService @(requires: [
         up__ID: String, 
         sourceFolderId: String,
         objectIds: String,
+        targetFacet: String,
         sourceFacet: String,      // Optional: if not provided, no source cleanup
     ) returns MoveAttachmentsResult;  // Return structured type
 
@@ -201,6 +207,7 @@ service AdminService @(requires: [
         up__ID: String, 
         sourceFolderId: String,
         objectIds: String,
+        targetFacet: String,
         sourceFacet: String,      // Optional: if not provided, no source cleanup
     ) returns MoveAttachmentsResult;  // Return structured type
 
@@ -229,6 +236,7 @@ service AdminService @(requires: [
         up__ID: String, 
         sourceFolderId: String,
         objectIds: String,
+        targetFacet: String,
         sourceFacet: String,      // Optional: if not provided, no source cleanup
     ) returns MoveAttachmentsResult;  // Return structured type
 
@@ -258,6 +266,7 @@ service AdminService @(requires: [
         up__ID: String, 
         sourceFolderId: String,
         objectIds: String,
+        targetFacet: String,
         sourceFacet: String,      // Optional: if not provided, no source cleanup
     ) returns MoveAttachmentsResult;  // Return structured type
 
