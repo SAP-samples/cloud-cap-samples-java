@@ -6,18 +6,24 @@ import cds.gen.adminservice.AdminService_;
 import cds.gen.adminservice.GenreHierarchy;
 import cds.gen.adminservice.GenreHierarchyMoveSiblingContext;
 import cds.gen.adminservice.GenreHierarchy_;
+import com.sap.cds.ql.CQL;
 import com.sap.cds.ql.Select;
 import com.sap.cds.ql.Update;
 import com.sap.cds.services.handler.EventHandler;
 import com.sap.cds.services.handler.annotations.On;
 import com.sap.cds.services.handler.annotations.ServiceName;
 import com.sap.cds.services.persistence.PersistenceService;
-import java.util.List;
 import org.springframework.stereotype.Component;
 
 @Component
 @ServiceName(AdminService_.CDS_NAME)
-/** Example of a custom handler for nextSiblingAction */
+/**
+ * Handles the moveSibling action for GenreHierarchy.
+ *
+ * <p>Assumes contiguous 1-based siblingRank values among siblings. Instead of loading all siblings
+ * and rewriting them, this implementation uses expression-based updates to shift only the affected
+ * ranks.
+ */
 public class HierarchySiblingActionHandler implements EventHandler {
 
   private final PersistenceService db;
@@ -28,43 +34,76 @@ public class HierarchySiblingActionHandler implements EventHandler {
 
   @On
   void onMoveSiblingAction(GenreHierarchy_ ref, GenreHierarchyMoveSiblingContext context) {
-    // Find current node and its parent
+    // Get current node's rank and parent
     GenreHierarchy toMove =
-        db.run(Select.from(ref).columns(c -> c.ID(), c -> c.parent_ID())).single();
+        db.run(Select.from(ref).columns(c -> c.ID(), c -> c.siblingRank(), c -> c.parent_ID()))
+            .single();
 
-    // Find all children of the parent, which are siblings of the entry being moved
-    List<GenreHierarchy> siblingNodes =
-        db.run(
-                Select.from(GENRE_HIERARCHY)
-                    .columns(c -> c.ID(), c -> c.siblingRank())
-                    .where(c -> c.parent_ID().eq(toMove.getParentId())))
-            .list();
+    String parentId = toMove.getParentId();
+    int oldRank = toMove.getSiblingRank();
 
-    int oldPosition = 0;
-    int newPosition = siblingNodes.size();
-    for (int i = 0; i < siblingNodes.size(); ++i) {
-      GenreHierarchy sibling = siblingNodes.get(i);
-      if (sibling.getId().equals(toMove.getId())) {
-        oldPosition = i;
-      }
-      if (context.getNextSibling() != null
-          && sibling.getId().equals(context.getNextSibling().getId())) {
-        newPosition = i;
-      }
+    // Determine target rank
+    int newRank;
+    if (context.getNextSibling() != null) {
+      // Move before the specified next sibling
+      GenreHierarchy nextSibling =
+          db.run(
+                  Select.from(GENRE_HIERARCHY)
+                      .columns(c -> c.siblingRank())
+                      .where(c -> c.ID().eq(context.getNextSibling().getId())))
+              .single();
+      newRank = nextSibling.getSiblingRank();
+    } else {
+      // Move to end: target rank is one past the current maximum
+      Number siblingCount =
+              db.run(
+                      Select.from(GENRE_HIERARCHY)
+                          .columns(b -> CQL.count().as("cnt"))
+                          .where(c -> c.parent_ID().eq(parentId)))
+                  .single()
+                  .getPath("cnt");
+      newRank = siblingCount.intValue() + 1;
     }
 
-    // Move siblings
-    siblingNodes.add(
-        oldPosition < newPosition ? newPosition - 1 : newPosition,
-        siblingNodes.remove(oldPosition));
-
-    // Recalculate ranks (1-based)
-    for (int i = 0; i < siblingNodes.size(); ++i) {
-      siblingNodes.get(i).setSiblingRank(i + 1);
+    if (oldRank == newRank || oldRank + 1 == newRank) {
+      // Node is already at the target position
+      context.setCompleted();
+      return;
     }
 
-    // Update DB
-    db.run(Update.entity(GENRE_HIERARCHY).entries(siblingNodes));
+    int targetRank;
+    if (oldRank < newRank) {
+      // Moving forward: shift siblings in (oldRank, newRank) down by 1
+      db.run(
+          Update.entity(GENRE_HIERARCHY)
+              .where(
+                  c ->
+                      c.parent_ID()
+                          .eq(parentId)
+                          .and(c.siblingRank().gt(oldRank))
+                          .and(c.siblingRank().lt(newRank)))
+              .set(b -> b.siblingRank(), s -> s.minus(1)));
+      targetRank = newRank - 1;
+    } else {
+      // Moving backward: shift siblings in [newRank, oldRank) up by 1
+      db.run(
+          Update.entity(GENRE_HIERARCHY)
+              .where(
+                  c ->
+                      c.parent_ID()
+                          .eq(parentId)
+                          .and(c.siblingRank().ge(newRank))
+                          .and(c.siblingRank().lt(oldRank)))
+              .set(b -> b.siblingRank(), s -> s.plus(1)));
+      targetRank = newRank;
+    }
+
+    // Set the moved node's new rank
+    db.run(
+        Update.entity(GENRE_HIERARCHY)
+            .where(c -> c.ID().eq(toMove.getId()))
+            .data("siblingRank", targetRank));
+
     context.setCompleted();
   }
 }
