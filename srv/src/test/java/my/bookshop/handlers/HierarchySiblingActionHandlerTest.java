@@ -148,7 +148,9 @@ class HierarchySiblingActionHandlerTest {
     assertThat(siblings).hasSize(expectedIds.length);
     for (int i = 0; i < expectedIds.length; i++) {
       assertThat(siblings.get(i).getId()).as("sibling at position %d", i).isEqualTo(expectedIds[i]);
-      assertThat(siblings.get(i).getSiblingRank()).as("siblingRank at position %d", i).isEqualTo(i);
+      assertThat(siblings.get(i).getSiblingRank())
+          .as("siblingRank at position %d", i)
+          .isEqualTo(i + 1);
     }
   }
 }
