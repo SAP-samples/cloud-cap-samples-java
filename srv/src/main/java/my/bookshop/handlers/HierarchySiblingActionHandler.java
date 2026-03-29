@@ -56,12 +56,12 @@ public class HierarchySiblingActionHandler implements EventHandler {
     } else {
       // Move to end: target rank is one past the current maximum
       Number siblingCount =
-              db.run(
-                      Select.from(GENRE_HIERARCHY)
-                          .columns(b -> CQL.count().as("cnt"))
-                          .where(c -> c.parent_ID().eq(parentId)))
-                  .single()
-                  .getPath("cnt");
+          db.run(
+                  Select.from(GENRE_HIERARCHY)
+                      .columns(b -> CQL.count().as("cnt"))
+                      .where(c -> c.parent_ID().eq(parentId)))
+              .single()
+              .getPath("cnt");
       newRank = siblingCount.intValue() + 1;
     }
 

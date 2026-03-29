@@ -50,6 +50,8 @@ entity Genres : sap.common.CodeList, Hierarchy {
     key ID          : UUID;
         // move siblings
         siblingRank : Integer;
+        // dot-separated path of siblingRank values from root to this node
+        virtual number : String;
         parent      : Association to Genres;
         // for cascade delete
         children    : Composition of many Genres on children.parent = $self;
