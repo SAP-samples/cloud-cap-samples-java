@@ -110,6 +110,14 @@ annotate AdminService.GenreHierarchy with @UI: {
         $Type: 'UI.DataField',
         Value: name,
         Label : '{i18n>Genre}'
+    }, {
+        $Type: 'UI.DataField',
+        Value: number,
+        Label : 'Number'
+    }, {
+        $Type: 'UI.DataField',
+        Value: siblingRank,
+        Label : 'Sibling Rank'
     }],
 };
 

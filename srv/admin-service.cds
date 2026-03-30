@@ -56,6 +56,12 @@ annotate AdminService.Orders with @odata.draft.enabled;
 annotate AdminService.Books with @odata.draft.enabled;
 annotate AdminService.GenreHierarchy with @odata.draft.enabled;
 
+// Refresh the tree after reparenting a node (PATCH with parent@odata.bind)
+annotate AdminService.GenreHierarchy with @Common.SideEffects: {
+  SourceProperties: [parent],
+  TargetEntities:   [_self]
+};
+
 // workaround to enable the value help for languages
 // Necessary because auto exposure is currently not working
 // for if Languages is only referenced by the generated
