@@ -64,6 +64,12 @@
       <scope>runtime</scope>
     </dependency>
 
+    <dependency>
+      <groupId>com.sap.cds</groupId>
+      <artifactId>cds-feature-ord</artifactId>
+      <scope>runtime</scope>
+    </dependency>
+
     <!-- CLOUD SDK dependencies -->
     <dependency>
       <groupId>com.sap.cloud.sdk.cloudplatform</groupId>
@@ -218,6 +224,7 @@
             <configuration>
               <commands>
                 <command>build --for java</command>
+                <command>build --for ord -o "${project.basedir}/src/main/resources/ord"</command>
                 <command>deploy --to h2 --with-mocks --dry --out "${project.basedir}/src/main/resources/schema-h2.sql"</command>
                 <command>compile srv/cat-service.cds -2 openapi --openapi:url /api/browse &gt;
 									"${project.basedir}/src/main/resources/swagger/openapi.json"</command>

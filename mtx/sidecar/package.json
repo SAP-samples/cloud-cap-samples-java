@@ -1,10 +1,12 @@
 {
+  "name": "bookshop-cds",
   "dependencies": {
     "@cap-js/hana": "^2.7.1",
     "@sap/cds": "^9.9.0",
     "@sap/cds-mtxs": "^3",
     "@sap/xssec": "^4.13.0",
-    "express": "^4"
+    "express": "^4",
+    "@cap-js/ord": "^1.6.0"
   },
   "devDependencies": {
     "@cap-js/sqlite": "^2.2.1"
