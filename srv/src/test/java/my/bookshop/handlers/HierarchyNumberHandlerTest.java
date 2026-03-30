@@ -80,4 +80,17 @@ class HierarchyNumberHandlerTest {
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.number").value("2.20.5"));
   }
+
+  @Test
+  void countQuerySucceeds() throws Exception {
+    mockMvc.perform(get("/api/admin/GenreHierarchy/$count")).andExpect(status().isOk());
+  }
+
+  @Test
+  void collectionIncludesNumber() throws Exception {
+    mockMvc
+        .perform(get("/api/admin/GenreHierarchy?$select=number&$top=1&IsActiveEntity=true"))
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.value[0].number").isNotEmpty());
+  }
 }

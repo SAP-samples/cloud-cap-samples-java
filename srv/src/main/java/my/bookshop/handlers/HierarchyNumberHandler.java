@@ -5,12 +5,21 @@ import static cds.gen.adminservice.AdminService_.GENRE_HIERARCHY;
 import cds.gen.adminservice.AdminService_;
 import cds.gen.adminservice.GenreHierarchy;
 import cds.gen.adminservice.GenreHierarchy_;
+import com.sap.cds.ql.CQL;
 import com.sap.cds.ql.Select;
+import com.sap.cds.ql.cqn.CqnAnalyzer;
+import com.sap.cds.ql.cqn.CqnElementRef;
+import com.sap.cds.ql.cqn.CqnSelect;
+import com.sap.cds.ql.cqn.CqnSelectListItem;
+import com.sap.cds.ql.cqn.Modifier;
+import com.sap.cds.services.cds.CdsReadEventContext;
 import com.sap.cds.services.cds.CqnService;
 import com.sap.cds.services.handler.EventHandler;
 import com.sap.cds.services.handler.annotations.After;
+import com.sap.cds.services.handler.annotations.Before;
 import com.sap.cds.services.handler.annotations.ServiceName;
 import com.sap.cds.services.persistence.PersistenceService;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -36,6 +45,42 @@ public class HierarchyNumberHandler implements EventHandler {
 
   HierarchyNumberHandler(PersistenceService db) {
     this.db = db;
+  }
+
+  /**
+   * Ensures that {@code siblingRank} is always included in the SELECT columns. This is needed as a
+   * workaround for a cds4j bug that renders wrong SQL when {@code siblingRank} is not selected.
+   */
+  @Before(event = CqnService.EVENT_READ, entity = GenreHierarchy_.CDS_NAME)
+  void ensureSiblingRankSelected(CdsReadEventContext context) {
+    CqnSelect query = context.getCqn();
+    if (CqnAnalyzer.isCountQuery(query)) {
+      return;
+    }
+    CqnSelect copy =
+        CQL.copy(
+            query,
+            new Modifier() {
+              @Override
+              public List<CqnSelectListItem> items(List<CqnSelectListItem> items) {
+                if (items.isEmpty()) {
+                  return items;
+                }
+                boolean selectsSiblingRank =
+                    items.stream()
+                        .anyMatch(
+                            sli ->
+                                sli instanceof CqnElementRef ref
+                                    && GenreHierarchy.SIBLING_RANK.equals(ref.path()));
+                if (!selectsSiblingRank) {
+                  List<CqnSelectListItem> newItems = new ArrayList<>(items);
+                  newItems.add(CQL.get(GenreHierarchy.SIBLING_RANK));
+                  return newItems;
+                }
+                return items;
+              }
+            });
+    context.setCqn(copy);
   }
 
   @After(event = CqnService.EVENT_READ, entity = GenreHierarchy_.CDS_NAME)
