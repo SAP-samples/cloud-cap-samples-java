@@ -39,6 +39,8 @@ import com.sap.cds.services.handler.annotations.ServiceName;
 import com.sap.cds.services.messages.Messages;
 import com.sap.cds.services.persistence.PersistenceService;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import cds.gen.adminservice.BooksAddToOrderContext;
 import cds.gen.adminservice.AdminService;
 import cds.gen.adminservice.AdminService_;
@@ -52,6 +54,25 @@ import cds.gen.adminservice.Upload_;
 import cds.gen.my.bookshop.Bookshop_;
 import my.bookshop.MessageKeys;
 
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
+import java.time.Instant;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
+import java.util.HashMap;
+import java.util.Map;
+
+import com.sap.cds.ql.Insert;
+import com.sap.cds.ql.cqn.CqnComparisonPredicate;
+import com.sap.cds.ql.cqn.CqnConnectivePredicate;
+import com.sap.cds.ql.cqn.CqnElementRef;
+import com.sap.cds.ql.cqn.CqnLiteral;
+import com.sap.cds.ql.cqn.CqnPredicate;
+import com.sap.cds.ql.cqn.CqnReference;
+import com.sap.cds.ql.cqn.CqnSelect;
+import com.sap.cds.ql.cqn.CqnStructuredTypeRef;
+
 /**
  * Custom business logic for the "Admin Service" (see admin-service.cds)
  *
@@ -60,6 +81,8 @@ import my.bookshop.MessageKeys;
 @Component
 @ServiceName(AdminService_.CDS_NAME)
 class AdminServiceHandler implements EventHandler {
+
+	private static final Logger logger = LoggerFactory.getLogger(AdminServiceHandler.class);
 
 	private final AdminService.Draft adminService;
 
@@ -314,6 +337,120 @@ class AdminServiceHandler implements EventHandler {
 
 	private BigDecimal defaultZero(BigDecimal decimal) {
 		return decimal == null ? BigDecimal.valueOf(0) : decimal;
+	}
+
+	/**
+	 * Creates an attachment directly in the active entity state (bypassing draft flow).
+	 * Triggered by the "Create Attachment" button visible only in active entity state.
+	 */
+	@On(event = "createAttachmentInActive")
+	public void createAttachmentInActive(EventContext context) {
+		String targetEntity = context.getTarget().getQualifiedName();
+		logger.info("=== createAttachmentInActive triggered for entity: {} ===", targetEntity);
+
+		// Guard: Skip framework-triggered invocations during edit+save.
+		// User clicks send "in" as null/empty (RequiresSelection: false).
+		Object inParam = context.get("in");
+		if (inParam instanceof java.util.List && !((java.util.List<?>) inParam).isEmpty()) {
+			logger.info("Skipping createAttachmentInActive — framework save, not user click");
+			context.setCompleted();
+			return;
+		}
+
+		try {
+			CqnSelect cqn = (CqnSelect) context.get("cqn");
+			Map<String, Object> rootKeys = analyzer.analyze(cqn).rootKeys();
+			logger.info("Root keys: {}", rootKeys);
+
+			String parentId = extractParentId(cqn, rootKeys);
+
+			if (parentId == null || parentId.isEmpty()) {
+				logger.error("Could not extract parent ID from CQN. Root keys: {}", rootKeys);
+				throw new ServiceException(ErrorStatuses.BAD_REQUEST, "Parent entity ID is required to create attachment.");
+			}
+
+			logger.info("Creating attachment for parent ID: {} in facet: {}", parentId, targetEntity);
+
+			String attachmentId = UUID.randomUUID().toString();
+			String timestamp = DateTimeFormatter.ofPattern("yyyyMMdd-HHmmss-SSS")
+				.withZone(ZoneId.systemDefault())
+				.format(Instant.now());
+			String fileName = "attachment-" + timestamp + ".txt";
+
+			String sampleContent = "Sample Attachment\nCreated: " + Instant.now()
+				+ "\nParent ID: " + parentId
+				+ "\nFacet: " + targetEntity;
+
+			InputStream contentStream = new ByteArrayInputStream(
+				sampleContent.getBytes(StandardCharsets.UTF_8));
+
+			Map<String, Object> attachmentData = new HashMap<>();
+			attachmentData.put("ID", attachmentId);
+			attachmentData.put("up__ID", parentId);
+			attachmentData.put("fileName", fileName);
+			attachmentData.put("mimeType", "text/plain");
+			attachmentData.put("note", "Created in active entity");
+			attachmentData.put("content", contentStream);
+
+			adminService.run(Insert.into(targetEntity).entry(attachmentData));
+			logger.info("Attachment created with ID: {}", attachmentId);
+
+			context.setCompleted();
+
+		} catch (ServiceException e) {
+			throw e;
+		} catch (Exception e) {
+			logger.error("Failed to create attachment: {}", e.getMessage(), e);
+			context.setCompleted();
+			throw new ServiceException(ErrorStatuses.SERVER_ERROR, "Failed to create attachment: " + e.getMessage(), e);
+		}
+	}
+
+	private String extractParentId(CqnSelect cqn, Map<String, Object> rootKeys) {
+		// Case 1: Direct entity — rootKeys has up__ID
+		Object upId = rootKeys.get("up__ID");
+		if (upId != null) {
+			return upId.toString();
+		}
+
+		// Case 2: Nested composition path — traverse CQN segments
+		try {
+			if (cqn.from().isRef()) {
+				CqnStructuredTypeRef ref = cqn.from().asRef();
+				java.util.List<? extends CqnReference.Segment> segments = ref.segments();
+				if (segments.size() >= 2) {
+					CqnReference.Segment parentSegment = segments.get(segments.size() - 2);
+					if (parentSegment.filter().isPresent()) {
+						String parentId = extractIdFromPredicate(parentSegment.filter().get());
+						if (parentId != null) return parentId;
+					}
+				}
+			}
+		} catch (Exception e) {
+			logger.warn("Could not extract parent ID from CQN path: {}", e.getMessage());
+		}
+
+		// Fallback
+		Object id = rootKeys.get("ID");
+		return id != null ? id.toString() : null;
+	}
+
+	private String extractIdFromPredicate(CqnPredicate predicate) {
+		if (predicate instanceof CqnComparisonPredicate) {
+			CqnComparisonPredicate comp = (CqnComparisonPredicate) predicate;
+			if (comp.left() instanceof CqnElementRef && comp.right() instanceof CqnLiteral) {
+				String fieldName = ((CqnElementRef) comp.left()).lastSegment();
+				if ("ID".equals(fieldName)) {
+					return ((CqnLiteral<?>) comp.right()).value().toString();
+				}
+			}
+		} else if (predicate instanceof CqnConnectivePredicate) {
+			for (CqnPredicate child : ((CqnConnectivePredicate) predicate).predicates()) {
+				String id = extractIdFromPredicate(child);
+				if (id != null) return id;
+			}
+		}
+		return null;
 	}
 
 }
