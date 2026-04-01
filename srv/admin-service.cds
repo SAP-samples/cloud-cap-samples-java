@@ -9,7 +9,7 @@ service AdminService @(requires: [
     'admin',
     'system-user'
 ]) {
-  entity Books   as projection on my.Books excluding { reviews } actions {
+  entity Books as projection on my.Books excluding { reviews } actions {
     action addToOrder(order_ID : UUID, quantity : Integer) returns Orders;
   }
 
@@ -23,6 +23,8 @@ service AdminService @(requires: [
 
   entity Books.attachments as projection on my.Books.attachments
   actions {
+    @(Common.SideEffects : {TargetEntities: ['']},)
+    action createAttachmentInActive(in:many $self);
     @(Common.SideEffects : {TargetEntities: ['']},)
     action copyAttachments(in:many $self,up__ID:String,objectIds:String);
     // moveAttachments action signature
@@ -52,6 +54,8 @@ service AdminService @(requires: [
   entity Books.references as projection on my.Books.references
   actions {
     @(Common.SideEffects : {TargetEntities: ['']},)
+    action createAttachmentInActive(in:many $self);
+    @(Common.SideEffects : {TargetEntities: ['']},)
     action copyAttachments(in:many $self,up__ID:String,objectIds:String);
     // moveAttachments action signature
     @(Common.SideEffects : {TargetEntities: ['']})
@@ -79,6 +83,8 @@ service AdminService @(requires: [
 
   entity Books.footnotes as projection on my.Books.footnotes
   actions {
+    @(Common.SideEffects : {TargetEntities: ['']},)
+    action createAttachmentInActive(in:many $self);
     @(Common.SideEffects : {TargetEntities: ['']},)
     action copyAttachments(in:many $self,up__ID:String,objectIds:String);
     // moveAttachments action signature
@@ -108,6 +114,8 @@ service AdminService @(requires: [
   entity Pages.attachments as projection on my.Pages.attachments
     actions {
     @(Common.SideEffects : {TargetEntities: ['']},)
+    action createAttachmentInActive(in:many $self);
+    @(Common.SideEffects : {TargetEntities: ['']},)
     action copyAttachments(in:many $self, up__ID:String, objectIds:String);
     // moveAttachments action signature
     @(Common.SideEffects : {TargetEntities: ['']})
@@ -135,6 +143,8 @@ service AdminService @(requires: [
 
   entity Pages.references as projection on my.Pages.references
     actions {
+    @(Common.SideEffects : {TargetEntities: ['']},)
+    action createAttachmentInActive(in:many $self);
     @(Common.SideEffects : {TargetEntities: ['']},)
     action copyAttachments(in:many $self, up__ID:String, objectIds:String);
     // moveAttachments action signature
@@ -165,6 +175,8 @@ service AdminService @(requires: [
   entity Chapters.attachments as projection on my.Chapters.attachments
     actions {
     @(Common.SideEffects : {TargetEntities: ['']},)
+    action createAttachmentInActive(in:many $self);
+    @(Common.SideEffects : {TargetEntities: ['']},)
     action copyAttachments(in:many $self, up__ID:String, objectIds:String);
     // moveAttachments action signature
     @(Common.SideEffects : {TargetEntities: ['']})
@@ -192,6 +204,8 @@ service AdminService @(requires: [
 
   entity Chapters.references as projection on my.Chapters.references
     actions {
+    @(Common.SideEffects : {TargetEntities: ['']},)
+    action createAttachmentInActive(in:many $self);
     @(Common.SideEffects : {TargetEntities: ['']},)
     action copyAttachments(in:many $self, up__ID:String, objectIds:String);
     // moveAttachments action signature
@@ -221,6 +235,8 @@ service AdminService @(requires: [
   entity Chapters.footnotes as projection on my.Chapters.footnotes
     actions {
     @(Common.SideEffects : {TargetEntities: ['']},)
+    action createAttachmentInActive(in:many $self);
+    @(Common.SideEffects : {TargetEntities: ['']},)
     action copyAttachments(in:many $self, up__ID:String, objectIds:String);
     // moveAttachments action signature
     @(Common.SideEffects : {TargetEntities: ['']})
@@ -249,6 +265,8 @@ service AdminService @(requires: [
   // Pages footnotes projection
   entity Pages.footnotes as projection on my.Pages.footnotes
     actions {
+    @(Common.SideEffects : {TargetEntities: ['']},)
+    action createAttachmentInActive(in:many $self);
     @(Common.SideEffects : {TargetEntities: ['']},)
     action copyAttachments(in:many $self, up__ID:String, objectIds:String);
     // moveAttachments action signature
