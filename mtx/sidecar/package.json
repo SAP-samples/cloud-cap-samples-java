@@ -1,9 +1,9 @@
 {
   "dependencies": {
     "@cap-js/hana": "^2",
-    "@sap/cds": "^9",
+    "@sap/cds": "^9.8.5",
     "@sap/cds-mtxs": "^3",
-    "@sap/xssec": "^4",
+    "@sap/xssec": "^4.13.0",
     "express": "^4"
   },
   "devDependencies": {
@@ -13,7 +13,10 @@
     "node": "^22"
   },
   "cds": {
-    "profiles": ["mtx-sidecar", "java"]
+    "profiles": [
+      "mtx-sidecar",
+      "java"
+    ]
   },
   "scripts": {
     "start": "cds-serve",
