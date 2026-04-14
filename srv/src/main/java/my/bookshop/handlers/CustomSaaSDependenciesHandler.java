@@ -6,9 +6,7 @@ import com.sap.cds.services.handler.annotations.ServiceName;
 import com.sap.cds.services.mt.DependenciesEventContext;
 import com.sap.cds.services.mt.DeploymentService;
 import com.sap.cds.services.mt.SaasRegistryDependency;
-
 import java.util.List;
-
 import org.springframework.stereotype.Component;
 
 @Component
@@ -19,7 +17,7 @@ public class CustomSaaSDependenciesHandler implements EventHandler {
   public void assign(DependenciesEventContext ctx) {
     SaasRegistryDependency dep = SaasRegistryDependency.create();
     dep.setAppId("xsapp-test-name");
-    
+
     ctx.setResult(List.of(dep));
   }
 }
