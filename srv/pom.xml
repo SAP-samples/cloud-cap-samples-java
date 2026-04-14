@@ -59,6 +59,16 @@
 
     <dependency>
       <groupId>com.sap.cds</groupId>
+      <artifactId>cds-feature-ucl</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>com.sap.cds</groupId>
+      <artifactId>cds-feature-mt</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>com.sap.cds</groupId>
       <artifactId>cds-feature-attachments</artifactId>
       <version>${cds-feature-attachments.version}</version>
       <scope>runtime</scope>
