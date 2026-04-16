@@ -65,5 +65,9 @@ entity Contents: Hierarchy {
         page   : Integer;
         parent : Association to Contents @odata.draft.enclosed;
         book   : Association to Books;
+        // for cascade delete
+        @cascade.delete
+        @odata.draft.enclosed
+        children : Association to many Contents on children.parent = $self;
 }
 
