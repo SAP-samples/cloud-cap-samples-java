@@ -94,7 +94,7 @@ annotate AdminService.GenreHierarchy with {
   ID @UI.Hidden;
 };
 
-annotate AdminService.GenreHierarchy with @Hierarchy.RecursiveHierarchyActions #GenreHierarchy: {
+annotate AdminService.GenreHierarchy with @Hierarchy.RecursiveHierarchyActions #GenreHierarchyHierarchy: {
   $Type                  : 'Hierarchy.RecursiveHierarchyActionsType',
   // any name can be the action name with namespace/no bound action name
   ChangeNextSiblingAction: 'AdminService.moveSibling',
