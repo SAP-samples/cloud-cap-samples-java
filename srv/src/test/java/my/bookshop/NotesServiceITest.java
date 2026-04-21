@@ -4,6 +4,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
+import org.springframework.boot.webtestclient.autoconfigure.AutoConfigureWebTestClient;
 import org.springframework.http.HttpHeaders;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.reactive.server.WebTestClient;
@@ -12,6 +13,7 @@ import org.springframework.test.web.reactive.server.WebTestClient;
     webEnvironment = WebEnvironment.RANDOM_PORT,
     properties =
         "cds.remote.services.'[API_BUSINESS_PARTNER]'.destination.name=myself-NotesServiceITest")
+@AutoConfigureWebTestClient
 @ActiveProfiles({"default", "mocked"})
 class NotesServiceITest {
 
