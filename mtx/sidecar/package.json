@@ -1,19 +1,22 @@
 {
   "dependencies": {
-    "@cap-js/hana": "^2",
-    "@sap/cds": "^9",
+    "@cap-js/hana": "^2.7.1",
+    "@sap/cds": "^9.9.0",
     "@sap/cds-mtxs": "^3",
-    "@sap/xssec": "^4",
+    "@sap/xssec": "^4.13.0",
     "express": "^4"
   },
   "devDependencies": {
-    "@cap-js/sqlite": "^2"
+    "@cap-js/sqlite": "^2.2.1"
   },
   "engines": {
     "node": "^22"
   },
   "cds": {
-    "profiles": ["mtx-sidecar", "java"]
+    "profiles": [
+      "mtx-sidecar",
+      "java"
+    ]
   },
   "scripts": {
     "start": "cds-serve",
