@@ -6,7 +6,7 @@
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>3.4.5</version>
+		<version>4.0.3</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 
@@ -23,12 +23,12 @@
 
 		<!-- DEPENDENCIES VERSION -->
 		<jdk.version>21</jdk.version>
-		<cds.services.version>3.10.1</cds.services.version>
+		<cds.services.version>5.0.0-m2617</cds.services.version>
 		<cds-feature-event-hub.version>4.0.1</cds-feature-event-hub.version>
-		<cloud.sdk.version>5.18.0</cloud.sdk.version>
-		<xsuaa.version>3.6.0</xsuaa.version>
-		<cf-java-logging-support.version>3.8.5</cf-java-logging-support.version>
-		<cds-feature-attachments.version>1.0.7</cds-feature-attachments.version>
+		<cloud.sdk.version>5.28.0</cloud.sdk.version>
+		<xsuaa.version>4.0.0</xsuaa.version>
+		<cf-java-logging-support.version>4.1.0</cf-java-logging-support.version>
+		<cds-feature-attachments.version>1.3.3</cds-feature-attachments.version>
 	</properties>
 
 	<modules>
