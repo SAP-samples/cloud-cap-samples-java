@@ -104,6 +104,9 @@ cds:
 spring:
   config.activate.on-profile: messaging-cloud
 cds:
+  environment:
+    production:
+      profile: messaging-cloud
   security:
     authentication.normalize-provider-tenant: false
   data-source:
