@@ -8,6 +8,9 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import cds.gen.catalogservice.Reviews;
+import com.sap.cds.ql.Delete;
+import com.sap.cds.services.persistence.PersistenceService;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,77 +20,76 @@ import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 
-import com.sap.cds.ql.Delete;
-import com.sap.cds.services.persistence.PersistenceService;
-
-import cds.gen.catalogservice.Reviews;
-
 @SpringBootTest
 @AutoConfigureMockMvc
 class CatalogServiceITest {
 
-	private static final String booksURI = "/api/browse/Books";
-	private static final String addReviewURI = "%s(ID=%s)/CatalogService.addReview".formatted(booksURI, "f846b0b9-01d4-4f6d-82a4-d79204f62278");
+  private static final String booksURI = "/api/browse/Books";
+  private static final String addReviewURI =
+      "%s(ID=%s)/CatalogService.addReview"
+          .formatted(booksURI, "f846b0b9-01d4-4f6d-82a4-d79204f62278");
 
-	private static final String USER_USER_STRING = "user";
-	private static final String ADMIN_USER_STRING = "admin";
+  private static final String USER_USER_STRING = "user";
+  private static final String ADMIN_USER_STRING = "admin";
 
-	@Autowired
-	private MockMvc mockMvc;
+  @Autowired private MockMvc mockMvc;
 
-	@Autowired
-	private PersistenceService db;
+  @Autowired private PersistenceService db;
 
-	@AfterEach
-	void cleanup() {
-		db.run(Delete.from(REVIEWS));
-	}
+  @AfterEach
+  void cleanup() {
+    db.run(Delete.from(REVIEWS));
+  }
 
-	@Test
-	void discountApplied() throws Exception {
-		mockMvc.perform(get(booksURI + "?$filter=stock gt 200&top=1"))
-			.andExpect(status().isOk())
-			.andExpect(jsonPath("$.value[0].title").value(containsString("11% discount")));
-	}
+  @Test
+  void discountApplied() throws Exception {
+    mockMvc
+        .perform(get(booksURI + "?$filter=stock gt 200&top=1"))
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.value[0].title").value(containsString("11% discount")));
+  }
 
-	@Test
-	void discountNotApplied() throws Exception {
-		mockMvc.perform(get(booksURI + "?$filter=stock lt 100&top=1"))
-			.andExpect(status().isOk())
-			.andExpect(jsonPath("$.value[0].title").value(not(containsString("11% discount"))));
-	}
+  @Test
+  void discountNotApplied() throws Exception {
+    mockMvc
+        .perform(get(booksURI + "?$filter=stock lt 100&top=1"))
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.value[0].title").value(not(containsString("11% discount"))));
+  }
 
-	@Test
-	void createReviewNotAuthenticated() throws Exception {
-		String payload = createTestReview().toJson();
-		mockMvc.perform(post(addReviewURI).contentType(MediaType.APPLICATION_JSON).content(payload))
-			.andExpect(status().isUnauthorized());
-	}
+  @Test
+  void createReviewNotAuthenticated() throws Exception {
+    String payload = createTestReview().toJson();
+    mockMvc
+        .perform(post(addReviewURI).contentType(MediaType.APPLICATION_JSON).content(payload))
+        .andExpect(status().isUnauthorized());
+  }
 
-	@Test
-	@WithMockUser(USER_USER_STRING)
-	void createReviewByUser() throws Exception {
-		String payload = createTestReview().toJson();
-		mockMvc.perform(post(addReviewURI).contentType(MediaType.APPLICATION_JSON).content(payload))
-			.andExpect(status().isOk())
-			.andExpect(jsonPath("$.createdBy").value(USER_USER_STRING));
-	}
+  @Test
+  @WithMockUser(USER_USER_STRING)
+  void createReviewByUser() throws Exception {
+    String payload = createTestReview().toJson();
+    mockMvc
+        .perform(post(addReviewURI).contentType(MediaType.APPLICATION_JSON).content(payload))
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.createdBy").value(USER_USER_STRING));
+  }
 
-	@Test
-	@WithMockUser(ADMIN_USER_STRING)
-	void createReviewByAdmin() throws Exception {
-		String payload = createTestReview().toJson();
-		mockMvc.perform(post(addReviewURI).contentType(MediaType.APPLICATION_JSON).content(payload))
-			.andExpect(status().isOk())
-			.andExpect(jsonPath("$.createdBy").value(ADMIN_USER_STRING));
-	}
+  @Test
+  @WithMockUser(ADMIN_USER_STRING)
+  void createReviewByAdmin() throws Exception {
+    String payload = createTestReview().toJson();
+    mockMvc
+        .perform(post(addReviewURI).contentType(MediaType.APPLICATION_JSON).content(payload))
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.createdBy").value(ADMIN_USER_STRING));
+  }
 
-	private Reviews createTestReview() {
-		Reviews review = Reviews.create();
-		review.setRating(1);
-		review.setTitle("title");
-		review.setText("text");
-		return review;
-	}
-
+  private Reviews createTestReview() {
+    Reviews review = Reviews.create();
+    review.setRating(1);
+    review.setTitle("title");
+    review.setText("text");
+    return review;
+  }
 }

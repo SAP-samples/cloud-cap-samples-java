@@ -7,24 +7,26 @@ import org.springframework.test.context.ActiveProfiles;
 
 /**
  * Runs tests defined in {@link AdminServiceAddressITestBase} with the default and mocked profile.
- * The mocked profile creates a remote services for the API_BUSINESS_PARTNER service (which is however mocked by our own application),
- * so the application behaves as if the AdminService and the API_BUSINESS_PARTNER service were provided by two different applications.
+ * The mocked profile creates a remote services for the API_BUSINESS_PARTNER service (which is
+ * however mocked by our own application), so the application behaves as if the AdminService and the
+ * API_BUSINESS_PARTNER service were provided by two different applications.
  */
 @ActiveProfiles({"default", "mocked"})
-@SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT,
-		properties = "cds.remote.services.'[API_BUSINESS_PARTNER]'.destination.name=myself-AdminServiceAddressITest")
+@SpringBootTest(
+    webEnvironment = WebEnvironment.RANDOM_PORT,
+    properties =
+        "cds.remote.services.'[API_BUSINESS_PARTNER]'.destination.name=myself-AdminServiceAddressITest")
 class AdminServiceAddress_mocked_ITest extends AdminServiceAddressITestBase {
 
-	@Test
-	@Override
-	public void testAddressesValueHelp() {
-		super.testAddressesValueHelp();
-	}
+  @Test
+  @Override
+  public void testAddressesValueHelp() {
+    super.testAddressesValueHelp();
+  }
 
-	@Test
-	@Override
-	public void testOrderWithAddress() throws InterruptedException {
-		super.testOrderWithAddress();
-	}
-
+  @Test
+  @Override
+  public void testOrderWithAddress() throws InterruptedException {
+    super.testOrderWithAddress();
+  }
 }

@@ -17,52 +17,54 @@ import org.springframework.stereotype.Component;
 
 @Component
 @ServiceName(AdminService_.CDS_NAME)
-/**
- * Example of a custom handler for nextSiblingAction
- */
+/** Example of a custom handler for nextSiblingAction */
 public class HierarchySiblingActionHandler implements EventHandler {
 
-    private final PersistenceService db;
+  private final PersistenceService db;
 
-    HierarchySiblingActionHandler(PersistenceService db) {
-        this.db = db;
+  HierarchySiblingActionHandler(PersistenceService db) {
+    this.db = db;
+  }
+
+  @On
+  void onMoveSiblingAction(GenreHierarchy_ ref, GenreHierarchyMoveSiblingContext context) {
+    // Find current node and its parent
+    GenreHierarchy toMove =
+        db.run(Select.from(ref).columns(c -> c.ID(), c -> c.parent_ID())).single();
+
+    // Find all children of the parent, which are siblings of the entry being moved
+    List<GenreHierarchy> siblingNodes =
+        db.run(
+                Select.from(GENRE_HIERARCHY)
+                    .columns(c -> c.ID(), c -> c.siblingRank())
+                    .where(c -> c.parent_ID().eq(toMove.getParentId())))
+            .list();
+
+    int oldPosition = 0;
+    int newPosition = siblingNodes.size();
+    for (int i = 0; i < siblingNodes.size(); ++i) {
+      GenreHierarchy sibling = siblingNodes.get(i);
+      if (sibling.getId().equals(toMove.getId())) {
+        oldPosition = i;
+      }
+      if (context.getNextSibling() != null
+          && sibling.getId().equals(context.getNextSibling().getId())) {
+        newPosition = i;
+      }
     }
 
-    @On
-    void onMoveSiblingAction(GenreHierarchy_ ref, GenreHierarchyMoveSiblingContext context) {
-        // Find current node and its parent
-        GenreHierarchy toMove = db.run(Select.from(ref)
-                .columns(c -> c.ID(), c -> c.parent_ID()))
-                .single();
+    // Move siblings
+    siblingNodes.add(
+        oldPosition < newPosition ? newPosition - 1 : newPosition,
+        siblingNodes.remove(oldPosition));
 
-        // Find all children of the parent, which are siblings of the entry being moved
-        List<GenreHierarchy> siblingNodes = db.run(Select.from(GENRE_HIERARCHY)
-                .columns(c -> c.ID(), c -> c.siblingRank())
-                .where(c -> c.parent_ID().eq(toMove.getParentId())))
-                .list();
-
-        int oldPosition = 0;
-        int newPosition = siblingNodes.size();
-        for (int i = 0; i < siblingNodes.size(); ++i) {
-            GenreHierarchy sibling = siblingNodes.get(i);
-            if (sibling.getId().equals(toMove.getId())) {
-                oldPosition = i;
-            }
-            if (context.getNextSibling() != null && sibling.getId().equals(context.getNextSibling().getId())) {
-                newPosition = i;
-            }
-        }
-
-        // Move siblings
-        siblingNodes.add(oldPosition < newPosition ? newPosition - 1 : newPosition, siblingNodes.remove(oldPosition));
-
-        // Recalculate ranks
-        for (int i = 0; i < siblingNodes.size(); ++i) {
-            siblingNodes.get(i).setSiblingRank(i);
-        }
-
-        // Update DB
-        db.run(Update.entity(GENRE_HIERARCHY).entries(siblingNodes));
-        context.setCompleted();
+    // Recalculate ranks
+    for (int i = 0; i < siblingNodes.size(); ++i) {
+      siblingNodes.get(i).setSiblingRank(i);
     }
+
+    // Update DB
+    db.run(Update.entity(GENRE_HIERARCHY).entries(siblingNodes));
+    context.setCompleted();
+  }
 }
