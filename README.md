@@ -92,7 +92,7 @@ In the IDE use the [TestApplication](srv/src/test/java/my/bookshop/config/TestAp
 
 This application is built to use only PostgreSQL as the database. It is used in the tests, can be started locally and, when deployed to SAP BTP, can use PostgreSQL service available there.
 
-This sample uses [Liquibase](https://www.liquibase.com) for deployment and evolution of database schema. You can find more on that in [CAP Database Guide](https://cap.cloud.sap/docs/guides/databases-postgres).
+This sample uses [Liquibase](https://www.liquibase.com) for deployment and evolution of database schema. You can find more on that in [CAP Database Guide](https://cap.cloud.sap/docs/guides/databases-postgres). Please be aware that Liquibase [changed it's license to  Functional Source License (FSL)](https://www.liquibase.com/blog/liquibase-community-for-the-future-fsl) with release 5.0. In case you want to use Liquibase >=5.0 outside of an sample application you have to check if the FSL licence is compatible with your application.
 
 To start the application with built-in PostgresSQL container run `mvn spring-boot:test-run`. Make sure that you have Docker Desktop or compatible alternative up and running. You will see that application created PostgreSQL container, deployed the database there and your application is up and running.
 
