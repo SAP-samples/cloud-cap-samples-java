@@ -13,16 +13,12 @@ modules:
     parameters:
       memory: 1024M
       disk-quota: 512M
-      buildpack: java_buildpack
+      buildpack: sap_java_buildpack_jakarta
     properties:
-        SPRING_PROFILES_ACTIVE: cloud
-        JBP_CONFIG_COMPONENTS: '{jres: ["JavaBuildpack::Jre::SapMachineJRE"]}'
-        JBP_CONFIG_SAP_MACHINE_JRE: '{ jre: { version: "25.+" } }'
-        # We do not want cfenv to configure the DataSource for us
-        # cfenv uses names of the services, so this variable must be adapted if needed
-        # as CFENV_SERVICE_[service-name]_ENABLED
-        # See https://docs.cloudfoundry.org/buildpacks/java/configuring-service-connections.html
-        CFENV_SERVICE_BOOKSHOP-PG-DB_ENABLED: false
+      SPRING_PROFILES_ACTIVE: cloud
+      JBP_CONFIG_COMPONENTS: "jres: ['com.sap.xs.java.buildpack.jdk.SAPMachineJDK']"
+      JBP_CONFIG_SAP_MACHINE_JDK: '{ version: 25.+ }'
+      JBP_SKIP_PROVIDED_LIBRARY_COMPONENTS: true
     build-parameters:
       builder: custom
       commands:
