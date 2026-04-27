@@ -109,7 +109,6 @@ Prerequisites:
 - Install the [Cloud Foundry Command Line Interface](https://docs.cloudfoundry.org/cf-cli/install-go-cli.html).
 - Get an SAP Business Technology Platform account to deploy the services and applications.
 - Ensure you have an entitlement for _PostgreSQL, hyperscaler option_ with appropriate plan in the same space.
-- Ensure that your CF instances are connected to Internet to download SAPMachine JRE 17 as it is available in `sap_java_buildpack` in online mode only and you run in the landscape where the _PostgreSQL, hyperscaler option_ is available.
 
 Deploy Application:
 - Run `mbt build`
