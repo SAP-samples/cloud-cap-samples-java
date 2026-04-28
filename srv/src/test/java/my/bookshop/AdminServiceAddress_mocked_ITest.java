@@ -3,6 +3,7 @@ package my.bookshop;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
+import org.springframework.boot.webtestclient.autoconfigure.AutoConfigureWebTestClient;
 import org.springframework.test.context.ActiveProfiles;
 
 /**
@@ -13,6 +14,7 @@ import org.springframework.test.context.ActiveProfiles;
 @ActiveProfiles({"default", "mocked"})
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT,
 		properties = "cds.remote.services.'[API_BUSINESS_PARTNER]'.destination.name=myself-AdminServiceAddressITest")
+@AutoConfigureWebTestClient
 public class AdminServiceAddress_mocked_ITest extends AdminServiceAddressITestBase {
 
 	@Test
