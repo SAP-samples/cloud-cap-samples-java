@@ -133,7 +133,6 @@ resources:
       config:
         authorization:
           enabled: true
-          value_help_url: "https://vhp-srv-develop.cert.cfapps.sap.hana.ondemand.com/odata/v4/ExampleValueHelpService/"
         oauth2-configuration:
           redirect-uris: [
             "https://*.cfapps.sap.hana.ondemand.com/**",
