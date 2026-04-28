@@ -1,4 +1,4 @@
-_schema-version: '2.1'
+_schema-version: '3.1'
 ID: bookshop-pg
 version: 1.0.0
 description: "CAP Java Bookshop on PostgreSQL with UI"
@@ -12,7 +12,7 @@ modules:
     path: srv
     parameters:
       memory: 1024M
-      disk-quota: 512M
+      disk-quota: 768M
       buildpack: sap_java_buildpack_jakarta
     properties:
       SPRING_PROFILES_ACTIVE: cloud
