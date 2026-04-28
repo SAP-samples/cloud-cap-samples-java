@@ -24,7 +24,7 @@
 		<!-- DEPENDENCIES VERSION -->
 		<jdk.version>21</jdk.version>
 		<cds.services.version>5.0.0-m2617</cds.services.version>
-		<cds-feature-event-hub.version>4.0.1</cds-feature-event-hub.version>
+		<cds-feature-event-hub.version>4.1.0</cds-feature-event-hub.version>
 		<cloud.sdk.version>5.28.0</cloud.sdk.version>
 		<xsuaa.version>4.0.0</xsuaa.version>
 		<cf-java-logging-support.version>4.1.0</cf-java-logging-support.version>
