@@ -45,7 +45,7 @@ class GenreHierarchyTest {
                 genresURI
                     + "?$select=DrillState,ID,name,DistanceFromRoot"
                     + "&$apply=orderby(name)/"
-                    + "com.sap.vocabularies.Hierarchy.v1.TopLevels(HierarchyNodes=$root/GenreHierarchy,HierarchyQualifier='GenreHierarchy',NodeProperty='ID',Levels=1)"
+                    + "com.sap.vocabularies.Hierarchy.v1.TopLevels(HierarchyNodes=$root/GenreHierarchy,HierarchyQualifier='GenreHierarchyHierarchy',NodeProperty='ID',Levels=1)"
                     + "&$count=true"))
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.value[0].ID").value("8bbf14c6-b378-4e35-9b4f-05a9c8878001"))
@@ -68,7 +68,7 @@ class GenreHierarchyTest {
                 genresURI
                     + "?$select=DrillState,ID,name,DistanceFromRoot"
                     + "&$apply=orderby(name)/"
-                    + "com.sap.vocabularies.Hierarchy.v1.TopLevels(HierarchyNodes=$root/GenreHierarchy,HierarchyQualifier='GenreHierarchy',NodeProperty='ID',Levels=2)"
+                    + "com.sap.vocabularies.Hierarchy.v1.TopLevels(HierarchyNodes=$root/GenreHierarchy,HierarchyQualifier='GenreHierarchyHierarchy',NodeProperty='ID',Levels=2)"
                     + "&$count=true"))
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.value[0].name").value("Fiction"))
@@ -107,7 +107,7 @@ class GenreHierarchyTest {
             get(
                 genresURI
                     + "?$select=DrillState,ID,name"
-                    + "&$apply=orderby(name)/com.sap.vocabularies.Hierarchy.v1.TopLevels(HierarchyNodes=$root/GenreHierarchy,HierarchyQualifier='GenreHierarchy',NodeProperty='ID',Levels=1)"
+                    + "&$apply=orderby(name)/com.sap.vocabularies.Hierarchy.v1.TopLevels(HierarchyNodes=$root/GenreHierarchy,HierarchyQualifier='GenreHierarchyHierarchy',NodeProperty='ID',Levels=1)"
                     + "&$count=true&$skip=0&$top=238"))
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.value[0].name").value("Fiction"))
@@ -123,7 +123,7 @@ class GenreHierarchyTest {
     String url =
         genresURI
             + "?$select=DistanceFromRoot,DrillState,ID,LimitedDescendantCount,name"
-            + "&$apply=orderby(name)/com.sap.vocabularies.Hierarchy.v1.TopLevels(HierarchyNodes=$root/GenreHierarchy,HierarchyQualifier='GenreHierarchy',NodeProperty='ID')"
+            + "&$apply=orderby(name)/com.sap.vocabularies.Hierarchy.v1.TopLevels(HierarchyNodes=$root/GenreHierarchy,HierarchyQualifier='GenreHierarchyHierarchy',NodeProperty='ID')"
             + "&$count=true&$skip=0&$top=100";
 
     client
@@ -147,7 +147,7 @@ class GenreHierarchyTest {
                     + "?$select=DistanceFromRoot,DrillState,ID,LimitedDescendantCount,name"
                     + "&$apply=ancestors($root/GenreHierarchy,GenreHierarchy,ID,search(\"true\"),keep start)"
                     + "/orderby(name)"
-                    + "/com.sap.vocabularies.Hierarchy.v1.TopLevels(HierarchyNodes=$root/GenreHierarchy,HierarchyQualifier='GenreHierarchy',NodeProperty='ID')"
+                    + "/com.sap.vocabularies.Hierarchy.v1.TopLevels(HierarchyNodes=$root/GenreHierarchy,HierarchyQualifier='GenreHierarchyHierarchy',NodeProperty='ID')"
                     + "&$count=true"))
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.value[0].name").value("Fiction"))
@@ -177,7 +177,7 @@ class GenreHierarchyTest {
                 genresURI
                     + "?$select=DrillState,ID,name,DistanceFromRoot"
                     + "&$apply=ancestors($root/GenreHierarchy,GenreHierarchy,ID,filter(name eq 'Autobiography'),keep start)/orderby(name)"
-                    + "/com.sap.vocabularies.Hierarchy.v1.TopLevels(HierarchyNodes=$root/GenreHierarchy,HierarchyQualifier='GenreHierarchy',NodeProperty='ID',Levels=1)"))
+                    + "/com.sap.vocabularies.Hierarchy.v1.TopLevels(HierarchyNodes=$root/GenreHierarchy,HierarchyQualifier='GenreHierarchyHierarchy',NodeProperty='ID',Levels=1)"))
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.value[0].name").value("Non-Fiction"))
         .andExpect(jsonPath("$.value[0].DrillState").value("collapsed"))
@@ -196,7 +196,7 @@ class GenreHierarchyTest {
         genresURI
             + "?$select=DistanceFromRoot,DrillState,ID,LimitedDescendantCount,name"
             + "&$apply=ancestors($root/GenreHierarchy,GenreHierarchy,ID,filter(name eq 'Autobiography'),keep start)/orderby(name)"
-            + "/com.sap.vocabularies.Hierarchy.v1.TopLevels(HierarchyNodes=$root/GenreHierarchy,HierarchyQualifier='GenreHierarchy',NodeProperty='ID',Levels=1,ExpandLevels="
+            + "/com.sap.vocabularies.Hierarchy.v1.TopLevels(HierarchyNodes=$root/GenreHierarchy,HierarchyQualifier='GenreHierarchyHierarchy',NodeProperty='ID',Levels=1,ExpandLevels="
             + expandLevelsJson
             + ")&$count=true";
     String uriString = UriComponentsBuilder.fromUriString(unencoded).toUriString();
@@ -219,7 +219,7 @@ class GenreHierarchyTest {
                 genresURI
                     + "?$select=DrillState,ID,name,DistanceFromRoot"
                     + "&$apply=orderby(name desc)/"
-                    + "com.sap.vocabularies.Hierarchy.v1.TopLevels(HierarchyNodes=$root/GenreHierarchy,HierarchyQualifier='GenreHierarchy',NodeProperty='ID',Levels=2)"
+                    + "com.sap.vocabularies.Hierarchy.v1.TopLevels(HierarchyNodes=$root/GenreHierarchy,HierarchyQualifier='GenreHierarchyHierarchy',NodeProperty='ID',Levels=2)"
                     + "&$count=true"))
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.value[0].name").value("Non-Fiction"))
