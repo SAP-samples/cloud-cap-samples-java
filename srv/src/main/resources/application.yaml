@@ -53,7 +53,10 @@ cds:
       kind: enterprise-messaging
       format: cloudevents
       subscribe-prefix: sap/S4HANAOD/java/ce/
-
+  ucl:
+    x509:
+      cert-issuer: "CN=SAP PKI Certificate Service Client CA,OU=SAP BTP Clients,O=SAP SE,L=cf-eu10,C=DE"
+      cert-subject: "CN=cmp-prod,OU=SAP Cloud Platform Clients,OU=cmp-cf-eu10,O=SAP SE,L=Prod,C=DE"
 ---
 spring:
   config.activate.on-profile: sandbox

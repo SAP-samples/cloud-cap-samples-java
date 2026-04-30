@@ -36,3 +36,5 @@ hs_err*
 
 /chart/
 .reloadtrigger
+
+srv/src/main/resources/ord/**
