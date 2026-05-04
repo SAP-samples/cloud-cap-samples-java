@@ -30,7 +30,7 @@
     <jdk.version>25</jdk.version>
     <cds.services.version>4.9.0</cds.services.version>
     <cloud.sdk.version>5.29.0</cloud.sdk.version>
-    <xsuaa.version>3.7.1</xsuaa.version>
+    <xsuaa.version>4.0.5</xsuaa.version>
     <cf-java-logging-support.version>4.2.0</cf-java-logging-support.version>
     <cds-feature-attachments.version>1.5.0</cds-feature-attachments.version>
   </properties>
