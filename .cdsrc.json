@@ -2,7 +2,15 @@
     "requires": {
         "multitenancy": true,
         "extensibility": true,
-        "toggles": true
+        "toggles": true,
+        "ord": true
     },
-    "profile": "with-mtx-sidecar"
+    "profile": "with-mtx-sidecar",
+    "ord": {
+        "namespace": "sap.sample",
+        "policyLevels": [
+            "sap:core:v1"
+        ],
+        "description": "This is a custom description"
+    }
 }
