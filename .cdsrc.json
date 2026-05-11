@@ -6,9 +6,6 @@
         "ord": true
     },
     "profile": "with-mtx-sidecar",
-    "odata": {
-        "containment": true
-    },
     "ord": {
         "namespace": "sap.sample",
         "policyLevels": [
