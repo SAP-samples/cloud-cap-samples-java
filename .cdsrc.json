@@ -4,8 +4,5 @@
         "extensibility": true,
         "toggles": true
     },
-    "profile": "with-mtx-sidecar",
-    "odata": {
-        "containment": true
-    }
+    "profile": "with-mtx-sidecar"
 }
