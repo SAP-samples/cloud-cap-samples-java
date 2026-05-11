@@ -91,7 +91,7 @@ class GenreHierarchyTest {
             get(
                 genresURI
                     + "?$select=DrillState,ID,name"
-                    + "&$apply=descendants($root/GenreHierarchy,GenreHierarchy,ID,filter(ID eq 8bbf14c6-b378-4e35-9b4f-05a9c8878021),1)"
+                    + "&$apply=descendants($root/GenreHierarchy,GenreHierarchyHierarchy,ID,filter(ID eq 8bbf14c6-b378-4e35-9b4f-05a9c8878021),1)"
                     + "/orderby(ID)"))
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.value[0].name").value("Detective Fiction"))
@@ -145,7 +145,7 @@ class GenreHierarchyTest {
             get(
                 genresURI
                     + "?$select=DistanceFromRoot,DrillState,ID,LimitedDescendantCount,name"
-                    + "&$apply=ancestors($root/GenreHierarchy,GenreHierarchy,ID,search(\"true\"),keep start)"
+                    + "&$apply=ancestors($root/GenreHierarchy,GenreHierarchyHierarchy,ID,search(\"true\"),keep start)"
                     + "/orderby(name)"
                     + "/com.sap.vocabularies.Hierarchy.v1.TopLevels(HierarchyNodes=$root/GenreHierarchy,HierarchyQualifier='GenreHierarchyHierarchy',NodeProperty='ID')"
                     + "&$count=true"))
@@ -176,7 +176,7 @@ class GenreHierarchyTest {
             get(
                 genresURI
                     + "?$select=DrillState,ID,name,DistanceFromRoot"
-                    + "&$apply=ancestors($root/GenreHierarchy,GenreHierarchy,ID,filter(name eq 'Autobiography'),keep start)/orderby(name)"
+                    + "&$apply=ancestors($root/GenreHierarchy,GenreHierarchyHierarchy,ID,filter(name eq 'Autobiography'),keep start)/orderby(name)"
                     + "/com.sap.vocabularies.Hierarchy.v1.TopLevels(HierarchyNodes=$root/GenreHierarchy,HierarchyQualifier='GenreHierarchyHierarchy',NodeProperty='ID',Levels=1)"))
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.value[0].name").value("Non-Fiction"))
@@ -195,7 +195,7 @@ class GenreHierarchyTest {
     String unencoded =
         genresURI
             + "?$select=DistanceFromRoot,DrillState,ID,LimitedDescendantCount,name"
-            + "&$apply=ancestors($root/GenreHierarchy,GenreHierarchy,ID,filter(name eq 'Autobiography'),keep start)/orderby(name)"
+            + "&$apply=ancestors($root/GenreHierarchy,GenreHierarchyHierarchy,ID,filter(name eq 'Autobiography'),keep start)/orderby(name)"
             + "/com.sap.vocabularies.Hierarchy.v1.TopLevels(HierarchyNodes=$root/GenreHierarchy,HierarchyQualifier='GenreHierarchyHierarchy',NodeProperty='ID',Levels=1,ExpandLevels="
             + expandLevelsJson
             + ")&$count=true";

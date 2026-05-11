@@ -8,5 +8,8 @@
 	},
 	"workspaces": [
 		"mtx/sidecar"
-	]
+	],
+	"dependencies": {
+		"@sap/cds-compiler": "^6.9.0"
+	}
 }
