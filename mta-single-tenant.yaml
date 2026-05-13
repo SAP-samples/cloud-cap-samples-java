@@ -58,6 +58,8 @@ modules:
     parameters:
       memory: 256M
       disk-quota: 512M
+    properties:
+      CHECK_X_FORWARDED_HOST_IN_LOGIN_CALLBACK: true
     requires:
     - name: srv-api
       group: destinations
