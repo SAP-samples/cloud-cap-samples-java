@@ -77,6 +77,7 @@ modules:
       keep-existing-routes: true
     properties:
       TENANT_HOST_PATTERN: ^(.*)-${default-uri} # testing only, use custom domain with wildcard for production
+      CHECK_X_FORWARDED_HOST_IN_LOGIN_CALLBACK: true
     requires:
     - name: srv-api
       group: destinations
@@ -90,7 +91,7 @@ modules:
       - name: app-api
         properties:
           app-url: '${default-url}'
-          app-domain: '${domain}'
+          app-uri: '${default-uri}'
 # --------------------- RESOURCES ---------------------
 resources:
 # -----------------------------------------------------
@@ -104,7 +105,7 @@ resources:
         xsappname: bookshop-mt-${org}-${space}
         oauth2-configuration:
           redirect-uris:
-          - https://*.~{app-api/app-domain}/**
+          - https://*-~{app-api/app-uri}/** # be as explicit as possible, but keep the wildcard for the tenant subdomain
     requires:
       - name: app-api
   - name: bookshop-mt-service-manager

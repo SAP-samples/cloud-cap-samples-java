@@ -1,0 +1,525 @@
+[INFO] Scanning for projects...
+[INFO] ------------------------------------------------------------------------
+[INFO] Reactor Build Order:
+[INFO] 
+[INFO] bookshop parent                                                    [pom]
+[INFO] bookshop                                                           [jar]
+[INFO] bookshop-integration-tests                                         [jar]
+[INFO] 
+[INFO] -------------------------< my:bookshop-parent >-------------------------
+[INFO] Building bookshop parent 1.0.0-SNAPSHOT                            [1/3]
+[INFO]   from pom.xml
+[INFO] --------------------------------[ pom ]---------------------------------
+[INFO] 
+[INFO] --- dependency:3.9.0:tree (default-cli) @ bookshop-parent ---
+[INFO] my:bookshop-parent:pom:1.0.0-SNAPSHOT
+[INFO] 
+[INFO] ----------------------------< my:bookshop >-----------------------------
+[INFO] Building bookshop 1.0.0-SNAPSHOT                                   [2/3]
+[INFO]   from srv/pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- dependency:3.9.0:tree (default-cli) @ bookshop ---
+[INFO] my:bookshop:jar:1.0.0-SNAPSHOT
+[INFO] +- com.sap.cds:cds-starter-spring-boot:jar:5.0.0-SNAPSHOT:compile
+[INFO] |  +- com.sap.cds:cds-services-api:jar:5.0.0-SNAPSHOT:compile
+[INFO] |  |  +- com.sap.cds:cds4j-api:jar:5.0.0-m20260421-084434:compile
+[INFO] |  |  \- com.sap.cloud.environment.servicebinding.api:java-core-api:jar:0.30.0:compile
+[INFO] |  +- com.sap.cds:cds-services-impl:jar:5.0.0-SNAPSHOT:runtime
+[INFO] |  |  +- com.sap.cloud.environment.servicebinding.api:java-access-api:jar:0.30.0:compile
+[INFO] |  |  +- org.apache.commons:commons-csv:jar:1.14.1:runtime
+[INFO] |  |  \- com.cronutils:cron-utils:jar:9.2.1:runtime
+[INFO] |  +- com.sap.cds:cds-feature-jdbc:jar:5.0.0-SNAPSHOT:runtime
+[INFO] |  |  +- com.sap.cds:cds4j-runtime:jar:5.0.0-m20260421-084434:runtime
+[INFO] |  |  |  \- com.sap.cds:cds4j-jdbc-spi:jar:5.0.0-m20260421-084434:runtime
+[INFO] |  |  \- com.sap.cds:cds4j-tx:jar:5.0.0-m20260421-084434:runtime
+[INFO] |  +- com.sap.cds:cds-framework-spring-boot:jar:5.0.0-SNAPSHOT:runtime
+[INFO] |  |  \- com.sap.cloud.sdk.cloudplatform:connectivity-apache-httpclient5:jar:5.28.0:compile
+[INFO] |  +- org.springframework.boot:spring-boot-starter-web:jar:4.0.3:compile
+[INFO] |  |  +- org.springframework.boot:spring-boot-starter-tomcat:jar:4.0.3:compile
+[INFO] |  |  |  +- org.springframework.boot:spring-boot-starter-tomcat-runtime:jar:4.0.3:compile
+[INFO] |  |  |  |  +- org.apache.tomcat.embed:tomcat-embed-core:jar:11.0.18:compile
+[INFO] |  |  |  |  +- org.apache.tomcat.embed:tomcat-embed-el:jar:11.0.18:compile
+[INFO] |  |  |  |  \- org.apache.tomcat.embed:tomcat-embed-websocket:jar:11.0.18:compile
+[INFO] |  |  |  \- org.springframework.boot:spring-boot-tomcat:jar:4.0.3:compile
+[INFO] |  |  +- org.springframework.boot:spring-boot-http-converter:jar:4.0.3:compile
+[INFO] |  |  \- org.springframework.boot:spring-boot-webmvc:jar:4.0.3:compile
+[INFO] |  |     +- org.springframework.boot:spring-boot-servlet:jar:4.0.3:compile
+[INFO] |  |     \- org.springframework:spring-webmvc:jar:7.0.5:compile
+[INFO] |  +- org.springframework.boot:spring-boot-starter-jdbc:jar:4.0.3:compile
+[INFO] |  |  +- org.springframework.boot:spring-boot-jdbc:jar:4.0.3:compile
+[INFO] |  |  |  +- org.springframework.boot:spring-boot-sql:jar:4.0.3:compile
+[INFO] |  |  |  +- org.springframework.boot:spring-boot-transaction:jar:4.0.3:compile
+[INFO] |  |  |  |  +- org.springframework.boot:spring-boot-persistence:jar:4.0.3:compile
+[INFO] |  |  |  |  \- org.springframework:spring-tx:jar:7.0.5:compile
+[INFO] |  |  |  \- org.springframework:spring-jdbc:jar:7.0.5:compile
+[INFO] |  |  \- com.zaxxer:HikariCP:jar:7.0.2:compile
+[INFO] |  \- org.yaml:snakeyaml:jar:2.5:compile
+[INFO] +- com.sap.cds:cds-adapter-odata-v4:jar:5.0.0-SNAPSHOT:runtime
+[INFO] |  +- com.sap.cds:cds-adapter-api:jar:5.0.0-SNAPSHOT:runtime
+[INFO] |  +- com.sap.cds:cds-services-utils:jar:5.0.0-SNAPSHOT:runtime
+[INFO] |  |  +- commons-io:commons-io:jar:2.21.0:compile
+[INFO] |  |  +- io.opentelemetry:opentelemetry-api:jar:1.55.0:runtime
+[INFO] |  |  |  \- io.opentelemetry:opentelemetry-context:jar:1.55.0:runtime
+[INFO] |  |  |     \- io.opentelemetry:opentelemetry-common:jar:1.55.0:runtime
+[INFO] |  |  \- org.apache.commons:commons-lang3:jar:3.19.0:compile
+[INFO] |  +- com.sap.cds:cds4j-core:jar:5.0.0-m20260421-084434:runtime
+[INFO] |  +- org.slf4j:slf4j-api:jar:2.0.17:compile
+[INFO] |  +- com.google.guava:guava:jar:33.5.0-jre:compile
+[INFO] |  |  +- com.google.guava:failureaccess:jar:1.0.3:compile
+[INFO] |  |  +- com.google.guava:listenablefuture:jar:9999.0-empty-to-avoid-conflict-with-guava:compile
+[INFO] |  |  +- org.jspecify:jspecify:jar:1.0.0:compile
+[INFO] |  |  +- com.google.errorprone:error_prone_annotations:jar:2.41.0:compile
+[INFO] |  |  \- com.google.j2objc:j2objc-annotations:jar:3.1:compile
+[INFO] |  +- com.fasterxml.jackson.dataformat:jackson-dataformat-xml:jar:2.20.2:runtime
+[INFO] |  |  +- com.fasterxml.jackson.core:jackson-core:jar:2.20.2:compile
+[INFO] |  |  +- com.fasterxml.jackson.core:jackson-annotations:jar:2.20:compile
+[INFO] |  |  \- org.codehaus.woodstox:stax2-api:jar:4.2.2:runtime
+[INFO] |  \- com.fasterxml:aalto-xml:jar:1.3.4:runtime
+[INFO] +- com.sap.cds:cds-starter-cloudfoundry:jar:5.0.0-SNAPSHOT:runtime
+[INFO] |  +- com.sap.cds:cds-feature-hana:jar:5.0.0-SNAPSHOT:runtime
+[INFO] |  |  \- com.sap.cloud.db.jdbc:ngdbc:jar:2.28.6:runtime
+[INFO] |  +- com.sap.cds:cds-feature-mt:jar:5.0.0-SNAPSHOT:runtime
+[INFO] |  |  \- com.google.code.gson:gson:jar:2.13.2:compile
+[INFO] |  +- com.sap.cds:cds-feature-cloudfoundry:jar:5.0.0-SNAPSHOT:runtime
+[INFO] |  |  \- com.sap.cloud.environment.servicebinding:java-sap-vcap-services:jar:0.30.0:runtime
+[INFO] |  +- com.sap.cds:cds-feature-identity:jar:5.0.0-SNAPSHOT:runtime
+[INFO] |  |  +- com.sap.cloud.security:java-api:jar:4.0.0:compile
+[INFO] |  |  \- com.sap.cloud.security:java-security:jar:4.0.0:runtime
+[INFO] |  |     \- com.sap.cloud.security:env:jar:4.0.0:runtime
+[INFO] |  \- com.sap.cloud.security:resourceserver-security-spring-boot-starter:jar:4.0.0:runtime
+[INFO] |     +- com.sap.cloud.security:spring-security:jar:4.0.0:runtime
+[INFO] |     +- org.springframework.security:spring-security-oauth2-jose:jar:7.0.3:compile
+[INFO] |     |  +- org.springframework.security:spring-security-core:jar:7.0.3:compile
+[INFO] |     |  |  \- org.springframework.security:spring-security-crypto:jar:7.0.3:compile
+[INFO] |     |  +- org.springframework.security:spring-security-oauth2-core:jar:7.0.3:compile
+[INFO] |     |  \- com.nimbusds:nimbus-jose-jwt:jar:10.4:compile
+[INFO] |     \- org.springframework.security:spring-security-oauth2-resource-server:jar:7.0.3:compile
+[INFO] +- com.sap.cds:cds-starter-k8s:jar:5.0.0-SNAPSHOT:runtime
+[INFO] |  \- com.sap.cds:cds-feature-k8s:jar:5.0.0-SNAPSHOT:runtime
+[INFO] |     \- com.sap.cloud.environment.servicebinding:java-sap-service-operator:jar:0.30.0:runtime
+[INFO] +- com.sap.cds:cds-feature-enterprise-messaging:jar:5.0.0-SNAPSHOT:runtime
+[INFO] |  +- com.sap.cds:cds-services-messaging:jar:5.0.0-SNAPSHOT:runtime
+[INFO] |  |  \- jakarta.jms:jakarta.jms-api:jar:3.1.0:runtime
+[INFO] |  +- com.sap.cds:cds-integration-cloud-sdk:jar:5.0.0-SNAPSHOT:runtime
+[INFO] |  +- com.sap.cloud.servicesdk.xbem:emjapi-extension-sap-cp-jms:jar:4.0.0:runtime
+[INFO] |  |  +- com.sap.cloud.servicesdk.xbem:emjapi-core:jar:4.0.0:runtime
+[INFO] |  |  +- org.apache.qpid:qpid-jms-client:jar:2.2.0:runtime
+[INFO] |  |  |  \- org.apache.qpid:proton-j:jar:0.34.0:runtime
+[INFO] |  |  +- commons-codec:commons-codec:jar:1.19.0:compile
+[INFO] |  |  +- io.netty:netty-buffer:jar:4.2.10.Final:runtime
+[INFO] |  |  +- io.netty:netty-common:jar:4.2.10.Final:runtime
+[INFO] |  |  +- io.netty:netty-handler:jar:4.2.10.Final:runtime
+[INFO] |  |  |  +- io.netty:netty-resolver:jar:4.2.10.Final:runtime
+[INFO] |  |  |  +- io.netty:netty-transport-native-unix-common:jar:4.2.10.Final:runtime
+[INFO] |  |  |  \- io.netty:netty-codec-base:jar:4.2.10.Final:runtime
+[INFO] |  |  +- io.netty:netty-handler-proxy:jar:4.2.10.Final:runtime
+[INFO] |  |  |  \- io.netty:netty-codec-socks:jar:4.2.10.Final:runtime
+[INFO] |  |  +- io.netty:netty-transport:jar:4.2.10.Final:runtime
+[INFO] |  |  +- io.netty:netty-transport-native-epoll:jar:linux-x86_64:4.2.10.Final:runtime
+[INFO] |  |  |  \- io.netty:netty-transport-classes-epoll:jar:4.2.10.Final:runtime
+[INFO] |  |  +- io.netty:netty-transport-native-kqueue:jar:osx-x86_64:4.2.10.Final:runtime
+[INFO] |  |  |  \- io.netty:netty-transport-classes-kqueue:jar:4.2.10.Final:runtime
+[INFO] |  |  \- io.netty:netty-codec-http:jar:4.2.10.Final:runtime
+[INFO] |  |     \- io.netty:netty-codec-compression:jar:4.2.10.Final:runtime
+[INFO] |  \- com.fasterxml.jackson.core:jackson-databind:jar:2.20.2:compile
+[INFO] +- com.sap.cds:cds-feature-remote-odata:jar:5.0.0-SNAPSHOT:runtime
+[INFO] |  +- com.sap.cloud.sdk.datamodel:odata-client:jar:5.28.0:runtime
+[INFO] |  |  \- com.sap.cloud.sdk.datamodel:fluent-result:jar:5.28.0:runtime
+[INFO] |  \- com.sap.cloud.sdk.cloudplatform:cloudplatform-connectivity:jar:5.28.0:compile
+[INFO] |     +- com.mikesamuel:json-sanitizer:jar:1.2.3:compile
+[INFO] |     +- com.auth0:java-jwt:jar:4.5.1:compile
+[INFO] |     +- org.bouncycastle:bcprov-jdk18on:jar:1.83:compile
+[INFO] |     \- org.bouncycastle:bcpkix-jdk18on:jar:1.83:compile
+[INFO] |        \- org.bouncycastle:bcutil-jdk18on:jar:1.83:compile
+[INFO] +- com.sap.cds:cds-feature-change-tracking:jar:5.0.0-SNAPSHOT:runtime
+[INFO] +- com.sap.cds:cds-feature-attachments:jar:1.3.3:runtime
+[INFO] |  \- com.sap.cloud.sdk.cloudplatform:cloudplatform-core:jar:5.28.0:compile
+[INFO] +- com.sap.cloud.sdk.cloudplatform:resilience:jar:5.28.0:compile
+[INFO] |  +- com.sap.cloud.sdk.cloudplatform:resilience-api:jar:5.28.0:compile
+[INFO] |  \- com.sap.cloud.sdk.cloudplatform:resilience4j:jar:5.28.0:compile
+[INFO] |     +- io.github.resilience4j:resilience4j-core:jar:2.4.0:compile
+[INFO] |     +- io.github.resilience4j:resilience4j-circuitbreaker:jar:2.4.0:compile
+[INFO] |     +- io.github.resilience4j:resilience4j-bulkhead:jar:2.4.0:compile
+[INFO] |     +- io.github.resilience4j:resilience4j-timelimiter:jar:2.4.0:compile
+[INFO] |     +- io.github.resilience4j:resilience4j-retry:jar:2.4.0:compile
+[INFO] |     +- io.github.resilience4j:resilience4j-ratelimiter:jar:2.4.0:compile
+[INFO] |     \- javax.cache:cache-api:jar:1.1.1:compile
+[INFO] +- com.sap.cloud.sdk:sdk-core:jar:5.28.0:compile
+[INFO] |  +- com.sap.cloud.sdk.cloudplatform:connectivity-destination-service:jar:5.28.0:compile
+[INFO] |  |  +- org.apache.httpcomponents.core5:httpcore5:jar:5.3.6:compile
+[INFO] |  |  +- org.apache.httpcomponents.client5:httpclient5:jar:5.5.2:compile
+[INFO] |  |  |  \- org.apache.httpcomponents.core5:httpcore5-h2:jar:5.3.6:compile
+[INFO] |  |  \- com.sap.cloud.environment.servicebinding.api:java-consumption-api:jar:0.30.0:compile
+[INFO] |  +- com.sap.cloud.sdk.cloudplatform:connectivity-oauth:jar:5.28.0:compile
+[INFO] |  |  +- com.sap.cloud.security.xsuaa:token-client:jar:4.0.0:compile
+[INFO] |  |  \- org.json:json:jar:20251224:compile
+[INFO] |  +- com.sap.cloud.sdk.cloudplatform:servlet-jakarta:jar:5.28.0:compile
+[INFO] |  +- com.sap.cloud.sdk.cloudplatform:tenant:jar:5.28.0:compile
+[INFO] |  +- com.sap.cloud.sdk.cloudplatform:security:jar:5.28.0:compile
+[INFO] |  \- com.sap.cloud.sdk.cloudplatform:caching:jar:5.28.0:compile
+[INFO] +- com.sap.cloud.sdk.cloudplatform:connectivity-apache-httpclient4:jar:5.28.0:compile
+[INFO] |  +- org.slf4j:jcl-over-slf4j:jar:2.0.17:runtime
+[INFO] |  +- io.vavr:vavr:jar:1.0.1:compile
+[INFO] |  |  \- io.vavr:vavr-match:jar:1.0.0:compile
+[INFO] |  +- com.github.ben-manes.caffeine:caffeine:jar:3.2.3:compile
+[INFO] |  +- org.apache.httpcomponents:httpcore:jar:4.4.16:compile
+[INFO] |  \- org.apache.httpcomponents:httpclient:jar:4.5.14:compile
+[INFO] +- com.h2database:h2:jar:2.4.240:runtime
+[INFO] +- org.xerial:sqlite-jdbc:jar:3.50.3.0:runtime
+[INFO] +- com.sap.hcp.cf.logging:cf-java-logging-support-servlet:jar:4.1.0:compile
+[INFO] |  \- com.sap.hcp.cf.logging:cf-java-logging-support-core:jar:4.1.0:compile
+[INFO] |     \- com.fasterxml.jackson.jr:jackson-jr-objects:jar:2.20.2:compile
+[INFO] +- com.sap.hcp.cf.logging:cf-java-logging-support-logback:jar:4.1.0:compile
+[INFO] +- org.springframework.boot:spring-boot-starter-security:jar:4.0.3:compile
+[INFO] |  +- org.springframework.boot:spring-boot-starter:jar:4.0.3:compile
+[INFO] |  |  +- org.springframework.boot:spring-boot-starter-logging:jar:4.0.3:compile
+[INFO] |  |  |  +- ch.qos.logback:logback-classic:jar:1.5.32:compile
+[INFO] |  |  |  |  \- ch.qos.logback:logback-core:jar:1.5.32:compile
+[INFO] |  |  |  +- org.apache.logging.log4j:log4j-to-slf4j:jar:2.25.3:compile
+[INFO] |  |  |  |  \- org.apache.logging.log4j:log4j-api:jar:2.25.3:compile
+[INFO] |  |  |  \- org.slf4j:jul-to-slf4j:jar:2.0.17:compile
+[INFO] |  |  \- jakarta.annotation:jakarta.annotation-api:jar:3.0.0:compile
+[INFO] |  +- org.springframework.boot:spring-boot-security:jar:4.0.3:compile
+[INFO] |  |  +- org.springframework.security:spring-security-config:jar:7.0.3:compile
+[INFO] |  |  \- org.springframework.security:spring-security-web:jar:7.0.3:compile
+[INFO] |  |     \- org.springframework:spring-expression:jar:7.0.5:compile
+[INFO] |  \- org.springframework:spring-aop:jar:7.0.5:compile
+[INFO] |     \- org.springframework:spring-beans:jar:7.0.5:compile
+[INFO] +- org.springframework.boot:spring-boot-starter-security-oauth2-resource-server:jar:4.0.3:compile
+[INFO] |  \- org.springframework.boot:spring-boot-security-oauth2-resource-server:jar:4.0.3:compile
+[INFO] +- org.springframework.boot:spring-boot-starter-actuator:jar:4.0.3:compile
+[INFO] |  +- org.springframework.boot:spring-boot-starter-micrometer-metrics:jar:4.0.3:compile
+[INFO] |  |  \- org.springframework.boot:spring-boot-micrometer-metrics:jar:4.0.3:compile
+[INFO] |  |     \- org.springframework.boot:spring-boot-micrometer-observation:jar:4.0.3:compile
+[INFO] |  +- org.springframework.boot:spring-boot-actuator-autoconfigure:jar:4.0.3:compile
+[INFO] |  |  \- org.springframework.boot:spring-boot-actuator:jar:4.0.3:compile
+[INFO] |  +- org.springframework.boot:spring-boot-health:jar:4.0.3:compile
+[INFO] |  +- io.micrometer:micrometer-observation:jar:1.16.3:compile
+[INFO] |  |  \- io.micrometer:micrometer-commons:jar:1.16.3:compile
+[INFO] |  \- io.micrometer:micrometer-jakarta9:jar:1.16.3:compile
+[INFO] |     \- io.micrometer:micrometer-core:jar:1.16.3:compile
+[INFO] |        +- org.hdrhistogram:HdrHistogram:jar:2.2.2:runtime
+[INFO] |        \- org.latencyutils:LatencyUtils:jar:2.0.3:runtime
+[INFO] +- org.springframework.boot:spring-boot-starter-test:jar:4.0.3:test
+[INFO] |  +- org.springframework.boot:spring-boot-test:jar:4.0.3:test
+[INFO] |  +- org.springframework.boot:spring-boot-test-autoconfigure:jar:4.0.3:test
+[INFO] |  +- com.jayway.jsonpath:json-path:jar:2.10.0:test
+[INFO] |  +- jakarta.xml.bind:jakarta.xml.bind-api:jar:4.0.4:test
+[INFO] |  |  \- jakarta.activation:jakarta.activation-api:jar:2.1.4:test
+[INFO] |  +- net.minidev:json-smart:jar:2.6.0:test
+[INFO] |  |  \- net.minidev:accessors-smart:jar:2.6.0:test
+[INFO] |  |     \- org.ow2.asm:asm:jar:9.7.1:test
+[INFO] |  +- org.assertj:assertj-core:jar:3.27.7:test
+[INFO] |  |  \- net.bytebuddy:byte-buddy:jar:1.17.8:runtime
+[INFO] |  +- org.awaitility:awaitility:jar:4.3.0:test
+[INFO] |  +- org.hamcrest:hamcrest:jar:3.0:test
+[INFO] |  +- org.junit.jupiter:junit-jupiter:jar:6.0.3:test
+[INFO] |  |  +- org.junit.jupiter:junit-jupiter-api:jar:6.0.3:test
+[INFO] |  |  |  +- org.opentest4j:opentest4j:jar:1.3.0:test
+[INFO] |  |  |  +- org.junit.platform:junit-platform-commons:jar:6.0.3:test
+[INFO] |  |  |  \- org.apiguardian:apiguardian-api:jar:1.1.2:test
+[INFO] |  |  +- org.junit.jupiter:junit-jupiter-params:jar:6.0.3:test
+[INFO] |  |  \- org.junit.jupiter:junit-jupiter-engine:jar:6.0.3:test
+[INFO] |  |     \- org.junit.platform:junit-platform-engine:jar:6.0.3:test
+[INFO] |  +- org.mockito:mockito-core:jar:5.20.0:runtime
+[INFO] |  |  +- net.bytebuddy:byte-buddy-agent:jar:1.17.8:runtime
+[INFO] |  |  \- org.objenesis:objenesis:jar:3.3:runtime
+[INFO] |  +- org.mockito:mockito-junit-jupiter:jar:5.20.0:test
+[INFO] |  +- org.skyscreamer:jsonassert:jar:1.5.3:test
+[INFO] |  |  \- com.vaadin.external.google:android-json:jar:0.0.20131108.vaadin1:test
+[INFO] |  +- org.springframework:spring-core:jar:7.0.5:compile
+[INFO] |  |  \- commons-logging:commons-logging:jar:1.3.5:compile
+[INFO] |  +- org.springframework:spring-test:jar:7.0.5:test
+[INFO] |  \- org.xmlunit:xmlunit-core:jar:2.10.4:test
+[INFO] +- org.springframework.boot:spring-boot-starter-security-test:jar:4.0.3:test
+[INFO] |  \- org.springframework.boot:spring-boot-security-test:jar:4.0.3:test
+[INFO] |     \- org.springframework.security:spring-security-test:jar:7.0.3:test
+[INFO] +- org.springframework.boot:spring-boot-starter-webclient:jar:4.0.3:test
+[INFO] |  +- org.springframework.boot:spring-boot-starter-jackson:jar:4.0.3:compile
+[INFO] |  |  \- org.springframework.boot:spring-boot-jackson:jar:4.0.3:compile
+[INFO] |  |     \- tools.jackson.core:jackson-databind:jar:3.0.4:compile
+[INFO] |  |        \- tools.jackson.core:jackson-core:jar:3.0.4:compile
+[INFO] |  +- org.springframework.boot:spring-boot-webclient:jar:4.0.3:test
+[INFO] |  |  \- org.springframework.boot:spring-boot-http-client:jar:4.0.3:test
+[INFO] |  \- io.projectreactor.netty:reactor-netty-http:jar:1.3.3:test
+[INFO] |     +- io.netty:netty-codec-http2:jar:4.2.10.Final:test
+[INFO] |     +- io.netty:netty-codec-http3:jar:4.2.10.Final:test
+[INFO] |     |  +- io.netty:netty-codec-classes-quic:jar:4.2.10.Final:runtime
+[INFO] |     |  +- io.netty:netty-codec-native-quic:jar:linux-x86_64:4.2.10.Final:runtime
+[INFO] |     |  +- io.netty:netty-codec-native-quic:jar:linux-aarch_64:4.2.10.Final:runtime
+[INFO] |     |  +- io.netty:netty-codec-native-quic:jar:osx-x86_64:4.2.10.Final:runtime
+[INFO] |     |  +- io.netty:netty-codec-native-quic:jar:osx-aarch_64:4.2.10.Final:runtime
+[INFO] |     |  \- io.netty:netty-codec-native-quic:jar:windows-x86_64:4.2.10.Final:runtime
+[INFO] |     +- io.netty:netty-resolver-dns:jar:4.2.10.Final:runtime
+[INFO] |     |  \- io.netty:netty-codec-dns:jar:4.2.10.Final:runtime
+[INFO] |     +- io.netty:netty-resolver-dns-native-macos:jar:osx-x86_64:4.2.10.Final:runtime
+[INFO] |     |  \- io.netty:netty-resolver-dns-classes-macos:jar:4.2.10.Final:runtime
+[INFO] |     +- io.projectreactor.netty:reactor-netty-core:jar:1.3.3:test
+[INFO] |     \- io.projectreactor:reactor-core:jar:3.8.3:runtime
+[INFO] |        \- org.reactivestreams:reactive-streams:jar:1.0.4:runtime
+[INFO] +- org.springframework.boot:spring-boot-webtestclient:jar:4.0.3:test
+[INFO] |  +- org.springframework.boot:spring-boot-http-codec:jar:4.0.3:test
+[INFO] |  |  \- org.springframework:spring-web:jar:7.0.5:compile
+[INFO] |  \- org.springframework:spring-webflux:jar:7.0.5:test
+[INFO] +- org.springframework.boot:spring-boot-starter-webmvc-test:jar:4.0.3:test
+[INFO] |  +- org.springframework.boot:spring-boot-starter-jackson-test:jar:4.0.3:test
+[INFO] |  +- org.springframework.boot:spring-boot-starter-webmvc:jar:4.0.3:test
+[INFO] |  +- org.springframework.boot:spring-boot-webmvc-test:jar:4.0.3:test
+[INFO] |  |  \- org.springframework.boot:spring-boot-web-server:jar:4.0.3:compile
+[INFO] |  \- org.springframework.boot:spring-boot-resttestclient:jar:4.0.3:test
+[INFO] \- org.springframework.boot:spring-boot-devtools:jar:4.0.3:compile (optional)
+[INFO]    +- org.springframework.boot:spring-boot:jar:4.0.3:compile
+[INFO]    |  \- org.springframework:spring-context:jar:7.0.5:compile
+[INFO]    \- org.springframework.boot:spring-boot-autoconfigure:jar:4.0.3:compile
+[INFO] 
+[INFO] -------------------< my:bookshop-integration-tests >--------------------
+[INFO] Building bookshop-integration-tests 1.0.0-SNAPSHOT                 [3/3]
+[INFO]   from integration-tests/pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- dependency:3.9.0:tree (default-cli) @ bookshop-integration-tests ---
+[INFO] my:bookshop-integration-tests:jar:1.0.0-SNAPSHOT
+[INFO] +- my:bookshop:jar:1.0.0-SNAPSHOT:test
+[INFO] |  +- com.sap.cds:cds-starter-spring-boot:jar:5.0.0-SNAPSHOT:test
+[INFO] |  |  +- com.sap.cds:cds-services-api:jar:5.0.0-SNAPSHOT:test
+[INFO] |  |  |  +- com.sap.cds:cds4j-api:jar:5.0.0-m20260421-084434:test
+[INFO] |  |  |  \- com.sap.cloud.environment.servicebinding.api:java-core-api:jar:0.30.0:test
+[INFO] |  |  +- com.sap.cds:cds-services-impl:jar:5.0.0-SNAPSHOT:test
+[INFO] |  |  |  +- com.sap.cloud.environment.servicebinding.api:java-access-api:jar:0.30.0:test
+[INFO] |  |  |  +- org.apache.commons:commons-csv:jar:1.14.1:test
+[INFO] |  |  |  \- com.cronutils:cron-utils:jar:9.2.1:test
+[INFO] |  |  +- com.sap.cds:cds-feature-jdbc:jar:5.0.0-SNAPSHOT:test
+[INFO] |  |  |  +- com.sap.cds:cds4j-runtime:jar:5.0.0-m20260421-084434:test
+[INFO] |  |  |  |  \- com.sap.cds:cds4j-jdbc-spi:jar:5.0.0-m20260421-084434:test
+[INFO] |  |  |  \- com.sap.cds:cds4j-tx:jar:5.0.0-m20260421-084434:test
+[INFO] |  |  +- com.sap.cds:cds-framework-spring-boot:jar:5.0.0-SNAPSHOT:test
+[INFO] |  |  |  \- com.sap.cloud.sdk.cloudplatform:connectivity-apache-httpclient5:jar:5.28.0:test
+[INFO] |  |  +- org.springframework.boot:spring-boot-starter-web:jar:4.0.3:test
+[INFO] |  |  +- org.springframework.boot:spring-boot-starter-jdbc:jar:4.0.3:test
+[INFO] |  |  |  +- org.springframework.boot:spring-boot-jdbc:jar:4.0.3:test
+[INFO] |  |  |  |  +- org.springframework.boot:spring-boot-sql:jar:4.0.3:test
+[INFO] |  |  |  |  +- org.springframework.boot:spring-boot-transaction:jar:4.0.3:test
+[INFO] |  |  |  |  |  +- org.springframework.boot:spring-boot-persistence:jar:4.0.3:test
+[INFO] |  |  |  |  |  \- org.springframework:spring-tx:jar:7.0.5:test
+[INFO] |  |  |  |  \- org.springframework:spring-jdbc:jar:7.0.5:test
+[INFO] |  |  |  \- com.zaxxer:HikariCP:jar:7.0.2:test
+[INFO] |  |  \- org.yaml:snakeyaml:jar:2.5:test
+[INFO] |  +- com.sap.cds:cds-adapter-odata-v4:jar:5.0.0-SNAPSHOT:test
+[INFO] |  |  +- com.sap.cds:cds-adapter-api:jar:5.0.0-SNAPSHOT:test
+[INFO] |  |  +- com.sap.cds:cds-services-utils:jar:5.0.0-SNAPSHOT:test
+[INFO] |  |  |  +- commons-io:commons-io:jar:2.21.0:test
+[INFO] |  |  |  +- io.opentelemetry:opentelemetry-api:jar:1.55.0:test
+[INFO] |  |  |  |  \- io.opentelemetry:opentelemetry-context:jar:1.55.0:test
+[INFO] |  |  |  |     \- io.opentelemetry:opentelemetry-common:jar:1.55.0:test
+[INFO] |  |  |  \- org.apache.commons:commons-lang3:jar:3.19.0:test
+[INFO] |  |  +- com.sap.cds:cds4j-core:jar:5.0.0-m20260421-084434:test
+[INFO] |  |  +- org.slf4j:slf4j-api:jar:2.0.17:test
+[INFO] |  |  +- com.google.guava:guava:jar:33.5.0-jre:test
+[INFO] |  |  |  +- com.google.guava:failureaccess:jar:1.0.3:test
+[INFO] |  |  |  +- com.google.guava:listenablefuture:jar:9999.0-empty-to-avoid-conflict-with-guava:test
+[INFO] |  |  |  +- com.google.errorprone:error_prone_annotations:jar:2.41.0:test
+[INFO] |  |  |  \- com.google.j2objc:j2objc-annotations:jar:3.1:test
+[INFO] |  |  +- com.fasterxml.jackson.dataformat:jackson-dataformat-xml:jar:2.20.2:test
+[INFO] |  |  |  +- com.fasterxml.jackson.core:jackson-core:jar:2.20.2:test
+[INFO] |  |  |  +- com.fasterxml.jackson.core:jackson-annotations:jar:2.20:test
+[INFO] |  |  |  \- org.codehaus.woodstox:stax2-api:jar:4.2.2:test
+[INFO] |  |  \- com.fasterxml:aalto-xml:jar:1.3.4:test
+[INFO] |  +- com.sap.cds:cds-starter-cloudfoundry:jar:5.0.0-SNAPSHOT:test
+[INFO] |  |  +- com.sap.cds:cds-feature-hana:jar:5.0.0-SNAPSHOT:test
+[INFO] |  |  |  \- com.sap.cloud.db.jdbc:ngdbc:jar:2.28.6:test
+[INFO] |  |  +- com.sap.cds:cds-feature-mt:jar:5.0.0-SNAPSHOT:test
+[INFO] |  |  |  \- com.google.code.gson:gson:jar:2.13.2:test
+[INFO] |  |  +- com.sap.cds:cds-feature-cloudfoundry:jar:5.0.0-SNAPSHOT:test
+[INFO] |  |  |  \- com.sap.cloud.environment.servicebinding:java-sap-vcap-services:jar:0.30.0:test
+[INFO] |  |  +- com.sap.cds:cds-feature-identity:jar:5.0.0-SNAPSHOT:test
+[INFO] |  |  |  +- com.sap.cloud.security:java-api:jar:4.0.0:test
+[INFO] |  |  |  \- com.sap.cloud.security:java-security:jar:4.0.0:test
+[INFO] |  |  |     \- com.sap.cloud.security:env:jar:4.0.0:test
+[INFO] |  |  \- com.sap.cloud.security:resourceserver-security-spring-boot-starter:jar:4.0.0:test
+[INFO] |  |     +- com.sap.cloud.security:spring-security:jar:4.0.0:test
+[INFO] |  |     |  \- io.projectreactor:reactor-core:jar:3.8.3:test
+[INFO] |  |     |     \- org.reactivestreams:reactive-streams:jar:1.0.4:test
+[INFO] |  |     +- org.springframework.security:spring-security-oauth2-jose:jar:7.0.3:test
+[INFO] |  |     |  +- org.springframework.security:spring-security-oauth2-core:jar:7.0.3:test
+[INFO] |  |     |  \- com.nimbusds:nimbus-jose-jwt:jar:10.4:test
+[INFO] |  |     \- org.springframework.security:spring-security-oauth2-resource-server:jar:7.0.3:test
+[INFO] |  +- com.sap.cds:cds-starter-k8s:jar:5.0.0-SNAPSHOT:test
+[INFO] |  |  \- com.sap.cds:cds-feature-k8s:jar:5.0.0-SNAPSHOT:test
+[INFO] |  |     \- com.sap.cloud.environment.servicebinding:java-sap-service-operator:jar:0.30.0:test
+[INFO] |  +- com.sap.cds:cds-feature-enterprise-messaging:jar:5.0.0-SNAPSHOT:test
+[INFO] |  |  +- com.sap.cds:cds-services-messaging:jar:5.0.0-SNAPSHOT:test
+[INFO] |  |  |  \- jakarta.jms:jakarta.jms-api:jar:3.1.0:test
+[INFO] |  |  +- com.sap.cds:cds-integration-cloud-sdk:jar:5.0.0-SNAPSHOT:test
+[INFO] |  |  +- com.sap.cloud.servicesdk.xbem:emjapi-extension-sap-cp-jms:jar:4.0.0:test
+[INFO] |  |  |  +- com.sap.cloud.servicesdk.xbem:emjapi-core:jar:4.0.0:test
+[INFO] |  |  |  +- org.apache.qpid:qpid-jms-client:jar:2.2.0:test
+[INFO] |  |  |  |  \- org.apache.qpid:proton-j:jar:0.34.0:test
+[INFO] |  |  |  +- commons-codec:commons-codec:jar:1.19.0:test
+[INFO] |  |  |  +- io.netty:netty-buffer:jar:4.2.10.Final:runtime
+[INFO] |  |  |  +- io.netty:netty-common:jar:4.2.10.Final:runtime
+[INFO] |  |  |  +- io.netty:netty-handler:jar:4.2.10.Final:test
+[INFO] |  |  |  |  +- io.netty:netty-resolver:jar:4.2.10.Final:runtime
+[INFO] |  |  |  |  +- io.netty:netty-transport-native-unix-common:jar:4.2.10.Final:runtime
+[INFO] |  |  |  |  \- io.netty:netty-codec-base:jar:4.2.10.Final:test
+[INFO] |  |  |  +- io.netty:netty-handler-proxy:jar:4.2.10.Final:test
+[INFO] |  |  |  |  \- io.netty:netty-codec-socks:jar:4.2.10.Final:test
+[INFO] |  |  |  +- io.netty:netty-transport:jar:4.2.10.Final:runtime
+[INFO] |  |  |  +- io.netty:netty-transport-native-epoll:jar:linux-x86_64:4.2.10.Final:runtime
+[INFO] |  |  |  |  \- io.netty:netty-transport-classes-epoll:jar:4.2.10.Final:runtime
+[INFO] |  |  |  +- io.netty:netty-transport-native-kqueue:jar:osx-x86_64:4.2.10.Final:runtime
+[INFO] |  |  |  |  \- io.netty:netty-transport-classes-kqueue:jar:4.2.10.Final:runtime
+[INFO] |  |  |  \- io.netty:netty-codec-http:jar:4.2.10.Final:test
+[INFO] |  |  |     \- io.netty:netty-codec-compression:jar:4.2.10.Final:test
+[INFO] |  |  \- com.fasterxml.jackson.core:jackson-databind:jar:2.20.2:test
+[INFO] |  +- com.sap.cds:cds-feature-remote-odata:jar:5.0.0-SNAPSHOT:test
+[INFO] |  |  +- com.sap.cloud.sdk.datamodel:odata-client:jar:5.28.0:test
+[INFO] |  |  |  \- com.sap.cloud.sdk.datamodel:fluent-result:jar:5.28.0:test
+[INFO] |  |  \- com.sap.cloud.sdk.cloudplatform:cloudplatform-connectivity:jar:5.28.0:test
+[INFO] |  |     +- com.mikesamuel:json-sanitizer:jar:1.2.3:test
+[INFO] |  |     +- com.auth0:java-jwt:jar:4.5.1:test
+[INFO] |  |     +- org.bouncycastle:bcprov-jdk18on:jar:1.83:test
+[INFO] |  |     \- org.bouncycastle:bcpkix-jdk18on:jar:1.83:test
+[INFO] |  |        \- org.bouncycastle:bcutil-jdk18on:jar:1.83:test
+[INFO] |  +- com.sap.cds:cds-feature-change-tracking:jar:5.0.0-SNAPSHOT:test
+[INFO] |  +- com.sap.cds:cds-feature-attachments:jar:1.3.3:test
+[INFO] |  |  \- com.sap.cloud.sdk.cloudplatform:cloudplatform-core:jar:5.28.0:test
+[INFO] |  +- com.sap.cloud.sdk.cloudplatform:resilience:jar:5.28.0:test
+[INFO] |  |  +- com.sap.cloud.sdk.cloudplatform:resilience-api:jar:5.28.0:test
+[INFO] |  |  \- com.sap.cloud.sdk.cloudplatform:resilience4j:jar:5.28.0:test
+[INFO] |  |     +- io.github.resilience4j:resilience4j-core:jar:2.4.0:test
+[INFO] |  |     +- io.github.resilience4j:resilience4j-circuitbreaker:jar:2.4.0:test
+[INFO] |  |     +- io.github.resilience4j:resilience4j-bulkhead:jar:2.4.0:test
+[INFO] |  |     +- io.github.resilience4j:resilience4j-timelimiter:jar:2.4.0:test
+[INFO] |  |     +- io.github.resilience4j:resilience4j-retry:jar:2.4.0:test
+[INFO] |  |     +- io.github.resilience4j:resilience4j-ratelimiter:jar:2.4.0:test
+[INFO] |  |     \- javax.cache:cache-api:jar:1.1.1:test
+[INFO] |  +- com.sap.cloud.sdk:sdk-core:jar:5.28.0:test
+[INFO] |  |  +- com.sap.cloud.sdk.cloudplatform:connectivity-destination-service:jar:5.28.0:test
+[INFO] |  |  |  +- org.apache.httpcomponents.core5:httpcore5:jar:5.3.6:test
+[INFO] |  |  |  +- org.apache.httpcomponents.client5:httpclient5:jar:5.5.2:test
+[INFO] |  |  |  |  \- org.apache.httpcomponents.core5:httpcore5-h2:jar:5.3.6:test
+[INFO] |  |  |  \- com.sap.cloud.environment.servicebinding.api:java-consumption-api:jar:0.30.0:test
+[INFO] |  |  +- com.sap.cloud.sdk.cloudplatform:connectivity-oauth:jar:5.28.0:test
+[INFO] |  |  |  +- com.sap.cloud.security.xsuaa:token-client:jar:4.0.0:test
+[INFO] |  |  |  \- org.json:json:jar:20251224:test
+[INFO] |  |  +- com.sap.cloud.sdk.cloudplatform:servlet-jakarta:jar:5.28.0:test
+[INFO] |  |  +- com.sap.cloud.sdk.cloudplatform:tenant:jar:5.28.0:test
+[INFO] |  |  +- com.sap.cloud.sdk.cloudplatform:security:jar:5.28.0:test
+[INFO] |  |  \- com.sap.cloud.sdk.cloudplatform:caching:jar:5.28.0:test
+[INFO] |  +- com.sap.cloud.sdk.cloudplatform:connectivity-apache-httpclient4:jar:5.28.0:test
+[INFO] |  |  +- org.slf4j:jcl-over-slf4j:jar:2.0.17:test
+[INFO] |  |  +- io.vavr:vavr:jar:1.0.1:test
+[INFO] |  |  |  \- io.vavr:vavr-match:jar:1.0.0:test
+[INFO] |  |  +- com.github.ben-manes.caffeine:caffeine:jar:3.2.3:test
+[INFO] |  |  +- org.apache.httpcomponents:httpcore:jar:4.4.16:test
+[INFO] |  |  \- org.apache.httpcomponents:httpclient:jar:4.5.14:test
+[INFO] |  +- com.h2database:h2:jar:2.4.240:test
+[INFO] |  +- org.xerial:sqlite-jdbc:jar:3.50.3.0:test
+[INFO] |  +- com.sap.hcp.cf.logging:cf-java-logging-support-servlet:jar:4.1.0:test
+[INFO] |  |  \- com.sap.hcp.cf.logging:cf-java-logging-support-core:jar:4.1.0:test
+[INFO] |  |     \- com.fasterxml.jackson.jr:jackson-jr-objects:jar:2.20.2:test
+[INFO] |  +- com.sap.hcp.cf.logging:cf-java-logging-support-logback:jar:4.1.0:test
+[INFO] |  +- org.springframework.boot:spring-boot-starter-security:jar:4.0.3:test
+[INFO] |  |  +- org.springframework.boot:spring-boot-security:jar:4.0.3:test
+[INFO] |  |  |  +- org.springframework.security:spring-security-config:jar:7.0.3:test
+[INFO] |  |  |  \- org.springframework.security:spring-security-web:jar:7.0.3:test
+[INFO] |  |  |     \- org.springframework:spring-expression:jar:7.0.5:test
+[INFO] |  |  \- org.springframework:spring-aop:jar:7.0.5:test
+[INFO] |  |     \- org.springframework:spring-beans:jar:7.0.5:test
+[INFO] |  +- org.springframework.boot:spring-boot-starter-security-oauth2-resource-server:jar:4.0.3:test
+[INFO] |  |  \- org.springframework.boot:spring-boot-security-oauth2-resource-server:jar:4.0.3:test
+[INFO] |  \- org.springframework.boot:spring-boot-starter-actuator:jar:4.0.3:test
+[INFO] |     +- org.springframework.boot:spring-boot-starter-micrometer-metrics:jar:4.0.3:test
+[INFO] |     |  \- org.springframework.boot:spring-boot-micrometer-metrics:jar:4.0.3:test
+[INFO] |     |     \- org.springframework.boot:spring-boot-micrometer-observation:jar:4.0.3:test
+[INFO] |     +- org.springframework.boot:spring-boot-actuator-autoconfigure:jar:4.0.3:test
+[INFO] |     |  \- org.springframework.boot:spring-boot-actuator:jar:4.0.3:test
+[INFO] |     +- org.springframework.boot:spring-boot-health:jar:4.0.3:test
+[INFO] |     +- io.micrometer:micrometer-observation:jar:1.16.3:test
+[INFO] |     |  \- io.micrometer:micrometer-commons:jar:1.16.3:test
+[INFO] |     \- io.micrometer:micrometer-jakarta9:jar:1.16.3:test
+[INFO] |        \- io.micrometer:micrometer-core:jar:1.16.3:test
+[INFO] |           +- org.hdrhistogram:HdrHistogram:jar:2.2.2:test
+[INFO] |           \- org.latencyutils:LatencyUtils:jar:2.0.3:test
+[INFO] +- org.springframework.boot:spring-boot-starter-test:jar:4.0.3:test
+[INFO] |  +- org.springframework.boot:spring-boot-starter:jar:4.0.3:test
+[INFO] |  |  +- org.springframework.boot:spring-boot-starter-logging:jar:4.0.3:test
+[INFO] |  |  |  +- ch.qos.logback:logback-classic:jar:1.5.32:test
+[INFO] |  |  |  |  \- ch.qos.logback:logback-core:jar:1.5.32:test
+[INFO] |  |  |  +- org.apache.logging.log4j:log4j-to-slf4j:jar:2.25.3:test
+[INFO] |  |  |  |  \- org.apache.logging.log4j:log4j-api:jar:2.25.3:test
+[INFO] |  |  |  \- org.slf4j:jul-to-slf4j:jar:2.0.17:test
+[INFO] |  |  +- org.springframework.boot:spring-boot-autoconfigure:jar:4.0.3:test
+[INFO] |  |  \- jakarta.annotation:jakarta.annotation-api:jar:3.0.0:test
+[INFO] |  +- org.springframework.boot:spring-boot-test:jar:4.0.3:test
+[INFO] |  |  \- org.springframework.boot:spring-boot:jar:4.0.3:test
+[INFO] |  |     \- org.springframework:spring-context:jar:7.0.5:test
+[INFO] |  +- org.springframework.boot:spring-boot-test-autoconfigure:jar:4.0.3:test
+[INFO] |  +- com.jayway.jsonpath:json-path:jar:2.10.0:test
+[INFO] |  +- jakarta.xml.bind:jakarta.xml.bind-api:jar:4.0.4:test
+[INFO] |  |  \- jakarta.activation:jakarta.activation-api:jar:2.1.4:test
+[INFO] |  +- net.minidev:json-smart:jar:2.6.0:test
+[INFO] |  |  \- net.minidev:accessors-smart:jar:2.6.0:test
+[INFO] |  |     \- org.ow2.asm:asm:jar:9.7.1:test
+[INFO] |  +- org.assertj:assertj-core:jar:3.27.7:test
+[INFO] |  |  \- net.bytebuddy:byte-buddy:jar:1.17.8:test
+[INFO] |  +- org.awaitility:awaitility:jar:4.3.0:test
+[INFO] |  +- org.hamcrest:hamcrest:jar:3.0:test
+[INFO] |  +- org.junit.jupiter:junit-jupiter:jar:6.0.3:test
+[INFO] |  |  +- org.junit.jupiter:junit-jupiter-api:jar:6.0.3:test
+[INFO] |  |  |  +- org.opentest4j:opentest4j:jar:1.3.0:test
+[INFO] |  |  |  +- org.junit.platform:junit-platform-commons:jar:6.0.3:test
+[INFO] |  |  |  \- org.apiguardian:apiguardian-api:jar:1.1.2:test
+[INFO] |  |  +- org.junit.jupiter:junit-jupiter-params:jar:6.0.3:test
+[INFO] |  |  \- org.junit.jupiter:junit-jupiter-engine:jar:6.0.3:test
+[INFO] |  |     \- org.junit.platform:junit-platform-engine:jar:6.0.3:test
+[INFO] |  +- org.mockito:mockito-core:jar:5.20.0:test
+[INFO] |  |  +- net.bytebuddy:byte-buddy-agent:jar:1.17.8:test
+[INFO] |  |  \- org.objenesis:objenesis:jar:3.3:test
+[INFO] |  +- org.mockito:mockito-junit-jupiter:jar:5.20.0:test
+[INFO] |  +- org.skyscreamer:jsonassert:jar:1.5.3:test
+[INFO] |  |  \- com.vaadin.external.google:android-json:jar:0.0.20131108.vaadin1:test
+[INFO] |  +- org.springframework:spring-core:jar:7.0.5:test
+[INFO] |  |  +- commons-logging:commons-logging:jar:1.3.5:test
+[INFO] |  |  \- org.jspecify:jspecify:jar:1.0.0:test
+[INFO] |  +- org.springframework:spring-test:jar:7.0.5:test
+[INFO] |  \- org.xmlunit:xmlunit-core:jar:2.10.4:test
+[INFO] +- org.springframework.boot:spring-boot-starter-webmvc-test:jar:4.0.3:test
+[INFO] |  +- org.springframework.boot:spring-boot-starter-jackson-test:jar:4.0.3:test
+[INFO] |  |  \- org.springframework.boot:spring-boot-starter-jackson:jar:4.0.3:test
+[INFO] |  |     \- org.springframework.boot:spring-boot-jackson:jar:4.0.3:test
+[INFO] |  |        \- tools.jackson.core:jackson-databind:jar:3.0.4:test
+[INFO] |  |           \- tools.jackson.core:jackson-core:jar:3.0.4:test
+[INFO] |  +- org.springframework.boot:spring-boot-starter-webmvc:jar:4.0.3:test
+[INFO] |  |  +- org.springframework.boot:spring-boot-starter-tomcat:jar:4.0.3:test
+[INFO] |  |  |  +- org.springframework.boot:spring-boot-starter-tomcat-runtime:jar:4.0.3:test
+[INFO] |  |  |  |  +- org.apache.tomcat.embed:tomcat-embed-core:jar:11.0.18:test
+[INFO] |  |  |  |  +- org.apache.tomcat.embed:tomcat-embed-el:jar:11.0.18:test
+[INFO] |  |  |  |  \- org.apache.tomcat.embed:tomcat-embed-websocket:jar:11.0.18:test
+[INFO] |  |  |  \- org.springframework.boot:spring-boot-tomcat:jar:4.0.3:test
+[INFO] |  |  +- org.springframework.boot:spring-boot-http-converter:jar:4.0.3:test
+[INFO] |  |  \- org.springframework.boot:spring-boot-webmvc:jar:4.0.3:test
+[INFO] |  |     +- org.springframework.boot:spring-boot-servlet:jar:4.0.3:test
+[INFO] |  |     \- org.springframework:spring-webmvc:jar:7.0.5:test
+[INFO] |  +- org.springframework.boot:spring-boot-webmvc-test:jar:4.0.3:test
+[INFO] |  |  \- org.springframework.boot:spring-boot-web-server:jar:4.0.3:test
+[INFO] |  \- org.springframework.boot:spring-boot-resttestclient:jar:4.0.3:test
+[INFO] |     \- org.springframework:spring-web:jar:7.0.5:test
+[INFO] \- org.springframework.boot:spring-boot-starter-security-test:jar:4.0.3:test
+[INFO]    \- org.springframework.boot:spring-boot-security-test:jar:4.0.3:test
+[INFO]       \- org.springframework.security:spring-security-test:jar:7.0.3:test
+[INFO]          \- org.springframework.security:spring-security-core:jar:7.0.3:test
+[INFO]             \- org.springframework.security:spring-security-crypto:jar:7.0.3:test
+[INFO] ------------------------------------------------------------------------
+[INFO] Reactor Summary for bookshop parent 1.0.0-SNAPSHOT:
+[INFO] 
+[INFO] bookshop parent .................................... SUCCESS [  0.508 s]
+[INFO] bookshop ........................................... SUCCESS [  0.511 s]
+[INFO] bookshop-integration-tests ......................... SUCCESS [  0.045 s]
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  1.664 s
+[INFO] Finished at: 2026-04-27T12:11:13+02:00
+[INFO] ------------------------------------------------------------------------
