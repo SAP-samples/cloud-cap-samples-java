@@ -3,6 +3,7 @@ package my.bookshop;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
+import org.springframework.boot.webtestclient.autoconfigure.AutoConfigureWebTestClient;
 import org.springframework.test.context.ActiveProfiles;
 
 /**
@@ -12,6 +13,7 @@ import org.springframework.test.context.ActiveProfiles;
  */
 @ActiveProfiles("default")
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
+@AutoConfigureWebTestClient
 class AdminServiceAddress_default_ITest extends AdminServiceAddressITestBase {
 
   @Test
