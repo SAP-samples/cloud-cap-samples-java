@@ -4,7 +4,7 @@
     "@sap/cds": "^9.9.1",
     "@sap/cds-mtxs": "^3",
     "@sap/xssec": "^4.13.0",
-    "express": "^4"
+    "express": "^4.22.2"
   },
   "devDependencies": {
     "@cap-js/sqlite": "^2.4.0"
