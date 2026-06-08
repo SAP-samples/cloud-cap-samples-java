@@ -48,7 +48,7 @@ const bookshop = new Vue({
       bookshop.fetchReviews(v && "?$search=" + v),
 
     async fetchBooks(etc = "") {
-      const { data } = await GET(`/Books?$expand=author,genre,currency${etc}`);
+      const { data } = await GET(`/Books?$expand=author,genre($select=ID,name),currency${etc}`);
       bookshop.books = data.value;
     },
 
