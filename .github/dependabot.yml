@@ -15,6 +15,13 @@ updates:
       all-maven-dependencies:
         patterns: 
         - "*"
+    ignore:
+      - dependency-name: "com.sap.cloud.security:*"
+        versions:
+          - ">=4"
+      - dependency-name: "org.springframework.boot:*"
+        versions:
+          - ">=4"
   - package-ecosystem: "npm"
     directories: 
     - "/"
