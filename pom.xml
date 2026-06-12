@@ -5,7 +5,7 @@
   <parent>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-parent</artifactId>
-    <version>4.0.3</version>
+    <version>4.1.0</version>
     <relativePath/>
     <!-- lookup parent from repository -->
   </parent>
@@ -28,7 +28,7 @@
 
     <!-- DEPENDENCIES VERSION -->
     <jdk.version>25</jdk.version>
-    <cds.services.version>5.0.0-SNAPSHOT</cds.services.version>
+    <cds.services.version>5.0.0-m2624</cds.services.version>
     <cloud.sdk.version>5.30.0</cloud.sdk.version>
     <xsuaa.version>4.0.0</xsuaa.version>
     <cf-java-logging-support.version>4.2.0</cf-java-logging-support.version>
