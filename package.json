@@ -9,5 +9,10 @@
 	},
 	"workspaces": [
 		"mtx/sidecar"
-	]
+	],
+	"cds": {
+		"cdsc": {
+			"draftUserDescription": true
+		}
+	}
 }
