@@ -169,7 +169,7 @@
         <artifactId>native-maven-plugin</artifactId>
         <configuration>
           <metadataRepository>
-            <version>0.3.14</version>
+            <version>0.3.33</version>
           </metadataRepository>
         </configuration>
       </plugin>
