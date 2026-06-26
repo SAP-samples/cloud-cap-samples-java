@@ -5,7 +5,7 @@
 	"devDependencies": {
 		"@sap/cds-dk": "9.9.2",
 		"@sap/cds-mtxs": "^3",
-		"@sap/cds-compiler": "^6.9.0"
+		"@sap/cds-compiler": "^6.9.3"
 	},
 	"workspaces": [
 		"mtx/sidecar"
