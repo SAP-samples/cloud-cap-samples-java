@@ -1,12 +1,7 @@
 package my.bookshop;
 
 import static cds.gen.catalogservice.CatalogService_.REVIEWS;
-import static org.hamcrest.CoreMatchers.containsString;
-import static org.hamcrest.CoreMatchers.not;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import cds.gen.catalogservice.Reviews;
 import com.sap.cds.ql.Delete;
@@ -14,14 +9,14 @@ import com.sap.cds.services.persistence.PersistenceService;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.resttestclient.autoconfigure.AutoConfigureRestTestClient;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
-import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.client.RestTestClient;
 
 @SpringBootTest
-@AutoConfigureMockMvc
+@AutoConfigureRestTestClient
 class CatalogServiceITest {
 
   private static final String booksURI = "/api/browse/Books";
@@ -32,7 +27,7 @@ class CatalogServiceITest {
   private static final String USER_USER_STRING = "user";
   private static final String ADMIN_USER_STRING = "admin";
 
-  @Autowired private MockMvc mockMvc;
+  @Autowired private RestTestClient client;
 
   @Autowired private PersistenceService db;
 
@@ -42,47 +37,76 @@ class CatalogServiceITest {
   }
 
   @Test
-  void discountApplied() throws Exception {
-    mockMvc
-        .perform(get(booksURI + "?$filter=stock gt 200&top=1"))
-        .andExpect(status().isOk())
-        .andExpect(jsonPath("$.value[0].title").value(containsString("11% discount")));
+  void discountApplied() {
+    client
+        .get()
+        .uri(booksURI + "?$filter=stock gt 200&top=1")
+        .exchange()
+        .expectStatus()
+        .isOk()
+        .expectBody()
+        .jsonPath("$.value[0].title")
+        .value(String.class, title -> assertThat(title).contains("11% discount"));
   }
 
   @Test
-  void discountNotApplied() throws Exception {
-    mockMvc
-        .perform(get(booksURI + "?$filter=stock lt 100&top=1"))
-        .andExpect(status().isOk())
-        .andExpect(jsonPath("$.value[0].title").value(not(containsString("11% discount"))));
+  void discountNotApplied() {
+    client
+        .get()
+        .uri(booksURI + "?$filter=stock lt 100&top=1")
+        .exchange()
+        .expectStatus()
+        .isOk()
+        .expectBody()
+        .jsonPath("$.value[0].title")
+        .value(String.class, title -> assertThat(title).doesNotContain("11% discount"));
   }
 
   @Test
-  void createReviewNotAuthenticated() throws Exception {
+  void createReviewNotAuthenticated() {
     String payload = createTestReview().toJson();
-    mockMvc
-        .perform(post(addReviewURI).contentType(MediaType.APPLICATION_JSON).content(payload))
-        .andExpect(status().isUnauthorized());
+    client
+        .post()
+        .uri(addReviewURI)
+        .contentType(MediaType.APPLICATION_JSON)
+        .body(payload)
+        .exchange()
+        .expectStatus()
+        .isUnauthorized();
   }
 
   @Test
   @WithMockUser(USER_USER_STRING)
-  void createReviewByUser() throws Exception {
+  void createReviewByUser() {
     String payload = createTestReview().toJson();
-    mockMvc
-        .perform(post(addReviewURI).contentType(MediaType.APPLICATION_JSON).content(payload))
-        .andExpect(status().isOk())
-        .andExpect(jsonPath("$.createdBy").value(USER_USER_STRING));
+    client
+        .post()
+        .uri(addReviewURI)
+        .contentType(MediaType.APPLICATION_JSON)
+        .body(payload)
+        .exchange()
+        .expectStatus()
+        .isOk()
+        .expectBody()
+        .jsonPath("$.createdBy")
+        .isEqualTo(USER_USER_STRING);
   }
 
   @Test
   @WithMockUser(ADMIN_USER_STRING)
-  void createReviewByAdmin() throws Exception {
+  void createReviewByAdmin() {
     String payload = createTestReview().toJson();
-    mockMvc
-        .perform(post(addReviewURI).contentType(MediaType.APPLICATION_JSON).content(payload))
-        .andExpect(status().isOk())
-        .andExpect(jsonPath("$.createdBy").value(ADMIN_USER_STRING));
+    client
+        .post()
+        .uri(addReviewURI)
+        .contentType(MediaType.APPLICATION_JSON)
+        .body(payload)
+        .exchange()
+        .expectStatus()
+        .isOk()
+        .expectBody()
+        .jsonPath("$.createdBy")
+        .isEqualTo(ADMIN_USER_STRING);
   }
 
   private Reviews createTestReview() {
