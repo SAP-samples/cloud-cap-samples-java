@@ -17,11 +17,21 @@ cds:
         password: admin
         roles:
         - admin
+        additional:
+            nickname: Chief Books Administrator
         attributes:
           businessPartner:
           - "10401010"
+      minad:
+        password: minad
+        roles:
+        - admin
+        additional:
+            nickname: Controller of Books
       user:
         password: user
+        additional:
+            nickname: Some user
 server.servlet.encoding:
   charset: UTF-8
   force: true
