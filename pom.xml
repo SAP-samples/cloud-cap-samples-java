@@ -27,8 +27,8 @@
 		<cds-feature-event-hub.version>4.1.0</cds-feature-event-hub.version>
 		<cloud.sdk.version>5.31.0</cloud.sdk.version>
 		<xsuaa.version>4.0.7</xsuaa.version>
-		<cf-java-logging-support.version>4.1.0</cf-java-logging-support.version>
-		<cds-feature-attachments.version>1.3.3</cds-feature-attachments.version>
+		<cf-java-logging-support.version>4.2.0</cf-java-logging-support.version>
+		<cds-feature-attachments.version>1.5.0</cds-feature-attachments.version>
 	</properties>
 
 	<modules>
