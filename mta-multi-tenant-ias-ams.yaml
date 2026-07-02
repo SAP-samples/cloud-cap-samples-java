@@ -23,7 +23,7 @@ modules:
       SPRING_PROFILES_ACTIVE: cloud,sandbox
       CDS_MULTITENANCY_APPUI_TENANTSEPARATOR: "-"
       JBP_CONFIG_COMPONENTS: "jres: ['com.sap.xs.java.buildpack.jre.SAPMachineJRE']"
-      JBP_CONFIG_SAP_MACHINE_JRE: '{ version: 21.+ }'
+      JBP_CONFIG_SAP_MACHINE_JRE: '{ version: 25.+ }'
       AMS_DCL_ROOT: "/BOOT-INF/classes/ams/"
     build-parameters:
       builder: custom
@@ -133,7 +133,6 @@ resources:
       config:
         authorization:
           enabled: true
-          value_help_url: "https://vhp-srv-develop.cert.cfapps.sap.hana.ondemand.com/odata/v4/ExampleValueHelpService/"
         oauth2-configuration:
           redirect-uris: [
             "https://*.cfapps.sap.hana.ondemand.com/**",
