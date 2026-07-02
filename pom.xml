@@ -26,7 +26,7 @@
 		<cds.services.version>5.0.0</cds.services.version>
 		<cloud.sdk.version>5.31.0</cloud.sdk.version>
 		<xsuaa.version>4.0.7</xsuaa.version>
-		<cf-java-logging-support.version>4.1.0</cf-java-logging-support.version>
+		<cf-java-logging-support.version>4.2.0</cf-java-logging-support.version>
 		<ams.client.version>1.7.0</ams.client.version>
 	</properties>
 
