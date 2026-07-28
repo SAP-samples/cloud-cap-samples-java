@@ -23,9 +23,9 @@ public class UserDescriptionHandler implements EventHandler {
     CdsDataProcessor.Filter filter =
         (path, element, type) -> "InProcessByUserDescription".equals(element.getName());
     CdsDataProcessor.Generator generator = (path, element, isNull) -> description();
-    CdsDataProcessor dataProcessor = CdsDataProcessor.create().addGenerator(filter, generator);
-
-    dataProcessor.process(entries, context.getTarget());
+    CdsDataProcessor.create()
+        .addGenerator(filter, generator)
+        .process(entries, context.getTarget());
   }
 
   private String description() {

@@ -32,8 +32,6 @@ cds:
             family_name: Maier
       user:
         password: user
-        additional:
-            nickname: Some user
 server.servlet.encoding:
   charset: UTF-8
   force: true
