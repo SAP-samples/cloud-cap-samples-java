@@ -18,7 +18,8 @@ cds:
         roles:
         - admin
         additional:
-            nickname: Chief Books Administrator
+            given_name: Paul
+            family_name: Müller 
         attributes:
           businessPartner:
           - "10401010"
@@ -27,7 +28,8 @@ cds:
         roles:
         - admin
         additional:
-            nickname: Controller of Books
+            given_name: Emma
+            family_name: Maier
       user:
         password: user
         additional:
