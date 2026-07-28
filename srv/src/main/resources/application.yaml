@@ -30,6 +30,9 @@ cds:
         additional:
             given_name: Emma
             family_name: Maier
+        attributes:
+          businessPartner:
+          - "1000020"
       user:
         password: user
 server.servlet.encoding:
