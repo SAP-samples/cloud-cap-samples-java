@@ -21,9 +21,9 @@ import com.sap.cds.services.handler.annotations.Before;
 import com.sap.cds.services.handler.annotations.ServiceName;
 import com.sap.cds.services.persistence.PersistenceService;
 import java.util.Arrays;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Stream;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 
 /** A custom handler that creates AuditLog messages. */
@@ -57,7 +57,7 @@ class AdminServiceAuditHandler implements EventHandler {
           Action action = null;
           Optional<Orders> oldOrders = readOldOrders(order.getId());
           if (oldOrders.isPresent()) {
-            if (!StringUtils.equals(order.getCurrencyCode(), oldOrders.get().getCurrencyCode())) {
+            if (!Objects.equals(order.getCurrencyCode(), oldOrders.get().getCurrencyCode())) {
               cfgChange = createConfigChange(order, oldOrders.get());
               action = Action.UPDATE;
             }
