@@ -1,125 +1,165 @@
 package my.bookshop;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
 import java.net.URI;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.resttestclient.autoconfigure.AutoConfigureRestTestClient;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
 import org.springframework.security.test.context.support.WithMockUser;
-import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.client.RestTestClient;
 import org.springframework.web.util.UriComponentsBuilder;
 
 @SpringBootTest
-@AutoConfigureMockMvc
+@AutoConfigureRestTestClient
 class GenreHierarchyTest {
 
-  @Autowired private MockMvc client;
+  @Autowired private RestTestClient client;
 
   private static final String genresURI = "/api/browse/GenreHierarchy";
 
   @Test
   @WithMockUser(username = "admin")
-  void getAll() throws Exception {
-    client.perform(get(genresURI)).andExpect(status().isOk());
+  void getAll() {
+    client.get().uri(genresURI).exchange().expectStatus().isOk();
   }
 
   @Test
   @WithMockUser(username = "admin")
-  void countAll() throws Exception {
+  void countAll() {
     client
-        .perform(get(genresURI + "/$count"))
-        .andExpect(status().isOk())
-        .andExpect(jsonPath("$").value(269));
+        .get()
+        .uri(genresURI + "/$count")
+        .exchange()
+        .expectStatus()
+        .isOk()
+        .expectBody()
+        .jsonPath("$")
+        .isEqualTo(269);
   }
 
   @Test
   @WithMockUser(username = "admin")
-  void startOneLevel() throws Exception {
+  void startOneLevel() {
     client
-        .perform(
-            get(
-                genresURI
-                    + "?$select=DrillState,ID,name,DistanceFromRoot"
-                    + "&$apply=orderby(name)/"
-                    + "com.sap.vocabularies.Hierarchy.v1.TopLevels(HierarchyNodes=$root/GenreHierarchy,HierarchyQualifier='GenreHierarchyHierarchy',NodeProperty='ID',Levels=1)"
-                    + "&$count=true"))
-        .andExpect(status().isOk())
-        .andExpect(jsonPath("$.value[0].ID").value("8bbf14c6-b378-4e35-9b4f-05a9c8878001"))
-        .andExpect(jsonPath("$.value[0].name").value("Fiction"))
-        .andExpect(jsonPath("$.value[0].DistanceFromRoot").value(0))
-        .andExpect(jsonPath("$.value[0].DrillState").value("collapsed"))
-        .andExpect(jsonPath("$.value[1].ID").value("8bbf14c6-b378-4e35-9b4f-05a9c8878002"))
-        .andExpect(jsonPath("$.value[1].name").value("Non-Fiction"))
-        .andExpect(jsonPath("$.value[1].DistanceFromRoot").value(0))
-        .andExpect(jsonPath("$.value[1].DrillState").value("collapsed"))
-        .andExpect(jsonPath("$.value[2]").doesNotExist());
+        .get()
+        .uri(
+            genresURI
+                + "?$select=DrillState,ID,name,DistanceFromRoot"
+                + "&$apply=orderby(name)/"
+                + "com.sap.vocabularies.Hierarchy.v1.TopLevels(HierarchyNodes=$root/GenreHierarchy,HierarchyQualifier='GenreHierarchyHierarchy',NodeProperty='ID',Levels=1)"
+                + "&$count=true")
+        .exchange()
+        .expectStatus()
+        .isOk()
+        .expectBody()
+        .jsonPath("$.value[0].ID")
+        .isEqualTo("8bbf14c6-b378-4e35-9b4f-05a9c8878001")
+        .jsonPath("$.value[0].name")
+        .isEqualTo("Fiction")
+        .jsonPath("$.value[0].DistanceFromRoot")
+        .isEqualTo(0)
+        .jsonPath("$.value[0].DrillState")
+        .isEqualTo("collapsed")
+        .jsonPath("$.value[1].ID")
+        .isEqualTo("8bbf14c6-b378-4e35-9b4f-05a9c8878002")
+        .jsonPath("$.value[1].name")
+        .isEqualTo("Non-Fiction")
+        .jsonPath("$.value[1].DistanceFromRoot")
+        .isEqualTo(0)
+        .jsonPath("$.value[1].DrillState")
+        .isEqualTo("collapsed")
+        .jsonPath("$.value[2]")
+        .doesNotExist();
   }
 
   @Test
   @WithMockUser(username = "admin")
-  void startTwoLevels() throws Exception {
+  void startTwoLevels() {
     client
-        .perform(
-            get(
-                genresURI
-                    + "?$select=DrillState,ID,name,DistanceFromRoot"
-                    + "&$apply=orderby(name)/"
-                    + "com.sap.vocabularies.Hierarchy.v1.TopLevels(HierarchyNodes=$root/GenreHierarchy,HierarchyQualifier='GenreHierarchyHierarchy',NodeProperty='ID',Levels=2)"
-                    + "&$count=true"))
-        .andExpect(status().isOk())
-        .andExpect(jsonPath("$.value[0].name").value("Fiction"))
-        .andExpect(jsonPath("$.value[0].DrillState").value("expanded"))
-        .andExpect(jsonPath("$.value[0].DistanceFromRoot").value(0))
-        .andExpect(jsonPath("$.value[1].name").value("Action & Adventure"))
-        .andExpect(jsonPath("$.value[1].DrillState").value("leaf"))
-        .andExpect(jsonPath("$.value[1].DistanceFromRoot").value(1))
-        .andExpect(jsonPath("$.value[182].name").value("True Crime"))
-        .andExpect(jsonPath("$.value[182].DrillState").value("leaf"))
-        .andExpect(jsonPath("$.value[182].DistanceFromRoot").value(1))
-        .andExpect(jsonPath("$.value[183]").doesNotExist());
+        .get()
+        .uri(
+            genresURI
+                + "?$select=DrillState,ID,name,DistanceFromRoot"
+                + "&$apply=orderby(name)/"
+                + "com.sap.vocabularies.Hierarchy.v1.TopLevels(HierarchyNodes=$root/GenreHierarchy,HierarchyQualifier='GenreHierarchyHierarchy',NodeProperty='ID',Levels=2)"
+                + "&$count=true")
+        .exchange()
+        .expectStatus()
+        .isOk()
+        .expectBody()
+        .jsonPath("$.value[0].name")
+        .isEqualTo("Fiction")
+        .jsonPath("$.value[0].DrillState")
+        .isEqualTo("expanded")
+        .jsonPath("$.value[0].DistanceFromRoot")
+        .isEqualTo(0)
+        .jsonPath("$.value[1].name")
+        .isEqualTo("Action & Adventure")
+        .jsonPath("$.value[1].DrillState")
+        .isEqualTo("leaf")
+        .jsonPath("$.value[1].DistanceFromRoot")
+        .isEqualTo(1)
+        .jsonPath("$.value[182].name")
+        .isEqualTo("True Crime")
+        .jsonPath("$.value[182].DrillState")
+        .isEqualTo("leaf")
+        .jsonPath("$.value[182].DistanceFromRoot")
+        .isEqualTo(1)
+        .jsonPath("$.value[183]")
+        .doesNotExist();
   }
 
   @Test
   @WithMockUser(username = "admin")
-  void expandNonFiction() throws Exception {
+  void expandNonFiction() {
     client
-        .perform(
-            get(
-                genresURI
-                    + "?$select=DrillState,ID,name"
-                    + "&$apply=descendants($root/GenreHierarchy,GenreHierarchyHierarchy,ID,filter(ID eq 8bbf14c6-b378-4e35-9b4f-05a9c8878021),1)"
-                    + "/orderby(ID)"))
-        .andExpect(status().isOk())
-        .andExpect(jsonPath("$.value[0].name").value("Detective Fiction"))
-        .andExpect(jsonPath("$.value[0].DrillState").value("leaf"))
-        .andExpect(jsonPath("$.value[1]").doesNotExist());
+        .get()
+        .uri(
+            genresURI
+                + "?$select=DrillState,ID,name"
+                + "&$apply=descendants($root/GenreHierarchy,GenreHierarchyHierarchy,ID,filter(ID eq 8bbf14c6-b378-4e35-9b4f-05a9c8878021),1)"
+                + "/orderby(ID)")
+        .exchange()
+        .expectStatus()
+        .isOk()
+        .expectBody()
+        .jsonPath("$.value[0].name")
+        .isEqualTo("Detective Fiction")
+        .jsonPath("$.value[0].DrillState")
+        .isEqualTo("leaf")
+        .jsonPath("$.value[1]")
+        .doesNotExist();
   }
 
   @Test
   @WithMockUser(username = "admin")
-  void collapseAll() throws Exception {
+  void collapseAll() {
     client
-        .perform(
-            get(
-                genresURI
-                    + "?$select=DrillState,ID,name"
-                    + "&$apply=orderby(name)/com.sap.vocabularies.Hierarchy.v1.TopLevels(HierarchyNodes=$root/GenreHierarchy,HierarchyQualifier='GenreHierarchyHierarchy',NodeProperty='ID',Levels=1)"
-                    + "&$count=true&$skip=0&$top=238"))
-        .andExpect(status().isOk())
-        .andExpect(jsonPath("$.value[0].name").value("Fiction"))
-        .andExpect(jsonPath("$.value[0].DrillState").value("collapsed"))
-        .andExpect(jsonPath("$.value[1].name").value("Non-Fiction"))
-        .andExpect(jsonPath("$.value[1].DrillState").value("collapsed"))
-        .andExpect(jsonPath("$.value[2]").doesNotExist());
+        .get()
+        .uri(
+            genresURI
+                + "?$select=DrillState,ID,name"
+                + "&$apply=orderby(name)/com.sap.vocabularies.Hierarchy.v1.TopLevels(HierarchyNodes=$root/GenreHierarchy,HierarchyQualifier='GenreHierarchyHierarchy',NodeProperty='ID',Levels=1)"
+                + "&$count=true&$skip=0&$top=238")
+        .exchange()
+        .expectStatus()
+        .isOk()
+        .expectBody()
+        .jsonPath("$.value[0].name")
+        .isEqualTo("Fiction")
+        .jsonPath("$.value[0].DrillState")
+        .isEqualTo("collapsed")
+        .jsonPath("$.value[1].name")
+        .isEqualTo("Non-Fiction")
+        .jsonPath("$.value[1].DrillState")
+        .isEqualTo("collapsed")
+        .jsonPath("$.value[2]")
+        .doesNotExist();
   }
 
   @Test
   @WithMockUser(username = "admin")
-  void expandAllTop100() throws Exception {
+  void expandAllTop100() {
     String url =
         genresURI
             + "?$select=DistanceFromRoot,DrillState,ID,LimitedDescendantCount,name"
@@ -127,67 +167,103 @@ class GenreHierarchyTest {
             + "&$count=true&$skip=0&$top=100";
 
     client
-        .perform(get(url))
-        .andExpect(status().isOk())
-        .andExpect(jsonPath("$.value[0].name").value("Fiction"))
-        .andExpect(jsonPath("$.value[0].DrillState").value("expanded"))
-        .andExpect(jsonPath("$.value[0].DistanceFromRoot").value(0))
-        .andExpect(jsonPath("$.value[99].name").value("New Weird"))
-        .andExpect(jsonPath("$.value[99].DrillState").value("leaf"))
-        .andExpect(jsonPath("$.value[100]").doesNotExist());
+        .get()
+        .uri(url)
+        .exchange()
+        .expectStatus()
+        .isOk()
+        .expectBody()
+        .jsonPath("$.value[0].name")
+        .isEqualTo("Fiction")
+        .jsonPath("$.value[0].DrillState")
+        .isEqualTo("expanded")
+        .jsonPath("$.value[0].DistanceFromRoot")
+        .isEqualTo(0)
+        .jsonPath("$.value[99].name")
+        .isEqualTo("New Weird")
+        .jsonPath("$.value[99].DrillState")
+        .isEqualTo("leaf")
+        .jsonPath("$.value[100]")
+        .doesNotExist();
   }
 
   @Test
   @WithMockUser(username = "admin")
-  void search() throws Exception {
+  void search() {
     client
-        .perform(
-            get(
-                genresURI
-                    + "?$select=DistanceFromRoot,DrillState,ID,LimitedDescendantCount,name"
-                    + "&$apply=ancestors($root/GenreHierarchy,GenreHierarchyHierarchy,ID,search(\"true\"),keep start)"
-                    + "/orderby(name)"
-                    + "/com.sap.vocabularies.Hierarchy.v1.TopLevels(HierarchyNodes=$root/GenreHierarchy,HierarchyQualifier='GenreHierarchyHierarchy',NodeProperty='ID')"
-                    + "&$count=true"))
-        .andExpect(status().isOk())
-        .andExpect(jsonPath("$.value[0].name").value("Fiction"))
-        .andExpect(jsonPath("$.value[0].DrillState").value("expanded"))
-        .andExpect(jsonPath("$.value[0].DistanceFromRoot").value(0))
-        .andExpect(jsonPath("$.value[1].name").value("Adventure"))
-        .andExpect(jsonPath("$.value[1].DrillState").value("expanded"))
-        .andExpect(jsonPath("$.value[1].DistanceFromRoot").value(1))
-        .andExpect(jsonPath("$.value[2].name").value("True Adventure"))
-        .andExpect(jsonPath("$.value[2].DrillState").value("leaf"))
-        .andExpect(jsonPath("$.value[2].DistanceFromRoot").value(2))
-        .andExpect(jsonPath("$.value[3].name").value("Non-Fiction"))
-        .andExpect(jsonPath("$.value[3].DrillState").value("expanded"))
-        .andExpect(jsonPath("$.value[3].DistanceFromRoot").value(0))
-        .andExpect(jsonPath("$.value[4].name").value("True Crime"))
-        .andExpect(jsonPath("$.value[4].DrillState").value("leaf"))
-        .andExpect(jsonPath("$.value[4].DistanceFromRoot").value(1))
-        .andExpect(jsonPath("$.value[5]").doesNotExist());
+        .get()
+        .uri(
+            genresURI
+                + "?$select=DistanceFromRoot,DrillState,ID,LimitedDescendantCount,name"
+                + "&$apply=ancestors($root/GenreHierarchy,GenreHierarchyHierarchy,ID,search(\"true\"),keep start)"
+                + "/orderby(name)"
+                + "/com.sap.vocabularies.Hierarchy.v1.TopLevels(HierarchyNodes=$root/GenreHierarchy,HierarchyQualifier='GenreHierarchyHierarchy',NodeProperty='ID')"
+                + "&$count=true")
+        .exchange()
+        .expectStatus()
+        .isOk()
+        .expectBody()
+        .jsonPath("$.value[0].name")
+        .isEqualTo("Fiction")
+        .jsonPath("$.value[0].DrillState")
+        .isEqualTo("expanded")
+        .jsonPath("$.value[0].DistanceFromRoot")
+        .isEqualTo(0)
+        .jsonPath("$.value[1].name")
+        .isEqualTo("Adventure")
+        .jsonPath("$.value[1].DrillState")
+        .isEqualTo("expanded")
+        .jsonPath("$.value[1].DistanceFromRoot")
+        .isEqualTo(1)
+        .jsonPath("$.value[2].name")
+        .isEqualTo("True Adventure")
+        .jsonPath("$.value[2].DrillState")
+        .isEqualTo("leaf")
+        .jsonPath("$.value[2].DistanceFromRoot")
+        .isEqualTo(2)
+        .jsonPath("$.value[3].name")
+        .isEqualTo("Non-Fiction")
+        .jsonPath("$.value[3].DrillState")
+        .isEqualTo("expanded")
+        .jsonPath("$.value[3].DistanceFromRoot")
+        .isEqualTo(0)
+        .jsonPath("$.value[4].name")
+        .isEqualTo("True Crime")
+        .jsonPath("$.value[4].DrillState")
+        .isEqualTo("leaf")
+        .jsonPath("$.value[4].DistanceFromRoot")
+        .isEqualTo(1)
+        .jsonPath("$.value[5]")
+        .doesNotExist();
   }
 
   @Test
   @WithMockUser(username = "admin")
-  void filterNotExpanded() throws Exception {
+  void filterNotExpanded() {
     client
-        .perform(
-            get(
-                genresURI
-                    + "?$select=DrillState,ID,name,DistanceFromRoot"
-                    + "&$apply=ancestors($root/GenreHierarchy,GenreHierarchyHierarchy,ID,filter(name eq 'Autobiography'),keep start)/orderby(name)"
-                    + "/com.sap.vocabularies.Hierarchy.v1.TopLevels(HierarchyNodes=$root/GenreHierarchy,HierarchyQualifier='GenreHierarchyHierarchy',NodeProperty='ID',Levels=1)"))
-        .andExpect(status().isOk())
-        .andExpect(jsonPath("$.value[0].name").value("Non-Fiction"))
-        .andExpect(jsonPath("$.value[0].DrillState").value("collapsed"))
-        .andExpect(jsonPath("$.value[0].DistanceFromRoot").value(0))
-        .andExpect(jsonPath("$.value[1]").doesNotExist());
+        .get()
+        .uri(
+            genresURI
+                + "?$select=DrillState,ID,name,DistanceFromRoot"
+                + "&$apply=ancestors($root/GenreHierarchy,GenreHierarchyHierarchy,ID,filter(name eq 'Autobiography'),keep start)/orderby(name)"
+                + "/com.sap.vocabularies.Hierarchy.v1.TopLevels(HierarchyNodes=$root/GenreHierarchy,HierarchyQualifier='GenreHierarchyHierarchy',NodeProperty='ID',Levels=1)")
+        .exchange()
+        .expectStatus()
+        .isOk()
+        .expectBody()
+        .jsonPath("$.value[0].name")
+        .isEqualTo("Non-Fiction")
+        .jsonPath("$.value[0].DrillState")
+        .isEqualTo("collapsed")
+        .jsonPath("$.value[0].DistanceFromRoot")
+        .isEqualTo(0)
+        .jsonPath("$.value[1]")
+        .doesNotExist();
   }
 
   @Test
   @WithMockUser(username = "admin")
-  void filterExpandLevels() throws Exception {
+  void filterExpandLevels() {
     String expandLevelsJson =
         """
 				[{"NodeID":"8bbf14c6-b378-4e35-9b4f-05a9c8878002","Levels":1},{"NodeID":"8bbf14c6-b378-4e35-9b4f-05a9c8878031","Levels":1}]\
@@ -202,29 +278,44 @@ class GenreHierarchyTest {
     String uriString = UriComponentsBuilder.fromUriString(unencoded).toUriString();
     URI uri = URI.create(uriString);
     client
-        .perform(get(uri))
-        .andExpect(status().isOk())
-        .andExpect(jsonPath("$.value[0].name").value("Non-Fiction"))
-        .andExpect(jsonPath("$.value[0].DrillState").value("expanded"))
-        .andExpect(jsonPath("$.value[0].DistanceFromRoot").value(0))
-        .andExpect(jsonPath("$.value[2]").doesNotExist());
+        .get()
+        .uri(uri)
+        .exchange()
+        .expectStatus()
+        .isOk()
+        .expectBody()
+        .jsonPath("$.value[0].name")
+        .isEqualTo("Non-Fiction")
+        .jsonPath("$.value[0].DrillState")
+        .isEqualTo("expanded")
+        .jsonPath("$.value[0].DistanceFromRoot")
+        .isEqualTo(0)
+        .jsonPath("$.value[2]")
+        .doesNotExist();
   }
 
   @Test
   @WithMockUser(username = "admin")
-  void startTwoLevelsOrderByDesc() throws Exception {
+  void startTwoLevelsOrderByDesc() {
     client
-        .perform(
-            get(
-                genresURI
-                    + "?$select=DrillState,ID,name,DistanceFromRoot"
-                    + "&$apply=orderby(name desc)/"
-                    + "com.sap.vocabularies.Hierarchy.v1.TopLevels(HierarchyNodes=$root/GenreHierarchy,HierarchyQualifier='GenreHierarchyHierarchy',NodeProperty='ID',Levels=2)"
-                    + "&$count=true"))
-        .andExpect(status().isOk())
-        .andExpect(jsonPath("$.value[0].name").value("Non-Fiction"))
-        .andExpect(jsonPath("$.value[1].name").value("True Crime"))
-        .andExpect(jsonPath("$.value[182].name").value("Action & Adventure"))
-        .andExpect(jsonPath("$.value[183]").doesNotExist());
+        .get()
+        .uri(
+            genresURI
+                + "?$select=DrillState,ID,name,DistanceFromRoot"
+                + "&$apply=orderby(name desc)/"
+                + "com.sap.vocabularies.Hierarchy.v1.TopLevels(HierarchyNodes=$root/GenreHierarchy,HierarchyQualifier='GenreHierarchyHierarchy',NodeProperty='ID',Levels=2)"
+                + "&$count=true")
+        .exchange()
+        .expectStatus()
+        .isOk()
+        .expectBody()
+        .jsonPath("$.value[0].name")
+        .isEqualTo("Non-Fiction")
+        .jsonPath("$.value[1].name")
+        .isEqualTo("True Crime")
+        .jsonPath("$.value[182].name")
+        .isEqualTo("Action & Adventure")
+        .jsonPath("$.value[183]")
+        .doesNotExist();
   }
 }
