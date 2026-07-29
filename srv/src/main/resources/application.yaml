@@ -6,6 +6,7 @@ spring:
   jmx:
     enabled: true
 cds:
+  telemetry.devOutput.enabled: false
   errors:
     prefer-service-exception: true
   odata-v4:
