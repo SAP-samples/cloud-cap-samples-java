@@ -35,3 +35,5 @@ service CatalogService @(requires: 'any') {
         }
     ];
 }
+
+annotate CatalogService with @mcp;
