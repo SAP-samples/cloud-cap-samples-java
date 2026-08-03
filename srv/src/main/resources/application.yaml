@@ -23,8 +23,8 @@ cds:
         attributes:
           businessPartner:
           - "10401010"
-      minad:
-        password: minad
+      admin2:
+        password: admin2
         roles:
         - admin
         additional:
