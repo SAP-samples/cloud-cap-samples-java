@@ -6,6 +6,7 @@ using {my.bookshop as my} from '../db/index';
  */
 @path : 'browse'
 @odata.apply.transformations
+@description: '@description: CatalogService exposes the Books, Authors, Reviews, and GenreHierarchy entities. It also defines actions for adding reviews and submitting orders.'
 service CatalogService @(requires: 'any') {
     /**
      * Doc comment: Books entity projection with addReview action
