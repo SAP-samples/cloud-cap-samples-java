@@ -6,6 +6,7 @@ spring:
   jmx:
     enabled: true
 cds:
+  model.includeDocumentation: true
   mcp.autoWired.enabled: true
   telemetry.devOutput.enabled: false
   errors:
