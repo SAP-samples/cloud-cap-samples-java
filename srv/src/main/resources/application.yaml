@@ -19,9 +19,22 @@ cds:
         password: admin
         roles:
         - admin
+        additional:
+            given_name: Paul
+            family_name: Müller 
         attributes:
           businessPartner:
           - "10401010"
+      admin2:
+        password: admin2
+        roles:
+        - admin
+        additional:
+            given_name: Emma
+            family_name: Maier
+        attributes:
+          businessPartner:
+          - "1000020"
       user:
         password: user
 server.servlet.encoding:
