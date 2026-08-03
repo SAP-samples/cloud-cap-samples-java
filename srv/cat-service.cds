@@ -3,6 +3,10 @@ using {my.bookshop as my} from '../db/index';
 @path : 'browse'
 @odata.apply.transformations
 service CatalogService @(requires: 'any') {
+    /**
+     * Doc comment: Books entity projection with addReview action
+     */
+    @description: '@description: Books entity projection with addReview action'
     @readonly
     entity Books       as projection on my.Books excluding {
         createdBy,
