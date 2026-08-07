@@ -1,6 +1,6 @@
 {
   "dependencies": {
-    "@cap-js/hana": "^3",
+    "@cap-js/hana": "^3.0.2",
     "@sap/cds": "^10.0.5",
     "@sap/cds-mtxs": "^4",
     "@sap/xssec": "^4",
