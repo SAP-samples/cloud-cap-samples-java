@@ -46,3 +46,5 @@ service CatalogService @(requires: 'any') {
 }
 
 annotate CatalogService with @mcp;
+
+annotate CatalogService with @agent;
