@@ -19,7 +19,7 @@
 		<cds.services.version>5.1.1</cds.services.version>
 		<spring.boot.version>4.1.1</spring.boot.version>
 		<cf-java-logging-support.version>4.2.0</cf-java-logging-support.version>
-		<testcontainers.version>1.19.0</testcontainers.version>
+		<testcontainers.version>1.21.4</testcontainers.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
 
