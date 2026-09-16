@@ -53,13 +53,8 @@
     	<dependency>
       		<groupId>org.springframework.boot</groupId>
       		<artifactId>spring-boot-starter-liquibase</artifactId>
-    	</dependency>
-
-		<dependency>
-			<groupId>org.liquibase</groupId>
-			<artifactId>liquibase-core</artifactId>
 			<scope>runtime</scope>
-		</dependency>
+    	</dependency>
 
 		<dependency>
 			<groupId>com.sap.hcp.cf.logging</groupId>
