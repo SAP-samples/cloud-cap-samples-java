@@ -59,10 +59,10 @@ User Interface related Features:
 
 CDS Maven Plugin Features:
 
-- Install [Node.js](srv/pom.xml#L161) in the default version.
-- Execute arbitrary [npm](srv/pom.xml#L161) commands.
-- [Generate](srv/pom.xml#L193) Java POJOs for type-safe access to the CDS model.
-- [Clean](srv/pom.xml#L154) project from artifacts of the previous build.
+- Install [Node.js](srv/pom.xml#L147) in the default version.
+- Execute arbitrary [npm](srv/pom.xml#L164) commands.
+- [Generate](srv/pom.xml#L179) Java POJOs for type-safe access to the CDS model.
+- [Clean](srv/pom.xml#L140) project from artifacts of the previous build.
 
 # Getting Started
 
