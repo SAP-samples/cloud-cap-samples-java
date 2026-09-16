@@ -11,15 +11,16 @@ import org.testcontainers.utility.DockerImageName;
 
 @Configuration
 public class DatabaseConfiguration {
-	private static final String POSTGRES = "postgres";
-	private static final Logger postgresLogger = LoggerFactory.getLogger(POSTGRES);
+  private static final String POSTGRES = "postgres";
+  private static final Logger postgresLogger = LoggerFactory.getLogger(POSTGRES);
 
-	@Bean
-	@ServiceConnection
-	PostgreSQLContainer<?> postgresContainer(@Value("${my.bookshop.postgres-image}") String imageName) {
-		DockerImageName image = DockerImageName.parse(imageName).asCompatibleSubstituteFor(POSTGRES);
-		return new PostgreSQLContainer<>(image)
-			.withLogConsumer(outputFrame -> postgresLogger.info(outputFrame.getUtf8StringWithoutLineEnding()));
-	}
-
+  @Bean
+  @ServiceConnection
+  PostgreSQLContainer<?> postgresContainer(
+      @Value("${my.bookshop.postgres-image}") String imageName) {
+    DockerImageName image = DockerImageName.parse(imageName).asCompatibleSubstituteFor(POSTGRES);
+    return new PostgreSQLContainer<>(image)
+        .withLogConsumer(
+            outputFrame -> postgresLogger.info(outputFrame.getUtf8StringWithoutLineEnding()));
+  }
 }
