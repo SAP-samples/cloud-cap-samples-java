@@ -16,10 +16,10 @@
 
 		<!-- DEPENDENCIES VERSION -->
 		<jdk.version>25</jdk.version>
-		<cds.services.version>4.9.0</cds.services.version>
-		<spring.boot.version>3.5.14</spring.boot.version>
+		<cds.services.version>5.1.1</cds.services.version>
+		<spring.boot.version>4.1.1</spring.boot.version>
 		<cf-java-logging-support.version>4.2.0</cf-java-logging-support.version>
-
+		<testcontainers.version>1.19.0</testcontainers.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
 
@@ -66,7 +66,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
-				<version>3.15.0</version>
+				<version>3.16.0</version>
 				<configuration>
 					<release>${jdk.version}</release>
 					<encoding>UTF-8</encoding>
@@ -87,7 +87,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-surefire-plugin</artifactId>
-				<version>3.5.5</version>
+				<version>3.6.0</version>
 				<configuration>
 					<failIfNoTests>true</failIfNoTests>
 				</configuration>
@@ -97,7 +97,7 @@
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>flatten-maven-plugin</artifactId>
-				<version>1.7.3</version>
+				<version>1.8.0</version>
 				<configuration>
 					<updatePomFile>true</updatePomFile>
 					<flattenMode>resolveCiFriendliesOnly</flattenMode>
@@ -124,7 +124,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-enforcer-plugin</artifactId>
-				<version>3.6.2</version>
+				<version>3.6.3</version>
 				<executions>
 					<execution>
 						<id>Project Structure Checks</id>
@@ -134,7 +134,7 @@
 						<configuration>
 							<rules>
 								<requireMavenVersion>
-									<version>3.6.3</version>
+									<version>3.9.14</version>
 								</requireMavenVersion>
 								<requireJavaVersion>
 									<version>${jdk.version}</version>
