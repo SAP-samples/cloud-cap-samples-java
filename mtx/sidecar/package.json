@@ -1,10 +1,10 @@
 {
   "dependencies": {
     "@cap-js/hana": "^3.1.2",
-    "@sap/cds": "^10.1.1",
-    "@sap/cds-mtxs": "^4",
+    "@sap/cds": "^10.2.1",
+    "@sap/cds-mtxs": "^4.2.0",
     "@sap/xssec": "^4.15.0",
-    "express": "^5.2.1"
+    "express": "^5.3.0"
   },
   "devDependencies": {
     "@cap-js/sqlite": "^3.1.2"
