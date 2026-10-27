@@ -1,7 +1,9 @@
 using {my.bookshop as my} from '../db/index';
+using from 'com.sap.cds/ai/agent-memory';
 
 @path : 'browse'
 @odata.apply.transformations
+@agent
 service CatalogService @(requires: 'any') {
     @readonly
     entity Books       as projection on my.Books excluding {
