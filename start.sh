@@ -21,11 +21,11 @@ while [[ $# -gt 0 ]]; do
   esac
 done
 
-DEBUG_ARGS=""
+DEBUG_ARGS=()
 if [[ "$DEBUG" == "true" ]]; then
   echo "Debug mode enabled, listening on port ${DEBUG_PORT}"
-  DEBUG_ARGS="-Dspring-boot.run.jvmArguments=-agentlib:jdwp=transport=dt_socket,server=y,suspend=y,address=*:${DEBUG_PORT}"
+  DEBUG_ARGS=("-Dspring-boot.run.jvmArguments=-agentlib:jdwp=transport=dt_socket,server=y,suspend=y,address=*:${DEBUG_PORT}")
 fi
 
 npx cds bind bookshop-ai --to ai-core-java
-npx cds bind --exec --profile hybrid -- mvn -f srv/pom.xml spring-boot:run -Dspring-boot.run.profiles=default "${DEBUG_ARGS}"
+npx cds bind --exec --profile hybrid -- mvn -f srv/pom.xml spring-boot:run -Dspring-boot.run.profiles=default "${DEBUG_ARGS[@]}"
