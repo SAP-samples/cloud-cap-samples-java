@@ -28,10 +28,9 @@ class RatingCalculatorTest {
     RatingTestFixture f3 = new RatingTestFixture(Stream.of(2.1, 4.0, 2.7, 3.8, 4.9), 3.5);
 
     Stream.of(f1, f2, f3)
-        .forEach(
-            f -> {
-              BigDecimal avgRating = RatingCalculator.getAvgRating(f.ratings);
-              assertEquals(f.expectedAvg, avgRating.doubleValue());
-            });
+        .forEach(f -> {
+          BigDecimal avgRating = RatingCalculator.getAvgRating(f.ratings);
+          assertEquals(f.expectedAvg, avgRating.doubleValue());
+        });
   }
 }

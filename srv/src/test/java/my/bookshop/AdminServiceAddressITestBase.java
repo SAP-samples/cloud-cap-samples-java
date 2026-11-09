@@ -108,7 +108,7 @@ public class AdminServiceAddressITestBase {
     bupa.on(
         BusinessPartnerChangedContext.CDS_NAME,
         null,
-        (context) ->
+        context ->
             context
                 .getChangeSetContext()
                 .register(

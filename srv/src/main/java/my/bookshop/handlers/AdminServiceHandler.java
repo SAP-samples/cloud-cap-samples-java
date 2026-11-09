@@ -81,83 +81,77 @@ class AdminServiceHandler implements EventHandler {
    */
   @Before(event = {CqnService.EVENT_CREATE, CqnService.EVENT_UPSERT, CqnService.EVENT_UPDATE})
   public void beforeCreateOrder(Stream<Orders> orders, EventContext context) {
-    orders.forEach(
-        order -> {
-          // reset total
-          order.setTotal(BigDecimal.valueOf(0));
-          if (order.getItems() != null) {
-            order
-                .getItems()
-                .forEach(
-                    orderItem -> {
-                      // validation of the Order creation request
-                      Integer quantity = orderItem.getQuantity();
-                      String bookId = orderItem.getBookId();
+    orders.forEach(order -> {
+      // reset total
+      order.setTotal(BigDecimal.valueOf(0));
+      if (order.getItems() != null) {
+        order
+            .getItems()
+            .forEach(orderItem -> {
+              // validation of the Order creation request
+              Integer quantity = orderItem.getQuantity();
+              String bookId = orderItem.getBookId();
 
-                      if (quantity == null || quantity <= 0 || bookId == null) {
-                        return; // follow up validations rely on these
-                      }
+              if (quantity == null || quantity <= 0 || bookId == null) {
+                return; // follow up validations rely on these
+              }
 
-                      // calculate the actual quantity difference
-                      // FIXME this should handle book changes, currently only quantity changes are
-                      // handled
-                      int diffQuantity =
-                          quantity
-                              - db.run(
-                                      Select.from(Bookshop_.ORDER_ITEMS)
-                                          .columns(i -> i.quantity())
-                                          .byId(orderItem.getId()))
-                                  .first()
-                                  .map(i -> i.getQuantity())
-                                  .orElse(0);
-
-                      // check if enough books are available
-                      var result =
-                          db.run(
-                              Select.from(BOOKS)
-                                  .columns(b -> b.ID(), b -> b.stock(), b -> b.price())
-                                  .byId(bookId));
-                      result
+              // calculate the actual quantity difference
+              // FIXME this should handle book changes, currently only quantity changes are
+              // handled
+              int diffQuantity =
+                  quantity
+                      - db.run(
+                              Select.from(Bookshop_.ORDER_ITEMS)
+                                  .columns(i -> i.quantity())
+                                  .byId(orderItem.getId()))
                           .first()
-                          .ifPresent(
-                              book -> {
-                                if (book.getStock() < diffQuantity) {
-                                  // Tip: you can have localized messages and use parameters in your
-                                  // messages
-                                  messages
-                                      .error(MessageKeys.BOOK_REQUIRE_STOCK, book.getStock())
-                                      .target(
-                                          ORDERS,
-                                          o ->
-                                              o.Items(
-                                                      i ->
-                                                          i.ID()
-                                                              .eq(orderItem.getId())
-                                                              .and(
-                                                                  i.IsActiveEntity()
-                                                                      .eq(
-                                                                          orderItem
-                                                                              .getIsActiveEntity())))
-                                                  .quantity());
-                                  return; // no need to update follow-up values with invalid
-                                  // quantity / stock
-                                }
+                          .map(i -> i.getQuantity())
+                          .orElse(0);
 
-                                // update the book with the new stock
-                                book.setStock(book.getStock() - diffQuantity);
-                                db.run(Update.entity(BOOKS).data(book));
+              // check if enough books are available
+              var result =
+                  db.run(
+                      Select.from(BOOKS)
+                          .columns(b -> b.ID(), b -> b.stock(), b -> b.price())
+                          .byId(bookId));
+              result
+                  .first()
+                  .ifPresent(book -> {
+                    if (book.getStock() < diffQuantity) {
+                      // Tip: you can have localized messages and use parameters in your
+                      // messages
+                      messages
+                          .error(MessageKeys.BOOK_REQUIRE_STOCK, book.getStock())
+                          .target(
+                              ORDERS,
+                              o ->
+                                  o.Items(i ->
+                                          i.ID()
+                                              .eq(orderItem.getId())
+                                              .and(
+                                                  i.IsActiveEntity()
+                                                      .eq(orderItem.getIsActiveEntity())))
+                                      .quantity());
+                      return; // no need to update follow-up values with invalid
+                      // quantity / stock
+                    }
 
-                                // update the amount
-                                BigDecimal updatedAmount =
-                                    book.getPrice().multiply(BigDecimal.valueOf(quantity));
-                                orderItem.setAmount(updatedAmount);
+                    // update the book with the new stock
+                    book.setStock(book.getStock() - diffQuantity);
+                    db.run(Update.entity(BOOKS).data(book));
 
-                                // update the total
-                                order.setTotal(order.getTotal().add(updatedAmount));
-                              });
-                    });
-          }
-        });
+                    // update the amount
+                    BigDecimal updatedAmount =
+                        book.getPrice().multiply(BigDecimal.valueOf(quantity));
+                    orderItem.setAmount(updatedAmount);
+
+                    // update the total
+                    order.setTotal(order.getTotal().add(updatedAmount));
+                  });
+            });
+      }
+    });
   }
 
   /*
@@ -306,28 +300,26 @@ class AdminServiceHandler implements EventHandler {
       try (BufferedReader br = new BufferedReader(new InputStreamReader(is))) {
         br.lines()
             .skip(1)
-            .forEach(
-                (line) -> {
-                  String[] p = line.split(";");
-                  Books book = Books.create();
-                  book.setId(p[0]);
-                  book.setTitle(p[1]);
-                  book.setDescr(p[2]);
-                  book.setAuthorId(p[3]);
-                  book.setStock(Integer.valueOf(p[4]).intValue());
-                  book.setPrice(BigDecimal.valueOf(Double.valueOf(p[5])));
-                  book.setCurrencyCode(p[6]);
-                  book.setGenreId(String.valueOf(p[7]));
+            .forEach(line -> {
+              String[] p = line.split(";");
+              Books book = Books.create();
+              book.setId(p[0]);
+              book.setTitle(p[1]);
+              book.setDescr(p[2]);
+              book.setAuthorId(p[3]);
+              book.setStock(Integer.valueOf(p[4]).intValue());
+              book.setPrice(BigDecimal.valueOf(Double.valueOf(p[5])));
+              book.setCurrencyCode(p[6]);
+              book.setGenreId(String.valueOf(p[7]));
 
-                  // separate transaction per line
-                  context
-                      .getCdsRuntime()
-                      .changeSetContext()
-                      .run(
-                          ctx -> {
-                            db.run(Upsert.into(BOOKS).entry(book));
-                          });
-                });
+              // separate transaction per line
+              context
+                  .getCdsRuntime()
+                  .changeSetContext()
+                  .run(ctx -> {
+                    db.run(Upsert.into(BOOKS).entry(book));
+                  });
+            });
       } catch (IOException e) {
         throw new ServiceException(ErrorStatuses.SERVER_ERROR, MessageKeys.BOOK_IMPORT_FAILED, e);
       } catch (IndexOutOfBoundsException e) {
