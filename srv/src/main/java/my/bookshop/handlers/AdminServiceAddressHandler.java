@@ -97,7 +97,7 @@ public class AdminServiceAddressHandler implements EventHandler {
               return bupa.run(select);
             },
             config,
-            (t) -> {
+            t -> {
               // ..falling back to the already replicated addresses in our own database
               logger.warn("Falling back to already replicated Addresses");
               return db.run(select);
@@ -116,35 +116,28 @@ public class AdminServiceAddressHandler implements EventHandler {
 
     orders
         .filter(o -> o.getShippingAddressId() != null)
-        .forEach(
-            order -> {
-              String addressId = order.getShippingAddressId();
-              var replica =
-                  db.run(
-                      Select.from(ADDRESSES)
-                          .where(
-                              a ->
-                                  a.businessPartner()
-                                      .eq(businessPartner)
-                                      .and(a.ID().eq(addressId))));
-              // check if the address was not yet replicated
-              if (replica.rowCount() < 1) {
-                logger.info("Replicating Address '{}' from S/4 service", addressId);
-                Addresses remoteAddress =
-                    bupa.run(
-                            Select.from(ADDRESSES)
-                                .where(
-                                    a ->
-                                        a.businessPartner()
-                                            .eq(businessPartner)
-                                            .and(a.ID().eq(addressId))))
-                        .single();
+        .forEach(order -> {
+          String addressId = order.getShippingAddressId();
+          var replica =
+              db.run(
+                  Select.from(ADDRESSES)
+                      .where(
+                          a -> a.businessPartner().eq(businessPartner).and(a.ID().eq(addressId))));
+          // check if the address was not yet replicated
+          if (replica.rowCount() < 1) {
+            logger.info("Replicating Address '{}' from S/4 service", addressId);
+            Addresses remoteAddress =
+                bupa.run(
+                        Select.from(ADDRESSES)
+                            .where(a ->
+                                a.businessPartner().eq(businessPartner).and(a.ID().eq(addressId))))
+                    .single();
 
-                remoteAddress.setTombstone(false);
-                db.run(Insert.into(ADDRESSES).entry(remoteAddress));
-              }
-              order.setShippingAddressBusinessPartner(businessPartner);
-            });
+            remoteAddress.setTombstone(false);
+            db.run(Insert.into(ADDRESSES).entry(remoteAddress));
+          }
+          order.setShippingAddressBusinessPartner(businessPartner);
+        });
   }
 
   @On(service = ApiBusinessPartner_.CDS_NAME)
@@ -162,19 +155,16 @@ public class AdminServiceAddressHandler implements EventHandler {
           bupa.run(Select.from(ADDRESSES).where(a -> a.businessPartner().eq(businessPartner)));
       // update replicas or add tombstone if external address was deleted
       replicas.stream()
-          .forEach(
-              rep -> {
-                Optional<Addresses> matching =
-                    remoteAddresses.stream()
-                        .filter(ext -> ext.getId().equals(rep.getId()))
-                        .findFirst();
+          .forEach(rep -> {
+            Optional<Addresses> matching =
+                remoteAddresses.stream().filter(ext -> ext.getId().equals(rep.getId())).findFirst();
 
-                if (matching.isEmpty()) {
-                  rep.setTombstone(true);
-                } else {
-                  matching.get().forEach(rep::put);
-                }
-              });
+            if (matching.isEmpty()) {
+              rep.setTombstone(true);
+            } else {
+              matching.get().forEach(rep::put);
+            }
+          });
       // update local replicas with changes from S/4
       db.run(Upsert.into(ADDRESSES).entries(replicas));
     }

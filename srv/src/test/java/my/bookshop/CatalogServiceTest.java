@@ -42,18 +42,17 @@ class CatalogServiceTest {
             createReview(
                 "aebdfc8a-0dfa-4468-bd36-48aabd65e663", 5, "great read", "just amazing..."));
 
-    bookReviews.forEach(
-        bookReview -> {
-          Books_ ref = CQL.entity(BOOKS).filter(b -> b.ID().eq(bookReview.getBookId()));
-          Reviews result =
-              catalogService.addReview(
-                  ref, bookReview.getRating(), bookReview.getTitle(), bookReview.getText());
+    bookReviews.forEach(bookReview -> {
+      Books_ ref = CQL.entity(BOOKS).filter(b -> b.ID().eq(bookReview.getBookId()));
+      Reviews result =
+          catalogService.addReview(
+              ref, bookReview.getRating(), bookReview.getTitle(), bookReview.getText());
 
-          assertEquals(bookReview.getBookId(), result.getBookId());
-          assertEquals(bookReview.getRating(), result.getRating());
-          assertEquals(bookReview.getTitle(), result.getTitle());
-          assertEquals(bookReview.getText(), result.getText());
-        });
+      assertEquals(bookReview.getBookId(), result.getBookId());
+      assertEquals(bookReview.getRating(), result.getRating());
+      assertEquals(bookReview.getTitle(), result.getTitle());
+      assertEquals(bookReview.getText(), result.getText());
+    });
   }
 
   @Test
@@ -70,16 +69,15 @@ class CatalogServiceTest {
 
     String message = "Valid rating range needs to be within 1 and 5";
 
-    bookReviews.forEach(
-        bookReview -> {
-          Books_ ref = CQL.entity(BOOKS).filter(b -> b.ID().eq(bookReview.getBookId()));
-          assertThrows(
-              ServiceException.class,
-              () ->
-                  catalogService.addReview(
-                      ref, bookReview.getRating(), bookReview.getTitle(), bookReview.getText()),
-              message);
-        });
+    bookReviews.forEach(bookReview -> {
+      Books_ ref = CQL.entity(BOOKS).filter(b -> b.ID().eq(bookReview.getBookId()));
+      assertThrows(
+          ServiceException.class,
+          () ->
+              catalogService.addReview(
+                  ref, bookReview.getRating(), bookReview.getTitle(), bookReview.getText()),
+          message);
+    });
   }
 
   @Test
@@ -100,19 +98,18 @@ class CatalogServiceTest {
             new BookReviewTestFixture(
                 createReview(nonExistingBookId, 5, "great read", "just amazing..."), exMessage2));
 
-    testCases.forEach(
-        testCase -> {
-          Books_ ref = CQL.entity(BOOKS).filter(b -> b.ID().eq(testCase.review.getBookId()));
-          assertThrows(
-              ServiceException.class,
-              () ->
-                  catalogService.addReview(
-                      ref,
-                      testCase.review.getRating(),
-                      testCase.review.getTitle(),
-                      testCase.review.getText()),
-              testCase.exceptionMessage);
-        });
+    testCases.forEach(testCase -> {
+      Books_ ref = CQL.entity(BOOKS).filter(b -> b.ID().eq(testCase.review.getBookId()));
+      assertThrows(
+          ServiceException.class,
+          () ->
+              catalogService.addReview(
+                  ref,
+                  testCase.review.getRating(),
+                  testCase.review.getTitle(),
+                  testCase.review.getText()),
+          testCase.exceptionMessage);
+    });
   }
 
   @Test
