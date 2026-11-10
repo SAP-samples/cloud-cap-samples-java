@@ -72,11 +72,10 @@ public class NotesServiceHandler implements EventHandler {
                 @Override
                 public CqnStructuredTypeRef ref(CqnStructuredTypeRef ref) {
                   return CQL.entity(ADDRESSES)
-                      .filter(
-                          p ->
-                              p.businessPartner()
-                                  .eq(note.getAddressBusinessPartner())
-                                  .and(p.ID().eq(note.getAddressId())))
+                      .filter(p ->
+                          p.businessPartner()
+                              .eq(note.getAddressBusinessPartner())
+                              .and(p.ID().eq(note.getAddressId())))
                       .asRef();
                 }
               });
@@ -109,26 +108,23 @@ public class NotesServiceHandler implements EventHandler {
                   ensureSelected(
                       notesExpand.items(), Notes.ADDRESS_BUSINESS_PARTNER, Notes.ADDRESS_ID))
               .orderBy(notesExpand.orderBy())
-              .where(
-                  n ->
-                      CQL.or(
-                              addresses.stream()
-                                  .map(
-                                      address ->
-                                          n.address_businessPartner()
-                                              .eq(address.getBusinessPartner())
-                                              .and(n.address_ID().eq(address.getId())))
-                                  .collect(Collectors.toList()))
-                          .and(predicate(notesExpand.ref().rootSegment())));
+              .where(n ->
+                  CQL.or(
+                          addresses.stream()
+                              .map(address ->
+                                  n.address_businessPartner()
+                                      .eq(address.getBusinessPartner())
+                                      .and(n.address_ID().eq(address.getId())))
+                              .collect(Collectors.toList()))
+                      .and(predicate(notesExpand.ref().rootSegment())));
 
       var notes = context.getService().run(notesSelect);
       for (Addresses address : addresses) {
         address.setNotes(
             notes.stream()
-                .filter(
-                    n ->
-                        n.getAddressBusinessPartner().equals(address.getBusinessPartner())
-                            && n.getAddressId().equals(address.getId()))
+                .filter(n ->
+                    n.getAddressBusinessPartner().equals(address.getBusinessPartner())
+                        && n.getAddressId().equals(address.getId()))
                 .collect(Collectors.toList()));
       }
     }
@@ -195,26 +191,23 @@ public class NotesServiceHandler implements EventHandler {
                 .columns(
                     ensureSelected(addressExpand.items(), Addresses.BUSINESS_PARTNER, Addresses.ID))
                 .orderBy(addressExpand.orderBy())
-                .where(
-                    a ->
-                        CQL.or(
-                                notesWithAddresses.stream()
-                                    .map(
-                                        n ->
-                                            a.businessPartner()
-                                                .eq(n.getAddressBusinessPartner())
-                                                .and(a.ID().eq(n.getAddressId())))
-                                    .collect(Collectors.toList()))
-                            .and(predicate(addressExpand.ref().rootSegment())));
+                .where(a ->
+                    CQL.or(
+                            notesWithAddresses.stream()
+                                .map(n ->
+                                    a.businessPartner()
+                                        .eq(n.getAddressBusinessPartner())
+                                        .and(a.ID().eq(n.getAddressId())))
+                                .collect(Collectors.toList()))
+                        .and(predicate(addressExpand.ref().rootSegment())));
 
         var addresses = context.getService().run(addressSelect);
         for (Notes note : notes) {
           note.setAddress(
               addresses.stream()
-                  .filter(
-                      a ->
-                          a.getBusinessPartner().equals(note.getAddressBusinessPartner())
-                              && a.getId().equals(note.getAddressId()))
+                  .filter(a ->
+                      a.getBusinessPartner().equals(note.getAddressBusinessPartner())
+                          && a.getId().equals(note.getAddressId()))
                   .findFirst()
                   .orElse(null));
         }

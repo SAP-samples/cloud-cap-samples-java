@@ -147,10 +147,9 @@ class CatalogServiceHandler implements EventHandler {
   public void discountBooks(Stream<Books> books) {
     books
         .filter(b -> b.getTitle() != null)
-        .forEach(
-            b -> {
-              discountBooksWithMoreThan111Stock(b, featureToggles.isEnabled("discount"));
-            });
+        .forEach(b -> {
+          discountBooksWithMoreThan111Stock(b, featureToggles.isEnabled("discount"));
+        });
   }
 
   @After

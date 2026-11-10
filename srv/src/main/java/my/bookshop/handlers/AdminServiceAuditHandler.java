@@ -42,33 +42,31 @@ class AdminServiceAuditHandler implements EventHandler {
 
   @Before(event = {CqnService.EVENT_CREATE})
   public void beforeCreateOrder(Stream<Orders> orders) {
-    orders.forEach(
-        order -> {
-          ConfigChange cfgChange = createConfigChange(order, null);
-          this.auditLog.logConfigChange(Action.CREATE, cfgChange);
-        });
+    orders.forEach(order -> {
+      ConfigChange cfgChange = createConfigChange(order, null);
+      this.auditLog.logConfigChange(Action.CREATE, cfgChange);
+    });
   }
 
   @Before(event = {CqnService.EVENT_UPDATE, CqnService.EVENT_UPSERT})
   public void beforeUpdateOrUpsertOrder(EventContext context, Stream<Orders> orders) {
-    orders.forEach(
-        order -> {
-          ConfigChange cfgChange = null;
-          Action action = null;
-          Optional<Orders> oldOrders = readOldOrders(order.getId());
-          if (oldOrders.isPresent()) {
-            if (!Objects.equals(order.getCurrencyCode(), oldOrders.get().getCurrencyCode())) {
-              cfgChange = createConfigChange(order, oldOrders.get());
-              action = Action.UPDATE;
-            }
-          } else {
-            cfgChange = createConfigChange(order, null);
-            action = Action.CREATE;
-          }
-          if (cfgChange != null && action != null) {
-            auditCfgChange(action, cfgChange, context);
-          }
-        });
+    orders.forEach(order -> {
+      ConfigChange cfgChange = null;
+      Action action = null;
+      Optional<Orders> oldOrders = readOldOrders(order.getId());
+      if (oldOrders.isPresent()) {
+        if (!Objects.equals(order.getCurrencyCode(), oldOrders.get().getCurrencyCode())) {
+          cfgChange = createConfigChange(order, oldOrders.get());
+          action = Action.UPDATE;
+        }
+      } else {
+        cfgChange = createConfigChange(order, null);
+        action = Action.CREATE;
+      }
+      if (cfgChange != null && action != null) {
+        auditCfgChange(action, cfgChange, context);
+      }
+    });
   }
 
   @Before(entity = {Orders_.CDS_NAME})
@@ -80,11 +78,10 @@ class AdminServiceAuditHandler implements EventHandler {
     this.db
         .run(ordersSelect)
         .first(Orders.class)
-        .ifPresent(
-            oldOrders -> {
-              ConfigChange cfgChange = createConfigChange(null, oldOrders);
-              auditCfgChange(Action.DELETE, cfgChange, context);
-            });
+        .ifPresent(oldOrders -> {
+          ConfigChange cfgChange = createConfigChange(null, oldOrders);
+          auditCfgChange(Action.DELETE, cfgChange, context);
+        });
   }
 
   private void auditCfgChange(
@@ -94,10 +91,9 @@ class AdminServiceAuditHandler implements EventHandler {
         .getCdsRuntime()
         .requestContext()
         .systemUserProvider()
-        .run(
-            ctx -> {
-              this.auditLog.logConfigChange(action, cfgChange);
-            });
+        .run(ctx -> {
+          this.auditLog.logConfigChange(action, cfgChange);
+        });
   }
 
   private Optional<Orders> readOldOrders(String ordersId) {

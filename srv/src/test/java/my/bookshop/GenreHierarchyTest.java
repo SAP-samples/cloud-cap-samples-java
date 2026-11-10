@@ -190,8 +190,8 @@ class GenreHierarchyTest {
   void filterExpandLevels() throws Exception {
     String expandLevelsJson =
         """
-				[{"NodeID":"8bbf14c6-b378-4e35-9b4f-05a9c8878002","Levels":1},{"NodeID":"8bbf14c6-b378-4e35-9b4f-05a9c8878031","Levels":1}]\
-				""";
+        [{"NodeID":"8bbf14c6-b378-4e35-9b4f-05a9c8878002","Levels":1},{"NodeID":"8bbf14c6-b378-4e35-9b4f-05a9c8878031","Levels":1}]\
+        """;
     String unencoded =
         genresURI
             + "?$select=DistanceFromRoot,DrillState,ID,LimitedDescendantCount,name"
