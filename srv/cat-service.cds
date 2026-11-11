@@ -1,5 +1,6 @@
 using {my.bookshop as my} from '../db/index';
 using from 'com.sap.cds/ai/agent-memory';
+using from 'com.sap.cds/ai/agent-tasks';
 
 @path : 'browse'
 @odata.apply.transformations
