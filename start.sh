@@ -31,4 +31,4 @@ if [[ "$DEBUG" == "true" ]]; then
 fi
 
 npx cds bind bookshop-ai --to ai-core-java
-npx cds bind --exec --profile hybrid -- mvn -f srv/pom.xml spring-boot:run -Dspring-boot.run.profiles=default "${DEBUG_ARGS[@]}"
+npx cds bind --exec --profile hybrid -- mvn clean spring-boot:run -Dspring-boot.run.profiles=default "${DEBUG_ARGS[@]}"
