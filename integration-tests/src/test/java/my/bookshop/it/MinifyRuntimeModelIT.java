@@ -4,7 +4,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.awaitility.Awaitility.await;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import cds.gen.sap.common.Countries_;
@@ -79,15 +78,15 @@ class MinifyRuntimeModelIT {
 
   @Test
   @WithMockUser("admin")
-  void javaOnlyPersistenceQueryFailsInTenantRequest() throws Exception {
+  void javaOnlyPersistenceQueryShouldSucceedInTenantRequest() throws Exception {
+    // Deliberately failing reproduction: the handler compiles locally, but the
+    // sidecar removes Countries and the tenant request actually returns 404002.
     client
         .perform(
             post("/api/browse/probeMinifiedCountries")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("{}"))
-        .andExpect(status().isNotFound())
-        .andExpect(jsonPath("$.error.code").value("404002"))
-        .andExpect(jsonPath("$.error.message").value("Entity 'sap.common.Countries' not found"));
+        .andExpect(status().isOk());
   }
 
   private static void deployment(String operation) throws Exception {

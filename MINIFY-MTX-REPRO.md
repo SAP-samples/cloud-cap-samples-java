@@ -28,16 +28,22 @@ The existing integration-test lifecycle starts the local sidecar on port 4005.
 The test subscribes its own `minify-runtime-probe` tenant and unsubscribes it
 afterward. Java HTTP requests use MockMvc, not port 8080.
 
-All three reproduction tests pass:
+This is an intentionally **failing** reproduction: two supporting checks pass,
+and the handler-request test fails.
 
 1. The generated query resolves against the local model.
 2. The same query analyzed against the tenant model throws the cds4j
    `CdsDefinitionNotFoundException`, without executing SQL.
-3. An authenticated tenant request to the action fails with HTTP **404**:
+3. `javaOnlyPersistenceQueryShouldSucceedInTenantRequest` expects HTTP **200**,
+   but the authenticated tenant request actually returns HTTP **404**:
 
    ```json
    {"error":{"code":"404002","message":"Entity 'sap.common.Countries' not found"}}
    ```
+
+   Maven reports `Status expected:<200> but was:<404>` and exits with a build
+   failure. The earlier characterization asserted the 404 and therefore passed;
+   this version deliberately exposes the runtime failure as a red test.
 
 The ordinary persistence call is rejected during runtime-model resolution,
 before SQL execution. The handler logs that the entity is absent from the tenant
